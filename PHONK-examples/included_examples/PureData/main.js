@@ -8,6 +8,8 @@
 * 	with the sendFloat, sendBang methods 
 */
 
+ui.screenOrientation("portrait");
+
 var pd = media.initPdPatch("sinwave.pd");
 
 pd.onNewData(function(data) { 

@@ -6,9 +6,9 @@
 */ 
 
 // Labels to hold lat, lng & city name values of current location
-var latTxt = ui.addText("Latitude : ",10,100,500,100);
-var lonTxt = ui.addText("Longitude : ",10,200,500,100);
-var altTxt = ui.addText("City : ",10,300,500,100);
+var latTxt = ui.addText("Latitude : ", 10, 100, 500, 100);
+var lonTxt = ui.addText("Longitude : ", 10, 200, 500, 100);
+var altTxt = ui.addText("City : ", 10, 300, 500, 100);
 
 //as demo purposes we are going to use google static maps 
 //where for each update it will show an image of your current location 

@@ -4,7 +4,7 @@
 */ 
 
 ui.toolbar.title("UI examples ---> lalalallala ");
-ui.toolbar.bgColor(0, 255, 0, 255);
+ui.toolbar.bgColor(55, 155, 155, 255);
 ui.toolbar.show(true);
 
 ui.allowScroll(true);

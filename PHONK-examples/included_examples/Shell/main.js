@@ -7,10 +7,11 @@
 
 var txt = ui.addText("shell output", 0, 0); 
 
-var e = app.executeCommand("ping www.google.es", function(d) {
+var cmd = "ping -c 1 www.google.com";
+
+var e = app.executeCommand(cmd, function(d) {
    console.log(d);
    txt.setText(d);
-});
+}).start();
     
 // e.stop();
-// e.run();

@@ -3,7 +3,7 @@
 *   Delay Delays a function for a especific time 
 */
 
-var txt = ui.addText("", 10, 10, ui.screenWidth - 20, ui.screenHeight);
+var txt = ui.addText("", 10, 10);
 
 var l1 = util.loop(1000, function () { 
     txt.append("repeating every 1000 ms \n");

@@ -7,17 +7,17 @@
 
 var dataLabel = ui.addText("data : ",10, 20, 500, 100);
 
-var arduino; 
+var serial; 
 
 //start connexion with arduino
 ui.addButton("START", 50, 150, 500,100).onClick(function() { 
 	
 	//show arduino incoming data
-    arduino = boards.startSerial(9600, function(connected) {
+    serial = boards.connectSerial(9600, function(connected) {
     	console.log("connected " + connected);
 	});
 
-	arduino.onNewData(function() {
+	serial.onNewData(function(data) {
 		dataLabel.setText("Data : "+ data);
 		console.log(data);
 		media.textToSpeech("tick"); 
@@ -27,15 +27,15 @@ ui.addButton("START", 50, 150, 500,100).onClick(function() {
 
 
 //write to the serial led on
-ui.addButton("LEDON", 50, 250, 500,100).onClick(function(){ 
-	arduino.write("ledon"); 
+ui.addButton("LED ON", 50, 250, 500,100).onClick(function(){ 
+	serial.write("ledon"); 
 });
 
-ui.addButton("LEDOFF", 50, 350, 500,100).onClick(function(){
-	arduino.write("ledoff");
+ui.addButton("LED OFF", 50, 350, 500,100).onClick(function(){
+	serial.write("ledoff");
 });
 
 
 ui.addButton("STOP", 50, 450, 500,100).onClick(function(){
-	arduino.stop(); 
+	serial.stop(); 
 });
