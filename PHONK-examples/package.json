@@ -1,13 +1,13 @@
 {
-    "name" : "ProtocoderExamples",
-    "description" : "Protocoder Examples",
-    "author" : "http://protocoder.org",
-    "version" : "0.0.1",
-    "devDependencies": {
-        "grunt": "0.x.x",
-        "grunt-contrib-clean": "0.5.x",
-        "grunt-contrib-copy": "0.4.x",
-        "grunt-contrib-watch" : "0.5.x",
-        "grunt-contrib-connect": "0.4.x"
-    }
+  "name" : "ProtocoderExamples",
+  "description" : "Protocoder Examples",
+  "author" : "http://protocoder.org",
+  "version" : "0.0.1",
+  "scripts" : {
+    "clean": "rm -rf ../AndroidApp/protocoder_app/src/main/assets/examples",
+    "deploy": "cp -r ./examples ../AndroidApp/protocoder_app/src/main/assets/",
+    "cleanAndDeploy": "npm run clean && npm run deploy"
+  },
+  "devDependencies": {
+  }
 }
