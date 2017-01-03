@@ -1,5 +1,11 @@
-var notification = app.notification(12345, 'img.png', 'title', 'description')
+/*
+ *  \\\ Notifications
+ *  
+ */
 
-notification.onClick(function (e) {
-  console.log('notification ' + e.id + ' is clicked ')
-}
+ui.addTitle(app.name)
+ui.addSubtitle('Get notifications from other apps')
+
+device.onNewNotification(function (e) {
+  console.log(e)
+})

@@ -13,7 +13,7 @@ ui.addTitle(app.name)
 // take a picture and save it
 ui.addButton('Take pic', 0.2, 0.8, 0.2, 0.1).onClick(function () {
     camera.takePicture('picture.png', function () {
-        console.log('<img src="" + app.servingUrl() + "picture.png"/>')
+        console.log('<img src = "' + protocoder.urlForFiles() + 'picture.png"/>')
     })
 })
 

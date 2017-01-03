@@ -4,25 +4,28 @@
  * A simple way use data in different parts of the app
  * easy to obtain MVC patterns using
  *
+ * you can use app.removeEvent(id) in order to stop listening to the event
+ *
  */
 
+ui.addTitle(app.name)
+ui.addSubtitle('Listen and send events')
+
 // start accelerometer
-sensors.accelerometer.onChange(function (event) {
+sensors.accelerometer.onChange(function (data) {
   // send event
-  app.sendEvent('e1', event)
-})
+  var e = { 'data': data }
+  app.sendEvent('event1', e)
+}).start()
 
 // register event
-var id = app.listenEvent('e1', function (event) {
-  console.log(event.x)
+var id = app.listenEvent('event1', function (event) {
+  console.log(event.data.x)
 })
 
-var txt = ui.addText('', 0, 0)
+var txt = ui.addText('', 0.1, 0.3)
 txt.textSize(85)
-
 // register an event and display it in the text field
-var id = app.listenEvent('e1', function (o) {
-  txt.text(Math.round(o.x * 100) / 100)
-});
-
-// you can use app.removeEvent(id) in order to stop listening to the event
+var id = app.listenEvent('event1', function (event) {
+  txt.text(Math.round(event.data.x * 100) / 100)
+})
