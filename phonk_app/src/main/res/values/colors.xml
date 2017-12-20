@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <color name="blacktransparent20">#20000000</color>
+
+    <!-- legacy stuff -->
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
+    <color name="blue">#0000ff</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#000000</color>
+    <color name="blacktransparent">#88000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_hovered">#2200FF00</color>
+    <color name="transparent_focused">#220000FF</color>
+    <color name="transparent_pressed">#55FFFF00</color>
+    <color name="transparent_selected">#5500FFFF</color>
+    <color name="transparent_normal">#22FFFFFF</color>
+    <color name="light_grey">#ffeeeeee</color>
+
+    
+    <drawable name="actionbar_highlight">#00777777</drawable>
+
+
+    <!-- Common drawable color values -->
+    <drawable name="drawable_transparent">#00000000</drawable>
+    <drawable name="drawable_blue_transparent">#6633B5E5</drawable>
+    <drawable name="drawable_blue">#33B5E5</drawable>
+    <drawable name="drawable_blue_selected">#0099cc</drawable>
+    <drawable name="drawable_grey_dark">#555555</drawable>
+    <drawable name="drawable_grey_selected">#BB555555</drawable>
+    <drawable name="drawable_grey">#cccccc</drawable>
+    <drawable name="drawable_black_transparent">#aa000000</drawable>
+    <drawable name="drawable_red_transparent">#66FF4444</drawable>
+    <drawable name="drawable_grey_light">#dddddd</drawable>
+    <drawable name="drawable_yellow">#ffFFbb33</drawable>
+    <drawable name="drawable_yellow_selected">#FF8800</drawable>
+    <drawable name="drawable_red">#ffff4444</drawable>
+    <drawable name="drawable_red_selected">#ffcc0000</drawable>
+    <drawable name="drawable_green">#ff99cc00</drawable>
+    <drawable name="drawable_green_selected">#ff669900</drawable>
+    <drawable name="drawable_purple">#ffAA66cc</drawable>
+    <drawable name="drawable_purple_selected">#9933CC</drawable>
+
+</resources>

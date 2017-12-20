@@ -1,0 +1,49 @@
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+
+    <!-- Styler for the header of each license card -->
+    <style name="LicenseCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/license_header</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:padding">@dimen/license_card_title_padding</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Styler for the body of each license card -->
+    <style name="LicenseCardBody">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/protocoder_textColor_secondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">@dimen/license_card_title_padding</item>
+    </style>
+
+</resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<getStyles name="ProtocoderAppRunner.Dialog" parent="Theme.AppCompat.Dialog">-->
+        <!--<item name="android:background">@color/transparent</item>-->
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!-- <item name="android:windowNoTitle">true</item> -->
+        <!-- <item name="android:listViewStyle">@getStyles/MyListView</item> -->
+        <!--<item name="android:buttonStyle">@getStyles/ProtocoderDark.Button</item>-->
+        <!--<item name="android:textViewStyle">@getStyles/ProtocoderDark.TextView</item>-->
+        <!--<item name="android:seekBarStyle">@getStyles/ProtocoderDark.SeekBar</item>-->
+
+
+		<!--<item name="android:windowIsTranslucent">true</item>-->
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <!--<item name="android:windowIsFloating">true</item>-->
+        <!--<item name="android:backgroundDimEnabled">true</item>-->
+        <!--<item name="android:colorBackgroundCacheHint">@null</item>-->
+        <!--<item name="android:windowFrame">@null</item>-->
+        <!--<item name="android:windowAnimationStyle">@android:getStyles/Animation.Dialog</item>-->
+
+
+    <!--</getStyles>-->
+
+</resources>

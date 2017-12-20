@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/txtTaskProjectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="project"
+        android:padding="5dp"
+        android:typeface="sans" />
+
+
+    <TextView
+        android:id="@+id/txtTaskId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="id" />
+
+    <TextView
+        android:id="@+id/txtTaskType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="type" />
+
+    <TextView
+        android:id="@+id/txtTaskWhen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="when" />
+
+    <TextView
+        android:id="@+id/txtTaskInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="interval" />
+
+    <CheckBox
+        android:id="@+id/bTaskRepeating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp" />
+
+    <CheckBox
+        android:id="@+id/bTaskWakeUpScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp" />
+
+</LinearLayout>

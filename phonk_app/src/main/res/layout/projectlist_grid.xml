@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/protocoder_backgroundColor_secondary" >
+
+    <include layout="@layout/projectlist_location_view"
+        android:id="@+id/folderLocation"/>
+
+    <io.phonk.runner.base.views.FitRecyclerView
+        android:id="@+id/gridprojects"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        android:layoutAnimation="@anim/fav_grid_anim"
+        android:animateLayoutChanges="false"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:columnWidth = "140dp"
+        android:horizontalSpacing="5dp"
+        android:listSelector="@android:color/transparent"
+        android:padding="5dp"
+        android:paddingBottom="20dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp"
+        android:clipToPadding="false" />
+
+    <LinearLayout
+        android:id="@+id/empty_grid_view"
+        android:layout_below="@id/folderLocation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:src="@drawable/protocoder_none" />-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_projects"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#55000000"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

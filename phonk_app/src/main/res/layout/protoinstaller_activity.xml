@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar2"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentTop="true"
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent">
+    </include>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/progressBar_installing"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/toolbar2"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Installing..."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/text_proto_install_info"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/progressBar_installing"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="origin"
+        android:id="@+id/text_proto_install_origin"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/text_proto_install_info"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="destiny"
+        android:id="@+id/text_proto_install_destiny"
+        android:layout_below="@+id/text_proto_install_origin"
+        android:layout_alignLeft="@+id/text_proto_install_origin"
+        android:layout_alignStart="@+id/text_proto_install_origin" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Project already exist, it will be overwritten"
+        android:visibility="gone"
+        android:id="@+id/text_proto_install_warning"
+        android:layout_below="@+id/text_proto_install_destiny"
+        android:textColor="#FF0000"
+        android:layout_alignLeft="@+id/text_proto_install_origin"
+        android:layout_alignStart="@+id/text_proto_install_origin" />
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:text="Yeah!"
+        android:id="@+id/button_proto_install_finish"
+        android:layout_gravity="left|bottom"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="75dp"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:id="@+id/proto_install_group"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Install"
+            android:id="@+id/button_proto_install_ok"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:id="@+id/button_proto_install_cancel"
+            android:layout_gravity="bottom"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</RelativeLayout>

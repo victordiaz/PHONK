@@ -1,0 +1,6 @@
+/*	
+ *  Description ........ 
+ *  by ........ 
+ */
+
+ui.addTitle(app.name)

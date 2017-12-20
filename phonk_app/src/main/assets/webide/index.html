@@ -1,0 +1,51 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="initial-scale=1,minimum-scale=1,maximum-scale=1"><meta http-equiv=Content-Type content="text/html;charset=UTF-8"><style>body {
+
+      }
+
+      .loading {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: #373234;
+        font-family: sans-serif;
+        font-size: 1.5em;
+        font-weight: 100;
+        padding: 20px;
+        color: white;
+      }
+
+      .loading p {
+        // width: 20ch;
+        font
+      }
+
+      .loading .progress_container {
+      	width:250px;
+      	height:2px;
+      	overflow:hidden;
+      	background-color:rgb(0,0,0);
+      	// margin: auto;
+        margin-top: 52px;
+      }
+
+      .loading .progress{
+      	background-color: rgb(255,255,255);
+      	margin-top: 0;
+      	animation-name: loading_animation;
+      	animation-duration: 1.5s;
+      	animation-iteration-count: infinite;
+      	animation-timing-function: linear;
+      	width: 250px;
+      	height: 19px;
+      }
+
+      @keyframes loading_animation {
+      	0%{ margin-left: -250px; }
+      	100%{ margin-left: 250px; }
+      }</style><link href=/static/css/app.85bfd9dbc2d3ee4d1932f1a2d335cfa5.css rel=stylesheet></head><body><div class=loading><div><h1>Let's phonk!</h1><p>Loading the coding environment, wait a sec! :)</p><div class=progress_container><div class=progress></div></div></div></div><app></app><link rel=icon href=static/favicon.ico type=image/x-icon><script src=static/lib/ace-builds/src-noconflict/ace.js type=text/javascript charset=utf-8></script><script src=static/lib/ace-builds/src-noconflict/ext-language_tools.js type=text/javascript charset=utf-8></script><script type=text/javascript src=/static/js/manifest.f7ac02836bd05a4457e1.js></script><script type=text/javascript src=/static/js/vendor.27fe4bc1f23a701a01e5.js></script><script type=text/javascript src=/static/js/app.948c742ae14c88dd05a3.js></script></body></html>

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# USE: release 0.99.1
+# http://semver.org/
+
+DIR=$(dirname $0)
+echo $DIR
+
+VERSION_NAME=$1
+ARR=(${VERSION_NAME//./ })
+VERSION_CODE=$((  1000000*${ARR[0]} + 1000*${ARR[1]} + ${ARR[2]}  ))
+
+echo "releasing $VERSION_NAME $VERSION_CODE"
+
+git stash
+git checkout develop -b release/$VERSION_NAME
+
+sed -i \
+     -e "s/versionCode .*/versionCode $VERSION_CODE/" \
+     -e "s/versionName .*/versionName \"$VERSION_NAME\"/" \
+     $DIR/protocoder_app/build.gradle \
+     $DIR/protocoder_apprunner/build.gradle
+
+git commit -a -m "version $VERSION_NAME"
+git checkout master
+git merge --no-ff release/$VERSION_NAME
+git tag $VERSION_NAME
+git checkout develop
+git merge --no-ff release/$VERSION_NAME
+git branch -d release/$VERSION_NAME
+#git push
+#git push --tags
+

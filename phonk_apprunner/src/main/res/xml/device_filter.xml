@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <usb-device vendor-id="6991" product-id="8" />
+
+    <!-- arduino serial -->
+    <usb-device vendor-id="1027" product-id="24577"/> <!--  0x0403 / 0x6001: FTDI FT232R UART  -->
+    <usb-device vendor-id="9025"/> <!--  0x2341 / Arduino  -->
+    <usb-device vendor-id="5824" product-id="1155"/> <!--  0x16C0 / 0x0483: Teensyduino   -->
+
+    <usb-device vendor-id="4292" product-id="60000"/> <!--  0x10C4 / 0xEA60: CP210x UART Bridge  -->
+
+
+    <usb-device vendor-id="0944" /> <!-- korg -->
+
+    <!-- <usb-device vendor-id="2367" /> --> <!-- op1 -->
+
+    <!-- honey -->
+    <usb-device vendor-id="7936"/>
+
+    <usb-device vendor-id="4292"/> <!-- CP210x VID:0x10c4 -->
+    <usb-device vendor-id="3368"/> <!-- mbed blue VID:0d28 PID:0204 NXP LPC1768 -->
+    <usb-device vendor-id="4951"/> <!-- mbed yellow VID:1357 PID:0707 P&E Microcomputer Systems -->
+    <usb-device vendor-id="5538"/> <!-- mbed black VID:15a2 PID:a50f Freescale Semiconductor, Inc. -->
+    <usb-device vendor-id="1412"/> <!-- REX-USB60F -->
+    <usb-device class="2" /> <!-- CDC -->
+
+    <!--product-id="2012" />-->
+
+</resources>

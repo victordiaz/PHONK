@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <style name="PhonkAppRunner.Button" parent="@android:style/Widget.Button">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">125sp</item>
+        <item name="android:textStyle">bold</item>
+        <!--<item name="android:textColor">#FF00FF</item>-->
+        <item name="android:gravity">center</item>
+        <!--<item name="android:shadowColor">#000000</item>-->
+        <!--<item name="android:background">@drawable/protocoder_theme_dark_btn_selector</item>-->
+        <!--<item name="android:padding">10dip</item>-->
+    </style>
+
+</resources>

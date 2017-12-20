@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+     <item android:state_pressed="true" >
+        <shape android:shape="rectangle"  >
+             <corners android:radius="1dip" />
+             <solid  android:color="#181818"/>       
+             <stroke android:width="3dip" android:color="#CC181818" />
+         </shape>
+     </item>
+    <item android:state_focused="true">
+       <shape android:shape="rectangle"  >
+             <corners android:radius="1dip" />
+             <solid  android:color="#282828"/>       
+             <stroke android:width="3dip" android:color="#CC282828" />
+         </shape>
+     </item>  
+    <item >
+        <shape android:shape="rectangle"  >
+             <corners android:radius="1dip" />
+             <solid  android:color="#181818"/>       
+             <stroke android:width="3dip" android:color="#CC222222" />
+         </shape>
+     </item>
+</selector>

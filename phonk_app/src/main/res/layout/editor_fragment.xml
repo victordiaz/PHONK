@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootEditor"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#272822"
+    android:orientation="vertical"
+    android:fitsSystemWindows="false"
+    android:animateLayoutChanges="true">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/editText1"
+            style="@style/editor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top|left"
+            android:hint="type here your code"
+            android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"
+            android:inputType="textMultiLine|textNoSuggestions|text"
+            android:cursorVisible="true"
+            android:paddingBottom="50dp"/>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/decreaseSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="15dp"
+        android:visibility="invisible"
+        android:text="-" />
+
+    <Button
+        android:id="@+id/increaseSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="2dp"
+        android:layout_toLeftOf="@+id/decreaseSize"
+        android:visibility="invisible"
+        android:padding="15dp"
+        android:text="+" />
+
+    <HorizontalScrollView
+        android:id="@+id/extraKeyBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:id="@+id/extraKeyBarLl"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="{"
+                android:id="@+id/button" />
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="}"
+                android:id="@+id/button6"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="("
+                android:id="@+id/button7"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text=")"
+                android:id="@+id/button8"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="="
+                android:id="@+id/button10"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text="'"
+                android:id="@+id/button11"/>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:text=";"
+                android:id="@+id/button12"/>
+
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</RelativeLayout>

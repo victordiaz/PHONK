@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/folderSelector"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_gravity="left|top"
+    android:animateLayoutChanges="true"
+    android:background="@color/protocoder_backgroundColor_secondary"
+    android:gravity="center">
+
+    <!-- back & folder info -->
+    <LinearLayout
+        android:id="@+id/choosefolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:padding="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_folder_open_black_24dp" />
+
+        <!-- choose folder -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="choose a folder"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <!--
+    <ToggleButton
+        android:id="@+id/selectFolderButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/project_folder_toggle_button_selector"
+        android:textColor="#88000000" />
+    -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#11000000"
+        android:visibility="gone" />
+
+    <io.phonk.gui._components.ResizableRecyclerView
+        android:id="@+id/folderList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </io.phonk.gui._components.ResizableRecyclerView>
+
+</LinearLayout>
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_project_list_run"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/run" />
+    <item android:id="@+id/menu_project_list_edit"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/edit" />
+    <item android:id="@+id/menu_project_webeditor"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/webeditor" />
+    <item android:id="@+id/menu_project_list_delete"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/delete" />
+    <item android:id="@+id/menu_project_list_add_shortcut"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/add_shortcut" />
+    <item android:id="@+id/menu_project_list_share_with"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/share" />
+    <item android:id="@+id/menu_project_list_share_proto_file"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/share_proto_file" />
+    <item android:id="@+id/menu_project_list_show_info"
+          android:icon="@drawable/phonk_icon"
+          android:title="@string/show_project_info" />
+
+    <!--  Bean is broken disabled till fixed
+    <item android:id="@+id/menu_project_list_beam"
+          android:icon="@drawable/ic_action_logo"
+          android:title="@string/beam"
+          android:menuCategory="system" 
+          /> 
+    -->
+</menu>

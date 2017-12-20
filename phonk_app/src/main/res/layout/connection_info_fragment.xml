@@ -1,0 +1,183 @@
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:animateLayoutChanges="true"
+    android:gravity="center"
+    android:paddingBottom="12dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="0dp"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:id="@+id/infoblock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+        <FrameLayout
+            android:id="@+id/computer_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="12dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/computer" />
+
+            <TextView
+                android:id="@+id/computerText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="55dp"
+                android:gravity="bottom"
+                android:elevation="1dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="25dp"
+                android:text="> "
+                android:textSize="3sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/connection_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/computer_image"
+            android:layout_toRightOf="@+id/computer_image"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/connection_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:maxWidth="200dp"
+                android:text="@string/connection_message_not_connected"
+                android:textColor="@color/protocoder_textColor_primary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/connection_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="left"
+                android:text="http://1.2.3.4.5:8585"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="italic|bold"
+                android:visibility="gone" />
+
+            <ToggleButton
+                android:id="@+id/webide_connection_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                style="@style/Widget.AppCompat.Button"
+                android:minHeight="12dp"
+                android:textAllCaps="true"
+                android:textColor="@color/protocoder_textColor_secondary"
+                android:textOff="Start Web Editor"
+                android:textOn="Stop Web Editor"
+                android:textSize="10sp"
+                android:backgroundTint="@color/white"
+                android:textStyle="normal|bold"
+                android:visibility="visible" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/infoblock"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:visibility="gone">
+
+        <!-- android:background="?attr/selectableItemBackgroundBorderless" -->
+
+        <LinearLayout
+            android:id="@+id/connection_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/connect_to_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:minHeight="12dp"
+                android:text="Connect to WIFI"
+                android:textAllCaps="true"
+                android:textColor="@color/protocoder_accentColor_primary"
+                android:textSize="10sp"
+                android:textStyle="normal|bold" />
+
+            <Button
+                android:id="@+id/start_hotspot"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:minHeight="12dp"
+                android:text="Start HOTSPOT"
+                android:textAllCaps="true"
+                android:textColor="@color/protocoder_accentColor_primary"
+                android:textSize="10sp"
+                android:textStyle="normal|bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

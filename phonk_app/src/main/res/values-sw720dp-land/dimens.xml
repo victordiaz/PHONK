@@ -1,0 +1,39 @@
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <!--
+         Customize dimensions originally defined in res/values/dimens.xml (such as
+         screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
+    -->
+
+    <dimen name="main_cardview_radius">2dp</dimen>
+    <dimen name="main_cardview_top_margin">20dp</dimen>
+    <dimen name="main_cardview_bottom_margin">-2dp</dimen>
+    <dimen name="main_cardview_left_margin">50dp</dimen>
+    <dimen name="main_cardview_right_margin">50dp</dimen>
+
+    <dimen name="activity_horizontal_margin">128dp</dimen>
+    <dimen name="editor_cardview_radius">2dp</dimen>
+
+</resources>

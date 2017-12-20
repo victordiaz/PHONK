@@ -1,0 +1,50 @@
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="license_card_marginTop">10dp</dimen>
+    <dimen name="license_card_marginBottom">5dp</dimen>
+    <dimen name="license_card_title_padding">10dp</dimen>
+
+    <dimen name="apprunner_console">150dp</dimen>
+    <dimen name="apprunner_console_text_padding">15dp</dimen>
+
+    <dimen name="main_cardview_radius">2dp</dimen>
+    <dimen name="main_cardview_top_margin">15dp</dimen>
+    <dimen name="main_cardview_bottom_margin">15dp</dimen>
+    <dimen name="main_cardview_left_margin">15dp</dimen>
+    <dimen name="main_cardview_right_margin">15dp</dimen>
+
+    <dimen name="other_cardview_radius">0dp</dimen>
+    <dimen name="other_cardview_top_margin">0dp</dimen>
+    <dimen name="other_cardview_horizontal_margin">0dp</dimen>
+
+    <dimen name="editor_cardview_radius">0dp</dimen>
+    <dimen name="editor_cardview_top_margin">5dp</dimen>
+    <dimen name="editor_cardview_horizontal_margin">0dp</dimen>
+    <dimen name="editor_filemanager_width">200dp</dimen>
+
+</resources>

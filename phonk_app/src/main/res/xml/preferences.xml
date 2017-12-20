@@ -1,0 +1,139 @@
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/setting_options_title" >
+
+        <EditTextPreference
+            android:key="device_id"
+            android:summary="@string/setting_device_id_description"
+            android:title="@string/setting_device_id_title" />
+
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="screen_always_on"
+            android:summary="@string/setting_screen_on_description"
+            android:title="@string/setting_screen_on_title" />
+
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="servers_enabled_on_start"
+            android:summary="@string/setting_enable_servers_on_start_description"
+            android:title="@string/setting_enable_servers_on_start_title" />
+
+        <CheckBoxPreference
+            android:checked="true"
+            android:key="notify_new_version"
+            android:summary="@string/setting_new_version_description"
+            android:title="@string/setting_new_version_title" />
+
+        <CheckBoxPreference
+            android:checked="true"
+            android:key="send_usage_log"
+            android:summary="@string/setting_send_usage_log_description"
+            android:title="@string/setting_send_usage_log_title" />
+
+        <CheckBoxPreference
+            android:checked="true"
+            android:key="webide_mode"
+            android:summary="@string/setting_show_html5_mode"
+            android:title="@string/setting_show_html5_mode_title" />
+
+         <CheckBoxPreference
+            android:checked="true"
+            android:key="launch_on_device_boot"
+            android:summary="@string/setting_launch_on_device_boot_description"
+            android:title="@string/setting_launch_on_device_boot_title" />
+
+        <EditTextPreference
+            android:key="launch_script_on_app_launch"
+            android:summary="@string/setting_launch_script_on_app_launch_description"
+            android:title="@string/setting_launch_script_on_app_launch_title" />
+
+        <CheckBoxPreference
+            android:checked="false"
+            android:key="apps_in_list_mode"
+            android:summary="@string/setting_list_mode_description"
+            android:title="@string/setting_list_mode_title" />
+
+        <!--
+        <CheckBoxPreference
+            android:selected="false"
+            android:key="pref_background_mode"
+            android:summary="@string/setting_background_mode_description"
+            android:title="@string/setting_background_mode_title"
+            />
+
+        <EditTextPreference
+            android:key="pref_app_color"
+            android:summary="@string/setting_app_color_description"
+            android:title="@string/setting_app_color_title" />
+        -->
+        <Preference
+            android:key="reinstall_examples"
+            android:summary="@string/setting_reinstall_description"
+            android:title="@string/setting_reinstall_title" />
+
+
+    </PreferenceCategory>
+
+    <!--
+    <PreferenceCategory android:title="Advanced">
+        <EditTextPreference
+            android:key="@string/pref_webserver_port"
+            android:summary="@string/setting_webserver_port"
+            android:title="@string/setting_swebserver_port_title" />
+        <EditTextPreference
+            android:key="@string/pref_webserver_port"
+            android:summary="@string/setting_websocket_port"
+            android:title="@string/setting_websocket_port_title" />
+
+        <ListPreference
+            android:key="change_editor"
+            android:summary="Load a custom-made web-editor from the SD card"
+            android:title="Change Editor" />
+
+        <Preference
+            android:key="ftp_enabled"
+            android:checked="false"
+            android:summary="Protocoder starts with a ftp server in the port 8589 that can be used to transfer files to it"
+            android:title="Enable ftp" />
+    </PreferenceCategory>
+    -->
+
+    <PreferenceCategory android:title="@string/setting_about_title" >
+        <Preference
+            android:key="licenses_detail"
+            android:summary="@string/setting_opensource_description"
+            android:title="@string/setting_opensource_title" />
+
+        <Preference
+            android:key="app_about"
+            android:summary="@string/setting_about_description"
+            android:title="@string/setting_about_title" />
+
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>

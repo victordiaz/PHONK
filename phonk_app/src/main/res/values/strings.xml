@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string name="app_name">Phonk!</string>
+    <string name="activity_name">Phonk!</string>
+    <string name="runner_name">Phonk! Runner</string>
+    <string name="connect_message">Click to connect</string>
+    <string name="connection_message_connected">Point the web browser in your computer to</string>
+    <string name="connection_message_wifi">Connected to WIFI. Point your computer\'s web browser to this address</string>
+    <string name="connection_message_tethering">Start coding using your computer</string>
+    <!--
+    <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
+    -->
+    <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
+    <string name="menu_settings">Settings</string>
+    <string name="BT_Home">Connect</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="symbol">&lt;\u0020\u0020\u0020&gt;</string>
+    <string name="no_projects">No projects yet!\nStart experimenting :)</string>
+
+    <string name="view">View</string>
+    <string name="run">Run</string>
+    <string name="edit">Edit</string>
+    <string name="webeditor">Open in WebEditor</string>
+    <string name="delete">Delete</string>
+    <string name="open">Open</string>
+    <string name="open_with">Open With...</string>
+    <string name="cut_file">Cut File</string>
+    <string name="copy_file">Cut File</string>
+
+    <string name="add_shortcut">Add shortcut to desktop</string>
+    <string name="share">Share main.js code</string>
+    <string name="share_proto_file">Share project as .proto file</string>
+    <string name="show_project_info">Show Project info</string>
+    <string name="send_to">Send to...</string>
+    <string name="beam">NFC Share</string>
+    <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>
+    <string name="files_zero">\nNo files in the project</string>
+    <string name="start_the_server">Connect to a WIFI and start the server to edit via web-IDE</string>
+    <string name="new_project_name_hint">Project name</string>
+
+    <!-- app drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Menu items -->
+    <string name="menu_label_new">New</string>
+    <string name="menu_label_about">About</string>
+    <string name="menu_label_help">Help</string>
+    <string name="menu_label_start_server">Start server</string>
+    <string name="menu_label_stop_server">Stop server</string>
+    <string name="menu_label_settings">Settings</string>
+
+    <!-- Help/About -->
+    <string name="about_activity_name">About</string>
+    <string name="about_how_to_title">How-to</string>
+    <string name="about_credits">Credits</string>
+    <string name="about_how_to_contents">Connect your Android device and your laptop to the same Wifi network. Your Android device acts as server that you can access simply access with your web browser. \nYou just need to type the URL shown at the bottom of the device screen in your computer\'s web browser and you will be ready to code.\n All the code that you execute is executed in your device. Now you got a pocketable IDE!  </string>
+    <string name="about_special_thanks">Special thanks to José Juan Sánchez Hernández</string>
+
+    <!-- Welcome -->
+    <string name="welcome_activity_name">Welcome</string>
+    <string name="welcome_title">Good to see you.</string>
+    <string name="welcome_body">Creative coding environment for Android devices. \nWrite and edit code using this device or any other computer using the self-hosted WebEditor</string>
+    <string name="welcome_accept">Let\'s go.</string>
+
+    <string name="editor_activity_name">Editor</string>
+
+    <!-- Settings screen -->
+    <string name="setting_about_title">About</string>
+    <string name="setting_about_description">About this project and the people behind</string>
+    <string name="setting_opensource_title">Open Source Licenses</string>
+    <string name="setting_opensource_description">License Details for open source software</string>
+
+    <string name="setting_screen_on_title">Keep screen on</string>
+    <string name="setting_screen_on_description">Force the device to be awake all the time</string>
+    <string name="setting_list_mode_title">Use List Mode</string>
+    <string name="setting_list_mode_description">Switch between grid or list mode in the main screen, list mode is nice for wearable devices</string>
+    <string name="setting_app_color_title">Change the app primary color</string>
+    <string name="setting_app_color_description">To change the color use the format #aarrggbb</string>
+    <string name="setting_background_mode_title">Background mode</string>
+    <string name="setting_background_mode_description">Servers will work in the background so you can keep working even if you are in a different app</string>
+    <string name="setting_connection_alert_title">Connection Alert</string>
+    <string name="setting_connection_alert_description">Protocoder will show when a new user is connecting</string>
+    <string name="setting_new_version_title">Notify New version</string>
+    <string name="setting_new_version_description">Protocoder will download (only Wifi) and notify when there is a new version</string>
+
+    <string name="setting_send_usage_log_title">Send Usage and Crash log</string>
+    <string name="setting_send_usage_log_description">Only anonymous information will be send to improve the app quality</string>
+    <string name="setting_launch_script_on_app_launch_title">Script Launch</string>
+    <string name="setting_launch_script_on_app_launch_description">A project will be launched when Protocoder starts</string>
+
+
+    <string name="setting_enable_servers_on_start_title">Start server on app launch</string>
+    <string name="setting_enable_servers_on_start_description">The servers will start automatically when Protocoder is launched</string>
+    <string name="setting_reinstall_title">Reinstall examples</string>
+    <string name="setting_reinstall_description">Overwrite all the examples with the default ones</string>
+    <string name="settings_activity_name">Settings</string>
+    <string name="setting_options_title">Normal</string>
+    <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
+    <string name="setting_show_html5_mode">Using the WebIDE interface is suitable for tablets and ChromeOS devices</string>
+    <string name="setting_launch_on_device_boot_title">Launch Protocoder when device boots</string>
+    <string name="setting_launch_on_device_boot_description">Protocoder will be launched right after the device is turned on</string>
+    <string name="setting_show_webserver_title">Webserver port</string>
+    <string name="setting_show_webserver"></string>
+    <string name="setting_show_websocket_title">Websocket port</string>
+    <string name="setting_show_websocket"></string>
+    <string name="setting_device_id_title"> Device ID </string>
+    <string name="setting_device_id_description">This ID is generated the first time you install the app. You can always change it!</string>
+
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+
+    <string name="resource">Normal</string>
+    <string name="licenses_explanation">Protocoder includes different open source libraries and without them this project would not be possible.  Below you can check each individual license. Click to expand</string>
+
+</resources>

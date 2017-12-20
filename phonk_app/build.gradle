@@ -1,0 +1,123 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+android {
+    flavorDimensions "protocoder_normal", "protocoder_extended"
+
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
+
+    defaultConfig {
+        applicationId "org.protocoder.extended.sandbox"
+        minSdkVersion 19 // change to 16
+        targetSdkVersion 24
+
+        versionCode 25
+        versionName "0.25.0"
+        multiDexEnabled true
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+    }
+
+    signingConfigs {
+        releaseConfig {
+
+        }
+    }
+
+    buildTypes {
+        release {
+        	minifyEnabled false
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.releaseConfig;
+            zipAlignEnabled true
+        }
+
+        debug {
+            debuggable true;
+            //applicationIdSuffix ".nineteen";
+        }
+
+    }
+
+    productFlavors {
+        normal {
+            dimension 'protocoder_normal'
+            applicationId "org.protocoder.normal.sandbox"
+            versionName "0.19.0_normal"
+            resValue "string", "releaseMode", "normal"
+        }
+
+        extended {
+            dimension 'protocoder_extended'
+            applicationId "org.protocoder.extended.sandbox"
+            versionName "0.19.0_extended"
+            resValue "string", "releaseMode", "all_features"
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+//        exclude 'META-INF/inputList.txt'
+    }
+
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "2g"
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
+
+    mavenCentral()
+    //mavenLocal()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://maven.google.com" }
+}
+
+configurations {
+    //all*.exclude group: 'com.android.support', module: 'support-v4'
+   // all*.exclude group: 'com.google.android.gms', module: 'play-services'
+}
+
+dependencies {
+    normalCompile project(path: ':phonk_apprunner')
+    extendedCompile project(path: ':phonk_apprunner')
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:preference-v7:25.4.0'
+
+    // compile (name:'processing_fragmented', ext:'aar')
+
+    compile 'jp.kshoji:midi-driver:0.1.4:@aar'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
+        transitive = true;
+    }
+}

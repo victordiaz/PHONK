@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Part of Phonk http://www.phonk.io
+  ~ A prototyping platform for Android devices
+  ~
+  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+  ~
+  ~ Phonk is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Phonk is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/protocoder_backgroundColor_secondary" >
+
+    <include layout="@layout/projectlist_location_view"
+        android:id="@+id/folderLocation2"/>
+
+    <io.phonk.runner.base.views.FitRecyclerView
+        android:id="@+id/gridprojects"
+        android:layout_below="@id/folderLocation2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="0dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:clipToPadding="false"
+        android:layoutAnimation="@anim/fav_grid_anim"
+        android:animateLayoutChanges="false"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:columnWidth = "0dp"
+        android:horizontalSpacing="5dp"
+        android:listSelector="@android:color/transparent"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp" />
+
+    <LinearLayout
+        android:id="@+id/empty_grid_view"
+        android:layout_below="@id/folderLocation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:src="@drawable/protocoder_none" />-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_projects"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#55000000"
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/protocoder_backgroundColor_primary"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:columnCount="1">
+
+                <Button
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Edit in WebIDE" />
+
+                <Button
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add shortcut to Homescreen" />
+
+
+                <Button
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Share main.js" />
+
+                <Button
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Share project as Zip (.proto)" />
+
+                <Button
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Show Project Info" />
+
+                <Button
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rename project" />
+
+                <Button
+                    android:id="@+id/button9"
+                    style="@style/textMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delete project" />
+
+            </GridLayout>
+        </ScrollView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_toEndOf="@+id/empty_grid_view"
+            android:layout_toRightOf="@+id/empty_grid_view"
+            android:weightSum="3"
+            android:visibility="gone">
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/protocoder_accentColor_secondary"
+                android:src="@drawable/ic_play_arrow_black_24dp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#55FFFFFF"></View>
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:text="EDIT"
+                android:textColor="@color/protocoder_textColor_primary" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#55FFFFFF"
+                android:visibility="gone"></View>
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:text="MORE"
+                android:textColor="@color/protocoder_textColor_primary" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
