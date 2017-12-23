@@ -28,7 +28,7 @@
     app:cardUseCompatPadding="true"
     app:cardElevation="4dp"
     app:cardCornerRadius="3dp"
-    app:cardBackgroundColor="@color/protocoder_accentColor_primary">
+    app:cardBackgroundColor="@color/phonk_accentColor_primary">
 
     <!-- console window -->
     <android.support.v7.widget.RecyclerView

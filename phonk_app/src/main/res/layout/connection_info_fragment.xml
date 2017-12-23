@@ -91,7 +91,7 @@
                 android:gravity="left"
                 android:maxWidth="200dp"
                 android:text="@string/connection_message_not_connected"
-                android:textColor="@color/protocoder_textColor_primary"
+                android:textColor="@color/phonk_textColor_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -101,7 +101,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="left"
                 android:text="http://1.2.3.4.5:8585"
-                android:textColor="@color/black"
+                android:textColor="@color/phonk_textColor_primary"
                 android:textSize="12sp"
                 android:textStyle="italic|bold"
                 android:visibility="gone" />
@@ -115,7 +115,7 @@
                 style="@style/Widget.AppCompat.Button"
                 android:minHeight="12dp"
                 android:textAllCaps="true"
-                android:textColor="@color/protocoder_textColor_secondary"
+                android:textColor="@color/phonk_textColor_secondary"
                 android:textOff="Start Web Editor"
                 android:textOn="Stop Web Editor"
                 android:textSize="10sp"
@@ -158,7 +158,7 @@
                 android:minHeight="12dp"
                 android:text="Connect to WIFI"
                 android:textAllCaps="true"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="10sp"
                 android:textStyle="normal|bold" />
 
@@ -172,7 +172,7 @@
                 android:minHeight="12dp"
                 android:text="Start HOTSPOT"
                 android:textAllCaps="true"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="10sp"
                 android:textStyle="normal|bold" />
         </LinearLayout>

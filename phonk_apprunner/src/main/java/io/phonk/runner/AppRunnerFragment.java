@@ -40,7 +40,6 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.protocoderrunner.R;
 
 import io.phonk.runner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apprunner.AppRunner;

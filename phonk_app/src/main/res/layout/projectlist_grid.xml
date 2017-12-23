@@ -24,7 +24,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/protocoder_backgroundColor_secondary" >
+    android:background="@color/phonk_backgroundColor_secondary" >
 
     <include layout="@layout/projectlist_location_view"
         android:id="@+id/folderLocation"/>

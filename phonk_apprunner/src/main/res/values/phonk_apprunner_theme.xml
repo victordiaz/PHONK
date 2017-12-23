@@ -35,7 +35,7 @@
         <item name="windowActionModeOverlay">true</item>
 
         <item name="colorPrimary">@color/blue</item>
-        <item name="colorAccent">@color/protocoder_accentColor_primary</item>
+        <item name="colorAccent">@color/phonk_accentColor_primary</item>
         <item name="colorPrimaryDark">#333333</item>
 
         <!--<item name="windowActionBar">false</item>-->

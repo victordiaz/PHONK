@@ -25,7 +25,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="org.phonk.pruebas.MainActivity$PlaceholderFragment">
+    tools:context="io.phonk.pruebas.MainActivity$PlaceholderFragment">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card"
@@ -36,7 +36,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="2dp"
-        app:cardBackgroundColor="@color/protocoder_accentColor_primary"
+        app:cardBackgroundColor="@color/phonk_accentColor_primary"
         app:cardElevation="5dp"
         app:contentPaddingLeft="55dp">
 

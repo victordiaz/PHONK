@@ -21,13 +21,13 @@
  */
 package io.phonk.gui.editor;
 
-import io.phonk.runner.base.utils.ProtocoderFonts;
+import io.phonk.runner.base.utils.PhonkFonts;
 
 /**
  * Created by victornomad on 11/04/16.
  */
 public class EditorSettings {
     public float fontSize;
-    public String font = ProtocoderFonts.CODE;
+    public String font = PhonkFonts.CODE;
     public boolean extraKeysBarEnabled = true;
 }

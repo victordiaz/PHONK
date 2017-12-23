@@ -30,7 +30,7 @@
         <item name="android:statusBarColor">#22000000</item>
         <item name="android:navigationBarColor">@color/black</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:colorPrimary">@color/protocoder_accentColor_primary</item>
+        <item name="android:colorPrimary">@color/phonk_accentColor_primary</item>
 
     </style>-->
 

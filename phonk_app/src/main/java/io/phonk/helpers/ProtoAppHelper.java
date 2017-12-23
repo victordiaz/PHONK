@@ -180,7 +180,7 @@ public class ProtoAppHelper {
 
 
     public static void openInWebEditor(final Context c, Project p) {
-        Intent i = new Intent("org.protocoder.intent.WEBEDITOR_SEND");
+        Intent i = new Intent("io.phonk.intent.WEBEDITOR_SEND");
         MLog.d("qq22", "openInWebEditor " + c);
 
         String[] splitted = p.getFolder().split("/"); // separating type and folder

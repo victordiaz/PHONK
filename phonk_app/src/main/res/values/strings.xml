@@ -54,7 +54,7 @@
 
     <string name="add_shortcut">Add shortcut to desktop</string>
     <string name="share">Share main.js code</string>
-    <string name="share_proto_file">Share project as .proto file</string>
+    <string name="share_phonk_file">Share project as .phonk file</string>
     <string name="show_project_info">Show Project info</string>
     <string name="send_to">Send to...</string>
     <string name="beam">NFC Share</string>
@@ -105,26 +105,26 @@
     <string name="setting_background_mode_title">Background mode</string>
     <string name="setting_background_mode_description">Servers will work in the background so you can keep working even if you are in a different app</string>
     <string name="setting_connection_alert_title">Connection Alert</string>
-    <string name="setting_connection_alert_description">Protocoder will show when a new user is connecting</string>
+    <string name="setting_connection_alert_description">Phonk will show when a new user is connecting</string>
     <string name="setting_new_version_title">Notify New version</string>
-    <string name="setting_new_version_description">Protocoder will download (only Wifi) and notify when there is a new version</string>
+    <string name="setting_new_version_description">Phonk will download (only Wifi) and notify when there is a new version</string>
 
     <string name="setting_send_usage_log_title">Send Usage and Crash log</string>
     <string name="setting_send_usage_log_description">Only anonymous information will be send to improve the app quality</string>
     <string name="setting_launch_script_on_app_launch_title">Script Launch</string>
-    <string name="setting_launch_script_on_app_launch_description">A project will be launched when Protocoder starts</string>
+    <string name="setting_launch_script_on_app_launch_description">A project will be launched when Phonk starts</string>
 
 
     <string name="setting_enable_servers_on_start_title">Start server on app launch</string>
-    <string name="setting_enable_servers_on_start_description">The servers will start automatically when Protocoder is launched</string>
+    <string name="setting_enable_servers_on_start_description">The servers will start automatically when Phonk is launched</string>
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Overwrite all the examples with the default ones</string>
     <string name="settings_activity_name">Settings</string>
     <string name="setting_options_title">Normal</string>
     <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
     <string name="setting_show_html5_mode">Using the WebIDE interface is suitable for tablets and ChromeOS devices</string>
-    <string name="setting_launch_on_device_boot_title">Launch Protocoder when device boots</string>
-    <string name="setting_launch_on_device_boot_description">Protocoder will be launched right after the device is turned on</string>
+    <string name="setting_launch_on_device_boot_title">Launch Phonk when device boots</string>
+    <string name="setting_launch_on_device_boot_description">Phonk will be launched right after the device is turned on</string>
     <string name="setting_show_webserver_title">Webserver port</string>
     <string name="setting_show_webserver"></string>
     <string name="setting_show_websocket_title">Websocket port</string>
@@ -136,6 +136,6 @@
     <string name="title_item_detail">Item Detail</string>
 
     <string name="resource">Normal</string>
-    <string name="licenses_explanation">Protocoder includes different open source libraries and without them this project would not be possible.  Below you can check each individual license. Click to expand</string>
+    <string name="licenses_explanation">Phonk includes different open source libraries and without them this project would not be possible.  Below you can check each individual license. Click to expand</string>
 
 </resources>

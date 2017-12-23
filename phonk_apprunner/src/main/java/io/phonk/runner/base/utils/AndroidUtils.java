@@ -44,7 +44,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import org.protocoderrunner.R;
+import io.phonk.runner.R;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 
 import java.io.UnsupportedEncodingException;

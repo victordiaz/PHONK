@@ -62,7 +62,7 @@
             android:textAllCaps="true"
             android:textStyle="normal|bold"
             android:textSize="20sp"
-            android:textColor="@color/protocoder_accentColor_primary"
+            android:textColor="@color/phonk_accentColor_primary"
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

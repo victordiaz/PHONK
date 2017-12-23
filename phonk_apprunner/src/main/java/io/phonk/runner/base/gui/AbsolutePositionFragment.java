@@ -32,7 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-import org.protocoderrunner.R;
+import io.phonk.runner.R;
 import io.phonk.runner.base.BaseFragment;
 
 public class AbsolutePositionFragment extends BaseFragment {

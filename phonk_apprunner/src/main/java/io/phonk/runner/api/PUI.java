@@ -48,7 +48,7 @@ import com.google.gson.GsonBuilder;
 
 import org.mozilla.javascript.NativeArray;
 import io.phonk.runner.AppRunnerFragment;
-import org.protocoderrunner.R;
+import io.phonk.runner.R;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.api.common.ReturnObject;
@@ -219,7 +219,7 @@ public class PUI extends ProtoBase {
         theme = new StyleProperties();
 
 
-        theme.put("accentColor", getContext().getResources().getString(R.color.protocoder_accentColor_primary));
+        theme.put("accentColor", getContext().getResources().getString(R.color.phonk_accentColor_primary));
         theme.put("primaryColor", "#efefef");
         theme.put("secondaryColor", "#2c2c2c");
     }

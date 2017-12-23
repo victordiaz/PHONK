@@ -28,7 +28,7 @@
     <item android:left="0dp" android:right="0dp">
         <shape android:shape="oval">
             <corners android:radius="2dp" />
-            <solid android:color="@color/protocoder_accentColor_primary"/>
+            <solid android:color="@color/phonk_accentColor_primary"/>
             <size android:width="45dp"></size>
             <size android:height="45dp"></size>
         </shape>

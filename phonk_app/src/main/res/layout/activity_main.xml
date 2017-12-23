@@ -29,12 +29,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:gravity="center"
-    android:background="@color/protocoder_backgroundColor_primary"
-    tools:context="org.phonk.io.phonk.MainActivity">
+    android:background="@color/phonk_backgroundColor_primary"
+    tools:context="io.phonk.MainActivity">
 
     <RelativeLayout
         android:id="@+id/header"
-        android:background="@color/protocoder_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor_primary"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
@@ -61,9 +61,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:shadowColor="@color/blacktransparent20"
+                android:shadowDx="1"
+                android:shadowDy="1"
                 android:text="phonk!"
-                android:textColor="@color/protocoder_textColor_primary"
-                android:textStyle="bold" />
+                android:textColor="@color/phonk_textColor_primary"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
 
             <View
                 android:layout_width="match_parent"
@@ -147,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="Protocoder"
+                android:text="Phonk"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="30sp"
@@ -160,7 +166,7 @@
                 android:layout_marginTop="0dp"
                 android:paddingLeft="0dp"
                 android:text="We shape our tools and thereafter our tools shape us \n- Marshall McLuhan"
-                android:textColor="@color/protocoder_textColor_primary"
+                android:textColor="@color/phonk_textColor_primary"
                 android:textSize="12sp"
                 android:visibility="gone"/>
 

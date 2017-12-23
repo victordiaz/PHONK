@@ -39,7 +39,7 @@
         android:layout_alignParentTop="true"
         android:alpha="1"
         android:animateLayoutChanges="true"
-        android:background="@color/protocoder_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor_primary"
         android:paddingBottom="0dp">
 
         <ImageView
@@ -161,7 +161,7 @@
                 android:layout_marginTop="0dp"
                 android:paddingLeft="0dp"
                 android:text="We shape our tools and thereafter our tools shape us \n- Marshall McLuhan"
-                android:textColor="@color/protocoder_textColor_primary"
+                android:textColor="@color/phonk_textColor_primary"
                 android:textSize="12sp"
                 android:visibility="gone" />
 

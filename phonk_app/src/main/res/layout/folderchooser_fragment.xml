@@ -31,7 +31,7 @@
     android:layout_alignParentTop="true"
     android:layout_gravity="left|top"
     android:animateLayoutChanges="true"
-    android:background="@color/protocoder_backgroundColor_secondary"
+    android:background="@color/phonk_backgroundColor_secondary"
     android:gravity="center">
 
     <!-- back & folder info -->

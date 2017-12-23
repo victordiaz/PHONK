@@ -29,23 +29,23 @@
         <item name="android:windowBackground">@drawable/phonk_background</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:alertDialogTheme">@style/PhonkAppTheme.Dialog</item>
-        <item name="colorAccent">@color/protocoder_accentColor_primary</item>
-        <item name="android:textColorSecondary">@color/protocoder_textColor_gray</item>
+        <item name="colorAccent">@color/phonk_accentColor_primary</item>
+        <item name="android:textColorSecondary">@color/phonk_textColor_gray</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:actionMenuTextColor">@color/protocoder_textColor_primary</item>
+        <item name="android:actionMenuTextColor">@color/phonk_textColor_primary</item>
     </style>
 
     <style name="PhonkAppTheme" parent="PhonkAppTheme.Base">
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/protocoder_backgroundColor_primary</item>
+        <item name="colorPrimary">@color/phonk_backgroundColor_primary</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/protocoder_backgroundColor_primary</item>
+        <item name="colorPrimaryDark">@color/phonk_backgroundColor_primary</item>
         <!-- colorAccent is used as the default value for colorControlActivated
              which is used to tint widgets -->
 
-        <item name="colorAccent">@color/protocoder_accentColor_primary</item>
-        <item name="android:textColorSecondary">@color/protocoder_textColor_primary</item>
+        <item name="colorAccent">@color/phonk_accentColor_primary</item>
+        <item name="android:textColorSecondary">@color/phonk_textColor_primary</item>
     </style>
 
     <style name="ProtocoderAppTheme.Toolbar" parent="Theme.AppCompat.Light">
@@ -54,10 +54,10 @@
     </style>
 
     <style name="PhonkAppTheme.ActionBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name = "android:textColorPrimary">@color/protocoder_textColor_primary</item>
-        <item name = "android:textColorSecondary">@color/protocoder_textColor_primary</item>
+        <item name = "android:textColorPrimary">@color/phonk_textColor_primary</item>
+        <item name = "android:textColorSecondary">@color/phonk_textColor_primary</item>
         <item name = "colorPrimary">@color/primaryAccent</item>
-        <item name = "colorAccent">@color/protocoder_textColor_primary</item>
+        <item name = "colorAccent">@color/phonk_textColor_primary</item>
         <item name = "android:selectableItemBackground">@drawable/actionbar_highlight</item>
         <item name = "android:actionOverflowButtonStyle">@style/OverFlow</item>
         <item name = "android:displayOptions">showHome|homeAsUp|showTitle</item>
@@ -72,8 +72,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:windowMinWidthMajor">85%</item>
         <item name="android:windowMinWidthMinor">85%</item>
-        <item name="android:textColor">@color/protocoder_textColor_secondary</item>
-        <item name="colorAccent">@color/protocoder_textColor_secondary</item>
+        <item name="android:textColor">@color/phonk_textColor_secondary</item>
+        <item name="colorAccent">@color/phonk_textColor_secondary</item>
 
         <!-- <item name="android:windowBackground">@android:color/transparent</item> -->
     </style>

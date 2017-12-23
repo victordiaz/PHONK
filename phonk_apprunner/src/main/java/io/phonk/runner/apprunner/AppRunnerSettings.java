@@ -33,7 +33,7 @@ public class AppRunnerSettings {
 
     public static String MAIN_FILENAME                      = "main.js";
     public static final String CONF_FILENAME                = "app.conf";
-    public final static String PROTOCODER_FOLDER = "protocodersandbox";
+    public final static String PHONK_FOLDER = "phonk_io";
     public static final String USER_PROJECTS_FOLDER = "user_projects";
     public static final String EXAMPLES_FOLDER = "examples";
 
@@ -46,7 +46,7 @@ public class AppRunnerSettings {
 
     public static String getBaseDir() {
         return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + PROTOCODER_FOLDER + File.separator;
+                + File.separator + PHONK_FOLDER + File.separator;
     }
 
     public static String getFolderPath(String folder) {

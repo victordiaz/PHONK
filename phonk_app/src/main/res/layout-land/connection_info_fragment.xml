@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="@string/connection_message_not_connected"
-                android:textColor="@color/protocoder_textColor_primary"
+                android:textColor="@color/phonk_textColor_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -113,7 +113,7 @@
                 android:backgroundTint="@color/white"
                 android:minHeight="12dp"
                 android:textAllCaps="true"
-                android:textColor="@color/protocoder_textColor_secondary"
+                android:textColor="@color/phonk_textColor_secondary"
                 android:textOff="Start Web Editor"
                 android:textOn="Stop Web Editor"
                 android:textSize="10sp"
@@ -155,7 +155,7 @@
                 android:minHeight="12dp"
                 android:text="Connect to WIFI"
                 android:textAllCaps="true"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="10sp"
                 android:textStyle="normal|bold" />
 
@@ -169,7 +169,7 @@
                 android:minHeight="12dp"
                 android:text="Start HOTSPOT"
                 android:textAllCaps="true"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="10sp"
                 android:textStyle="normal|bold" />
         </LinearLayout>

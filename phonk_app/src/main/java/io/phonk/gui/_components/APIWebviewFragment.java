@@ -44,7 +44,7 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint({"NewApi", "ValidFragment"})
 public class APIWebviewFragment extends BaseFragment {
 
-    protected WebView webView;
+    public WebView webView;
     final Handler myHandler = new Handler();
     protected View v;
     private String mUrl = null;
@@ -183,6 +183,7 @@ public class APIWebviewFragment extends BaseFragment {
 
         @JavascriptInterface
         public void setWebIde(boolean b) {
+            MLog.d("qq", "" + b);
             NewUserPreferences.getInstance().set("webide_mode", b).save();
         }
     }

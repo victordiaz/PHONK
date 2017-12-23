@@ -298,11 +298,11 @@ public class FileManagerFragment extends BaseFragment {
         String fileExt = ProtoScriptHelper.fileExt(fileName).substring(1);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
         String path = (mCurrentFileList.get(index).path) + fileName;
-        File file = new File(Environment.getExternalStorageDirectory(), "protocodersandbox/examples/User%20Interface/UI/patata2.png");
+        File file = new File(Environment.getExternalStorageDirectory(), "phonk_io/examples/User%20Interface/UI/patata2.png");
 
         MLog.d(TAG, "File path " + file.getAbsoluteFile() + " fileExtension " + fileExt + " mimeType " + mimeType);
 
-        Uri uri = FileProvider.getUriForFile(getContext(), "org.protocoder.fileprovider", file);
+        Uri uri = FileProvider.getUriForFile(getContext(), "io.phonk.fileprovider", file);
         //Uri uri = Uri.parse("content://org.protocoder.fileprovider/file" + path);
 
         MLog.d(TAG, "uri: " + uri);

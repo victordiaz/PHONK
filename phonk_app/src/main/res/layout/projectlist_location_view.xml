@@ -50,7 +50,7 @@
         android:text="folder"
         android:textStyle="bold"
         android:visibility="visible"
-        android:textColor="@color/protocoder_accentColor_primary" />
+        android:textColor="@color/phonk_accentColor_primary" />
 
     <TextView
         android:id="@+id/separator"
@@ -60,7 +60,7 @@
         android:text="/"
         android:textStyle="bold"
         android:visibility="visible"
-        android:textColor="@color/protocoder_accentColor_primary" />
+        android:textColor="@color/phonk_accentColor_primary" />
 
     <TextView
         android:id="@+id/folder"
@@ -69,7 +69,7 @@
         android:text="subfolder"
         android:textStyle="bold"
         android:visibility="visible"
-        android:textColor="@color/protocoder_accentColor_primary" />
+        android:textColor="@color/phonk_accentColor_primary" />
 </LinearLayout>
 
     

@@ -92,9 +92,14 @@ public class MainActivity extends BaseActivity {
     private FolderListFragment mFolderListFragment;
     private ProjectListFragment mProjectListFragment;
     private ConnectionInfoFragment mConnectionInfoFragment;
-    private boolean mIsTablet = true;
     private CombinedFolderAndProjectFragment mCombinedFolderAndProjectFragment;
+    private APIWebviewFragment mWebViewFragment;
+
+    private boolean mIsTablet = true;
+
     private boolean mUiInit = false;
+    private boolean isWebIdeMode = false;
+    private boolean isServersEnabledOnStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,14 +108,19 @@ public class MainActivity extends BaseActivity {
         // ProtoAppHelper.launchSchedulerList(this);
         EventBus.getDefault().register(this);
 
-
         NewUserPreferences.getInstance().load();
+        isWebIdeMode = (boolean) NewUserPreferences.getInstance().get("webide_mode");
+        isServersEnabledOnStart = (boolean) NewUserPreferences.getInstance().get("servers_enabled_on_start");
 
         mAppRunner = new AppRunnerCustom(this);
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
         ProtocoderApp protocoderApp = new ProtocoderApp(mAppRunner);
         // protocoderApp.network.checkVersion();
         mAppRunner.interp.eval("device.vibrate(100);");
+
+        // startServers if conf specifies. In webidemode always have to start it
+        MLog.d(TAG, "isWebIdeMode " + isWebIdeMode);
+        if (isWebIdeMode) startServers();
 
         loadUI();
 
@@ -211,13 +221,6 @@ public class MainActivity extends BaseActivity {
             public void onClick(View view) {
                 if (mConnectionInfo.getVisibility() == View.GONE) mConnectionInfo.setVisibility(View.VISIBLE);
                 else mConnectionInfo.setVisibility(View.GONE);
-
-                /*
-                ViewGroup.LayoutParams lp = mConnectionInfo.getLayoutParams();
-                lp.height = 0;
-                mConnectionInfo.setLayoutParams(lp);
-                */
-
             }
         });
 
@@ -244,10 +247,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-
                 mCurrentPagerPosition = position;
-
-
             }
 
             @Override
@@ -290,22 +290,33 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        if (isWebIdeMode) addWebIde();
+    }
 
-        if ((boolean) NewUserPreferences.getInstance().get("webide_mode")) {
-            FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentEditor);
-            fl.setVisibility(View.VISIBLE);
-            MLog.d(TAG, "using webide");
-            APIWebviewFragment webViewFragment = new APIWebviewFragment();
-            Bundle bundle = new Bundle();
-            // String url = "http://192.168.178.28:8080";
-            String url = "http://127.0.0.1:8585";
-            bundle.putString("url", url);
-            bundle.putBoolean("isTablet", mIsTablet);
-            webViewFragment.setArguments(bundle);
-            addFragment(webViewFragment, R.id.fragmentEditor, "qq");
+    public void addWebIde() {
+        FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentEditor);
+        fl.setVisibility(View.VISIBLE);
+        MLog.d(TAG, "using webide");
+        mWebViewFragment = new APIWebviewFragment();
 
-        }
+        /*
+        Bundle bundle = new Bundle();
+        // String url = "http://192.168.178.28:8080";
+        String url = "http://127.0.0.1:8585";
+        bundle.putString("url", url);
+        bundle.putBoolean("isTablet", mIsTablet);
+        mWebViewFragment.setArguments(bundle);
+        */
 
+        addFragment(mWebViewFragment, R.id.fragmentEditor, "qq");
+    }
+
+    public void loadWebIde() {
+        MLog.d(TAG, "loadWebIde");
+        String url = "http://127.0.0.1:8585";
+        // url = "http://192.168.1.132:8080";
+
+        mWebViewFragment.webView.loadUrl(url);
     }
 
     public void createProjectDialog() {
@@ -391,7 +402,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
         if (e.getAction() == Events.CLOSE_APP) { }
@@ -418,6 +428,10 @@ public class MainActivity extends BaseActivity {
                 break;
             case "startServers":
                 startServers();
+                break;
+            case "serversStarted":
+                // show webview
+                loadWebIde();
                 break;
 
         }

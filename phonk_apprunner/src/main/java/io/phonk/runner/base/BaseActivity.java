@@ -41,7 +41,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import org.protocoderrunner.R;
+import io.phonk.runner.R;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.media.Audio;
 import io.phonk.runner.base.utils.AndroidUtils;

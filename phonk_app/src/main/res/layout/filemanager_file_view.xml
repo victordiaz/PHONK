@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/img_file"
-            android:textColor="@color/protocoder_textColor_secondary"
+            android:textColor="@color/phonk_textColor_secondary"
             android:text="name"
             android:typeface="sans" />
     </RelativeLayout>

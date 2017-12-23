@@ -22,6 +22,6 @@
   -->
 
 <resources>
-    <color name="license_header">@color/protocoder_backgroundColor_primary</color>
-    <color name="license_text">@color/protocoder_textColor_primary</color>
+    <color name="license_header">@color/phonk_backgroundColor_primary</color>
+    <color name="license_text">@color/phonk_textColor_primary</color>
 </resources>

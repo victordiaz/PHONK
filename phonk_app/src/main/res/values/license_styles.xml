@@ -41,7 +41,7 @@
     <style name="LicenseCardBody">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/protocoder_textColor_secondary</item>
+        <item name="android:textColor">@color/phonk_textColor_secondary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:padding">@dimen/license_card_title_padding</item>
     </style>

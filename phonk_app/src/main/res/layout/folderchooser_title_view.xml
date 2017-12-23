@@ -35,6 +35,6 @@
         android:layout_height="wrap_content"
         android:text="Large Text"
         android:textStyle="bold"
-        android:textColor="@color/protocoder_accentColor_primary"
+        android:textColor="@color/phonk_accentColor_primary"
         android:id="@+id/textType"/>
 </LinearLayout>

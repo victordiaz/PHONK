@@ -53,7 +53,6 @@ import android.widget.FrameLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.protocoderrunner.R;
 
 import io.phonk.runner.api.PDevice;
 import io.phonk.runner.api.PMedia;

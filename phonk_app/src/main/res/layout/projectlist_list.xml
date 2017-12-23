@@ -24,7 +24,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/protocoder_backgroundColor_secondary" >
+    android:background="@color/phonk_backgroundColor_secondary" >
 
     <include layout="@layout/projectlist_location_view"
         android:id="@+id/folderLocation2"/>
@@ -82,7 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/protocoder_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor_primary"
         android:orientation="vertical">
 
         <ScrollView
@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/protocoder_accentColor_secondary"
+                android:background="@color/phonk_accentColor_secondary"
                 android:src="@drawable/ic_play_arrow_black_24dp" />
 
             <View
@@ -172,7 +172,7 @@
                 android:layout_weight="1"
                 android:background="@color/transparent"
                 android:text="EDIT"
-                android:textColor="@color/protocoder_textColor_primary" />
+                android:textColor="@color/phonk_textColor_primary" />
 
             <View
                 android:layout_width="1dp"
@@ -188,7 +188,7 @@
                 android:layout_weight="1"
                 android:background="@color/transparent"
                 android:text="MORE"
-                android:textColor="@color/protocoder_textColor_primary" />
+                android:textColor="@color/phonk_textColor_primary" />
 
         </LinearLayout>
     </LinearLayout>

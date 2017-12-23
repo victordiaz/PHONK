@@ -133,7 +133,7 @@ public class PhonkWebsocketServer extends WebSocketServer {
     }
 
     private void sendDashboardReceiver(JSONObject msg) {
-        Intent i = new Intent("org.protocoder.intent.WEBEDITOR_RECEIVER");
+        Intent i = new Intent("io.phonk.intent.WEBEDITOR_RECEIVER");
 
         i.putExtra("data", msg.toString());
         mContext.sendBroadcast(i);

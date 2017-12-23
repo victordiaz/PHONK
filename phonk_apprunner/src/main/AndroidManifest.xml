@@ -21,7 +21,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.protocoderrunner">
+    package="io.phonk.runner">
 
     <uses-sdk
         android:minSdkVersion="
@@ -91,7 +91,7 @@
             android:launchMode="standard" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <action android:name="org.protocoderrunner.apprunner.AppRunnerActivity" />
+                <action android:name="io.phonk.runner.apprunner.AppRunnerActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--how tool
@@ -111,12 +111,12 @@
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="org.protocoderrunner.intent.CLOSE"></action>
+                <action android:name="io.phonk.runner.intent.CLOSE"></action>
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="org.protocoderrunner.intent.EXECUTE_CODE"></action>
+                <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
             </intent-filter>
 
 
@@ -130,16 +130,16 @@
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="org.protocoderrunner.intent.CLOSE"></action>
+                <action android:name="io.phonk.runner.intent.CLOSE"></action>
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="org.protocoderrunner.intent.EXECUTE_CODE"></action>
+                <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
             </intent-filter>
 
             <intent-filter>
-                <action android:name="org.protocoderrunner.intent.WEBEDITOR_RECEIVER"></action>
+                <action android:name="io.phonk.runner.intent.WEBEDITOR_RECEIVER"></action>
             </intent-filter>
 
         </service>

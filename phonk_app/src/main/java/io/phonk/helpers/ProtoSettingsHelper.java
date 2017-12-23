@@ -31,7 +31,7 @@ import java.io.File;
 
 public class ProtoSettingsHelper {
 
-    private static String PROTOCODER_EXTENSION = ".proto";
+    private static String PHONK_EXTENSION = ".phonk";
 
     public interface InstallListener {
         void onReady();

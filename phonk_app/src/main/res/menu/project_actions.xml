@@ -42,7 +42,7 @@
           android:title="@string/share" />
     <item android:id="@+id/menu_project_list_share_proto_file"
           android:icon="@drawable/phonk_icon"
-          android:title="@string/share_proto_file" />
+          android:title="@string/share_phonk_file" />
     <item android:id="@+id/menu_project_list_show_info"
           android:icon="@drawable/phonk_icon"
           android:title="@string/show_project_info" />

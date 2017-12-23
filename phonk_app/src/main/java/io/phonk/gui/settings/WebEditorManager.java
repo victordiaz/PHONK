@@ -88,7 +88,7 @@ public class WebEditorManager {
 
 
     public String getCustomJSInterpreterIfExist(Context c) {
-        File file = new File(getUrlEditor(c) + "protocoder_js" + File.separator + "custom.js");
+        File file = new File(getUrlEditor(c) + "phonk_js" + File.separator + "custom.js");
 
         MLog.d("TAG", "trying to load custom js interpreter from " + file.getAbsolutePath());
         String code = "";

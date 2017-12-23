@@ -42,6 +42,8 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.phonk.R;
+
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;
 import io.phonk.events.EventsProxy;
@@ -71,7 +73,7 @@ public class PhonkServerService extends Service {
     /*
      * Servers
      */
-    private PhonkHttpServer protocoderHttpServer;
+    private PhonkHttpServer phonkHttpServer;
     private PhonkFtpServer phonkFtpServer;
     private PhonkWebsocketServer phonkWebsockets;
 
@@ -150,10 +152,10 @@ public class PhonkServerService extends Service {
         PendingIntent pendingIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(org.protocoderrunner.R.drawable.phonk_icon)
-                .setContentTitle("Protocoder").setContentText("Web Editor access is enabled")
+                .setSmallIcon(R.drawable.phonk_icon)
+                .setContentTitle("Phonk").setContentText("Web Editor access is enabled")
                 .setOngoing(false)
-                .addAction(org.protocoderrunner.R.drawable.ic_action_stop, "stop", pendingIntent)
+                .addAction(R.drawable.ic_action_stop, "stop", pendingIntent)
                 //.setDeleteIntent(pendingIntent)
                 .setContentInfo("1 Connection");
 
@@ -161,7 +163,7 @@ public class PhonkServerService extends Service {
 
         startForeground(NOTIFICATION_ID, notification);
 
-        protocoderHttpServer = new PhonkHttpServer(this, PhonkSettings.HTTP_PORT);
+        phonkHttpServer = new PhonkHttpServer(this, PhonkSettings.HTTP_PORT);
 
         try {
             phonkWebsockets = new PhonkWebsocketServer(this, PhonkSettings.WEBSOCKET_PORT);
@@ -254,6 +256,10 @@ public class PhonkServerService extends Service {
 
         startStopActivityBroadcastReceiver();
 
+
+        EventBus.getDefault().postSticky(new Events.AppUiEvent("serversStarted", ""));
+
+
         viewsUpdate();
     }
 
@@ -262,7 +268,7 @@ public class PhonkServerService extends Service {
         super.onDestroy();
         MLog.d(TAG, "service destroyed");
         mEventsProxy.stop();
-        protocoderHttpServer.stop();
+        phonkHttpServer.stop();
         phonkWebsockets.stop();
 
         // unregisterReceiver(mNotificationReceiver);
@@ -461,7 +467,7 @@ public class PhonkServerService extends Service {
         public void onReceive(Context context, Intent intent) {
             String views = intent.getStringExtra("views");
             MLog.d(TAG, "views" + views);
-            protocoderHttpServer.setViews(views);
+            phonkHttpServer.setViews(views);
         }
     };
 

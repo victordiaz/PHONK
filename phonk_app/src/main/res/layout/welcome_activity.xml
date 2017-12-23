@@ -85,7 +85,7 @@
             android:background="@drawable/solid_dark_grey_button"
             android:text="@string/welcome_accept"
             android:textColor="#ffffff"
-            android:backgroundTint="@color/protocoder_accentColor_primary"
+            android:backgroundTint="@color/phonk_accentColor_primary"
             />
 
     </LinearLayout>

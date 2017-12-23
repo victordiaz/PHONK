@@ -28,7 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.protocoderrunner.R;
+import io.phonk.runner.R;
 
 public class EmptyFragment extends Fragment {
 

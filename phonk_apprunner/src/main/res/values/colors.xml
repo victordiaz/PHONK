@@ -24,16 +24,16 @@
 <resources>
 
 
-    <color name="protocoder_accentColor_primary">#FF356B</color>
-    <color name="protocoder_accentColor_secondary">#35ffd0</color>
-    <color name="protocoder_accentColor_terciary">#FFD735</color>
+    <color name="phonk_accentColor_primary">#FF356B</color>
+    <color name="phonk_accentColor_secondary">#35ffd0</color>
+    <color name="phonk_accentColor_terciary">#FFD735</color>
 
-    <color name="protocoder_backgroundColor_primary">#373234</color>
-    <color name="protocoder_backgroundColor_secondary">#FFFFFF</color> <!-- #272822 -->
+    <color name="phonk_backgroundColor_primary">#373234</color>
+    <color name="phonk_backgroundColor_secondary">#FFFFFF</color> <!-- #272822 -->
 
-    <color name="protocoder_textColor_primary">#ffffff</color>
-    <color name="protocoder_textColor_secondary">#373234</color>
-    <color name="protocoder_textColor_gray">#555</color>
+    <color name="phonk_textColor_primary">#ffffff</color>
+    <color name="phonk_textColor_secondary">#373234</color>
+    <color name="phonk_textColor_gray">#555</color>
 
     <!-- theme -->
     <color name="console_background">#A6000000</color>
@@ -59,7 +59,7 @@
     <color name="project_user_color">#FF33b5e5</color>
     <color name="project_example_color">#FFffbb33</color>
 
-    <color name="primaryAccent">@color/protocoder_accentColor_primary</color>
+    <color name="primaryAccent">@color/phonk_accentColor_primary</color>
 
     <color name="theme_bg_blue">#BB33B5E5</color>
     <color name="theme_bg_magenta">#BBCD005B</color>

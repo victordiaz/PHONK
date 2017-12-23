@@ -62,7 +62,7 @@ public class ProtoScriptHelper {
         String baseDir;
 
         baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + PhonkSettings.PROTOCODER_FOLDER + File.separator;
+                + File.separator + PhonkSettings.PHONK_FOLDER + File.separator;
 
         return baseDir;
     }
@@ -438,7 +438,7 @@ public class ProtoScriptHelper {
 
         progress.dismiss();
 
-        c.startActivity(Intent.createChooser(shareIntent, c.getResources().getText(R.string.share_proto_file)));
+        c.startActivity(Intent.createChooser(shareIntent, c.getResources().getText(R.string.share_phonk_file)));
     }
 
 

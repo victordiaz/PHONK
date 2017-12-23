@@ -47,7 +47,7 @@
         android:text="Pr"
         android:textStyle="bold"
         android:textSize="22sp"
-        android:textColor="@color/protocoder_accentColor_primary"
+        android:textColor="@color/phonk_accentColor_primary"
         android:background="@drawable/project_list_item_icon"
         android:visibility="visible"/>
 
@@ -61,7 +61,7 @@
         android:paddingLeft="12dp"
         android:text="Title"
         android:textAlignment="center"
-        android:textColor="@color/protocoder_textColor_secondary"
+        android:textColor="@color/phonk_textColor_secondary"
         android:fontFamily="sans-serif-light"
         android:textSize="20sp"
         android:layout_below="@+id/txtProjectIcon"

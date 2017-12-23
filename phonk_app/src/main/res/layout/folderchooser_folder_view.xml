@@ -37,6 +37,6 @@
         android:text="Folder"
         android:fontFamily="sans-serif-light"
         android:textSize="20sp"
-        android:textColor="@color/protocoder_textColor_secondary"
+        android:textColor="@color/phonk_textColor_secondary"
         android:id="@+id/textFolder"/>
 </LinearLayout>

@@ -69,7 +69,7 @@ public class FileManagerDialog extends DialogFragment {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         FileManagerFragment fmf = FileManagerFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putString(FileManagerFragment.ROOT_FOLDER, "/sdcard/protocodersandbox/examples");
+        bundle.putString(FileManagerFragment.ROOT_FOLDER, "/sdcard/phonk_io/examples");
         fmf.setArguments(bundle);
         fragmentTransaction.add(R.id.dialogchooserfl, fmf);
         fragmentTransaction.commit();

@@ -65,7 +65,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="@string/about_how_to_title"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -78,7 +78,7 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:text="@string/about_how_to_contents"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="18sp" />
 
             <TextView
@@ -88,7 +88,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:text="@string/about_credits"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -101,7 +101,7 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:text="@string/about_special_thanks"
-                android:textColor="@color/protocoder_accentColor_primary"
+                android:textColor="@color/phonk_accentColor_primary"
                 android:textSize="18sp" />
 
 

@@ -33,9 +33,9 @@ import io.phonk.runner.base.utils.MLog;
 /**
  * Created by biquillo on 13/09/16.
  */
-public class ProtocoderBootReceiver extends BroadcastReceiver {
+public class PhonkBootReceiver extends BroadcastReceiver {
 
-    private static final String TAG = ProtocoderBootReceiver.class.getSimpleName();
+    private static final String TAG = PhonkBootReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {

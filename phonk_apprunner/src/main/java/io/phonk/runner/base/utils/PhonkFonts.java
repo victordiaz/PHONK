@@ -22,7 +22,7 @@
 
 package io.phonk.runner.base.utils;
 
-public class ProtocoderFonts {
+public class PhonkFonts {
 
     public static final String MENU_TITLE = "agaramond_italic.otf";
     public static final String MENU_SPLASH = "agaramond_regular.otf";

@@ -37,7 +37,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/protocoder_accentColor_primary"
+        android:background="@color/phonk_accentColor_primary"
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -51,7 +51,7 @@
     <ListView
         android:id="@+id/task_list"
         android:layout_below="@id/textView"
-        android:background="@color/protocoder_backgroundColor_secondary"
+        android:background="@color/phonk_backgroundColor_secondary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
