@@ -1,31 +1,9 @@
 <!DOCTYPE html>
-<!--
-  ~ Part of Phonk http://www.phonk.io
-  ~ A prototyping platform for Android devices
-  ~
-  ~ Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
-  ~ Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
-  ~
-  ~ Phonk is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ Phonk is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
-  ~
-  -->
-
 <html>
   <head>
       <meta charset="utf-8" />
       <title>help</title>
-      <style>.markdown-preview:not([data-use-github-style]) { padding: 2em; font-size: 1.2em; color: rgb(171, 178, 191); overflow: auto; background-color: rgb(40, 44, 52); }
+      <style>.markdown-preview:not([data-use-github-style]) { padding: 2em; font-size: 1.2em; color: rgb(171, 178, 191); background-color: rgb(40, 44, 52); overflow: auto; }
 .markdown-preview:not([data-use-github-style]) > :first-child { margin-top: 0px; }
 .markdown-preview:not([data-use-github-style]) h1, .markdown-preview:not([data-use-github-style]) h2, .markdown-preview:not([data-use-github-style]) h3, .markdown-preview:not([data-use-github-style]) h4, .markdown-preview:not([data-use-github-style]) h5, .markdown-preview:not([data-use-github-style]) h6 { line-height: 1.2; margin-top: 1.5em; margin-bottom: 0.5em; color: rgb(255, 255, 255); }
 .markdown-preview:not([data-use-github-style]) h1 { font-size: 2.4em; font-weight: 300; }
@@ -47,8 +25,8 @@
 .markdown-preview:not([data-use-github-style]) th, .markdown-preview:not([data-use-github-style]) td { padding: 0.66em 1em; border: 1px solid rgb(75, 83, 98); }
 .markdown-preview:not([data-use-github-style]) code { color: rgb(255, 255, 255); background-color: rgb(58, 63, 75); }
 .markdown-preview:not([data-use-github-style]) pre.editor-colors { margin: 1.5em 0px; padding: 1em; font-size: 0.92em; border-radius: 3px; background-color: rgb(49, 54, 63); }
-.markdown-preview:not([data-use-github-style]) kbd { color: rgb(255, 255, 255); border-width: 1px 1px 2px; border-style: solid; border-color: rgb(75, 83, 98) rgb(75, 83, 98) rgb(62, 68, 81); background-color: rgb(58, 63, 75); }
-.markdown-preview[data-use-github-style] { font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif; line-height: 1.6; word-wrap: break-word; padding: 30px; font-size: 16px; color: rgb(51, 51, 51); overflow: scroll; background-color: rgb(255, 255, 255); }
+.markdown-preview:not([data-use-github-style]) kbd { color: rgb(255, 255, 255); border-width: 1px 1px 2px; border-style: solid; border-color: rgb(75, 83, 98) rgb(75, 83, 98) rgb(62, 68, 81); border-image: initial; background-color: rgb(58, 63, 75); }
+.markdown-preview[data-use-github-style] { font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif; line-height: 1.6; word-wrap: break-word; padding: 30px; font-size: 16px; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); overflow: scroll; }
 .markdown-preview[data-use-github-style] > :first-child { margin-top: 0px !important; }
 .markdown-preview[data-use-github-style] > :last-child { margin-bottom: 0px !important; }
 .markdown-preview[data-use-github-style] a:not([href]) { color: inherit; text-decoration: none; }
@@ -73,7 +51,7 @@
 .markdown-preview[data-use-github-style] h6 { font-size: 1em; color: rgb(119, 119, 119); }
 .markdown-preview[data-use-github-style] h6 .anchor { line-height: 1.1; }
 .markdown-preview[data-use-github-style] p, .markdown-preview[data-use-github-style] blockquote, .markdown-preview[data-use-github-style] ul, .markdown-preview[data-use-github-style] ol, .markdown-preview[data-use-github-style] dl, .markdown-preview[data-use-github-style] table, .markdown-preview[data-use-github-style] pre { margin-top: 0px; margin-bottom: 16px; }
-.markdown-preview[data-use-github-style] hr { height: 4px; padding: 0px; margin: 16px 0px; border: 0px none; background-color: rgb(231, 231, 231); }
+.markdown-preview[data-use-github-style] hr { height: 4px; padding: 0px; margin: 16px 0px; background-color: rgb(231, 231, 231); border: 0px none; }
 .markdown-preview[data-use-github-style] ul, .markdown-preview[data-use-github-style] ol { padding-left: 2em; }
 .markdown-preview[data-use-github-style] ul.no-list, .markdown-preview[data-use-github-style] ol.no-list { padding: 0px; list-style-type: none; }
 .markdown-preview[data-use-github-style] ul ul, .markdown-preview[data-use-github-style] ul ol, .markdown-preview[data-use-github-style] ol ol, .markdown-preview[data-use-github-style] ol ul { margin-top: 0px; margin-bottom: 0px; }
@@ -87,7 +65,7 @@
 .markdown-preview[data-use-github-style] table { display: block; width: 100%; overflow: auto; word-break: keep-all; }
 .markdown-preview[data-use-github-style] table th { font-weight: bold; }
 .markdown-preview[data-use-github-style] table th, .markdown-preview[data-use-github-style] table td { padding: 6px 13px; border: 1px solid rgb(221, 221, 221); }
-.markdown-preview[data-use-github-style] table tr { border-top: 1px solid rgb(204, 204, 204); background-color: rgb(255, 255, 255); }
+.markdown-preview[data-use-github-style] table tr { background-color: rgb(255, 255, 255); border-top: 1px solid rgb(204, 204, 204); }
 .markdown-preview[data-use-github-style] table tr:nth-child(2n) { background-color: rgb(248, 248, 248); }
 .markdown-preview[data-use-github-style] img { max-width: 100%; box-sizing: border-box; }
 .markdown-preview[data-use-github-style] .emoji { max-width: none; }
@@ -105,27 +83,30 @@
 .markdown-preview[data-use-github-style] span.float-left span { margin: 13px 0px 0px; }
 .markdown-preview[data-use-github-style] span.float-right { display: block; float: right; margin-left: 13px; overflow: hidden; }
 .markdown-preview[data-use-github-style] span.float-right > span { display: block; margin: 13px auto 0px; overflow: hidden; text-align: right; }
-.markdown-preview[data-use-github-style] code, .markdown-preview[data-use-github-style] tt { padding: 0.2em 0px; margin: 0px; font-size: 85%; border-radius: 3px; background-color: rgba(0, 0, 0, 0.0392157); }
+.markdown-preview[data-use-github-style] code, .markdown-preview[data-use-github-style] tt { padding: 0.2em 0px; margin: 0px; font-size: 85%; background-color: rgba(0, 0, 0, 0.0392157); border-radius: 3px; }
 .markdown-preview[data-use-github-style] code::before, .markdown-preview[data-use-github-style] tt::before, .markdown-preview[data-use-github-style] code::after, .markdown-preview[data-use-github-style] tt::after { letter-spacing: -0.2em; content: " "; }
 .markdown-preview[data-use-github-style] code br, .markdown-preview[data-use-github-style] tt br { display: none; }
 .markdown-preview[data-use-github-style] del code { text-decoration: inherit; }
-.markdown-preview[data-use-github-style] pre > code { padding: 0px; margin: 0px; font-size: 100%; word-break: normal; white-space: pre; border: 0px; background: transparent; }
+.markdown-preview[data-use-github-style] pre > code { padding: 0px; margin: 0px; font-size: 100%; word-break: normal; white-space: pre; background: transparent; border: 0px; }
 .markdown-preview[data-use-github-style] .highlight { margin-bottom: 16px; }
-.markdown-preview[data-use-github-style] .highlight pre, .markdown-preview[data-use-github-style] pre { padding: 16px; overflow: auto; font-size: 85%; line-height: 1.45; border-radius: 3px; background-color: rgb(247, 247, 247); }
+.markdown-preview[data-use-github-style] .highlight pre, .markdown-preview[data-use-github-style] pre { padding: 16px; overflow: auto; font-size: 85%; line-height: 1.45; background-color: rgb(247, 247, 247); border-radius: 3px; }
 .markdown-preview[data-use-github-style] .highlight pre { margin-bottom: 0px; word-break: normal; }
 .markdown-preview[data-use-github-style] pre { word-wrap: normal; }
-.markdown-preview[data-use-github-style] pre code, .markdown-preview[data-use-github-style] pre tt { display: inline; max-width: initial; padding: 0px; margin: 0px; overflow: initial; line-height: inherit; word-wrap: normal; border: 0px; background-color: transparent; }
+.markdown-preview[data-use-github-style] pre code, .markdown-preview[data-use-github-style] pre tt { display: inline; max-width: initial; padding: 0px; margin: 0px; overflow: initial; line-height: inherit; word-wrap: normal; background-color: transparent; border: 0px; }
 .markdown-preview[data-use-github-style] pre code::before, .markdown-preview[data-use-github-style] pre tt::before, .markdown-preview[data-use-github-style] pre code::after, .markdown-preview[data-use-github-style] pre tt::after { content: normal; }
-.markdown-preview[data-use-github-style] kbd { display: inline-block; padding: 3px 5px; font-size: 11px; line-height: 10px; color: rgb(85, 85, 85); vertical-align: middle; border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(187, 187, 187); border-radius: 3px; box-shadow: rgb(187, 187, 187) 0px -1px 0px inset; background-color: rgb(252, 252, 252); }
+.markdown-preview[data-use-github-style] kbd { display: inline-block; padding: 3px 5px; font-size: 11px; line-height: 10px; color: rgb(85, 85, 85); vertical-align: middle; background-color: rgb(252, 252, 252); border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(187, 187, 187); border-image: initial; border-radius: 3px; box-shadow: rgb(187, 187, 187) 0px -1px 0px inset; }
 .markdown-preview[data-use-github-style] a { color: rgb(51, 122, 183); }
 .markdown-preview[data-use-github-style] code { color: inherit; }
 .markdown-preview[data-use-github-style] pre.editor-colors { padding: 0.8em 1em; margin-bottom: 1em; font-size: 0.85em; border-radius: 4px; overflow: auto; }
-.scrollbars-visible-always .markdown-preview pre.editor-colors::shadow .vertical-scrollbar, .scrollbars-visible-always .markdown-preview pre.editor-colors::shadow .horizontal-scrollbar { visibility: hidden; }
-.scrollbars-visible-always .markdown-preview pre.editor-colors:hover::shadow .vertical-scrollbar, .scrollbars-visible-always .markdown-preview pre.editor-colors:hover::shadow .horizontal-scrollbar { visibility: visible; }
+.scrollbars-visible-always .markdown-preview pre.editor-colors .vertical-scrollbar, .scrollbars-visible-always .markdown-preview pre.editor-colors .horizontal-scrollbar { visibility: hidden; }
+.scrollbars-visible-always .markdown-preview pre.editor-colors:hover .vertical-scrollbar, .scrollbars-visible-always .markdown-preview pre.editor-colors:hover .horizontal-scrollbar { visibility: visible; }
 .markdown-preview .task-list-item-checkbox { position: absolute; margin: 0.25em 0px 0px -1.4em; }
 .bracket-matcher .region {
   border-bottom: 1px dotted lime;
   position: absolute;
+}
+.line-number.bracket-matcher {
+  background-color: #777;
 }
 
 .spell-check-misspelling .region {
@@ -135,85 +116,66 @@
   width: 25em !important;
 }
 
-pre.editor-colors,
-.host {
+pre.editor-colors {
   background-color: #282c34;
   color: #abb2bf;
 }
-pre.editor-colors .line.cursor-line,
-.host .line.cursor-line {
+pre.editor-colors .line.cursor-line {
   background-color: rgba(153, 187, 255, 0.04);
 }
-pre.editor-colors .invisible,
-.host .invisible {
+pre.editor-colors .invisible {
   color: #abb2bf;
 }
-pre.editor-colors .cursor,
-.host .cursor {
+pre.editor-colors .cursor {
   border-left: 2px solid #528bff;
 }
-pre.editor-colors .selection .region,
-.host .selection .region {
+pre.editor-colors .selection .region {
   background-color: #3e4451;
 }
-pre.editor-colors .bracket-matcher .region,
-.host .bracket-matcher .region {
+pre.editor-colors .bracket-matcher .region {
   border-bottom: 1px solid #528bff;
   box-sizing: border-box;
 }
-pre.editor-colors .invisible-character,
-.host .invisible-character {
+pre.editor-colors .invisible-character {
   color: rgba(171, 178, 191, 0.15);
 }
-pre.editor-colors .indent-guide,
-.host .indent-guide {
+pre.editor-colors .indent-guide {
   color: rgba(171, 178, 191, 0.15);
 }
-pre.editor-colors .wrap-guide,
-.host .wrap-guide {
+pre.editor-colors .wrap-guide {
   background-color: rgba(171, 178, 191, 0.15);
 }
 pre.editor-colors .find-result .region.region.region,
-.host .find-result .region.region.region,
-pre.editor-colors .current-result .region.region.region,
-.host .current-result .region.region.region {
+pre.editor-colors .current-result .region.region.region {
   border-radius: 2px;
   background-color: rgba(82, 139, 255, 0.24);
   transition: border-color 0.4s;
 }
-pre.editor-colors .find-result .region.region.region,
-.host .find-result .region.region.region {
+pre.editor-colors .find-result .region.region.region {
   border: 2px solid transparent;
 }
-pre.editor-colors .current-result .region.region.region,
-.host .current-result .region.region.region {
+pre.editor-colors .current-result .region.region.region {
   border: 2px solid #528bff;
   transition-duration: .1s;
 }
-pre.editor-colors .gutter .line-number,
-.host .gutter .line-number {
+pre.editor-colors .gutter .line-number {
   color: #636d83;
   -webkit-font-smoothing: antialiased;
 }
-pre.editor-colors .gutter .line-number.cursor-line,
-.host .gutter .line-number.cursor-line {
+pre.editor-colors .gutter .line-number.cursor-line {
   color: #abb2bf;
   background-color: #2c313a;
 }
-pre.editor-colors .gutter .line-number.cursor-line-no-selection,
-.host .gutter .line-number.cursor-line-no-selection {
+pre.editor-colors .gutter .line-number.cursor-line-no-selection {
   background-color: transparent;
 }
-pre.editor-colors .gutter .line-number .icon-right,
-.host .gutter .line-number .icon-right {
+pre.editor-colors .gutter .line-number .icon-right {
   color: #abb2bf;
 }
-pre.editor-colors .gutter:not(.git-diff-icon) .line-number.git-line-removed.git-line-removed::before,
-.host .gutter:not(.git-diff-icon) .line-number.git-line-removed.git-line-removed::before {
+pre.editor-colors .gutter:not(.git-diff-icon) .line-number.git-line-removed.git-line-removed::before {
   bottom: -3px;
 }
-pre.editor-colors .gutter:not(.git-diff-icon) .line-number.git-line-removed::after,
-.host .gutter:not(.git-diff-icon) .line-number.git-line-removed::after {
+pre.editor-colors .gutter:not(.git-diff-icon) .line-number.git-line-removed::after {
   content: "";
   position: absolute;
   left: 0px;
@@ -223,351 +185,387 @@ pre.editor-colors .gutter:not(.git-diff-icon) .line-number.git-line-removed::aft
   pointer-events: none;
 }
 pre.editor-colors .gutter .line-number.folded,
-.host .gutter .line-number.folded,
 pre.editor-colors .gutter .line-number:after,
-.host .gutter .line-number:after,
-pre.editor-colors .fold-marker:after,
-.host .fold-marker:after {
+pre.editor-colors .fold-marker:after {
   color: #abb2bf;
 }
-.comment {
+.syntax--comment {
   color: #5c6370;
   font-style: italic;
 }
-.comment .markup.link {
+.syntax--comment .syntax--markup.syntax--link {
   color: #5c6370;
 }
-.entity.name.type {
+.syntax--entity.syntax--name.syntax--type {
   color: #e5c07b;
 }
-.entity.other.inherited-class {
+.syntax--entity.syntax--other.syntax--inherited-class {
   color: #98c379;
 }
-.keyword {
+.syntax--keyword {
   color: #c678dd;
 }
-.keyword.control {
+.syntax--keyword.syntax--control {
   color: #c678dd;
 }
-.keyword.operator {
+.syntax--keyword.syntax--operator {
   color: #abb2bf;
 }
-.keyword.other.special-method {
+.syntax--keyword.syntax--other.syntax--special-method {
   color: #61afef;
 }
-.keyword.other.unit {
+.syntax--keyword.syntax--other.syntax--unit {
   color: #d19a66;
 }
-.storage {
+.syntax--storage {
   color: #c678dd;
 }
-.storage.type.annotation,
-.storage.type.primitive {
+.syntax--storage.syntax--type.syntax--annotation,
+.syntax--storage.syntax--type.syntax--primitive {
   color: #c678dd;
 }
-.storage.modifier.package,
-.storage.modifier.import {
+.syntax--storage.syntax--modifier.syntax--package,
+.syntax--storage.syntax--modifier.syntax--import {
   color: #abb2bf;
 }
-.constant {
+.syntax--constant {
   color: #d19a66;
 }
-.constant.variable {
+.syntax--constant.syntax--variable {
   color: #d19a66;
 }
-.constant.character.escape {
+.syntax--constant.syntax--character.syntax--escape {
   color: #56b6c2;
 }
-.constant.numeric {
+.syntax--constant.syntax--numeric {
   color: #d19a66;
 }
-.constant.other.color {
+.syntax--constant.syntax--other.syntax--color {
   color: #56b6c2;
 }
-.constant.other.symbol {
+.syntax--constant.syntax--other.syntax--symbol {
   color: #56b6c2;
 }
-.variable {
+.syntax--variable {
   color: #e06c75;
 }
-.variable.interpolation {
+.syntax--variable.syntax--interpolation {
   color: #be5046;
 }
-.variable.parameter {
+.syntax--variable.syntax--parameter {
   color: #abb2bf;
 }
-.string {
+.syntax--string {
   color: #98c379;
 }
-.string.regexp {
+.syntax--string.syntax--regexp {
   color: #56b6c2;
 }
-.string.regexp .source.ruby.embedded {
+.syntax--string.syntax--regexp .syntax--source.syntax--ruby.syntax--embedded {
   color: #e5c07b;
 }
-.string.other.link {
+.syntax--string.syntax--other.syntax--link {
   color: #e06c75;
 }
-.punctuation.definition.comment {
+.syntax--punctuation.syntax--definition.syntax--comment {
   color: #5c6370;
 }
-.punctuation.definition.method-parameters,
-.punctuation.definition.function-parameters,
-.punctuation.definition.parameters,
-.punctuation.definition.separator,
-.punctuation.definition.seperator,
-.punctuation.definition.array {
+.syntax--punctuation.syntax--definition.syntax--method-parameters,
+.syntax--punctuation.syntax--definition.syntax--function-parameters,
+.syntax--punctuation.syntax--definition.syntax--parameters,
+.syntax--punctuation.syntax--definition.syntax--separator,
+.syntax--punctuation.syntax--definition.syntax--seperator,
+.syntax--punctuation.syntax--definition.syntax--array {
   color: #abb2bf;
 }
-.punctuation.definition.heading,
-.punctuation.definition.identity {
+.syntax--punctuation.syntax--definition.syntax--heading,
+.syntax--punctuation.syntax--definition.syntax--identity {
   color: #61afef;
 }
-.punctuation.definition.bold {
+.syntax--punctuation.syntax--definition.syntax--bold {
   color: #e5c07b;
   font-weight: bold;
 }
-.punctuation.definition.italic {
+.syntax--punctuation.syntax--definition.syntax--italic {
   color: #c678dd;
   font-style: italic;
 }
-.punctuation.section.embedded {
+.syntax--punctuation.syntax--section.syntax--embedded {
   color: #be5046;
 }
-.punctuation.section.method,
-.punctuation.section.class,
-.punctuation.section.inner-class {
+.syntax--punctuation.syntax--section.syntax--method,
+.syntax--punctuation.syntax--section.syntax--class,
+.syntax--punctuation.syntax--section.syntax--inner-class {
   color: #abb2bf;
 }
-.support.class {
+.syntax--support.syntax--class {
   color: #e5c07b;
 }
-.support.type {
+.syntax--support.syntax--type {
   color: #56b6c2;
 }
-.support.function {
+.syntax--support.syntax--function {
   color: #56b6c2;
 }
-.support.function.any-method {
+.syntax--support.syntax--function.syntax--any-method {
   color: #61afef;
 }
-.entity.name.function {
+.syntax--entity.syntax--name.syntax--function {
   color: #61afef;
 }
-.entity.name.class,
-.entity.name.type.class {
+.syntax--entity.syntax--name.syntax--class,
+.syntax--entity.syntax--name.syntax--type.syntax--class {
   color: #e5c07b;
 }
-.entity.name.section {
+.syntax--entity.syntax--name.syntax--section {
   color: #61afef;
 }
-.entity.name.tag {
+.syntax--entity.syntax--name.syntax--tag {
   color: #e06c75;
 }
-.entity.other.attribute-name {
+.syntax--entity.syntax--other.syntax--attribute-name {
   color: #d19a66;
 }
-.entity.other.attribute-name.id {
+.syntax--entity.syntax--other.syntax--attribute-name.syntax--id {
   color: #61afef;
 }
-.meta.class {
+.syntax--meta.syntax--class {
   color: #e5c07b;
 }
-.meta.class.body {
+.syntax--meta.syntax--class.syntax--body {
   color: #abb2bf;
 }
-.meta.method-call,
-.meta.method {
+.syntax--meta.syntax--method-call,
+.syntax--meta.syntax--method {
   color: #abb2bf;
 }
-.meta.definition.variable {
+.syntax--meta.syntax--definition.syntax--variable {
   color: #e06c75;
 }
-.meta.link {
+.syntax--meta.syntax--link {
   color: #d19a66;
 }
-.meta.require {
+.syntax--meta.syntax--require {
   color: #61afef;
 }
-.meta.selector {
+.syntax--meta.syntax--selector {
   color: #c678dd;
 }
-.meta.separator {
+.syntax--meta.syntax--separator {
   background-color: #373b41;
   color: #abb2bf;
 }
-.meta.tag {
+.syntax--meta.syntax--tag {
   color: #abb2bf;
 }
-.underline {
+.syntax--underline {
   text-decoration: underline;
 }
-.none {
+.syntax--none {
   color: #abb2bf;
 }
-.invalid.deprecated {
+.syntax--invalid.syntax--deprecated {
   color: #523d14 !important;
   background-color: #e0c285 !important;
 }
-.invalid.illegal {
-  color: #ffffff !important;
+.syntax--invalid.syntax--illegal {
+  color: white !important;
   background-color: #e05252 !important;
 }
-.markup.bold {
+.syntax--markup.syntax--bold {
   color: #d19a66;
   font-weight: bold;
 }
-.markup.changed {
+.syntax--markup.syntax--changed {
   color: #c678dd;
 }
-.markup.deleted {
+.syntax--markup.syntax--deleted {
   color: #e06c75;
 }
-.markup.italic {
+.syntax--markup.syntax--italic {
   color: #c678dd;
   font-style: italic;
 }
-.markup.heading {
+.syntax--markup.syntax--heading {
   color: #e06c75;
 }
-.markup.heading .punctuation.definition.heading {
+.syntax--markup.syntax--heading .syntax--punctuation.syntax--definition.syntax--heading {
   color: #61afef;
 }
-.markup.link {
-  color: #c678dd;
+.syntax--markup.syntax--link {
+  color: #56b6c2;
 }
-.markup.inserted {
+.syntax--markup.syntax--inserted {
   color: #98c379;
 }
-.markup.quote {
+.syntax--markup.syntax--quote {
   color: #d19a66;
 }
-.markup.raw {
+.syntax--markup.syntax--raw {
   color: #98c379;
 }
-.source.c .keyword.operator {
+.syntax--source.syntax--c .syntax--keyword.syntax--operator {
   color: #c678dd;
 }
-.source.cpp .keyword.operator {
+.syntax--source.syntax--cpp .syntax--keyword.syntax--operator {
   color: #c678dd;
 }
-.source.cs .keyword.operator {
+.syntax--source.syntax--cs .syntax--keyword.syntax--operator {
   color: #c678dd;
 }
-.source.css .property-name,
-.source.css .property-value {
+.syntax--source.syntax--css .syntax--property-name,
+.syntax--source.syntax--css .syntax--property-value {
   color: #828997;
 }
-.source.css .property-name.support,
-.source.css .property-value.support {
+.syntax--source.syntax--css .syntax--property-name.syntax--support,
+.syntax--source.syntax--css .syntax--property-value.syntax--support {
   color: #abb2bf;
 }
-.source.gfm .markup {
-  -webkit-font-smoothing: auto;
+.syntax--source.syntax--elixir .syntax--source.syntax--embedded.syntax--source {
+  color: #abb2bf;
 }
-.source.gfm .link .entity {
+.syntax--source.syntax--elixir .syntax--constant.syntax--language,
+.syntax--source.syntax--elixir .syntax--constant.syntax--numeric,
+.syntax--source.syntax--elixir .syntax--constant.syntax--definition {
   color: #61afef;
 }
-.source.go .storage.type.string {
+.syntax--source.syntax--elixir .syntax--variable.syntax--definition,
+.syntax--source.syntax--elixir .syntax--variable.syntax--anonymous {
   color: #c678dd;
 }
-.source.ini .keyword.other.definition.ini {
-  color: #e06c75;
-}
-.source.java .storage.modifier.import {
-  color: #e5c07b;
-}
-.source.java .storage.type {
-  color: #e5c07b;
-}
-.source.java .keyword.operator.instanceof {
-  color: #c678dd;
-}
-.source.java-properties .meta.key-pair {
-  color: #e06c75;
-}
-.source.java-properties .meta.key-pair > .punctuation {
-  color: #abb2bf;
-}
-.source.js .keyword.operator {
-  color: #56b6c2;
-}
-.source.js .keyword.operator.delete,
-.source.js .keyword.operator.in,
-.source.js .keyword.operator.of,
-.source.js .keyword.operator.instanceof,
-.source.js .keyword.operator.new,
-.source.js .keyword.operator.typeof,
-.source.js .keyword.operator.void {
-  color: #c678dd;
-}
-.source.json .meta.structure.dictionary.json > .string.quoted.json {
-  color: #e06c75;
-}
-.source.json .meta.structure.dictionary.json > .string.quoted.json > .punctuation.string {
-  color: #e06c75;
-}
-.source.json .meta.structure.dictionary.json > .value.json > .string.quoted.json,
-.source.json .meta.structure.array.json > .value.json > .string.quoted.json,
-.source.json .meta.structure.dictionary.json > .value.json > .string.quoted.json > .punctuation,
-.source.json .meta.structure.array.json > .value.json > .string.quoted.json > .punctuation {
+.syntax--source.syntax--elixir .syntax--quoted {
   color: #98c379;
 }
-.source.json .meta.structure.dictionary.json > .constant.language.json,
-.source.json .meta.structure.array.json > .constant.language.json {
-  color: #56b6c2;
+.syntax--source.syntax--elixir .syntax--keyword.syntax--special-method,
+.syntax--source.syntax--elixir .syntax--embedded.syntax--section,
+.syntax--source.syntax--elixir .syntax--embedded.syntax--source.syntax--empty {
+  color: #e06c75;
 }
-.source.ruby .constant.other.symbol > .punctuation {
-  color: inherit;
+.syntax--source.syntax--elixir .syntax--readwrite.syntax--module .syntax--punctuation {
+  color: #e06c75;
 }
-.source.python .keyword.operator.logical.python {
+.syntax--source.syntax--elixir .syntax--regexp.syntax--section,
+.syntax--source.syntax--elixir .syntax--regexp.syntax--string {
+  color: #be5046;
+}
+.syntax--source.syntax--elixir .syntax--separator,
+.syntax--source.syntax--elixir .syntax--keyword.syntax--operator {
+  color: #d19a66;
+}
+.syntax--source.syntax--elixir .syntax--variable.syntax--constant {
+  color: #e5c07b;
+}
+.syntax--source.syntax--elixir .syntax--array,
+.syntax--source.syntax--elixir .syntax--scope,
+.syntax--source.syntax--elixir .syntax--section {
+  color: #828997;
+}
+.syntax--source.syntax--gfm .syntax--markup {
+  -webkit-font-smoothing: auto;
+}
+.syntax--source.syntax--gfm .syntax--link .syntax--entity {
+  color: #61afef;
+}
+.syntax--source.syntax--go .syntax--storage.syntax--type.syntax--string {
   color: #c678dd;
 }
-.source.python .variable.parameter {
+.syntax--source.syntax--ini .syntax--keyword.syntax--other.syntax--definition.syntax--ini {
+  color: #e06c75;
+}
+.syntax--source.syntax--java .syntax--storage.syntax--modifier.syntax--import {
+  color: #e5c07b;
+}
+.syntax--source.syntax--java .syntax--storage.syntax--type {
+  color: #e5c07b;
+}
+.syntax--source.syntax--java .syntax--keyword.syntax--operator.syntax--instanceof {
+  color: #c678dd;
+}
+.syntax--source.syntax--java-properties .syntax--meta.syntax--key-pair {
+  color: #e06c75;
+}
+.syntax--source.syntax--java-properties .syntax--meta.syntax--key-pair > .syntax--punctuation {
+  color: #abb2bf;
+}
+.syntax--source.syntax--js .syntax--keyword.syntax--operator {
+  color: #56b6c2;
+}
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--delete,
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--in,
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--of,
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--instanceof,
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--new,
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--typeof,
+.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--void {
+  color: #c678dd;
+}
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--string.syntax--quoted.syntax--json {
+  color: #e06c75;
+}
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--string.syntax--quoted.syntax--json > .syntax--punctuation.syntax--string {
+  color: #e06c75;
+}
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json,
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--array.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json,
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json > .syntax--punctuation,
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--array.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json > .syntax--punctuation {
+  color: #98c379;
+}
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--constant.syntax--language.syntax--json,
+.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--array.syntax--json > .syntax--constant.syntax--language.syntax--json {
+  color: #56b6c2;
+}
+.syntax--source.syntax--ruby .syntax--constant.syntax--other.syntax--symbol > .syntax--punctuation {
+  color: inherit;
+}
+.syntax--source.syntax--python .syntax--keyword.syntax--operator.syntax--logical.syntax--python {
+  color: #c678dd;
+}
+.syntax--source.syntax--python .syntax--variable.syntax--parameter {
   color: #d19a66;
 }
 </style>
   </head>
-  <body class='markdown-preview' data-use-github-style><h2 id="what-is-protocoder">What is Protocoder</h2>
-<p>Protocoder is a creative programming environment for Android-based devices.
+  <body class='markdown-preview' data-use-github-style><h2 id="what-is-phonk">What is Phonk</h2>
+<p>Phonk is a creative programming environment for Android-based devices.
 It allows you to code rapidly from your computer using a WebIDE that resides in the Android-based device using WIFI.
 Code is rapidly executed using a Javascript virtual machine without having to go through slow compilation times.</p>
-<p>Protocoder comes with a simplified programming API to do things ranging IoT, creative graphics, cool sounds though LibPd, and lots more</p>
-<h2 id="how-to-use-protocoder">How to use Protocoder</h2>
-<p>Install Protocoder in your Android device using a direct link from <a href="http://protocoder.org#download">http://protocoder.org#download</a>, F-droid (prefered) or Google Play.</p>
-<p>During the first installation, Protocoder will ask you for some permissions (Android &gt; 6), you can skip any of them except the Storage Access,
+<p>Phonk comes with a simplified programming API to do things ranging IoT, creative graphics, cool sounds though LibPd, and lots more</p>
+<h2 id="how-to-use-phonk">How to use Phonk</h2>
+<p>Install Phonk in your Android device using a direct link from <a href="http://www.phonk.io">http://www.phonk.io</a>, F-droid (prefered) or Google Play.</p>
+<p>During the first installation, Phonk will ask you for some permissions (Android &gt; 6), you can skip any of them except the Storage Access,
 which is necessary to install, save and load the examples and your future projects.
 Once installed, you can browse and execute any of the examples that come with it, just pressing on the icon project. You can see and modify the source code
 within the device pressing on Edit, inside the three-dots menu.</p>
-<p><img src="./explanation.png" alt="alt text" title="Usage explanation"></p>
-<p>Most of the times, coding in this small devices is not very handy, thats why Protocoder has a built-in Editor (WebIDE) that you can access from your computer.
+<p><img title="Usage explanation" alt="alt text" src="/home/biquillo/Development/phonk-project/phonk-docs/about/explanation.png"></p>
+<p>Most of the times, coding in this small devices is not very handy, thats why Phonk has a built-in Editor (WebIDE) that you can access from your computer.
 To start using the WebIDE, make sure that both your laptop and Android device are connected to the same WIFI network.
-If you&#39;ve done that, you will see an IP address written in the Android Protocoder App.</p>
+If you've done that, you will see an IP address written in the Android Phonk App.</p>
 <p>Take that IP address, type it in your modern computer browser et voilà.</p>
 <p>You can start playing around now!</p>
 <h2 id="coding">Coding</h2>
-<p>Protocoder comes with a fairly wide API to cover different use cases.
+<p>Phonk comes with a fairly wide API to cover different use cases.
 At this point there is not many tutorials out there and the API is changing gradually, so it is better to play with the examples that come with the app.
 There is a work in progress self contained documentation listing all the methods and their usage (not yet!).</p>
 <p>If you find some strange behaviour, inconsistencies, bugs or missing methods, please file a bug report in Github.</p>
 <h2 id="faq">FAQ</h2>
 <ul>
-<li><p>Why did you start making Protocoder?</p>
+<li><p>Why did you start making Phonk?</p>
 <p>There is two main reasons for this:</p>
 <p>  1) I feel frustrated with all the waste we generate just buying and throwing away phones and around 5 years ago I started to use old Android phones for educational purposes.
-  It worked quite good but the tools I had to quickly teach where a bit overwhelming for beginners. I made a bunch of different tools (way simpler than this) and organically started to turn out into Protocoder.</p>
-<p>  2) I find my self a &quot;creative&quot; kind of person, and I got really frustrated with the Android programming environments for doing quick stuff. Sometimes I had an idea and just setting up a new project with the normal Android tooling and the write-compile-wait-obverse-repeat cycle was really long for my type of working</p>
+  It worked quite good but the tools I had to quickly teach where a bit overwhelming for beginners. I made a bunch of different tools (way simpler than this) and organically started to turn out into Phonk.</p>
+<p>  2) I find my self a "creative" kind of person, and I got really frustrated with the Android programming environments for doing quick stuff. Sometimes I had an idea and just setting up a new project with the normal Android tooling and the write-compile-wait-obverse-repeat cycle was really long for my type of working</p>
 </li>
-<li><p>Is it Protocoder suitable for beginners?</p>
+<li><p>Is it Phonk suitable for beginners?</p>
 <p>Yes and no.</p>
-<p>Protocoder has a smooth start because you dont need to setup a complex environment in your computer.
+<p>Phonk has a smooth start because you dont need to setup a complex environment in your computer.
 On the other side you still need to know basic programming (or learn with it) and things are still a bit buggy for coding newcomers that might get frustrated.</p>
 </li>
-<li><p>Do you think Protocoder is the ultimate Android programming tool?</p>
+<li><p>Do you think Phonk is the ultimate Android programming tool?</p>
 <p>No, there is so many great tools out there, just use whatever it works for you!</p>
 </li>
 <li><p>Can I compile my script into a full standalone APK?</p>
-<p>Yes, but it&#39;s quite complicated ATM. You will need to setup the whole Android environment and more. (Soon guide)
+<p>Yes, but it's quite complicated ATM. You will need to setup the whole Android environment and more. (Soon guide)
 If you want to help on this it will be more than welcome.</p>
 </li>
 <li><p>How many hours have you been working on this?</p>
@@ -585,11 +583,11 @@ If you want to help on this it will be more than welcome.</p>
 </ul>
 <ul>
 <li><p>Why you take so long to answer in any communication channel?</p>
-<p>This project is a hobby so I prefer to batch tasks and do them in a row. Im a bit nomad too, so sometimes I don&#39;t have internet access.</p>
+<p>This project is a hobby so I prefer to batch tasks and do them in a row. Im a bit nomad too, so sometimes I don't have internet access.</p>
 </li>
-<li><p>Why there isn&#39;t an API for Google Maps?</p>
-<p>Google Maps depends on Google Play Services which are not open source, they don&#39;t work in some countries and I feel a bit uncertain about how they treat your privacy.
-So I prefer to include ONLY open source code and code that respect your privacy inside Protocoder.</p>
+<li><p>Why there isn't an API for Google Maps?</p>
+<p>Google Maps depends on Google Play Services which are not open source, they don't work in some countries and I feel a bit uncertain about how they treat your privacy.
+So I prefer to include ONLY open source code and code that respect your privacy inside Phonk.</p>
 </li>
 </ul>
 <ul>
