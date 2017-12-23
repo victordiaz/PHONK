@@ -12,18 +12,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    flavorDimensions "protocoder_normal", "protocoder_extended"
+    flavorDimensions "phonk_normal", "phonk_extended"
 
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        applicationId "org.protocoder.extended.sandbox"
+        applicationId "io.phonk.beta"
         minSdkVersion 19 // change to 16
         targetSdkVersion 24
 
-        versionCode 25
-        versionName "0.25.0"
+        versionCode 26
+        versionName "0.26.0"
         multiDexEnabled true
 
         compileOptions {
@@ -56,15 +56,15 @@ android {
 
     productFlavors {
         normal {
-            dimension 'protocoder_normal'
-            applicationId "org.protocoder.normal.sandbox"
+            dimension 'phonk_normal'
+            applicationId "io.phonk.beta"
             versionName "0.19.0_normal"
             resValue "string", "releaseMode", "normal"
         }
 
         extended {
-            dimension 'protocoder_extended'
-            applicationId "org.protocoder.extended.sandbox"
+            dimension 'phonk_extended'
+            applicationId "io.phonk.extended.beta"
             versionName "0.19.0_extended"
             resValue "string", "releaseMode", "all_features"
         }

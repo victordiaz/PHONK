@@ -52,7 +52,7 @@
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="org.protocoder.LauncherActivity" />
+                <action android:name="io.phonk.LauncherActivity" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
                 <!--<category android:name="android.intent.category.HOME"/>-->
@@ -77,7 +77,7 @@
             android:resizeableActivity="true">
 
             <intent-filter>
-                <action android:name="org.protocoder.intent.EXECUTE"></action>
+                <action android:name="io.phonk.intent.EXECUTE"></action>
             </intent-filter>
 
             <!--
@@ -155,7 +155,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="org.protocoder.gui.ProtoAppInstallerActivity" />
+                <action android:name="io.phonk.gui.ProtoAppInstallerActivity" />
                 <data android:scheme="file" />
                 <data android:mimeType="*/*" />
                 <data android:pathPattern=".*\\.proto" />
@@ -164,29 +164,29 @@
         </activity>
 
         <service
-            android:name="io.phonk.server.ProtocoderServerService"
+            android:name="io.phonk.server.PhonkServerService"
             android:exported="false">
 
             <intent-filter>
-                <action android:name="org.protocoder.intent.CONSOLE"></action>
+                <action android:name="io.phonk.intent.CONSOLE"></action>
             </intent-filter>
 
             <intent-filter>
-                <action android:name="org.protocoder.intent.WEBEDITOR_SEND"></action>
+                <action android:name="io.phonk.intent.WEBEDITOR_SEND"></action>
             </intent-filter>
 
             <!-- intent when apprunner is closed -->
             <intent-filter>
-                <action android:name="org.protocoder.intent.CLOSED"></action>
+                <action android:name="io.phonk.intent.CLOSED"></action>
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="org.protocoder.intent.VIEWS_UPDATE"></action>
+                <action android:name="io.phonk.intent.VIEWS_UPDATE"></action>
             </intent-filter>
         </service>
 
-        <receiver android:name="io.phonk.server.ProtocoderBootReceiver">
+        <receiver android:name="io.phonk.server.PhonkBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
