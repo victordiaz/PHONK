@@ -50,9 +50,9 @@ import io.phonk.runner.models.Project;
 
 import java.util.Map;
 
-public class ProtoAppHelper {
+public class PhonkAppHelper {
 
-    private static final String TAG = ProtoAppHelper.class.getSimpleName();
+    private static final String TAG = PhonkAppHelper.class.getSimpleName();
     private static boolean multiWindowEnabled = true;
 
     public static void launchScript(Context context, Project p) {
@@ -162,7 +162,7 @@ public class ProtoAppHelper {
         NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
         newProjectDialog.show(fm, "fragment_edit_name");
 
-        String[] templates = ProtoScriptHelper.listTemplates(c);
+        String[] templates = PhonkScriptHelper.listTemplates(c);
         for (String template : templates) {
             MLog.d(TAG, "template " + template);
         }
@@ -172,7 +172,7 @@ public class ProtoAppHelper {
             public void onFinishEditDialog(String inputText) {
                 String template = "default";
                 Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = ProtoScriptHelper.createNewProject(c, template, "user_projects/User Projects/", inputText);
+                Project p = PhonkScriptHelper.createNewProject(c, template, "user_projects/User Projects/", inputText);
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });

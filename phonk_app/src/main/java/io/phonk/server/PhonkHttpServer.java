@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.server.model.ProtoFile;
 import io.phonk.server.networkexchangeobjects.NEOProject;
 import io.phonk.runner.base.utils.FileIO;
@@ -155,8 +155,8 @@ public class PhonkHttpServer extends NanoHTTPD {
             if (uriSplitted[COMMAND].equals("list")) {
                 HashMap<String, ArrayList> files = new HashMap<>();
 
-                ArrayList<ProtoFile> userFolder = ProtoScriptHelper.listFilesInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
-                ArrayList<ProtoFile> examplesFolder = ProtoScriptHelper.listFilesInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
+                ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listFilesInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
+                ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listFilesInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
 
                 files.put(PhonkSettings.USER_PROJECTS_FOLDER, userFolder);
                 files.put(PhonkSettings.EXAMPLES_FOLDER, examplesFolder);
@@ -230,7 +230,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 if (!p.exists()) {
                     String template = "default";
                     MLog.d(TAG, p.getParentPath());
-                    ProtoScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
+                    PhonkScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
                     res = newFixedLengthResponse("OK");
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                 }
@@ -260,18 +260,18 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                 // saving all the files changed
                 for (ProtoFile file : neo.files) {
-                    ProtoScriptHelper.saveCodeFromSandboxPath(file.path, file.code);
+                    PhonkScriptHelper.saveCodeFromSandboxPath(file.path, file.code);
                 }
 
                 res = newFixedLengthResponse("OK");
 
             } else if (uriSplitted[PROJECT_ACTION].equals("load")) {
-                ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
+                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
 
                 // only load main.js & app.conf
                 for (int i = 0; i < files.size(); i++) {
                     if (files.get(i).name.equals(PhonkSettings.MAIN_FILENAME)) { // || files.get(i).name.equals(PhonkSettings.CONF_FILENAME)) {
-                        files.get(i).code = ProtoScriptHelper.getCode(p, files.get(i).name);
+                        files.get(i).code = PhonkScriptHelper.getCode(p, files.get(i).name);
                     }
                 }
 
@@ -288,7 +288,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
             } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
                 String path = "";
-                // ProtoScriptHelper.deleteFolder(path);
+                // PhonkScriptHelper.deleteFolder(path);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
                 MLog.d(TAG, "run --> " + p.getFolder());
@@ -317,7 +317,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 MLog.d("getting folder -> " + path);
 
                 // here
-                ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath() + path, 0);
+                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInFolder(p.getSandboxPath() + path, 0);
                 String jsonFiles = gson.toJson(files);
 
                 MLog.d("list", jsonFiles);
@@ -343,7 +343,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 String fileName = uriSplitted[FILE_NAME];
                 ProtoFile file = new ProtoFile();
                 file.name = fileName;
-                file.code = ProtoScriptHelper.getCode(p, fileName);
+                file.code = PhonkScriptHelper.getCode(p, fileName);
                 NEOProject neo = new NEOProject();
                 neo.files.add(file);
 
@@ -442,11 +442,11 @@ public class PhonkHttpServer extends NanoHTTPD {
         /*
 
             // get files
-            ArrayList<ProtoFile> files = ProtoScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
+            ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
 
             for (int i = 0; i < files.size(); i++) {
                 ProtoFile f = files.get(i);
-                f.code = ProtoScriptHelper.getCode(p);
+                f.code = PhonkScriptHelper.getCode(p);
             }
 
             NEOProject neo = new NEOProject();

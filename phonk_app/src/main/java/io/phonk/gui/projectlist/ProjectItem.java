@@ -46,8 +46,8 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.phonk.R;
 import io.phonk.events.Events;
-import io.phonk.helpers.ProtoAppHelper;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkAppHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
 
@@ -104,7 +104,7 @@ public class ProjectItem extends LinearLayout {
                         // Events.ProjectEvent evt = new Events.ProjectEvent(Events.PROJECT_RUN, mProject);
                         // EventBus.getDefault().post(evt);
 
-                        ProtoAppHelper.launchScript(getContext(), mProject);
+                        PhonkAppHelper.launchScript(getContext(), mProject);
                         // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
                         //        R.anim.splash_slide_out_anim_set);
                     }
@@ -214,15 +214,15 @@ public class ProjectItem extends LinearLayout {
                 switch (itemId) {
                     case R.id.menu_project_list_run:
                       // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
-                      ProtoAppHelper.launchScript(getContext(), mProject);
+                      PhonkAppHelper.launchScript(getContext(), mProject);
                       return true;
                     case R.id.menu_project_list_edit:
-                      ProtoAppHelper.launchEditor(getContext(), mProject);
+                      PhonkAppHelper.launchEditor(getContext(), mProject);
 
                      // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
                       return true;
                     case R.id.menu_project_webeditor:
-                        ProtoAppHelper.openInWebEditor(getContext(), mProject);
+                        PhonkAppHelper.openInWebEditor(getContext(), mProject);
                         return true;
 
                     case R.id.menu_project_list_delete:
@@ -235,7 +235,7 @@ public class ProjectItem extends LinearLayout {
                                         //mPlf.removeItem(mProject);
                                         MLog.d(TAG, "deleting " + mProject.getFullPath());
                                         Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
-                                        ProtoScriptHelper.deleteFolder(mProject.getFullPath());
+                                        PhonkScriptHelper.deleteFolder(mProject.getFullPath());
 
                                         break;
 
@@ -249,16 +249,16 @@ public class ProjectItem extends LinearLayout {
                                 .setNegativeButton("No", dialogClickListener).show();
                         return true;
                     case R.id.menu_project_list_add_shortcut:
-                        ProtoScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
+                        PhonkScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
                         return true;
                     case R.id.menu_project_list_share_with:
-                        ProtoScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
+                        PhonkScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
                         return true;
                     case R.id.menu_project_list_share_proto_file:
-                        ProtoScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
+                        PhonkScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
                         return true;
                     case R.id.menu_project_list_show_info:
-                        ProtoAppHelper.launchScriptInfoActivity(c, mProject);
+                        PhonkAppHelper.launchScriptInfoActivity(c, mProject);
                         return true;
                     default:
                         return true;

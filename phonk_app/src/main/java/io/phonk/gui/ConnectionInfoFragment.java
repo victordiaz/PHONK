@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.NewUserPreferences;
-import io.phonk.helpers.ProtoAppHelper;
+import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
 
@@ -88,14 +88,14 @@ public class ConnectionInfoFragment extends Fragment {
         connectWifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProtoAppHelper.launchWifiSettings(getActivity());
+                PhonkAppHelper.launchWifiSettings(getActivity());
             }
         });
 
         startHotspot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProtoAppHelper.launchHotspotSettings(getActivity());
+                PhonkAppHelper.launchHotspotSettings(getActivity());
             }
         });
 

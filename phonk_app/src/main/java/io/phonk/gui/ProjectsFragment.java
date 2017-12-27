@@ -38,7 +38,7 @@ import android.view.ViewGroup;
 import org.phonk.R;
 import io.phonk.gui._components.ResizableRecyclerView;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.models.Folder;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class ProjectsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.prueba_fragment_main, container, false);
 
         // get the folders
-        ArrayList<Folder> adapterData = ProtoScriptHelper.listFoldersOrdered(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects");
+        ArrayList<Folder> adapterData = PhonkScriptHelper.listFoldersOrdered(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects");
 
         CardView cardView = (CardView) rootView.findViewById(R.id.card);
         cardView.setCardBackgroundColor(Color.parseColor(CARD_COLOR));

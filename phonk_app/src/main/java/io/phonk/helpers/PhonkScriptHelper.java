@@ -54,9 +54,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class ProtoScriptHelper {
+public class PhonkScriptHelper {
 
-    private static final String TAG = ProtoScriptHelper.class.getSimpleName();
+    private static final String TAG = PhonkScriptHelper.class.getSimpleName();
 
     private static String getBaseDir() {
         String baseDir;
@@ -86,7 +86,7 @@ public class ProtoScriptHelper {
     // Create Project
     public static Project createNewProject(Context c, String template, String where, String newProjectName) {
         Project newProject = null;
-        String fullPath = ProtoScriptHelper.getProjectFolderPath(where + newProjectName);
+        String fullPath = PhonkScriptHelper.getProjectFolderPath(where + newProjectName);
         MLog.d(TAG, "--> " + fullPath);
 
         // check if is existing
@@ -252,7 +252,7 @@ public class ProtoScriptHelper {
                 protoFile.size = f.length();
             }
             protoFile.name = f.getName();
-            protoFile.path = ProtoScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
+            protoFile.path = PhonkScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
 
             if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1, extensionFilter);
 

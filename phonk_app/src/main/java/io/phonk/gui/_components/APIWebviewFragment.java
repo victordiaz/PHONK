@@ -38,6 +38,7 @@ import android.webkit.WebViewClient;
 
 import org.phonk.R;
 import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
 
@@ -185,6 +186,8 @@ public class APIWebviewFragment extends BaseFragment {
         public void setWebIde(boolean b) {
             MLog.d("qq", "" + b);
             NewUserPreferences.getInstance().set("webide_mode", b).save();
+
+            PhonkSettingsHelper.showRestartMessage(getContext(), v);
         }
     }
 

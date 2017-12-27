@@ -22,6 +22,8 @@
 
 package io.phonk.gui.settings;
 
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -104,6 +106,7 @@ public class NewUserPreferences {
     public NewUserPreferences set(String key, Object value) {
         if (pref == null) load();
         pref.put(key, value);
+
         return this;
     }
 }

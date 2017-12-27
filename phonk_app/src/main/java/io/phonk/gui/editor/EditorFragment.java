@@ -45,7 +45,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.phonk.R;
 import io.phonk.events.Events;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.server.model.ProtoFile;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.FileIO;
@@ -295,7 +295,7 @@ public class EditorFragment extends BaseFragment {
      * Save the current project
      */
     public void saveFile() {
-        ProtoScriptHelper.saveCodeFromAbsolutePath(mCurrentFile.getFullPath(), openedFiles.get(mCurrentFile.getFullPath()));
+        PhonkScriptHelper.saveCodeFromAbsolutePath(mCurrentFile.getFullPath(), openedFiles.get(mCurrentFile.getFullPath()));
         // Toast.makeText(getActivity(), "Saving " + mCurrentFile.getFullPath() + "...", Toast.LENGTH_SHORT).show();
     }
 

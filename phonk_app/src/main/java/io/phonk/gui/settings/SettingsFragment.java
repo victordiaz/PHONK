@@ -41,7 +41,7 @@ import android.view.ViewGroup;
 import org.phonk.R;
 import io.phonk.gui.AboutActivity;
 import io.phonk.gui.LicenseActivity;
-import io.phonk.helpers.ProtoSettingsHelper;
+import io.phonk.helpers.PhonkSettingsHelper;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -49,6 +49,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     protected static final String TAG = SettingsFragment.class.getSimpleName();
     private Context mContext;
     private NewUserPreferences mUserPreferences;
+    private View mParentView;
 
     public SettingsFragment() {
 
@@ -71,13 +72,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     //twostatepreference(boolean)->action/action edittextpreference(text)->action preference->action
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // View view = super.onCreateView(inflater, container, savedInstanceState);
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        // View mParentView = super.onCreateView(inflater, container, savedInstanceState);
+        mParentView = super.onCreateView(inflater, container, savedInstanceState);
 
         /*
-        View view = inflater.inflate(R.layout.prueba_fragment_preferences, container , false);
+        View mParentView = inflater.inflate(R.layout.prueba_fragment_preferences, container , false);
 
-        final ViewGroup innerContainer = (ViewGroup) view.findViewById(R.id.card);
+        final ViewGroup innerContainer = (ViewGroup) mParentView.findViewById(R.id.card);
         final View innerView = super.onCreateView(inflater, innerContainer, savedInstanceState);
         if (innerView != null) {
             innerContainer.addView(innerView);
@@ -160,6 +161,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object o) {
                 boolean isChecked = (Boolean) o;
                 mUserPreferences.set("webide_mode", isChecked).save();
+
+                PhonkSettingsHelper.showRestartMessage(mContext, mParentView);
                 return true;
             }
         });
@@ -256,8 +259,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     public void onClick(DialogInterface dialog, int which) {
                         progress.show();
 
-                        ProtoSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
-                                new ProtoSettingsHelper.InstallListener() {
+                        PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
+                                new PhonkSettingsHelper.InstallListener() {
 
                                     @Override
                                     public void onReady() {
@@ -330,13 +333,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
                 alertDialog.setTitle("FTP settings");
-                final View view = getActivity().getLayoutInflater().inflate(R.layout.preferences_ftp_dialog, null);
+                final View mParentView = getActivity().getLayoutInflater().inflate(R.layout.preferences_ftp_dialog, null);
                 //alertDialog.setView(R.layout.preferences_ftp_dialog);
 
 
-                final EditText userName = (EditText) view.findViewById(R.id.ftp_username);
-                final EditText userPassword = (EditText) view.findViewById(R.id.ftp_userpassword);
-                final CheckBox check = (CheckBox) view.findViewById(R.id.ftp_enable);
+                final EditText userName = (EditText) mParentView.findViewById(R.id.ftp_username);
+                final EditText userPassword = (EditText) mParentView.findViewById(R.id.ftp_userpassword);
+                final CheckBox check = (CheckBox) mParentView.findViewById(R.id.ftp_enable);
 
                 final boolean[] checked = {mSettings.getFtpChecked()};
                 final String[] userNameText = {mSettings.getFtpUserName()};
@@ -347,7 +350,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                 check.setChecked(checked[0]);
 
-                alertDialog.setView(view);
+                alertDialog.setView(mParentView);
 
                 alertDialog.setCancelable(true);
                 alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
@@ -380,7 +383,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         */
 
-        return view;
+        return mParentView;
 
     }
 

@@ -43,7 +43,7 @@ import org.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.events.Events.ProjectEvent;
 import io.phonk.gui.settings.NewUserPreferences;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
@@ -226,7 +226,7 @@ public class ProjectListFragment extends BaseFragment {
 
         mProjectFolder = folder;
 
-        mListProjects = ProtoScriptHelper.listProjects(mProjectFolder, mOrderByName);
+        mListProjects = PhonkScriptHelper.listProjects(mProjectFolder, mOrderByName);
         mProjectAdapter.setArray(mListProjects);
         mGrid.setAdapter(mProjectAdapter);
         // mGrid.clearAnimation();

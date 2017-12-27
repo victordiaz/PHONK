@@ -40,7 +40,7 @@ import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui.filemanager.FileManagerFragment;
 import io.phonk.gui.filepreviewer.FilePreviewerFragment;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoAppHelper;
+import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.server.model.ProtoFile;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.FileIO;
@@ -169,7 +169,7 @@ public class EditorActivity extends BaseActivity {
      * Run the current project
      */
     public void run() {
-        ProtoAppHelper.launchScript(this, mCurrentProject);
+        PhonkAppHelper.launchScript(this, mCurrentProject);
     }
 
     public void save() {

@@ -22,16 +22,47 @@
 
 package io.phonk.helpers;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
+import io.phonk.MainActivity;
+import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.base.utils.FileIO;
 
 import java.io.File;
 
-public class ProtoSettingsHelper {
+public class PhonkSettingsHelper {
 
     private static String PHONK_EXTENSION = ".phonk";
+
+    public static void showRestartMessage(final Context mContext, View view) {
+        // Toast.makeText(mContext, "Restarting the app is recommended after changing the mode", Toast.LENGTH_LONG).show();
+        // EventBus.getDefault().post(new Events.AppUiEvent("recreate", ""));
+
+        Snackbar.make(view, "Close the app to see the changes", Snackbar.LENGTH_LONG)
+                .setAction("RESTART", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent mStartActivity = new Intent(mContext, MainActivity.class);
+                        int mPendingIntentId = 123456;
+                        PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId, mStartActivity,
+                                PendingIntent.FLAG_CANCEL_CURRENT);
+                        AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 250, mPendingIntent);
+                        System.exit(0);
+
+                    }
+                }).show();
+    }
 
     public interface InstallListener {
         void onReady();

@@ -51,7 +51,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.phonk.R;
 import io.phonk.events.Events;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.server.model.ProtoFile;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
@@ -265,7 +265,7 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     private void getFileList() {
-        mCurrentFileList = ProtoScriptHelper.listFilesForFileManager(mCurrentFolder);
+        mCurrentFileList = PhonkScriptHelper.listFilesForFileManager(mCurrentFolder);
 
         String showPath = "";
         if (mPathHideFrom != null) {
@@ -295,7 +295,7 @@ public class FileManagerFragment extends BaseFragment {
         Intent newIntent = new Intent();
 
         String fileName = mCurrentFileList.get(index).name;
-        String fileExt = ProtoScriptHelper.fileExt(fileName).substring(1);
+        String fileExt = PhonkScriptHelper.fileExt(fileName).substring(1);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
         String path = (mCurrentFileList.get(index).path) + fileName;
         File file = new File(Environment.getExternalStorageDirectory(), "phonk_io/examples/User%20Interface/UI/patata2.png");

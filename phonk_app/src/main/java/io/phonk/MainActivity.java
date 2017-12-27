@@ -59,8 +59,8 @@ import io.phonk.gui.folderchooser.FolderListFragment;
 import io.phonk.gui.projectlist.ProjectListFragment;
 import io.phonk.gui.settings.NewUserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoAppHelper;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkAppHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.gui.EmptyFragment;
 import io.phonk.server.PhonkServerService;
 import io.phonk.runner.api.PUtil;
@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ProtoAppHelper.launchSchedulerList(this);
+        // PhonkAppHelper.launchSchedulerList(this);
         EventBus.getDefault().register(this);
 
         NewUserPreferences.getInstance().load();
@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity {
         String script = (String) NewUserPreferences.getInstance().get("launch_script_on_app_launch");
         if (!script.isEmpty()) {
             Project p = new Project(script);
-            ProtoAppHelper.launchScript(this, p);
+            PhonkAppHelper.launchScript(this, p);
         }
 
         mAppRunner.pUtil.delay(2000, new PUtil.delayCB() {
@@ -269,16 +269,16 @@ public class MainActivity extends BaseActivity {
 
                         if (itemId == R.id.more_options_new) {
 
-                            ProtoAppHelper.newProjectDialog(MainActivity.this);
+                            PhonkAppHelper.newProjectDialog(MainActivity.this);
                             return true;
                         } else if (itemId == R.id.more_options_settings) {
-                            ProtoAppHelper.launchSettings(MainActivity.this);
+                            PhonkAppHelper.launchSettings(MainActivity.this);
                             return true;
                         } else if (itemId == R.id.more_options_help) {
-                            ProtoAppHelper.launchHelp(MainActivity.this);
+                            PhonkAppHelper.launchHelp(MainActivity.this);
                             return true;
                         }  else if (itemId == R.id.more_options_about) {
-                            ProtoAppHelper.launchHelp(MainActivity.this);
+                            PhonkAppHelper.launchHelp(MainActivity.this);
                             return true;
                         }
 
@@ -324,7 +324,7 @@ public class MainActivity extends BaseActivity {
         NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
         newProjectDialog.show(fm, "fragment_edit_name");
 
-        String[] templates = ProtoScriptHelper.listTemplates(this);
+        String[] templates = PhonkScriptHelper.listTemplates(this);
         for (String template : templates) {
             MLog.d(TAG, "template " + template);
         }
@@ -334,7 +334,7 @@ public class MainActivity extends BaseActivity {
             public void onFinishEditDialog(String inputText) {
                 String template = "default";
                 Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = ProtoScriptHelper.createNewProject(MainActivity.this, template, "user_projects/User Projects/", inputText);
+                Project p = PhonkScriptHelper.createNewProject(MainActivity.this, template, "user_projects/User Projects/", inputText);
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });
@@ -432,6 +432,10 @@ public class MainActivity extends BaseActivity {
             case "serversStarted":
                 // show webview
                 loadWebIde();
+                break;
+            case "recreate":
+                // recreate();
+                // finish();
                 break;
 
         }

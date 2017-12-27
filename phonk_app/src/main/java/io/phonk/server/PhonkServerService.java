@@ -48,7 +48,7 @@ import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;
 import io.phonk.events.EventsProxy;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoAppHelper;
+import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.utils.AndroidUtils;
@@ -394,13 +394,13 @@ public class PhonkServerService extends Service {
 
         String action = e.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
-            ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
+            PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
             mProjectRunning = e.getProject();
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
             // ProtoScriptHelper.stop_all_scripts();
             Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
             sendBroadcast(i);
-            ProtoAppHelper.launchScript(getApplicationContext(), e.getProject());
+            PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
 
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
             Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
@@ -416,7 +416,7 @@ public class PhonkServerService extends Service {
         } else if (action.equals(Events.PROJECT_EDIT)) {
             MLog.d(TAG, "edit " + e.getProject().getName());
 
-            ProtoAppHelper.launchEditor(getApplicationContext(), e.getProject());
+            PhonkAppHelper.launchEditor(getApplicationContext(), e.getProject());
         }
     }
 

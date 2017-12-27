@@ -39,7 +39,7 @@ import org.phonk.R;
 
 import io.phonk.gui.settings.NewUserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoSettingsHelper;
+import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -212,7 +212,7 @@ public class WelcomeActivity extends BaseActivity {
         new File(PhonkSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        ProtoSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, new ProtoSettingsHelper.InstallListener() {
+        PhonkSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, new PhonkSettingsHelper.InstallListener() {
             @Override
             public void onReady() {
                 runOnUiThread(new Runnable() {

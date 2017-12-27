@@ -33,7 +33,7 @@ import android.widget.LinearLayout;
 import org.phonk.R;
 import io.phonk.gui._components.ResizableRecyclerView;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.ProtoScriptHelper;
+import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Folder;
@@ -66,7 +66,7 @@ public class FolderListFragment extends BaseFragment {
         ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
 
         //get the user folder
-        ArrayList<Folder> folders = ProtoScriptHelper.listFolders(PhonkSettings.USER_PROJECTS_FOLDER, true);
+        ArrayList<Folder> folders = PhonkScriptHelper.listFolders(PhonkSettings.USER_PROJECTS_FOLDER, true);
         foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.USER_PROJECTS_FOLDER, "Playground"));
 
         MLog.d(TAG, "nn1 " + folders);
@@ -75,7 +75,7 @@ public class FolderListFragment extends BaseFragment {
         }
 
         //get the examples folder
-        ArrayList<Folder> examples = ProtoScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
+        ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
         foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
         for (Folder folder : examples) {
             foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME,  PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
