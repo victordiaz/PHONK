@@ -24,7 +24,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/bonuspack_bubble_black"
+    android:background="@drawable/bubble"
     android:orientation="horizontal">
 
     <ImageView
@@ -50,9 +50,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed"
                 android:maxEms="17"
                 android:text="Title"
-                android:textColor="#ffffff"/>
+                android:textColor="@color/phonk_textColor_secondary"
+                android:textStyle="bold"
+                android:typeface="normal" />
 
             <Button
                 android:id="@+id/bubble_moreinfo"
@@ -67,10 +70,11 @@
             android:id="@+id/bubble_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:maxEms="17"
             android:text="Description"
-            android:textColor="#ffffff"
-            android:textSize="12dp"/>
+            android:textColor="@color/phonk_backgroundColor_primary"
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/bubble_subdescription"

@@ -23,8 +23,11 @@
 package io.phonk.runner.api.widgets;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import org.osmdroid.api.IMapController;
@@ -48,6 +51,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PMap extends MapView {
 
@@ -60,11 +64,14 @@ public class PMap extends MapView {
     private final boolean firstMarker = false;
     private ArrayList<OverlayItem> markerList = null;
 
-    private Context c;
+    private AppRunner mAppRunner;
+    private Context mContext;
 
     public PMap(AppRunner appRunner) {
         super(appRunner.getAppContext());
-        this.c = appRunner.getAppContext();
+
+        mAppRunner = appRunner;
+        this.mContext = appRunner.getAppContext();
         // super(appRunner, pixelTileSize);
 
         // Create the mapview with the custom tile provider array
@@ -99,7 +106,7 @@ public class PMap extends MapView {
 
         markerList = new ArrayList<OverlayItem>();
 
-        Drawable icon = c.getResources().getDrawable(R.drawable.icon);
+        Drawable icon = mContext.getResources().getDrawable(R.drawable.icon);
         iconOverlay = new ItemizedOverlayWithFocus<OverlayItem>(markerList,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
@@ -122,7 +129,7 @@ public class PMap extends MapView {
         iconOverlay.setFocusItemsOnTap(true);
 
 
-        // myLocationOverlay = new MyLocationNewOverlay(c, mapView);
+        // myLocationOverlay = new MyLocationNewOverlay(mContext, mapView);
         // mapView.getOverlays().add(myLocationOverlay);
         mapView.getOverlays().add(iconOverlay);
 
@@ -154,11 +161,16 @@ public class PMap extends MapView {
 
     }
 
-
-    @ProtoMethod(description = "Creates a path in which it can be added new points", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
-    public MapPath createPath(String color) {
-        MapPath path = new MapPath();
+    /**
+     * Creates a path in which it can be added new point
+     * Once the path is created, we can add points to it
+     *
+     * @param color
+     * @return
+     */
+    @ProtoMethod
+    public PMapPath createPath(String color) {
+        PMapPath path = new PMapPath();
         path.setColor(Color.parseColor(color));
         mapView.getOverlays().add(path);
 
@@ -166,13 +178,19 @@ public class PMap extends MapView {
     }
 
 
-    @ProtoMethod(description = "Set a new tile source such as mapbox and others", example = "")
-    @ProtoMethodParam(params = {"name", "url"})
+    /**
+     * Set a new tile source such as mapbox and others
+     *
+     * @param name
+     * @param url
+     * @return
+     */
+    @ProtoMethod
     public MapView tileSource(String name, String url) {
 
         String[] tileSourcesUrl = new String[1];
         tileSourcesUrl[0] = url;
-        MapTileProviderBasic tileProvider = new MapTileProviderBasic(c);
+        MapTileProviderBasic tileProvider = new MapTileProviderBasic(mContext);
         ITileSource tileSource = new XYTileSource(name, 3, 10, 256, ".png", tileSourcesUrl);
 
         tileProvider.setTileSource(tileSource);
@@ -194,69 +212,110 @@ public class PMap extends MapView {
         return mapView;
     }
 
-    /*
-    @ProtoMethod(description = "Add a new marker", example = "")
-    @ProtoMethodParam(params = {"title", "text", "latitude", "longitude"})
-    public OverlayItem addMarker(String title, String text, double lat, double lon) {
+    /**
+     * Add a marker to the map.
+     * The params object accepts params as follows
+     * {
+     *     lon: 21.1,
+     *     lat: 22.2,
+     *     icon: "myicon.png",
+     *     title: "hello",
+     *     description: "Bubble info"
+     * }
+     * @param params
+     * @return
+     */
+    @ProtoMethod
+    public PMapMarker addMarker(Map params) {
+        PMapMarker m = new PMapMarker(mapView);
 
-        OverlayItem olItem = new OverlayItem(title, text, new GeoPoint(lat, lon));
-        Drawable newMarker = c.getResources().getDrawable(R.drawable.marker);
-        olItem.setMarker(newMarker);
-        olItem.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
-        markerList.add(olItem);
-        iconOverlay.addItem(olItem);
-        this.invalidate();
+        // location
+        GeoPoint loc = new GeoPoint((double) params.get("lon"), (double) params.get("lat"));
+        m.setPosition(loc);
 
-        return olItem;
-    }
-    */
+        // icon
+        String iconName = (String) params.get("icon");
+        if (iconName == null) m.setIcon(getResources().getDrawable(R.drawable.marker));
+        else {
+            m.icon(iconName);
+        }
 
+        String title = (String) params.get("title");
+        if (title != null) m.title(title);
 
-    public MapMarker addMarker(double lat, double lon) {
-        MapMarker m = new MapMarker(mapView);
-        m.setPosition(new GeoPoint(lat, lon));
-        m.setIcon(getResources().getDrawable(R.drawable.marker));
-        // m.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
+        /*
+        String subTitle = (String) map.get("title");
+        if (subTitle != null) m.setSubDescription(subTitle);
+        */
+
+        String description = (String) params.get("description");
+        if (description != null) m.description(description);
 
         mapView.getOverlays().add(m);
         mapView.invalidate();
+
         return m;
     }
 
 
-    @ProtoMethod(description = "Clear the map cache", example = "")
-    @ProtoMethodParam(params = {""})
+    /**
+     * Clear the map cache"
+     *
+     * @return
+     */
+    @ProtoMethod
     public MapView clearCache() {
         mapView.getTileProvider().clearTileCache();
 
         return this;
     }
 
-    @ProtoMethod(description = "Zoom in/out depending on the integer given", example = "")
-    @ProtoMethodParam(params = {"zoomValue"})
-    public MapView zoom(int z) {
-        mapController.setZoom(z);
+    /**
+     * Zoom in/out depending on the integer given
+     *
+     * @param zoom
+     * @return
+     */
+    @ProtoMethod
+    public MapView zoom(int zoom) {
+        mapController.setZoom(zoom);
 
         return this;
     }
 
-    @ProtoMethod(description = "Show/hide the map controls", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    /**
+     * Show/hide the map controls
+     *
+     * @param b
+     * @return
+     */
+    @ProtoMethod
     public MapView showControls(boolean b) {
         mapView.setBuiltInZoomControls(b);
 
         return this;
     }
 
-    @ProtoMethod(description = "Enable/Disables the multitouch events in the map", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    /**
+     * Enable/Disable the multitouch events in the map
+     *
+     * @param b
+     * @return
+     */
+    @ProtoMethod
     public MapView multitouch(boolean b) {
         mapView.setMultiTouchControls(b);
         return this;
     }
 
-    @ProtoMethod(description = "Move to a specified location", example = "")
-    @ProtoMethodParam(params = {"latitude", "longitude"})
+    /**
+     * Move to a specified location
+     *
+     * @param lat
+     * @param lon
+     * @return
+     */
+    @ProtoMethod
     public MapView moveTo(double lat, double lon) {
         GeoPoint point2 = new GeoPoint(lat, lon);
         mapController.animateTo(point2);
@@ -264,8 +323,14 @@ public class PMap extends MapView {
         return this;
     }
 
-    @ProtoMethod(description = "Set the center of the map with the specified location", example = "")
-    @ProtoMethodParam(params = {"latitude", "longitude"})
+    /**
+     * Set the center of the map with the specified location
+     *
+     * @param lat
+     * @param lon
+     * @return
+     */
+    @ProtoMethod
     public MapView center(double lat, double lon) {
         GeoPoint point2 = new GeoPoint(lat, lon);
         mapController.setCenter(point2);
@@ -274,22 +339,36 @@ public class PMap extends MapView {
     }
 
 
-    @ProtoMethod(description = "Gets the current center of the map", example = "")
-    @ProtoMethodParam(params = {""})
+    /**
+     * Gets the current center of the map
+     *
+     * @return
+     */
+    @ProtoMethod
     public GeoPoint center() {
         return mapView.getBoundingBox().getCenter();
     }
 
 
-    @ProtoMethod(description = "Gets the current zoom of the map", example = "")
-    @ProtoMethodParam(params = {""})
+    /**
+     * Gets the current zoom of the map
+     *
+     * @return
+     */
+    @ProtoMethod
     public float zoom() {
         return mapView.getZoomLevel();
     }
 
 
-    @ProtoMethod(description = "Set the zoom limits", example = "")
-    @ProtoMethodParam(params = {"min", "max"})
+    /**
+     * Set the zoom limits
+     *
+     * @param min
+     * @param max
+     * @return
+     */
+    @ProtoMethod
     public MapView zoomLimits(int min, int max) {
         mapView.setMinZoomLevel(min);
         mapView.setMaxZoomLevel(max);
@@ -297,22 +376,36 @@ public class PMap extends MapView {
         return this;
     }
 
-
-    @ProtoMethod(description = "Get coordinates from the pixel position of the map", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    /**
+     * Get coordinates from the pixel position of the map
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    @ProtoMethod
     public org.osmdroid.api.IGeoPoint pixelsToGeo(int x, int y) {
         return mapView.getProjection().fromPixels(x, y);
     }
 
-
-    @ProtoMethod(description = "Get coordinates from the pixel position of the map", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    /**
+     * Get coordinates from the pixel position of the map
+     *
+     * @param lat
+     * @param lon
+     * @return
+     */
+    @ProtoMethod
     public Point geoToPixels(double lat, double lon) {
         GeoPoint point = new GeoPoint(lat, lon);
 
         return mapView.getProjection().toPixels(point, null);
     }
 
+    /**
+     * Enable / disable online map data
+     * @param b
+     */
     public void useOnlineData(boolean b) {
         mapView.setUseDataConnection(b);
     }
@@ -323,21 +416,21 @@ public class PMap extends MapView {
 
     /*
     public void getRoadPath(double lat1, double lon1, double lat2, double lon2) {
-        RoadManager roadManager = new OSRMRoadManager(c);
+        RoadManager roadManager = new OSRMRoadManager(mContext);
 
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
         waypoints.add(new GeoPoint(lat1, lon1));
         waypoints.add(new GeoPoint(lat2, lon2));
 
         Road road = roadManager.getRoad(waypoints);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, c);
+        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, mContext);
         roadOverlay.setWidth(2);
         mapView.getOverlays().add(roadOverlay);
         mapView.invalidate();
     }
 
     public void addGroundOverlay(double lat, double lon) {
-        GroundOverlay myGroundOverlay = new GroundOverlay(c);
+        GroundOverlay myGroundOverlay = new GroundOverlay(mContext);
         myGroundOverlay.setPosition(new GeoPoint(lat, lon));
         myGroundOverlay.setImage(getResources().getDrawable(R.drawable.protocoder_icon).mutate());
         myGroundOverlay.setDimensions(2000.0f);
@@ -395,51 +488,64 @@ public class PMap extends MapView {
 //        return true;
 //    }
 
-    public class MapMarker extends Marker {
+    public class PMapMarker extends Marker {
 
-        public MapMarker(MapView mapView) {
+        public PMapMarker(MapView mapView) {
             super(mapView);
         }
 
-        public MapMarker title(String title) {
+        public PMapMarker position(double lon, double lat) {
+            setPosition(new GeoPoint(lon, lat));
+            invalidate();
+            return this;
+        }
+
+        public PMapMarker title(String title) {
             setTitle(title);
             invalidate();
             return this;
         }
 
-        public MapMarker snippet(String description) {
+        public PMapMarker snippet(String description) {
             setSnippet(description);
             return this;
         }
 
-        public MapMarker subDescription(String text) {
+        public PMapMarker subDescription(String text) {
             setSubDescription(text);
             return this;
         }
 
-        public MapMarker icon(String iconSrc) {
+        public PMapMarker icon(String iconSrc) {
+            Bitmap iconBmp = BitmapFactory.decodeFile(mAppRunner.getProject().getFullPathForFile(iconSrc));
+            setIcon(new BitmapDrawable(getResources(), iconBmp));
 
             return this;
         }
 
-        public MapMarker image(String imgSrc) {
+        public PMapMarker image(String imgSrc) {
+            Bitmap iconBmp = BitmapFactory.decodeFile(mAppRunner.getProject().getFullPathForFile(imgSrc));
+            setImage(new BitmapDrawable(getResources(), iconBmp));
 
             return this;
         }
 
 
-
+        public PMapMarker description(String description) {
+            setSnippet(description);
+            invalidate();
+            return this;
+        }
     }
 
-    public class MapPath extends Polyline {
-        MapPath() {
+    public class PMapPath extends Polyline {
+        PMapPath() {
             super();
-
         }
 
         @ProtoMethod(description = "Add a point to the path", example = "")
         @ProtoMethodParam(params = {"path", "latitude", "longitude"})
-        public MapPath addGeoPoint(double lat, double lon) {
+        public PMapPath addGeoPoint(double lat, double lon) {
             addPoint(new GeoPoint(lat, lon));
             mapView.invalidate();
 
@@ -449,7 +555,7 @@ public class PMap extends MapView {
 
         @ProtoMethod(description = "Clear the path", example = "")
         @ProtoMethodParam(params = {"path"})
-        public MapPath clear() {
+        public PMapPath clear() {
             clearPath();
             mapView.invalidate();
 
@@ -458,3 +564,4 @@ public class PMap extends MapView {
 
     }
 }
+
