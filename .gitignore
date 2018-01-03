@@ -5,17 +5,19 @@
 #   git config --global core.excludesfile ~/.gitignore_global
 
 /keystore
-/protocoder_app/fabric.properties
 
 
 # Ignore bundler config
 /.bundle
 
 # Ignore WebIDE
-protocoder_app/src/main/assets/webide/
+phonk_app/src/main/assets/webide/
 
 # Ignore examples
-protocoder_app/src/main/assets/examples/
+phonk_app/src/main/assets/examples/
+
+# Signing Properties
+signing.properties
 
 ## ANDROID THINGS
 # built application files
