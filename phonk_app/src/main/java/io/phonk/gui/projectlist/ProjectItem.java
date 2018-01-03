@@ -100,10 +100,6 @@ public class ProjectItem extends LinearLayout {
                 Runnable r = new Runnable() {
                     @Override
                     public void run() {
-
-                        // Events.ProjectEvent evt = new Events.ProjectEvent(Events.PROJECT_RUN, mProject);
-                        // EventBus.getDefault().post(evt);
-
                         PhonkAppHelper.launchScript(getContext(), mProject);
                         // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
                         //        R.anim.splash_slide_out_anim_set);
@@ -112,7 +108,6 @@ public class ProjectItem extends LinearLayout {
 
                 Handler handler = new Handler();
                 handler.postDelayed(r, 0);
-                
             }
         });
 

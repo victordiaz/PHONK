@@ -59,7 +59,6 @@ public class PhonkSettingsHelper {
                         AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
                         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 250, mPendingIntent);
                         System.exit(0);
-
                     }
                 }).show();
     }

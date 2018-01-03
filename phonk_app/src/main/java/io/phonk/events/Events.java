@@ -46,7 +46,9 @@ public class Events {
     public static final String EDITOR_FILE_PREVIEW  = "editor_file_preview" ;
     public static final String EDITOR_ALL_FILE_STATUS = "editor_all_file_status";
     
-    public static final String CLOSE_APP = "cloase_app";
+    public static final String CLOSE_APP = "close_app";
+    public static final String PROJECTLIST_SHOW_BOTTOM_BAR = "projectlist_show_bottom_bar";
+    public static final String PROJECTLIST_HIDE_BOTTOM_BAR = "projectlist_hide_bottom_bar";
 
     public static class ProjectEvent {
         private Project project;

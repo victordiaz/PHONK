@@ -54,7 +54,7 @@ public class PhonkAppInstallerActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_proto_installer);
+        setContentView(R.layout.activity_phonk_installer);
 
         TextView txtProto = (TextView) findViewById(R.id.text_proto_install_info);
         TextView txtOrigin = (TextView) findViewById(R.id.from_url);

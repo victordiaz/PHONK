@@ -97,7 +97,7 @@ public class FolderChooserDialog extends DialogFragment {
 
     @Override
     public void onPause() {
-        super.onResume();
+        super.onPause();
         EventBus.getDefault().unregister(this);
     }
 

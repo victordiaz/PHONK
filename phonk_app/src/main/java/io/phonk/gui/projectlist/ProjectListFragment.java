@@ -45,6 +45,7 @@ import io.phonk.events.Events.ProjectEvent;
 import io.phonk.gui.settings.NewUserPreferences;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
 import io.phonk.runner.models.Project;
@@ -65,7 +66,7 @@ public class ProjectListFragment extends BaseFragment {
     public ProjectItemAdapter mProjectAdapter;
 
     public String mProjectFolder;
-    boolean mListMode;
+    boolean mListMode = true;
     public boolean mOrderByName = true;
     public int num = 0;
     public static int totalNum = 0;
@@ -75,6 +76,7 @@ public class ProjectListFragment extends BaseFragment {
     private TextView mTxtFolder;
     private boolean mIsTablet = false;
 
+    private LinearLayout mBottomBar;
 
     public ProjectListFragment() {
         num = totalNum++;
@@ -88,8 +90,8 @@ public class ProjectListFragment extends BaseFragment {
         //mProjectFolder = "projects";
         MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
-        mListMode = (boolean) NewUserPreferences.getInstance().get("apps_in_list_mode");
-        
+        // mListMode = (boolean) NewUserPreferences.getInstance().get("apps_in_list_mode");
+
         mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode);
     }
 
@@ -135,6 +137,11 @@ public class ProjectListFragment extends BaseFragment {
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         LinearLayout llFolderLocation = (LinearLayout) v.findViewById(R.id.folderLocation2);
         if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
+
+        mBottomBar = (LinearLayout) v.findViewById(R.id.bottombar);
+
+        mBottomBar.setTranslationY(AndroidUtils.dpToPixels(mContext, 52));
+        mBottomBar.animate().translationY(AndroidUtils.dpToPixels(mContext, 0)).setDuration(5000).start();
 
         return v;
     }
@@ -285,6 +292,10 @@ public class ProjectListFragment extends BaseFragment {
         String action = evt.getAction();
 
         switch (action) {
+            case Events.PROJECTLIST_SHOW_BOTTOM_BAR:
+                break;
+            case Events.PROJECTLIST_HIDE_BOTTOM_BAR:
+                break;
             case Events.PROJECT_RUN:
                 Project p = evt.getProject();
                 projectRefresh(p.getName());
@@ -315,5 +326,5 @@ public class ProjectListFragment extends BaseFragment {
         mTxtParentFolder.setText(e.getParent());
         mTxtFolder.setText(e.getName());
     }
-    
+
 }

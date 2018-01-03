@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Part of Phonk http://www.phonk.io
   ~ A prototyping platform for Android devices
@@ -20,12 +21,18 @@
   ~
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="0dp"
+        android:color="#505050"/>
+    <corners
+        android:radius="0dp" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+    <padding
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp"
+        android:bottom="1dp"/>
 
-</menu>
+    <solid android:color="@color/phonk_backgroundColor_primary"/>
+</shape>

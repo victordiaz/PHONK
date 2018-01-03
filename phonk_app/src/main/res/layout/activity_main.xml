@@ -49,14 +49,15 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/phonk_icon_big_no_text" />
+            android:src="@drawable/phonk_icon_big_no_text"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/logo_area"
-            android:padding="12dp"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_height="wrap_content">
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -65,9 +66,9 @@
                 android:shadowColor="@color/blacktransparent20"
                 android:shadowDx="1"
                 android:shadowDy="1"
-                android:text="phonk!"
+                android:text="phonk"
                 android:textColor="@color/phonk_textColor_primary"
-                android:textSize="48sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:typeface="monospace" />
 
@@ -93,8 +94,8 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginLeft="12dp"
-                android:src="@drawable/ic_more_vert_white_24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_more_vert_white_24dp"
                 android:text=""
                 android:textOff=""
                 android:textOn="" />

@@ -39,10 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
+
         <FrameLayout
             android:id="@+id/computer_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="12dp">
@@ -55,17 +56,21 @@
             <TextView
                 android:id="@+id/computerText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxHeight="55dp"
-                android:gravity="bottom"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="18dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="28dp"
+                android:layout_marginTop="18dp"
                 android:elevation="1dp"
-                android:paddingLeft="18dp"
-                android:paddingRight="18dp"
-                android:paddingTop="25dp"
+                android:gravity="top"
+                android:maxHeight="55dp"
                 android:text="> "
+                android:textColor="@color/phonk_textColor_primary"
                 android:textSize="3sp"
                 android:textStyle="bold"
-                android:typeface="monospace" />
+                android:typeface="monospace"
+                android:visibility="visible"
+                tools:text="bnvbnbv" />
 
         </FrameLayout>
 
@@ -90,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:maxWidth="200dp"
+                android:padding="5dp"
                 android:text="@string/connection_message_not_connected"
                 android:textColor="@color/phonk_textColor_primary"
                 android:textSize="12sp" />
@@ -98,10 +104,11 @@
                 android:id="@+id/connection_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="0dp"
                 android:gravity="left"
                 android:text="http://1.2.3.4.5:8585"
                 android:textColor="@color/phonk_textColor_primary"
+                android:paddingLeft="2dp"
                 android:textSize="12sp"
                 android:textStyle="italic|bold"
                 android:visibility="gone" />

@@ -70,11 +70,13 @@
             android:summary="@string/setting_launch_script_on_app_launch_description"
             android:title="@string/setting_launch_script_on_app_launch_title" />
 
+        <!--
         <CheckBoxPreference
             android:checked="false"
             android:key="apps_in_list_mode"
             android:summary="@string/setting_list_mode_description"
             android:title="@string/setting_list_mode_title" />
+        -->
 
         <!--
         <CheckBoxPreference

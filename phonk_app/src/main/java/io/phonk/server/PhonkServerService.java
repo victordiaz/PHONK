@@ -111,7 +111,7 @@ public class PhonkServerService extends Service {
                 @Override
                 public void run() {
                     Looper.prepare();
-                    Toast.makeText(PhonkServerService.this, "lalll", Toast.LENGTH_LONG);
+                    Toast.makeText(PhonkServerService.this, "ooops!", Toast.LENGTH_LONG).show();
                     Looper.loop();
                 }
             }.start();

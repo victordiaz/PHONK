@@ -193,5 +193,39 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/bottombar_run"
+            android:background="@drawable/button_projectlist_bottom_run"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="run"/>
+
+        <Button
+            android:id="@+id/bottombar_edit"
+            android:background="@drawable/button_projectlist_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/phonk_textColor_primary"
+            android:text="edit"/>
+
+        <Button
+            android:id="@+id/bottombar_more"
+            android:background="@drawable/button_projectlist_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/phonk_textColor_primary"
+            android:text="more"/>
+
+
+    </LinearLayout>
 </RelativeLayout>
