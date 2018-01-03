@@ -11,8 +11,14 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
+
+// load keyStore properties to sign the apk
+def keystorePropertiesFile = rootProject.file("signing.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
-    flavorDimensions "phonk_normal", "phonk_extended"
+    // flavorDimensions "phonk_normal", "phonk_extended"
 
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
@@ -20,11 +26,12 @@ android {
     defaultConfig {
         applicationId "io.phonk.beta"
         minSdkVersion 19 // change to 16
-        targetSdkVersion 24
+        targetSdkVersion 25
 
         versionCode 26
         versionName "0.26.0"
         multiDexEnabled true
+        setProperty("archivesBaseName", "phonk-$versionName")
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7
@@ -34,7 +41,10 @@ android {
 
     signingConfigs {
         releaseConfig {
-
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
 
@@ -51,9 +61,9 @@ android {
             debuggable true;
             //applicationIdSuffix ".nineteen";
         }
-
     }
 
+    /*
     productFlavors {
         normal {
             dimension 'phonk_normal'
@@ -69,6 +79,7 @@ android {
             resValue "string", "releaseMode", "all_features"
         }
     }
+    */
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -102,21 +113,19 @@ repositories {
     maven { url "https://maven.google.com" }
 }
 
+/*
 configurations {
     //all*.exclude group: 'com.android.support', module: 'support-v4'
    // all*.exclude group: 'com.google.android.gms', module: 'play-services'
 }
+*/
 
 dependencies {
-    normalCompile project(path: ':phonk_apprunner')
-    extendedCompile project(path: ':phonk_apprunner')
+    compile project(path: ':phonk_apprunner')
+    // extendedCompile project(path: ':phonk_apprunner')
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:preference-v7:25.4.0'
-
-    // compile (name:'processing_fragmented', ext:'aar')
-
     compile 'jp.kshoji:midi-driver:0.1.4:@aar'
-
     compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true;
     }
