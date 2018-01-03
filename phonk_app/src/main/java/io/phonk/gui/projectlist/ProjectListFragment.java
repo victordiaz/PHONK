@@ -32,7 +32,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -138,10 +140,13 @@ public class ProjectListFragment extends BaseFragment {
         LinearLayout llFolderLocation = (LinearLayout) v.findViewById(R.id.folderLocation2);
         if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
 
+        // TODO add the bottom bar any day.....
         mBottomBar = (LinearLayout) v.findViewById(R.id.bottombar);
-
+        mBottomBar.setVisibility(View.GONE);
+        /*
         mBottomBar.setTranslationY(AndroidUtils.dpToPixels(mContext, 52));
         mBottomBar.animate().translationY(AndroidUtils.dpToPixels(mContext, 0)).setDuration(5000).start();
+        */
 
         return v;
     }
@@ -240,6 +245,13 @@ public class ProjectListFragment extends BaseFragment {
         // mGrid.startAnimation(mAnim);
 
         notifyAddedProject();
+
+        final Context context = mGrid.getContext();
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.fav_grid_anim);
+
+        mGrid.setLayoutAnimation(controller);
+        mGrid.getAdapter().notifyDataSetChanged();
+        mGrid.scheduleLayoutAnimation();
 
         MLog.d(TAG, "loading " + mProjectFolder);
     }
