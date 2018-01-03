@@ -30,9 +30,6 @@ import io.phonk.MainActivity;
 import io.phonk.gui.settings.NewUserPreferences;
 import io.phonk.runner.base.utils.MLog;
 
-/**
- * Created by biquillo on 13/09/16.
- */
 public class PhonkBootReceiver extends BroadcastReceiver {
 
     private static final String TAG = PhonkBootReceiver.class.getSimpleName();

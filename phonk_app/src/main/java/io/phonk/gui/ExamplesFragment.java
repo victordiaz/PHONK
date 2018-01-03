@@ -20,10 +20,6 @@
  *
  */
 
-/**
-* Created by biquillo on 31/03/17.
-*/
-
 package io.phonk.gui;
 
 import android.graphics.Color;

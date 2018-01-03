@@ -30,10 +30,6 @@ import android.os.Bundle;
 
 import io.phonk.runner.base.BaseActivity;
 
-/**
- * Created by biquillo on 28/12/16.
- */
-
 public class OpenGLActivity extends BaseActivity {
 
     private GLSurfaceView mGLSurfaceView;
