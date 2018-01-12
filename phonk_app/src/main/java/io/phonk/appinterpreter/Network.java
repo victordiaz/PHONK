@@ -22,7 +22,7 @@
 
 package io.phonk.appinterpreter;
 
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 
@@ -37,7 +37,7 @@ public class Network {
 
     public void checkVersion() {
         //check if new version is available
-        if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) NewUserPreferences.getInstance().get("notify_new_version")) {
+        if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) UserPreferences.getInstance().get("notify_new_version")) {
             mAppRunner.pNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new ReturnInterface() {
                 @Override
                 public void event(ReturnObject data) {

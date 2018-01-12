@@ -37,7 +37,7 @@ import android.widget.ViewFlipper;
 
 import org.phonk.R;
 
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseActivity;
@@ -320,7 +320,7 @@ public class WelcomeActivity extends BaseActivity {
                 userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 
                 // first time id
-                NewUserPreferences.getInstance().set("user_id", StrUtils.generateUUID()).save();
+                UserPreferences.getInstance().set("user_id", StrUtils.generateUUID()).save();
 
                 ready();
 

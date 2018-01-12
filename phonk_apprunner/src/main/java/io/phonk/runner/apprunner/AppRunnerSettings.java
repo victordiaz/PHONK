@@ -36,6 +36,7 @@ public class AppRunnerSettings {
     public final static String PHONK_FOLDER = "phonk_io";
     public static final String USER_PROJECTS_FOLDER = "user_projects";
     public static final String EXAMPLES_FOLDER = "examples";
+    public static final String LOGS_FOLDER = "logs";
 
     public static final String LIBRARIES_FOLDER = "libraries";
     public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
@@ -55,5 +56,9 @@ public class AppRunnerSettings {
 
     public static String getBaseLibrariesDir() {
         return getBaseDir() + LIBRARIES_FOLDER + File.separator;
+    }
+
+    public static String getLogsFolder() {
+        return getBaseDir() + LOGS_FOLDER + File.separator;
     }
 }

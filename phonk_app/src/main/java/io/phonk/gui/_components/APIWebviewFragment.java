@@ -37,7 +37,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.phonk.R;
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
@@ -179,13 +179,13 @@ public class APIWebviewFragment extends BaseFragment {
 
         @JavascriptInterface
         public boolean getWebIde() {
-            return (boolean) NewUserPreferences.getInstance().get("webide_mode");
+            return (boolean) UserPreferences.getInstance().get("webide_mode");
         }
 
         @JavascriptInterface
         public void setWebIde(boolean b) {
             MLog.d("qq", "" + b);
-            NewUserPreferences.getInstance().set("webide_mode", b).save();
+            UserPreferences.getInstance().set("webide_mode", b).save();
 
             PhonkSettingsHelper.showRestartMessage(getContext(), v);
         }

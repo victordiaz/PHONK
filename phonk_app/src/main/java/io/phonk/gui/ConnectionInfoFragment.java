@@ -39,7 +39,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.phonk.R;
 import io.phonk.events.Events;
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
@@ -107,7 +107,7 @@ public class ConnectionInfoFragment extends Fragment {
             }
         });
 
-        if ((boolean) NewUserPreferences.getInstance().get("servers_enabled_on_start")) {
+        if ((boolean) UserPreferences.getInstance().get("servers_enabled_on_start")) {
             mToggleServers.performClick(); // startServers();
         }
 

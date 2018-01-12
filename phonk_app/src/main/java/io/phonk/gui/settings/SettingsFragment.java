@@ -48,7 +48,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     protected static final String TAG = SettingsFragment.class.getSimpleName();
     private Context mContext;
-    private NewUserPreferences mUserPreferences;
+    private UserPreferences mUserPreferences;
     private View mParentView;
 
     public SettingsFragment() {
@@ -87,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         mContext = getActivity();
 
-        mUserPreferences = NewUserPreferences.getInstance();
+        mUserPreferences = UserPreferences.getInstance();
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
@@ -101,7 +101,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
-        prefDeviceId.setText((String) NewUserPreferences.getInstance().get("device_id"));
+        prefDeviceId.setText((String) UserPreferences.getInstance().get("device_id"));
 
         // Screen always on mode
         final TwoStatePreference prefScreenOn = (TwoStatePreference) findPreference("screen_always_on");
@@ -191,9 +191,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
-        prefLaunchScript.setText((String) NewUserPreferences.getInstance().get("launch_script_on_app_launch"));
+        prefLaunchScript.setText((String) UserPreferences.getInstance().get("launch_script_on_app_launch"));
 
         // Column mode
+        /*
         final TwoStatePreference prefAppsInColumnMode = (TwoStatePreference) findPreference("apps_in_list_mode");
         if (prefAppsInColumnMode != null) {
             prefAppsInColumnMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -206,9 +207,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             });
         }
         prefAppsInColumnMode.setChecked((Boolean) mUserPreferences.get("apps_in_list_mode"));
-
-
-
+        */
 
 
 
@@ -222,7 +221,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
-        appColor.setText((String) NewUserPreferences.getInstance().get("app_color"));
+        appColor.setText((String) UserPreferences.getInstance().get("app_color"));
         */
 
         Preference btnShowLicenses = findPreference("licenses_detail");

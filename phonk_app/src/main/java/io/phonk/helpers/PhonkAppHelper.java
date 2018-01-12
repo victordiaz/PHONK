@@ -38,7 +38,7 @@ import io.phonk.gui.LicenseActivity;
 import io.phonk.gui.SchedulerActivity;
 import io.phonk.gui._components.NewProjectDialogFragment;
 import io.phonk.gui.editor.EditorActivity;
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.SettingsActivity;
 import io.phonk.runner.AppRunnerActivity;
@@ -70,7 +70,7 @@ public class PhonkAppHelper {
             intent.putExtra(Project.FOLDER, p.getFolder());
             intent.putExtra(Project.NAME, p.getName());
             intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
-            intent.putExtra("device_id", (String) NewUserPreferences.getInstance().get("device_id"));
+            intent.putExtra("device_id", (String) UserPreferences.getInstance().get("device_id"));
             context.startService(intent);
         } else {
             Intent intent = new Intent(context, AppRunnerActivity.class);
@@ -78,7 +78,7 @@ public class PhonkAppHelper {
             intent.putExtra(Project.FOLDER, p.getFolder());
             intent.putExtra(Project.NAME, p.getName());
             intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
-            intent.putExtra("device_id", (String) NewUserPreferences.getInstance().get("device_id"));
+            intent.putExtra("device_id", (String) UserPreferences.getInstance().get("device_id"));
             MLog.d(TAG, "1 ------------> launching side by side " + AndroidUtils.isVersionN());
 
             if (AndroidUtils.isVersionN() && multiWindowEnabled) {

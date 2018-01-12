@@ -25,7 +25,7 @@ package io.phonk.server;
 import android.content.Context;
 
 import io.phonk.appinterpreter.AppRunnerCustom;
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.api.network.PFtpServer;
 import io.phonk.runner.base.utils.MLog;
@@ -42,7 +42,7 @@ public class PhonkFtpServer extends PFtpServer {
         MLog.d(TAG, "" + port);
 
         c = appRunner.getAppContext();
-        NewUserPreferences newUserPreferences = NewUserPreferences.getInstance();
+        UserPreferences newUserPreferences = UserPreferences.getInstance();
 
         String user = (String) newUserPreferences.get("ftp_user");
         String password = (String) newUserPreferences.get("ftp_password");
