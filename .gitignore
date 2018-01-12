@@ -59,13 +59,6 @@ build/
 # Windows stuff
 Thumbs.db
 
-DesktopApp/ 
-
-AndroidApp/protocoder/tool_release.sh
-AndroidApp/protocoder/tool_verify_signature.sh
-AndroidApp/protocoder/key_release.keystore
-
-
 # JS stuff
 node_modules
 manifest-merger*
