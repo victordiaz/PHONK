@@ -76,6 +76,35 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/select_folder"
+        android:layout_below="@id/folderLocation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:src="@drawable/protocoder_none" />-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Select a folder"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#55000000"
+            />
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"

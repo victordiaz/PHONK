@@ -43,33 +43,41 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_arrow_back_black_24dp" />
 
-    <TextView
-        android:id="@+id/parentFolder"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/folderPath"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="folder"
-        android:textStyle="bold"
-        android:visibility="visible"
-        android:textColor="@color/phonk_accentColor_primary" />
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/separator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="/"
-        android:textStyle="bold"
-        android:visibility="visible"
-        android:textColor="@color/phonk_accentColor_primary" />
+        <TextView
+            android:id="@+id/parentFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="folder"
+            android:textStyle="bold"
+            android:visibility="visible"
+            android:textColor="@color/phonk_accentColor_primary" />
 
-    <TextView
-        android:id="@+id/folder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="subfolder"
-        android:textStyle="bold"
-        android:visibility="visible"
-        android:textColor="@color/phonk_accentColor_primary" />
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="/"
+            android:textStyle="bold"
+            android:visibility="visible"
+            android:textColor="@color/phonk_accentColor_primary" />
+
+        <TextView
+            android:id="@+id/folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="subfolder"
+            android:textStyle="bold"
+            android:visibility="visible"
+            android:textColor="@color/phonk_accentColor_primary" />
+
+    </LinearLayout>
 </LinearLayout>
 
     

@@ -57,7 +57,7 @@ import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui._components.NewProjectDialogFragment;
 import io.phonk.gui.folderchooser.FolderListFragment;
 import io.phonk.gui.projectlist.ProjectListFragment;
-import io.phonk.gui.settings.NewUserPreferences;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
@@ -100,6 +100,7 @@ public class MainActivity extends BaseActivity {
     private boolean mUiInit = false;
     private boolean isWebIdeMode = false;
     private boolean isServersEnabledOnStart;
+    private boolean mShowProjectsInFolder = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +109,9 @@ public class MainActivity extends BaseActivity {
         // PhonkAppHelper.launchSchedulerList(this);
         EventBus.getDefault().register(this);
 
-        NewUserPreferences.getInstance().load();
-        isWebIdeMode = (boolean) NewUserPreferences.getInstance().get("webide_mode");
-        isServersEnabledOnStart = (boolean) NewUserPreferences.getInstance().get("servers_enabled_on_start");
+        UserPreferences.getInstance().load();
+        isWebIdeMode = (boolean) UserPreferences.getInstance().get("webide_mode");
+        isServersEnabledOnStart = (boolean) UserPreferences.getInstance().get("servers_enabled_on_start");
 
         mAppRunner = new AppRunnerCustom(this);
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
@@ -124,10 +125,10 @@ public class MainActivity extends BaseActivity {
 
         loadUI();
 
-        setScreenAlwaysOn((boolean) NewUserPreferences.getInstance().get("screen_always_on"));
+        setScreenAlwaysOn((boolean) UserPreferences.getInstance().get("screen_always_on"));
 
         // execute onLaunch script
-        String script = (String) NewUserPreferences.getInstance().get("launch_script_on_app_launch");
+        String script = (String) UserPreferences.getInstance().get("launch_script_on_app_launch");
         if (!script.isEmpty()) {
             Project p = new Project(script);
             PhonkAppHelper.launchScript(this, p);
@@ -268,7 +269,6 @@ public class MainActivity extends BaseActivity {
                         int itemId = menuItem.getItemId();
 
                         if (itemId == R.id.more_options_new) {
-
                             PhonkAppHelper.newProjectDialog(MainActivity.this);
                             return true;
                         } else if (itemId == R.id.more_options_settings) {
@@ -289,34 +289,28 @@ public class MainActivity extends BaseActivity {
                 myPopup.show();
             }
         });
-
-        if (isWebIdeMode) addWebIde();
     }
 
-    public void addWebIde() {
+    public void loadWebIde() {
+        MLog.d(TAG, "loadWebIde");
+
+        if (mWebViewFragment != null) return;
+
         FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentEditor);
         fl.setVisibility(View.VISIBLE);
         MLog.d(TAG, "using webide");
         mWebViewFragment = new APIWebviewFragment();
 
-        /*
         Bundle bundle = new Bundle();
-        // String url = "http://192.168.178.28:8080";
-        String url = "http://127.0.0.1:8585";
+        // String url = "http://127.0.0.1:8585";
+        String url = "http://10.0.2.2:8080";
         bundle.putString("url", url);
         bundle.putBoolean("isTablet", mIsTablet);
         mWebViewFragment.setArguments(bundle);
-        */
 
         addFragment(mWebViewFragment, R.id.fragmentEditor, "qq");
-    }
 
-    public void loadWebIde() {
-        MLog.d(TAG, "loadWebIde");
-        String url = "http://127.0.0.1:8585";
-        // url = "http://192.168.1.132:8080";
-
-        mWebViewFragment.webView.loadUrl(url);
+        // mWebViewFragment.webView.loadUrl(url);
     }
 
     public void createProjectDialog() {
@@ -418,6 +412,7 @@ public class MainActivity extends BaseActivity {
     public void onEventMainThread(Events.AppUiEvent e) {
         String action = e.getAction();
         Object value = e.getValue();
+        MLog.d(TAG, "got AppUiEvent "  + action);
 
         switch (action) {
             case "page":
@@ -431,7 +426,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case "serversStarted":
                 // show webview
-                loadWebIde();
+                if (isWebIdeMode) loadWebIde();
                 break;
             case "recreate":
                 // recreate();

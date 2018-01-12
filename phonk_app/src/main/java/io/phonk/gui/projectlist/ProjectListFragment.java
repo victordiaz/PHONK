@@ -44,10 +44,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.events.Events.ProjectEvent;
-import io.phonk.gui.settings.NewUserPreferences;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
-import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
 import io.phonk.runner.models.Project;
@@ -79,6 +77,8 @@ public class ProjectListFragment extends BaseFragment {
     private boolean mIsTablet = false;
 
     private LinearLayout mBottomBar;
+    private LinearLayout mFolderPath;
+    private LinearLayout mSelectFolder;
 
     public ProjectListFragment() {
         num = totalNum++;
@@ -92,7 +92,7 @@ public class ProjectListFragment extends BaseFragment {
         //mProjectFolder = "projects";
         MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
-        // mListMode = (boolean) NewUserPreferences.getInstance().get("apps_in_list_mode");
+        // mListMode = (boolean) UserPreferences.getInstance().get("apps_in_list_mode");
 
         mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode);
     }
@@ -110,21 +110,20 @@ public class ProjectListFragment extends BaseFragment {
 
         // Get GridView and set adapter
         mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
-        // mGrid.setHasFixedSize(true);
         mGrid.setItemAnimator(new DefaultItemAnimator());
 
         // set the empty state
         mEmptyGrid = (LinearLayout) v.findViewById(R.id.empty_grid_view);
-        checkEmptyState();
+        // checkEmptyState();
         registerForContextMenu(mGrid);
 
-        if (mProjectFolder != "") {
-            loadFolder(mProjectFolder);
-        }
+        if (mProjectFolder != "") loadFolder(mProjectFolder);
 
         mBackToFolderButton = (ImageButton) v.findViewById(R.id.backToFolders);
         mTxtParentFolder = (TextView) v.findViewById(R.id.parentFolder);
         mTxtFolder = (TextView) v.findViewById(R.id.folder);
+        mFolderPath = (LinearLayout) v.findViewById(R.id.folderPath);
+        mSelectFolder = (LinearLayout) v.findViewById(R.id.select_folder);
 
         mBackToFolderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +197,6 @@ public class ProjectListFragment extends BaseFragment {
         } else {
             showProjectList(true);
         }
-
     }
 
     private void showProjectList(boolean b) {
@@ -230,7 +228,6 @@ public class ProjectListFragment extends BaseFragment {
 
     public void notifyAddedProject() {
         checkEmptyState();
-        //mProjectAdapter.notifyDataSetChanged();
     }
 
     public void loadFolder(String folder) {
@@ -335,6 +332,8 @@ public class ProjectListFragment extends BaseFragment {
         String folder = e.getFullFolder();
         loadFolder(folder);
 
+        mSelectFolder.setVisibility(View.GONE);
+        mFolderPath.setVisibility(View.VISIBLE);
         mTxtParentFolder.setText(e.getParent());
         mTxtFolder.setText(e.getName());
     }

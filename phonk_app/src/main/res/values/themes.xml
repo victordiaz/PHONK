@@ -33,6 +33,11 @@
         <item name="android:textColorSecondary">@color/phonk_textColor_gray</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:actionMenuTextColor">@color/phonk_textColor_primary</item>
+        <item name="popupMenuStyle">@style/phonk_PopupMenu</item>
+    </style>
+
+    <style name="phonk_PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/phonk_accentColor_primary</item>
     </style>
 
     <style name="PhonkAppTheme" parent="PhonkAppTheme.Base">
@@ -77,6 +82,8 @@
 
         <!-- <item name="android:windowBackground">@android:color/transparent</item> -->
     </style>
+
+
 
     <!-- ProtocoderThemeAppRunner -->
 

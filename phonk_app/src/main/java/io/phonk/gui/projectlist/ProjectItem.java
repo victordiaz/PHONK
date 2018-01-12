@@ -35,6 +35,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,8 +59,7 @@ public class ProjectItem extends LinearLayout {
     private static final String TAG = ProjectItem.class.getSimpleName();
     //private final ProjectListFragment mPlf;
     private View mItemView;
-    // private Context c;
-    private final Context c;
+    private final Context mContext;
 
     private String t;
     private boolean highlighted = false;
@@ -71,7 +71,7 @@ public class ProjectItem extends LinearLayout {
 
     public ProjectItem(Context context, boolean listMode) {
         super(context);
-        this.c = context;
+        this.mContext = context;
         //this.mPlf = plf;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -198,7 +198,7 @@ public class ProjectItem extends LinearLayout {
 
     private void showMenu(View fromView) {
         MLog.d(TAG, "clicked");
-        PopupMenu myPopup = new PopupMenu(c, fromView);
+        PopupMenu myPopup = new PopupMenu(mContext, fromView);
         myPopup.inflate(R.menu.project_actions);
         myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -239,21 +239,21 @@ public class ProjectItem extends LinearLayout {
                                 }
                             }
                         };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                         builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                                 .setNegativeButton("No", dialogClickListener).show();
                         return true;
                     case R.id.menu_project_list_add_shortcut:
-                        PhonkScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
+                        PhonkScriptHelper.addShortcut(mContext, mProject.getFolder(), mProject.getName());
                         return true;
                     case R.id.menu_project_list_share_with:
-                        PhonkScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
+                        PhonkScriptHelper.shareMainJsDialog(mContext, mProject.getFolder(), mProject.getName());
                         return true;
                     case R.id.menu_project_list_share_proto_file:
-                        PhonkScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
+                        PhonkScriptHelper.shareProtoFileDialog(mContext, mProject.getFolder(), mProject.getName());
                         return true;
                     case R.id.menu_project_list_show_info:
-                        PhonkAppHelper.launchScriptInfoActivity(c, mProject);
+                        PhonkAppHelper.launchScriptInfoActivity(mContext, mProject);
                         return true;
                     default:
                         return true;

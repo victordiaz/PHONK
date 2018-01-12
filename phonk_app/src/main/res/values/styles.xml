@@ -62,6 +62,18 @@
         <item name="android:shadowRadius">2</item>
     </style>
 
+    <style name="logo">
+        <item name="android:fontFamily">sans-serif-condensed"</item>
+        <item name="android:shadowColor">@color/blacktransparent20</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:text">phonk</item>
+        <item name="android:textColor">@color/phonk_textColor_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
     <style name="qq">
         <item name="android:paddingLeft">4px</item>
         <item name="android:paddingBottom">4px</item>

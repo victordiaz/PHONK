@@ -62,15 +62,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:shadowColor="@color/blacktransparent20"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:text="phonk"
-                android:textColor="@color/phonk_textColor_primary"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:typeface="monospace" />
+                style="@style/logo"
+              />
 
             <View
                 android:layout_width="match_parent"

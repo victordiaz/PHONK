@@ -25,6 +25,7 @@ package io.phonk;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 
+import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.Timer2;
 
 public class App extends Application {
@@ -58,5 +59,9 @@ public class App extends Application {
 
         Fabric.with(fabric);
         */
+
+        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(PhonkSettings.getLogsFolder()));
+        }
     }
 }
