@@ -11,10 +11,10 @@
 /.bundle
 
 # Ignore WebIDE
-phonk_app/src/main/assets/webide/
+phonk_app/src/main/assets/webide
 
 # Ignore examples
-phonk_app/src/main/assets/examples/
+phonk_app/src/main/assets/examples
 
 # Signing Properties
 signing.properties
