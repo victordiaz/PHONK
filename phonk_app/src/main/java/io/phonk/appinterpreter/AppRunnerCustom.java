@@ -31,20 +31,20 @@ import java.util.HashMap;
 
 public class AppRunnerCustom extends AppRunner {
 
-    public ProtocoderApp protocoderApp;
+    public PhonkApp phonkApp;
 
     public AppRunnerCustom(Context context) {
         super(context);
     }
 
     public AppRunnerCustom initDefaultObjects(HashMap<String, Object> settings) {
-        protocoderApp = new ProtocoderApp(this);
+        phonkApp = new PhonkApp(this);
         return (AppRunnerCustom) super.initDefaultObjects(settings);
     }
 
     public AppRunnerCustom initInterpreter() {
         super.initInterpreter();
-        interp.addJavaObjectToJs("protocoderApp", protocoderApp);
+        interp.addJavaObjectToJs("phonkApp", phonkApp);
 
         return this;
     }

@@ -23,7 +23,7 @@ package io.phonk.appinterpreter;
 
 import io.phonk.runner.apprunner.AppRunner;
 
-public class ProtocoderApp {
+public class PhonkApp {
 
     private final AppRunner mAppRunner;
 
@@ -31,7 +31,7 @@ public class ProtocoderApp {
     public Network network;
     // public UserSettings userSettings;
 
-    public ProtocoderApp(AppRunnerCustom appRunner) {
+    public PhonkApp(AppRunnerCustom appRunner) {
         this.mAppRunner = appRunner;
 
         //lazy load all the objects

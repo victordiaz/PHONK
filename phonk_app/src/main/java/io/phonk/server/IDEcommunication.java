@@ -51,7 +51,7 @@ public class IDEcommunication {
         }
         */
 
-        ws.addListener("protocoderApp", new PhonkWebsocketServer.WebSocketListener() {
+        ws.addListener("phonkApp", new PhonkWebsocketServer.WebSocketListener() {
             @Override
             public void onUpdated(JSONObject jsonObject) {
                 try {

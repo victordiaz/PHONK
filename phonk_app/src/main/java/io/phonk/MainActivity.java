@@ -49,7 +49,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.phonk.R;
 
 import io.phonk.appinterpreter.AppRunnerCustom;
-import io.phonk.appinterpreter.ProtocoderApp;
+import io.phonk.appinterpreter.PhonkApp;
 import io.phonk.events.Events;
 import io.phonk.gui.CombinedFolderAndProjectFragment;
 import io.phonk.gui.ConnectionInfoFragment;
@@ -115,8 +115,8 @@ public class MainActivity extends BaseActivity {
 
         mAppRunner = new AppRunnerCustom(this);
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
-        ProtocoderApp protocoderApp = new ProtocoderApp(mAppRunner);
-        // protocoderApp.network.checkVersion();
+        PhonkApp phonkApp = new PhonkApp(mAppRunner);
+        // phonkApp.network.checkVersion();
         mAppRunner.interp.eval("device.vibrate(100);");
 
         // startServers if conf specifies. In webidemode always have to start it
