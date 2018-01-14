@@ -30,9 +30,12 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.phonk.runner.base.utils.MLog;
+
 // https://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application
 public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
 
+    private static final java.lang.String TAG = CustomExceptionHandler.class.getSimpleName();
     private Thread.UncaughtExceptionHandler defaultUEH;
 
     private String localPath;
@@ -69,6 +72,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
             bos.flush();
             bos.close();
         } catch (Exception e) {
+            MLog.d(TAG, "cannot write log file");
             e.printStackTrace();
         }
     }
