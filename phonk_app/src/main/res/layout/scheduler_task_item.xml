@@ -21,14 +21,12 @@
   ~
   -->
 
-<LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
     android:gravity="center_vertical"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/txtTaskProjectName"

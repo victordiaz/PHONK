@@ -30,11 +30,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
 
 public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdapter.ViewHolder> {
 

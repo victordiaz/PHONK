@@ -34,6 +34,9 @@ import android.widget.FrameLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.HashMap;
+
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui._components.APIWebviewFragment;
@@ -41,12 +44,10 @@ import io.phonk.gui.filemanager.FileManagerFragment;
 import io.phonk.gui.filepreviewer.FilePreviewerFragment;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.server.model.ProtoFile;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.models.Project;
-
-import java.util.HashMap;
+import io.phonk.server.model.ProtoFile;
 
 public class EditorActivity extends BaseActivity {
 

@@ -30,14 +30,6 @@ import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
-import io.phonk.events.Events;
-import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.server.model.ProtoFile;
-import io.phonk.server.networkexchangeobjects.NEOProject;
-import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,6 +42,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
+import io.phonk.events.Events;
+import io.phonk.gui.settings.PhonkSettings;
+import io.phonk.helpers.PhonkScriptHelper;
+import io.phonk.runner.base.utils.FileIO;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.models.Project;
+import io.phonk.server.model.ProtoFile;
+import io.phonk.server.networkexchangeobjects.NEOProject;
 
 public class PhonkHttpServer extends NanoHTTPD {
     public static final String TAG = PhonkHttpServer.class.getSimpleName();

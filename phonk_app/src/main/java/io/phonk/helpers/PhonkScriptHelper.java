@@ -32,19 +32,6 @@ import android.widget.Toast;
 
 import net.lingala.zip4j.exception.ZipException;
 
-import io.phonk.App;
-import io.phonk.R;
-
-import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.server.model.ProtoFile;
-import io.phonk.runner.AppRunnerActivity;
-import io.phonk.runner.apprunner.AppRunnerHelper;
-import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.utils.TimeUtils;
-import io.phonk.runner.models.Folder;
-import io.phonk.runner.models.Project;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -53,6 +40,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import io.phonk.App;
+import io.phonk.R;
+import io.phonk.gui.settings.PhonkSettings;
+import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.base.utils.FileIO;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.base.utils.TimeUtils;
+import io.phonk.runner.models.Folder;
+import io.phonk.runner.models.Project;
+import io.phonk.server.model.ProtoFile;
 
 public class PhonkScriptHelper {
 

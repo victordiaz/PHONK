@@ -31,10 +31,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import io.phonk.R;
 import io.phonk.server.model.ProtoFile;
-
-import java.lang.ref.WeakReference;
 
 public class FileManagerListItem extends LinearLayout {
 

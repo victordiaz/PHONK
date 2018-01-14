@@ -32,15 +32,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import io.phonk.R;
+import java.io.File;
 
+import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.io.File;
 
 public class PhonkAppInstallerActivity extends BaseActivity {
 

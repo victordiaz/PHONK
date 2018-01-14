@@ -38,14 +38,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
+
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.io.File;
 
 public class ProjectAdapterViewItem extends LinearLayout {
 

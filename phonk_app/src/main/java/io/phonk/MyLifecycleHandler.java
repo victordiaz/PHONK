@@ -26,10 +26,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
 
 /**
  * Created by biquillo on 5/09/16.

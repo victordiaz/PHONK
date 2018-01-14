@@ -21,6 +21,6 @@
   ~
   -->
 
-<paths xmlns:android="http://schemas.android.com/apk/res/android">
+<paths>
     <external-path name="file" path="phonk_io" />
 </paths>

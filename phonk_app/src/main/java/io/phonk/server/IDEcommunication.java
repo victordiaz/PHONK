@@ -27,9 +27,10 @@ import android.content.Context;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-import io.phonk.events.Events;
 
 import java.lang.ref.WeakReference;
+
+import io.phonk.events.Events;
 
 public class IDEcommunication {
 

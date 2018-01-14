@@ -27,11 +27,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.EventBus;
-import io.phonk.events.Events;
-import io.phonk.server.model.ProtoFile;
-import io.phonk.runner.base.utils.MLog;
 
 import java.util.ArrayList;
+
+import io.phonk.events.Events;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.server.model.ProtoFile;
 
 public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.ViewHolder> {
 

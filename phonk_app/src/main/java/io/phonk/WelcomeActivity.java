@@ -35,19 +35,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
-import io.phonk.R;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.StrUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressLint("NewApi")
 public class WelcomeActivity extends BaseActivity {

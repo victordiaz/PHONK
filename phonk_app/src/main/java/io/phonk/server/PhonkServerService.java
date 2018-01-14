@@ -42,8 +42,11 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import io.phonk.R;
 
+import java.net.UnknownHostException;
+import java.util.HashMap;
+
+import io.phonk.R;
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;
 import io.phonk.events.EventsProxy;
@@ -54,9 +57,6 @@ import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.net.UnknownHostException;
-import java.util.HashMap;
 
 public class PhonkServerService extends Service {
 

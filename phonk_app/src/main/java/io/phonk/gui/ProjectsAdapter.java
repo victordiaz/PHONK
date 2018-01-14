@@ -27,10 +27,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import io.phonk.runner.models.Folder;
 import io.phonk.runner.models.Project;
-
-import java.util.ArrayList;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
 

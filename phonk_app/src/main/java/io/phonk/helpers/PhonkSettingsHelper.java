@@ -28,16 +28,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.widget.Toast;
-
-import org.greenrobot.eventbus.EventBus;
-
-import io.phonk.MainActivity;
-import io.phonk.events.Events;
-import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.runner.base.utils.FileIO;
 
 import java.io.File;
+
+import io.phonk.MainActivity;
+import io.phonk.gui.settings.PhonkSettings;
+import io.phonk.runner.base.utils.FileIO;
 
 public class PhonkSettingsHelper {
 

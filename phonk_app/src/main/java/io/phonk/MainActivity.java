@@ -46,23 +46,21 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import io.phonk.R;
 
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.appinterpreter.PhonkApp;
 import io.phonk.events.Events;
 import io.phonk.gui.CombinedFolderAndProjectFragment;
 import io.phonk.gui.ConnectionInfoFragment;
+import io.phonk.gui.EmptyFragment;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui._components.NewProjectDialogFragment;
 import io.phonk.gui.folderchooser.FolderListFragment;
 import io.phonk.gui.projectlist.ProjectListFragment;
-import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.gui.EmptyFragment;
-import io.phonk.server.PhonkServerService;
 import io.phonk.runner.api.PUtil;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.BaseActivity;
@@ -70,6 +68,7 @@ import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
+import io.phonk.server.PhonkServerService;
 
 public class MainActivity extends BaseActivity {
 

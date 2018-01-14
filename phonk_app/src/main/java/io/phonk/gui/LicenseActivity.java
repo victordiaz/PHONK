@@ -34,13 +34,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import io.phonk.R;
-import io.phonk.runner.base.BaseActivity;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import io.phonk.R;
+import io.phonk.runner.base.BaseActivity;
 
 public class LicenseActivity extends BaseActivity {
 

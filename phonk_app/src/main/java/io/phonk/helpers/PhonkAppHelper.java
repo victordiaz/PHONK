@@ -30,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+
 import io.phonk.MainActivity;
 import io.phonk.events.Events;
 import io.phonk.gui.HelpActivity;
@@ -38,19 +39,13 @@ import io.phonk.gui.LicenseActivity;
 import io.phonk.gui.SchedulerActivity;
 import io.phonk.gui._components.NewProjectDialogFragment;
 import io.phonk.gui.editor.EditorActivity;
-import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.SettingsActivity;
-import io.phonk.runner.AppRunnerActivity;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.runner.AppRunnerLauncherService;
-import io.phonk.runner.AppRunnerService;
-import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.apprunner.AppRunnerSettings;
-import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.util.Map;
 
 public class PhonkAppHelper {
 

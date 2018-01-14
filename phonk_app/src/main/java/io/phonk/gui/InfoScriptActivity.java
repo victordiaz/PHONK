@@ -29,13 +29,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Map;
+
 import io.phonk.R;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.util.Map;
 
 public class InfoScriptActivity extends BaseActivity {
 

@@ -24,9 +24,9 @@ package io.phonk.appinterpreter;
 
 import android.content.Context;
 
-import io.phonk.runner.apprunner.AppRunner;
-
 import java.util.HashMap;
+
+import io.phonk.runner.apprunner.AppRunner;
 
 
 public class AppRunnerCustom extends AppRunner {

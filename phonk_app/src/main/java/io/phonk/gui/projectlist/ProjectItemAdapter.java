@@ -26,9 +26,9 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import io.phonk.runner.models.Project;
-
 import java.util.ArrayList;
+
+import io.phonk.runner.models.Project;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = ProjectItemAdapter.class.getSimpleName();
@@ -45,7 +45,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
             mView = v;
         }
     }
-    
+
     /*
      * ProjectItemAdapter
      */

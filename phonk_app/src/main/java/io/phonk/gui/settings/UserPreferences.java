@@ -26,11 +26,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import io.phonk.runner.base.utils.FileIO;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.phonk.runner.base.utils.FileIO;
 
 /**
  * Created by biquillo on 12/09/16.

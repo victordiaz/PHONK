@@ -49,15 +49,16 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import io.phonk.R;
-import io.phonk.events.Events;
-import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.server.model.ProtoFile;
-import io.phonk.runner.base.BaseFragment;
-import io.phonk.runner.base.utils.MLog;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import io.phonk.R;
+import io.phonk.events.Events;
+import io.phonk.helpers.PhonkScriptHelper;
+import io.phonk.runner.base.BaseFragment;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.server.model.ProtoFile;
 
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {

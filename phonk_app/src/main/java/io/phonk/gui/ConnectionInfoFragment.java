@@ -37,6 +37,7 @@ import android.widget.ToggleButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.UserPreferences;

@@ -22,17 +22,17 @@
 
 package io.phonk;
 
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
+import android.os.SystemClock;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
-import android.os.SystemClock;
 
 /**
  * This class implements our custom renderer. Note that the GL10 parameter passed in is unused for OpenGL ES 2.0

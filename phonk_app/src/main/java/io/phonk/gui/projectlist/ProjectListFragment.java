@@ -41,6 +41,9 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.events.Events.ProjectEvent;
@@ -49,8 +52,6 @@ import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
 import io.phonk.runner.models.Project;
-
-import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {

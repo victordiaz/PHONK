@@ -32,12 +32,12 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import io.phonk.R;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.SchedulerManager;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
 
 public class SchedulerActivity extends BaseActivity {
 

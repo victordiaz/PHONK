@@ -24,9 +24,9 @@ package io.phonk.gui.settings;
 
 import android.os.Build;
 
-import io.phonk.runner.apprunner.AppRunnerSettings;
-
 import java.io.File;
+
+import io.phonk.runner.apprunner.AppRunnerSettings;
 
 public class PhonkSettings extends AppRunnerSettings {
 

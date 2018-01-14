@@ -28,8 +28,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import io.phonk.R;
-
 public class LauncherActivity extends Activity {
 
     Intent intent = null;
