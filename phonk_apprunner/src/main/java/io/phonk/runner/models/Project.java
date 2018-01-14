@@ -42,6 +42,7 @@ public class Project {
     public static final String SETTINGS_SCREEN_ORIENTATION = "settings_screenOrientation";
     public static final String SERVER_PORT = "settings_protocoder_port";
     public static final String SETTINGS = "project_settings";
+    public static final String DEVICE_ID = "device_id";
 
     /*
      * this will get serialized

@@ -28,7 +28,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.phonk.R;
+import io.phonk.R;
 
 public class LauncherActivity extends Activity {
 

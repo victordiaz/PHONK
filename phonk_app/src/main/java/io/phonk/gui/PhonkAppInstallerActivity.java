@@ -32,7 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.phonk.R;
+import io.phonk.R;
 
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;

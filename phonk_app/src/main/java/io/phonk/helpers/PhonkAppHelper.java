@@ -42,8 +42,10 @@ import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.SettingsActivity;
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.AppRunnerLauncherService;
 import io.phonk.runner.AppRunnerService;
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
@@ -53,7 +55,6 @@ import java.util.Map;
 public class PhonkAppHelper {
 
     private static final String TAG = PhonkAppHelper.class.getSimpleName();
-    private static boolean multiWindowEnabled = true;
 
     public static void launchScript(Context context, Project p) {
 
@@ -62,31 +63,12 @@ public class PhonkAppHelper {
                 .putContentId("launched script"));
         */
 
-        Map<String, Object> map = AppRunnerHelper.readProjectProperties(context, p);
-        boolean isService = (boolean) map.get("background_service");
-
-        if (isService) {
-            Intent intent = new Intent(context, AppRunnerService.class);
-            intent.putExtra(Project.FOLDER, p.getFolder());
-            intent.putExtra(Project.NAME, p.getName());
-            intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
-            intent.putExtra("device_id", (String) UserPreferences.getInstance().get("device_id"));
-            context.startService(intent);
-        } else {
-            Intent intent = new Intent(context, AppRunnerActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Project.FOLDER, p.getFolder());
-            intent.putExtra(Project.NAME, p.getName());
-            intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
-            intent.putExtra("device_id", (String) UserPreferences.getInstance().get("device_id"));
-            MLog.d(TAG, "1 ------------> launching side by side " + AndroidUtils.isVersionN());
-
-            if (AndroidUtils.isVersionN() && multiWindowEnabled) {
-                MLog.d(TAG, "2 ------------> launching side by side");
-                // intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-            }
-            context.startActivity(intent);
-        }
+        Intent intent = new Intent(context, AppRunnerLauncherService.class);
+        intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
+        intent.putExtra(Project.FOLDER, p.getFolder());
+        intent.putExtra(Project.NAME, p.getName());
+        intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
+        context.startService(intent);
     }
 
     public static void launchSettings(Context context) {
@@ -172,7 +154,7 @@ public class PhonkAppHelper {
             public void onFinishEditDialog(String inputText) {
                 String template = "default";
                 Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = PhonkScriptHelper.createNewProject(c, template, "user_projects/User Projects/", inputText);
+                Project p = PhonkScriptHelper.createNewProject(c, template, AppRunnerSettings.USER_PROJECTS_FOLDER + "/User Projects/", inputText);
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });

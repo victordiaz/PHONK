@@ -33,7 +33,7 @@ import android.widget.Toast;
 import net.lingala.zip4j.exception.ZipException;
 
 import io.phonk.App;
-import org.phonk.R;
+import io.phonk.R;
 
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.server.model.ProtoFile;

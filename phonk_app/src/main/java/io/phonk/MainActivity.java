@@ -46,7 +46,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.appinterpreter.PhonkApp;

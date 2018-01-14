@@ -37,7 +37,7 @@ import android.widget.ToggleButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
@@ -154,17 +154,17 @@ public class ConnectionInfoFragment extends Fragment {
         String address = e.getAddress();
 
         if (type == "wifi") {
-            mTxtConnectionMessage.setText(getResources().getString(org.phonk.R.string.connection_message_wifi));
+            mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_wifi));
             mTxtConnectionIp.setText("http://" + address);
             mTxtConnectionIp.setVisibility(View.VISIBLE);
             // mConnectionButtons.setVisibility(View.GONE);
         } else if (type == "tethering") {
-            mTxtConnectionMessage.setText(getResources().getString(org.phonk.R.string.connection_message_tethering));
+            mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_tethering));
             mTxtConnectionIp.setText("http://" + address);
             mTxtConnectionIp.setVisibility(View.VISIBLE);
             // mConnectionButtons.setVisibility(View.GONE);
         } else {
-            mTxtConnectionMessage.setText(getResources().getString(org.phonk.R.string.connection_message_not_connected));
+            mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_not_connected));
             mTxtConnectionIp.setVisibility(View.GONE);
             // mConnectionButtons.setVisibility(View.VISIBLE);
         }

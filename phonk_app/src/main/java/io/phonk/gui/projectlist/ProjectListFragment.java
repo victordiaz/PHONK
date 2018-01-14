@@ -41,7 +41,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.events.Events.ProjectEvent;
 import io.phonk.helpers.PhonkScriptHelper;

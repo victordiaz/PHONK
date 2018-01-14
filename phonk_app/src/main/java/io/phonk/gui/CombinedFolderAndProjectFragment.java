@@ -29,7 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.gui.folderchooser.FolderListFragment;
 import io.phonk.gui.projectlist.ProjectListFragment;
 

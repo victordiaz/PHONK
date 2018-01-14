@@ -38,7 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.gui.AboutActivity;
 import io.phonk.gui.LicenseActivity;
 import io.phonk.helpers.PhonkSettingsHelper;

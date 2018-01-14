@@ -91,7 +91,7 @@
             android:launchMode="standard" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
-                <action android:name="io.phonk.runner.apprunner.AppRunnerActivity" />
+                <action android:name="io.phonk.runner.AppRunnerActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--how tool
@@ -121,6 +121,12 @@
 
 
         </activity>
+
+
+        <service
+            android:name="io.phonk.runner.AppRunnerLauncherService"
+            android:label="AppRunnerServiceLauncher" >
+        </service>
 
         <service
             android:name="io.phonk.runner.AppRunnerService"

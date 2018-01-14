@@ -113,7 +113,7 @@ public class AppRunnerFragment extends Fragment {
 
         mAppRunner.initInterpreter();
 
-        mAppRunner.pDevice.deviceId = bundle.getString("device_id", "");
+        mAppRunner.pDevice.deviceId = bundle.getString(Project.DEVICE_ID, "");
         // mAppRunner.pUi.screenOrientation("portrait");
         mAppRunner.pUi.updateScreenSizes();
         mAppRunner.pUi.toolbar.title(name);

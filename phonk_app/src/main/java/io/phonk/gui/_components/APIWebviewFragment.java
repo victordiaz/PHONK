@@ -36,7 +36,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseFragment;

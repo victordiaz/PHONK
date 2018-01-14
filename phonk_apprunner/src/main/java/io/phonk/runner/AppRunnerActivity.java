@@ -123,13 +123,7 @@ public class AppRunnerActivity extends BaseActivity {
         // if intent is empty => finish
         if (intent == null) finish();
 
-        // if is a service with start it and finish this activity
-        if (intent.getBooleanExtra("isService", false)) {
-            Intent i = new Intent(this, AppRunnerService.class);
-            i.putExtras(intent);
-            this.startService(i);
-            finish();
-        }
+        mBundle = intent.getExtras();
 
         mSettingWakeUpScreen = intent.getBooleanExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
 
@@ -138,19 +132,8 @@ public class AppRunnerActivity extends BaseActivity {
         AppRunnerSettings.SERVER_PORT = intent.getIntExtra(Project.SERVER_PORT, 0);
         Project p = new Project(folder, name);
 
-        // send bundle to the fragment
-        mBundle = new Bundle();
-        mBundle.putString(Project.NAME, name);
-        mBundle.putString(Project.FOLDER, folder);
-        mBundle.putString(Project.PREFIX, intent.getStringExtra(Project.PREFIX));
-        mBundle.putString(Project.INTENTCODE, intent.getStringExtra(Project.INTENTCODE));
-        mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));
-        mBundle.putString("device_id", intent.getStringExtra("device_id"));
-
         // settings
         scriptSettings = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
-
-        // mBundle.putString(Project.SETTINGS, scriptSettings);
 
         boolean screenAlwaysOn   = false;
         String orientation       = (String) scriptSettings.get("orientation");
@@ -161,7 +144,7 @@ public class AppRunnerActivity extends BaseActivity {
          */
         if (screenMode.equals("fullscreen")) setImmersive();
         else if (screenMode.equals("dialog")) setTheme(R.style.PhonkAppRunner_Dialog);
-        
+
         /*
          * Set orientation
          */

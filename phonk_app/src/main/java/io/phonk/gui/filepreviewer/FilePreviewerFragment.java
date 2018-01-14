@@ -35,7 +35,7 @@ import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.server.model.ProtoFile;
 import io.phonk.runner.base.BaseFragment;

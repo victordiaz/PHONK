@@ -35,7 +35,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ViewFlipper;
 
-import org.phonk.R;
+import io.phonk.R;
 
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.gui.settings.PhonkSettings;

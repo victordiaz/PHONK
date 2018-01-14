@@ -42,7 +42,7 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;

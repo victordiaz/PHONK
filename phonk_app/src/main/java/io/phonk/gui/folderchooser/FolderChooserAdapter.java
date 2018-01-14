@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.runner.base.utils.MLog;
 

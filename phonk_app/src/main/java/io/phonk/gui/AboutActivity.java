@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.MLog;

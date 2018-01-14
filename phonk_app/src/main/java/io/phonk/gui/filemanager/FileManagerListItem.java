@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.server.model.ProtoFile;
 
 import java.lang.ref.WeakReference;

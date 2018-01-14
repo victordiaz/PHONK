@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import org.phonk.R;
+import io.phonk.R;
 
 public class FileManagerDialog extends DialogFragment {
 

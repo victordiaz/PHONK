@@ -29,7 +29,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.MLog;

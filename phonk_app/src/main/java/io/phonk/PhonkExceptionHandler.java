@@ -23,6 +23,7 @@
 package io.phonk;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -30,27 +31,31 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.base.utils.MLog;
 
 // https://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application
-public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
+public class PhonkExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-    private static final java.lang.String TAG = CustomExceptionHandler.class.getSimpleName();
+    private static final java.lang.String TAG = PhonkExceptionHandler.class.getSimpleName();
     private Thread.UncaughtExceptionHandler defaultUEH;
 
-    private String localPath;
+    private File localPath;
 
     /*
      * if any of the parameters is null, the respective functionality
      * will not be used
      */
-    public CustomExceptionHandler(String localPath) {
-        this.localPath = localPath;
+    public PhonkExceptionHandler() {
+        this.localPath = new File(PhonkSettings.getLogsFolder());
+        localPath.mkdirs();
+        MLog.d(TAG, "exception " + localPath.getAbsolutePath());
+
         this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-        SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
+        SimpleDateFormat s = new SimpleDateFormat("yyyyMMdd_hhmmss");
         String timestamp = s.format(new Date());
 
         final Writer result = new StringWriter();
@@ -60,14 +65,14 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         printWriter.close();
         String filename = timestamp + ".log";
 
-        if (localPath != null) writeToFile(stacktrace, filename);
+        writeToFile(stacktrace, filename);
 
         defaultUEH.uncaughtException(t, e);
     }
 
     private void writeToFile(String stacktrace, String filename) {
         try {
-            BufferedWriter bos = new BufferedWriter(new FileWriter(localPath + filename));
+            BufferedWriter bos = new BufferedWriter(new FileWriter(localPath.getAbsoluteFile() + File.separator + filename));
             bos.write(stacktrace);
             bos.flush();
             bos.close();

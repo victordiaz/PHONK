@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.runner.base.BaseFragment;
 
 @SuppressLint("NewApi")

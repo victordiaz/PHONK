@@ -34,41 +34,48 @@ import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
 
-public class AppRunnerLauncher extends Service {
+public class AppRunnerLauncherService extends Service {
 
-    private static final String TAG = AppRunnerLauncher.class.getSimpleName();
+    private static final String TAG = AppRunnerLauncherService.class.getSimpleName();
     private static boolean multiWindowEnabled = true;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String projectFolder = intent.getStringExtra("projectFolder");
+        String projectName = intent.getStringExtra("projectName");
+        int httpPort = intent.getIntExtra("httpPort", -1);
+        String deviceId = intent.getStringExtra("projectName");
+
+        Project p = new Project(projectFolder, projectName);
 
         Map<String, Object> map = AppRunnerHelper.readProjectProperties(this, p);
         boolean isService = (boolean) map.get("background_service");
+        MLog.d(TAG, "launching " + p.getFullPath() + " " + isService);
 
+        Intent newIntent = null;
         if (isService) {
-            Intent intent = new Intent(this, AppRunnerService.class);
-            intent.putExtra(Project.FOLDER, p.getFolder());
-            intent.putExtra(Project.NAME, p.getName());
-            intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
-            intent.putExtra("device_id", (String) UserPreferences.getInstance().get("device_id"));
-            this.startService(intent);
+            newIntent = new Intent(this, AppRunnerService.class);
         } else {
-            Intent intent = new Intent(this, AppRunnerActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Project.FOLDER, p.getFolder());
-            intent.putExtra(Project.NAME, p.getName());
-            intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
-            intent.putExtra("device_id", (String) UserPreferences.getInstance().get("device_id"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            MLog.d(TAG, "1 ------------> launching side by side " + AndroidUtils.isVersionN());
-
-            if (AndroidUtils.isVersionN() && multiWindowEnabled) {
-                MLog.d(TAG, "2 ------------> launching side by side");
-                // intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
-            }
-            this.startActivity(intent);
+            newIntent = new Intent(this, AppRunnerActivity.class);
+            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (AndroidUtils.isVersionN() && multiWindowEnabled) intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
         }
+
+        newIntent.putExtras(intent);
+
+
+        newIntent.putExtra(Project.SERVER_PORT, httpPort);
+        newIntent.putExtra(Project.DEVICE_ID, deviceId);
+
+        /*
+        newIntent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
+        mBundle.putString(Project.PREFIX, intent.getStringExtra(Project.PREFIX));
+        mBundle.putString(Project.INTENTCODE, intent.getStringExtra(Project.INTENTCODE));
+        mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));
+        */
+
+        if (isService) this.startService(newIntent);
+        else this.startActivity(newIntent);
 
         return super.onStartCommand(intent, flags, startId);
     }

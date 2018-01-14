@@ -34,7 +34,7 @@ public class AppRunnerSettings {
     public static String MAIN_FILENAME                      = "main.js";
     public static final String CONF_FILENAME                = "app.conf";
     public final static String PHONK_FOLDER = "phonk_io";
-    public static final String USER_PROJECTS_FOLDER = "user_projects";
+    public static final String USER_PROJECTS_FOLDER = "playground";
     public static final String EXAMPLES_FOLDER = "examples";
     public static final String LOGS_FOLDER = "logs";
 

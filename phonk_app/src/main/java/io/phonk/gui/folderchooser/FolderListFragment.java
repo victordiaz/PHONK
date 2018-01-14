@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.gui._components.ResizableRecyclerView;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;

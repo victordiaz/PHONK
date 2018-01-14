@@ -86,17 +86,16 @@ public class AppRunnerService extends Service {
 
         mContext = this;
 
-        String folder = intent.getStringExtra(Project.FOLDER);
-        String name = intent.getStringExtra(Project.NAME);
         AppRunnerSettings.SERVER_PORT = intent.getIntExtra(Project.SERVER_PORT, 0);
 
         mAppRunner = new AppRunner(mContext);
         mAppRunner.hasUserInterface = false;
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings());
-        mAppRunner.pApp.folder = folder;
-        mAppRunner.pApp.name = name;
+        mAppRunner.pApp.folder = intent.getStringExtra(Project.FOLDER);;
+        mAppRunner.pApp.name = intent.getStringExtra(Project.NAME);
+        mAppRunner.pDevice.deviceId = intent.getStringExtra(Project.DEVICE_ID);
 
-        mAppRunner.loadProject(folder, name);
+        mAppRunner.loadProject(mAppRunner.pApp.folder, mAppRunner.pApp.name);
         //  mAppRunner.mIntentPrefixScript = intent.getString(Project.PREFIX, "");
         //  mAppRunner.mIntentCode = intent.getString(Project.INTENTCODE, "");
         //  mAppRunner.mIntentPostfixScript = intent.getString(Project.POSTFIX, "");

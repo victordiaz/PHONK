@@ -34,7 +34,7 @@ import android.widget.FrameLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui.filemanager.FileManagerFragment;

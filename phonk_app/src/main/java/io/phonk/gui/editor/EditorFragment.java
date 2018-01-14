@@ -43,7 +43,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.phonk.R;
+import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.server.model.ProtoFile;

@@ -24,7 +24,7 @@
 <manifest
      xmlns:android="http://schemas.android.com/apk/res/android"
      xmlns:tools="http://schemas.android.com/tools"
-     package="org.phonk">
+     package="io.phonk">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -194,7 +194,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="org.phonk.fileprovider"
+            android:authorities="io.phonk.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">
 

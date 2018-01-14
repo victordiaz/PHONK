@@ -60,8 +60,8 @@ public class App extends Application {
         Fabric.with(fabric);
         */
 
-        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(PhonkSettings.getLogsFolder()));
+        if(!(Thread.getDefaultUncaughtExceptionHandler() instanceof PhonkExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new PhonkExceptionHandler());
         }
     }
 }
