@@ -526,9 +526,9 @@ public class PNetwork extends ProtoBase {
                     NativeObject o = (NativeObject) parts.get(i);
 
                     // go through elements
-                    String name = (String) o.get("name");
-                    String content = (String) o.get("content");
-                    String type = (String) o.get("type");
+                    String name = (String) o.get("name").toString();
+                    String content = (String) o.get("content").toString();
+                    String type = (String) o.get("type").toString();
 
                     if (type.equals("file")) {
                         String mediaType = (String) o.get("mediaType");
