@@ -9,32 +9,31 @@ var TexHighlightRules = function(textClass) {
 
     if (!textClass)
         textClass = "text";
-
     this.$rules = {
         "start" : [
-	        {
-	            token : "comment",
-	            regex : "%.*$"
-	        }, {
-	            token : textClass, // non-command
-	            regex : "\\\\[$&%#\\{\\}]"
-	        }, {
-	            token : "keyword", // command
-	            regex : "\\\\(?:documentclass|usepackage|newcounter|setcounter|addtocounter|value|arabic|stepcounter|newenvironment|renewenvironment|ref|vref|eqref|pageref|label|cite[a-zA-Z]*|tag|begin|end|bibitem)\\b",
+            {
+                token : "comment",
+                regex : "%.*$"
+            }, {
+                token : textClass, // non-command
+                regex : "\\\\[$&%#\\{\\}]"
+            }, {
+                token : "keyword", // command
+                regex : "\\\\(?:documentclass|usepackage|newcounter|setcounter|addtocounter|value|arabic|stepcounter|newenvironment|renewenvironment|ref|vref|eqref|pageref|label|cite[a-zA-Z]*|tag|begin|end|bibitem)\\b",
                next : "nospell"
-	        }, {
-	            token : "keyword", // command
-	            regex : "\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])"
-	        }, {
+            }, {
+                token : "keyword", // command
+                regex : "\\\\(?:[a-zA-Z0-9]+|[^a-zA-Z0-9])"
+            }, {
                token : "paren.keyword.operator",
-	            regex : "[[({]"
-	        }, {
+                regex : "[[({]"
+            }, {
                token : "paren.keyword.operator",
-	            regex : "[\\])}]"
-	        }, {
-	            token : textClass,
-	            regex : "\\s+"
-	        }
+                regex : "[\\])}]"
+            }, {
+                token : textClass,
+                regex : "\\s+"
+            }
         ],
         "nospell" : [
            {
@@ -49,7 +48,7 @@ var TexHighlightRules = function(textClass) {
                regex : "\\\\(?:documentclass|usepackage|newcounter|setcounter|addtocounter|value|arabic|stepcounter|newenvironment|renewenvironment|ref|vref|eqref|pageref|label|cite[a-zA-Z]*|tag|begin|end|bibitem)\\b"
            }, {
                token : "keyword", // command
-               regex : "\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])",
+               regex : "\\\\(?:[a-zA-Z0-9]+|[^a-zA-Z0-9])",
                next : "start"
            }, {
                token : "paren.keyword.operator",
@@ -97,7 +96,6 @@ define("ace/mode/r_highlight_rules",["require","exports","module","ace/lib/oop",
             ("NULL|NA|TRUE|FALSE|T|F|Inf|NaN|NA_integer_|NA_real_|NA_character_|" +
              "NA_complex_").split("|")
             );
-
       this.$rules = {
          "start" : [
             {
@@ -275,28 +273,38 @@ var MatchingBraceOutdent = function() {};
 exports.MatchingBraceOutdent = MatchingBraceOutdent;
 });
 
-define("ace/mode/r",["require","exports","module","ace/range","ace/lib/oop","ace/mode/text","ace/mode/text_highlight_rules","ace/mode/r_highlight_rules","ace/mode/matching_brace_outdent","ace/unicode"], function(require, exports, module) {
+define("ace/mode/r",["require","exports","module","ace/unicode","ace/range","ace/lib/oop","ace/mode/text","ace/mode/text_highlight_rules","ace/mode/r_highlight_rules","ace/mode/matching_brace_outdent"], function(require, exports, module) {
    "use strict";
 
+   var unicode = require("../unicode");
    var Range = require("../range").Range;
    var oop = require("../lib/oop");
    var TextMode = require("./text").Mode;
    var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
    var RHighlightRules = require("./r_highlight_rules").RHighlightRules;
    var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-   var unicode = require("../unicode");
 
-   var Mode = function()
-   {
+   var Mode = function(){
       this.HighlightRules = RHighlightRules;
       this.$outdent = new MatchingBraceOutdent();
+      this.$behaviour = this.$defaultBehaviour;
    };
    oop.inherits(Mode, TextMode);
 
-   (function()
-   {
+   (function() {
       this.lineCommentStart = "#";
+      this.tokenRe = new RegExp("^[" + unicode.wordChars + "._]+", "g");
+
+      this.nonTokenRe = new RegExp("^(?:[^" + unicode.wordChars + "._]|\s])+", "g");
        this.$id = "ace/mode/r";
    }).call(Mode.prototype);
    exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/r"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

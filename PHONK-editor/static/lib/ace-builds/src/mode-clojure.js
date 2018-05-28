@@ -90,7 +90,6 @@ var ClojureHighlightRules = function() {
         "constant.language": buildinConstants,
         "support.function": builtinFunctions
     }, "identifier", false, " ");
-
     this.$rules = {
         "start" : [
             {
@@ -141,16 +140,16 @@ var ClojureHighlightRules = function() {
                 regex : /:[^()\[\]{}'"\^%`,;\s]+/
             }, {
                 token : "string.regexp", //Regular Expressions
-                regex : '/#"(?:\\.|(?:\\\")|[^\""\n])*"/g'
+                regex : '/#"(?:\\.|(?:\\")|[^""\n])*"/g'
             }
 
         ],
         "string" : [
             {
-                token : "constant.language.escape",                
+                token : "constant.language.escape",
                 regex : "\\\\.|\\\\$"
             }, {
-                token : "string",                
+                token : "string",
                 regex : '[^"\\\\]+'
             }, {
                 token : "string",
@@ -222,6 +221,7 @@ var MatchingParensOutdent = require("./matching_parens_outdent").MatchingParensO
 var Mode = function() {
     this.HighlightRules = ClojureHighlightRules;
     this.$outdent = new MatchingParensOutdent();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -304,3 +304,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/clojure"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

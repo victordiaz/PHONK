@@ -16,7 +16,6 @@ var SchemeHighlightRules = function() {
         "constant.language": constantLanguage,
         "support.function": supportFunctions
     }, "identifier", true);
-
     this.$rules = 
         {
     "start": [
@@ -75,7 +74,7 @@ var SchemeHighlightRules = function() {
             "merge" : true
         }
     ]
-}
+};
 
 };
 
@@ -140,6 +139,7 @@ var MatchingParensOutdent = require("./matching_parens_outdent").MatchingParensO
 var Mode = function() {
     this.HighlightRules = SchemeHighlightRules;
 	this.$outdent = new MatchingParensOutdent();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -222,3 +222,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/scheme"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

@@ -18,7 +18,23 @@ var LatexHighlightRules = function() {
             regex : "(\\\\(?:label|v?ref|cite(?:[^{]*)))(?:({)([^}]*)(}))?"
         }, {
             token : ["storage.type", "lparen", "variable.parameter", "rparen"],
-            regex : "(\\\\(?:begin|end))({)(\\w*)(})"
+            regex : "(\\\\begin)({)(verbatim)(})",
+            next : "verbatim"
+        },  {
+            token : ["storage.type", "lparen", "variable.parameter", "rparen"],
+            regex : "(\\\\begin)({)(lstlisting)(})",
+            next : "lstlisting"
+        },  {
+            token : ["storage.type", "lparen", "variable.parameter", "rparen"],
+            regex : "(\\\\(?:begin|end))({)([\\w*]*)(})"
+        }, {
+            token : "storage.type",
+            regex : /\\verb\b\*?/,
+            next : [{
+                token : ["keyword.operator", "string", "keyword.operator"],
+                regex : "(.)(.*?)(\\1|$)|",
+                next : "start"
+            }]
         }, {
             token : "storage.type",
             regex : "\\\\[a-zA-Z]+"
@@ -52,9 +68,24 @@ var LatexHighlightRules = function() {
             next : "start" 
         }, {
             defaultToken : "string"
+        }],
+        "verbatim": [{
+            token : ["storage.type", "lparen", "variable.parameter", "rparen"],
+            regex : "(\\\\end)({)(verbatim)(})",
+            next : "start"
+        }, {
+            defaultToken : "text"
+        }],
+        "lstlisting": [{
+            token : ["storage.type", "lparen", "variable.parameter", "rparen"],
+            regex : "(\\\\end)({)(lstlisting)(})",
+            next : "start"
+        }, {
+            defaultToken : "text"
         }]
-
     };
+    
+    this.normalizeRules();
 };
 oop.inherits(LatexHighlightRules, TextHighlightRules);
 
@@ -71,32 +102,31 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var LaTeXHighlightRules = require("./latex_highlight_rules");
 
 var RDocHighlightRules = function() {
-
     this.$rules = {
         "start" : [
-	        {
-	            token : "comment",
-	            regex : "%.*$"
-	        }, {
-	            token : "text", // non-command
-	            regex : "\\\\[$&%#\\{\\}]"
-	        }, {
-	            token : "keyword", // command
-	            regex : "\\\\(?:name|alias|method|S3method|S4method|item|code|preformatted|kbd|pkg|var|env|option|command|author|email|url|source|cite|acronym|href|code|preformatted|link|eqn|deqn|keyword|usage|examples|dontrun|dontshow|figure|if|ifelse|Sexpr|RdOpts|inputencoding|usepackage)\\b",
+            {
+                token : "comment",
+                regex : "%.*$"
+            }, {
+                token : "text", // non-command
+                regex : "\\\\[$&%#\\{\\}]"
+            }, {
+                token : "keyword", // command
+                regex : "\\\\(?:name|alias|method|S3method|S4method|item|code|preformatted|kbd|pkg|var|env|option|command|author|email|url|source|cite|acronym|href|code|preformatted|link|eqn|deqn|keyword|usage|examples|dontrun|dontshow|figure|if|ifelse|Sexpr|RdOpts|inputencoding|usepackage)\\b",
                next : "nospell"
-	        }, {
-	            token : "keyword", // command
-	            regex : "\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])"
-	        }, {
+            }, {
+                token : "keyword", // command
+                regex : "\\\\(?:[a-zA-Z0-9]+|[^a-zA-Z0-9])"
+            }, {
                token : "paren.keyword.operator",
-	            regex : "[[({]"
-	        }, {
+                regex : "[[({]"
+            }, {
                token : "paren.keyword.operator",
-	            regex : "[\\])}]"
-	        }, {
-	            token : "text",
-	            regex : "\\s+"
-	        }
+                regex : "[\\])}]"
+            }, {
+                token : "text",
+                regex : "\\s+"
+            }
         ],
         "nospell" : [
            {
@@ -111,7 +141,7 @@ var RDocHighlightRules = function() {
                regex : "\\\\(?:name|alias|method|S3method|S4method|item|code|preformatted|kbd|pkg|var|env|option|command|author|email|url|source|cite|acronym|href|code|preformatted|link|eqn|deqn|keyword|usage|examples|dontrun|dontshow|figure|if|ifelse|Sexpr|RdOpts|inputencoding|usepackage)\\b"
            }, {
                token : "keyword", // command
-               regex : "\\\\(?:[a-zA-z0-9]+|[^a-zA-z0-9])",
+               regex : "\\\\(?:[a-zA-Z0-9]+|[^a-zA-Z0-9])",
                next : "start"
            }, {
                token : "paren.keyword.operator",
@@ -179,18 +209,18 @@ var MatchingBraceOutdent = function() {};
 exports.MatchingBraceOutdent = MatchingBraceOutdent;
 });
 
-define("ace/mode/rdoc",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/text_highlight_rules","ace/mode/rdoc_highlight_rules","ace/mode/matching_brace_outdent"], function(require, exports, module) {
+define("ace/mode/rdoc",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/rdoc_highlight_rules","ace/mode/matching_brace_outdent"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var RDocHighlightRules = require("./rdoc_highlight_rules").RDocHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
 var Mode = function(suppressHighlighting) {
 	this.HighlightRules = RDocHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -203,3 +233,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/rdoc"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

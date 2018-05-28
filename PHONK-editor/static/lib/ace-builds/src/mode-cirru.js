@@ -11,47 +11,47 @@ var CirruHighlightRules = function() {
         }, {
             token: 'comment.line.double-dash',
             regex: /--/,
-            next: 'comment',
+            next: 'comment'
         }, {
             token: 'storage.modifier',
-            regex: /\(/,
+            regex: /\(/
         }, {
             token: 'storage.modifier',
-            regex: /\,/,
-            next: 'line',
+            regex: /,/,
+            next: 'line'
         }, {
             token: 'support.function',
-            regex: /[^\(\)\"\s]+/,
+            regex: /[^\(\)"\s]+/,
             next: 'line'
         }, {
             token: 'string.quoted.double',
             regex: /"/,
-            next: 'string',
+            next: 'string'
         }, {
             token: 'storage.modifier',
-            regex: /\)/,
+            regex: /\)/
         }],
         comment: [{
             token: 'comment.line.double-dash',
-            regex: /\ +[^\n]+/,
-            next: 'start',
+            regex: / +[^\n]+/,
+            next: 'start'
         }],
         string: [{
             token: 'string.quoted.double',
             regex: /"/,
-            next: 'line',
+            next: 'line'
         }, {
             token: 'constant.character.escape',
             regex: /\\/,
-            next: 'escape',
+            next: 'escape'
         }, {
             token: 'string.quoted.double',
-            regex: /[^\\\"]+/,
+            regex: /[^\\"]+/
         }],
         escape: [{
             token: 'constant.character.escape',
             regex: /./,
-            next: 'string',
+            next: 'string'
         }],
         line: [{
             token: 'constant.numeric',
@@ -59,31 +59,31 @@ var CirruHighlightRules = function() {
         }, {
             token: 'markup.raw',
             regex: /^\s*/,
-            next: 'start',
+            next: 'start'
         }, {
             token: 'storage.modifier',
             regex: /\$/,
-            next: 'start',
+            next: 'start'
         }, {
             token: 'variable.parameter',
-            regex: /[^\(\)\"\s]+/
+            regex: /[^\(\)"\s]+/
         }, {
             token: 'storage.modifier',
             regex: /\(/,
             next: 'start'
         }, {
             token: 'storage.modifier',
-            regex: /\)/,
+            regex: /\)/
         }, {
             token: 'markup.raw',
-            regex: /^\ */,
-            next: 'start',
+            regex: /^ */,
+            next: 'start'
         }, {
             token: 'string.quoted.double',
             regex: /"/,
-            next: 'string',
+            next: 'string'
         }]
-    }
+    };
 
 };
 
@@ -190,6 +190,7 @@ var CoffeeFoldMode = require("./folding/coffee").FoldMode;
 var Mode = function() {
     this.HighlightRules = CirruHighlightRules;
     this.foldingRules = new CoffeeFoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -200,3 +201,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/cirru"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

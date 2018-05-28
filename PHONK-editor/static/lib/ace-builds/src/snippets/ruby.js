@@ -933,3 +933,11 @@ snippet aft\n\
 exports.scope = "ruby";
 
 });
+                (function() {
+                    window.require(["ace/snippets/ruby"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

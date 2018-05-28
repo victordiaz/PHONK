@@ -55,7 +55,7 @@ var VHDLHighlightRules = function() {
             regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
         }, {
             token : "keyword", // pre-compiler directives
-            regex : "\\s*(?:library|package|use)\\b",
+            regex : "\\s*(?:library|package|use)\\b"
         }, {
             token : keywordMapper,
             regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
@@ -74,7 +74,7 @@ var VHDLHighlightRules = function() {
         }, {
             token : "text",
             regex : "\\s+"
-        } ],
+        } ]
 
        
     };
@@ -85,16 +85,16 @@ oop.inherits(VHDLHighlightRules, TextHighlightRules);
 exports.VHDLHighlightRules = VHDLHighlightRules;
 });
 
-define("ace/mode/vhdl",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/vhdl_highlight_rules","ace/range"], function(require, exports, module) {
+define("ace/mode/vhdl",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/vhdl_highlight_rules"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var VHDLHighlightRules = require("./vhdl_highlight_rules").VHDLHighlightRules;
-var Range = require("../range").Range;
 
 var Mode = function() {
     this.HighlightRules = VHDLHighlightRules;
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -108,3 +108,11 @@ oop.inherits(Mode, TextMode);
 exports.Mode = Mode;
 
 });
+                (function() {
+                    window.require(["ace/mode/vhdl"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

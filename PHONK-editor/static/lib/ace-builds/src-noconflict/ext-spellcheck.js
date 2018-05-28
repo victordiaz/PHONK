@@ -1,4 +1,4 @@
-ace.define("ace/ext/spellcheck",["require","exports","module","ace/lib/event","ace/editor","ace/config"], function(require, exports, module) {
+ace.define("ace/ext/spellcheck",[], function(require, exports, module) {
 "use strict";
 var event = require("../lib/event");
 
@@ -28,7 +28,7 @@ exports.contextMenuHandler = function(e){
     });
 
     host.textInput.setInputHandler(function(newVal) {
-        console.log(newVal , value, text.selectionStart, text.selectionEnd)
+        console.log(newVal , value, text.selectionStart, text.selectionEnd);
         if (newVal == value)
             return '';
         if (newVal.lastIndexOf(value, 0) === 0)
@@ -66,6 +66,10 @@ require("../config").defineOptions(Editor.prototype, "editor", {
 
 });
                 (function() {
-                    ace.require(["ace/ext/spellcheck"], function() {});
+                    ace.require(["ace/ext/spellcheck"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
                 })();
             

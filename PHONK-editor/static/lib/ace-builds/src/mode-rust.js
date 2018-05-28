@@ -4,9 +4,8 @@ define("ace/mode/rust_highlight_rules",["require","exports","module","ace/lib/oo
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-var stringEscape = /\\(?:[nrt0'"]|x[\da-fA-F]{2}|u\{[\da-fA-F]{6}\})/.source;
+var stringEscape = /\\(?:[nrt0'"\\]|x[\da-fA-F]{2}|u\{[\da-fA-F]{6}\})/.source;
 var RustHighlightRules = function() {
-
     this.$rules = { start:
        [ { token: 'variable.other.source.rust',
            regex: '\'[a-zA-Z_][a-zA-Z0-9_]*(?![\\\'])' },
@@ -54,9 +53,9 @@ var RustHighlightRules = function() {
            regex: '\\b(fn)(\\s+)([a-zA-Z_][a-zA-Z0-9_]*)' },
          { token: 'support.constant', regex: '\\b[a-zA-Z_][\\w\\d]*::' },
          { token: 'keyword.source.rust',
-           regex: '\\b(?:abstract|alignof|as|box|break|continue|const|crate|do|else|enum|extern|for|final|if|impl|in|let|loop|macro|match|mod|move|mut|offsetof|override|priv|proc|pub|pure|ref|return|self|sizeof|static|struct|super|trait|type|typeof|unsafe|unsized|use|virtual|where|while|yield)\\b' },
+           regex: '\\b(?:abstract|alignof|as|become|box|break|catch|continue|const|crate|default|do|dyn|else|enum|extern|for|final|if|impl|in|let|loop|macro|match|mod|move|mut|offsetof|override|priv|proc|pub|pure|ref|return|self|sizeof|static|struct|super|trait|type|typeof|union|unsafe|unsized|use|virtual|where|while|yield)\\b' },
          { token: 'storage.type.source.rust',
-           regex: '\\b(?:Self|isize|usize|char|bool|u8|u16|u32|u64|f16|f32|f64|i8|i16|i32|i64|str|option|either|c_float|c_double|c_void|FILE|fpos_t|DIR|dirent|c_char|c_schar|c_uchar|c_short|c_ushort|c_int|c_uint|c_long|c_ulong|size_t|ptrdiff_t|clock_t|time_t|c_longlong|c_ulonglong|intptr_t|uintptr_t|off_t|dev_t|ino_t|pid_t|mode_t|ssize_t)\\b' },
+           regex: '\\b(?:Self|isize|usize|char|bool|u8|u16|u32|u64|u128|f16|f32|f64|i8|i16|i32|i64|i128|str|option|either|c_float|c_double|c_void|FILE|fpos_t|DIR|dirent|c_char|c_schar|c_uchar|c_short|c_ushort|c_int|c_uint|c_long|c_ulong|size_t|ptrdiff_t|clock_t|time_t|c_longlong|c_ulonglong|intptr_t|uintptr_t|off_t|dev_t|ino_t|pid_t|mode_t|ssize_t)\\b' },
          { token: 'variable.language.source.rust', regex: '\\bself\\b' },
          
          { token: 'comment.line.doc.source.rust',
@@ -86,14 +85,10 @@ var RustHighlightRules = function() {
            regex: '\\b(?:EXIT_FAILURE|EXIT_SUCCESS|RAND_MAX|EOF|SEEK_SET|SEEK_CUR|SEEK_END|_IOFBF|_IONBF|_IOLBF|BUFSIZ|FOPEN_MAX|FILENAME_MAX|L_tmpnam|TMP_MAX|O_RDONLY|O_WRONLY|O_RDWR|O_APPEND|O_CREAT|O_EXCL|O_TRUNC|S_IFIFO|S_IFCHR|S_IFBLK|S_IFDIR|S_IFREG|S_IFMT|S_IEXEC|S_IWRITE|S_IREAD|S_IRWXU|S_IXUSR|S_IWUSR|S_IRUSR|F_OK|R_OK|W_OK|X_OK|STDIN_FILENO|STDOUT_FILENO|STDERR_FILENO)\\b' },
          { token: 'meta.preprocessor.source.rust',
            regex: '\\b\\w\\(\\w\\)*!|#\\[[\\w=\\(\\)_]+\\]\\b' },
-         { token: 'constant.numeric.integer.source.rust',
-           regex: '\\b(?:[0-9][0-9_]*|[0-9][0-9_]*(?:u|us|u8|u16|u32|u64)|[0-9][0-9_]*(?:i|is|i8|i16|i32|i64))\\b' },
-         { token: 'constant.numeric.hex.source.rust',
-           regex: '\\b(?:0x[a-fA-F0-9_]+|0x[a-fA-F0-9_]+(?:u|us|u8|u16|u32|u64)|0x[a-fA-F0-9_]+(?:i|is|i8|i16|i32|i64))\\b' },
-         { token: 'constant.numeric.binary.source.rust',
-           regex: '\\b(?:0b[01_]+|0b[01_]+(?:u|us|u8|u16|u32|u64)|0b[01_]+(?:i|is|i8|i16|i32|i64))\\b' },
-         { token: 'constant.numeric.float.source.rust',
-           regex: '[0-9][0-9_]*(?:f32|f64|f)|[0-9][0-9_]*[eE][+-]=[0-9_]+|[0-9][0-9_]*[eE][+-]=[0-9_]+(?:f32|f64|f)|[0-9][0-9_]*\\.[0-9_]+|[0-9][0-9_]*\\.[0-9_]+(?:f32|f64|f)|[0-9][0-9_]*\\.[0-9_]+%[eE][+-]=[0-9_]+|[0-9][0-9_]*\\.[0-9_]+%[eE][+-]=[0-9_]+(?:f32|f64|f)' } ] }
+         { token: 'constant.numeric.source.rust',
+           regex: /\b(?:0x[a-fA-F0-9_]+|0o[0-7_]+|0b[01_]+|[0-9][0-9_]*(?!\.))(?:[iu](?:size|8|16|32|64|128))?\b/ },
+         { token: 'constant.numeric.source.rust',
+           regex: /\b(?:[0-9][0-9_]*)(?:\.[0-9][0-9_]*)?(?:[Ee][+-][0-9][0-9_]*)?(?:f32|f64)?\b/ } ] };
     
     this.normalizeRules();
 };
@@ -102,7 +97,7 @@ RustHighlightRules.metaData = { fileTypes: [ 'rs', 'rc' ],
       foldingStartMarker: '^.*\\bfn\\s*(\\w+\\s*)?\\([^\\)]*\\)(\\s*\\{[^\\}]*)?\\s*$',
       foldingStopMarker: '^\\s*\\}',
       name: 'Rust',
-      scopeName: 'source.rust' }
+      scopeName: 'source.rust' };
 
 
 oop.inherits(RustHighlightRules, TextHighlightRules);
@@ -131,8 +126,8 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 (function() {
     
-    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-    this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
+    this.foldingStartMarker = /([\{\[\(])[^\}\]\)]*$|^\s*(\/\*)/;
+    this.foldingStopMarker = /^[^\[\{\(]*([\}\]\)])|^[\s\*]*(\*\/)/;
     this.singleLineBlockCommentRe= /^\s*(\/\*).*\*\/\s*$/;
     this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/;
     this.startRegionRe = /^\s*(\/\*|\/\/)#?region\b/;
@@ -261,14 +256,24 @@ var FoldMode = require("./folding/cstyle").FoldMode;
 var Mode = function() {
     this.HighlightRules = RustHighlightRules;
     this.foldingRules = new FoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
 (function() {
     this.lineCommentStart = "//";
     this.blockComment = {start: "/*", end: "*/", nestable: true};
+    this.$quotes = { '"': '"' };
     this.$id = "ace/mode/rust";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/rust"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

@@ -66,7 +66,7 @@ var highlight = function(el, opts, callback) {
             }
         }
     } else {
-        data = dom.getInnerText(el);
+        data = el.textContent;
         if (opts.trim)
             data = data.trim();
     }
@@ -153,9 +153,13 @@ highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
 };
 
 module.exports = highlight;
-module.exports.highlight =highlight;
+module.exports.highlight = highlight;
 });
                 (function() {
-                    window.require(["ace/ext/static_highlight"], function() {});
+                    window.require(["ace/ext/static_highlight"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
                 })();
             

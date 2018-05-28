@@ -1,4 +1,4 @@
-ace.define("ace/mode/sh_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
+ace.define("ace/mode/sh_highlight_rules",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -30,7 +30,6 @@ var ShHighlightRules = function() {
     }, "identifier");
 
     var integer = "(?:(?:[1-9]\\d*)|(?:0))";
-
     var fraction = "(?:\\.\\d+)";
     var intPart = "(?:\\d+)";
     var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\.))";
@@ -39,7 +38,7 @@ var ShHighlightRules = function() {
     var fileDescriptor = "(?:&" + intPart + ")";
 
     var variableName = "[a-zA-Z_][a-zA-Z0-9_]*";
-    var variable = "(?:" + variableName + "=)";
+    var variable = "(?:" + variableName + "(?==))";
 
     var builtinVariable = "(?:\\$(?:SHLVL|\\$|\\!|\\?))";
 
@@ -53,7 +52,7 @@ var ShHighlightRules = function() {
             token : ["text", "comment"],
             regex : /(^|\s)(#.*)$/
         }, {
-            token : "string",
+            token : "string.start",
             regex : '"',
             push : [{
                 token : "constant.language.escape",
@@ -64,7 +63,7 @@ var ShHighlightRules = function() {
                 token : "keyword.operator",
                 regex : /`/ // TODO highlight `
             }, {
-                token : "string",
+                token : "string.end",
                 regex : '"',
                 next: "pop"
             }, {
@@ -217,7 +216,7 @@ oop.inherits(ShHighlightRules, TextHighlightRules);
 exports.ShHighlightRules = ShHighlightRules;
 });
 
-ace.define("ace/mode/makefile_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules","ace/mode/sh_highlight_rules"], function(require, exports, module) {
+ace.define("ace/mode/makefile_highlight_rules",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -226,7 +225,6 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var ShHighlightFile = require("./sh_highlight_rules");
 
 var MakefileHighlightRules = function() {
-
     var keywordMapper = this.createKeywordMapper({
         "keyword": ShHighlightFile.reservedKeywords,
         "support.function.builtin": ShHighlightFile.languageConstructs,
@@ -281,7 +279,7 @@ var MakefileHighlightRules = function() {
             next  : "start"
         }
     ]
-}
+};
 
 };
 
@@ -290,7 +288,7 @@ oop.inherits(MakefileHighlightRules, TextHighlightRules);
 exports.MakefileHighlightRules = MakefileHighlightRules;
 });
 
-ace.define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ace/mode/folding/fold_mode","ace/range"], function(require, exports, module) {
+ace.define("ace/mode/folding/coffee",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../../lib/oop");
@@ -377,7 +375,7 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 });
 
-ace.define("ace/mode/makefile",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/makefile_highlight_rules","ace/mode/folding/coffee"], function(require, exports, module) {
+ace.define("ace/mode/makefile",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -388,6 +386,7 @@ var FoldMode = require("./folding/coffee").FoldMode;
 var Mode = function() {
     this.HighlightRules = MakefileHighlightRules;
     this.foldingRules = new FoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -401,3 +400,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    ace.require(["ace/mode/makefile"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

@@ -5,7 +5,6 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var PascalHighlightRules = function() {
-
     this.$rules = { start: 
        [ { caseInsensitive: true,
            token: 'keyword.control.pascal',
@@ -59,7 +58,7 @@ var PascalHighlightRules = function() {
               { token: 'punctuation.definition.string.end.pascal',
                 regex: '"',
                 next: 'pop' },
-              { defaultToken: 'string.quoted.double.pascal' } ],
+              { defaultToken: 'string.quoted.double.pascal' } ]
             },
          { token: 'punctuation.definition.string.begin.pascal',
            regex: '\'',
@@ -71,7 +70,7 @@ var PascalHighlightRules = function() {
                 next: 'pop' },
               { defaultToken: 'string.quoted.single.pascal' } ] },
           { token: 'keyword.operator',
-           regex: '[+\\-;,/*%]|:=|=' } ] }
+           regex: '[+\\-;,/*%]|:=|=' } ] };
     
     this.normalizeRules();
 };
@@ -179,6 +178,7 @@ var FoldMode = require("./folding/coffee").FoldMode;
 var Mode = function() {
     this.HighlightRules = PascalHighlightRules;
     this.foldingRules = new FoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -195,3 +195,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/pascal"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

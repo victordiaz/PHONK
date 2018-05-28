@@ -972,3 +972,11 @@ snippet zoo\n\
 exports.scope = "css";
 
 });
+                (function() {
+                    window.require(["ace/snippets/css"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

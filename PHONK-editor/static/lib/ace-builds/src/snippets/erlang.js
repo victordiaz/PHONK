@@ -165,3 +165,11 @@ snippet gen_server\n\
 exports.scope = "erlang";
 
 });
+                (function() {
+                    window.require(["ace/snippets/erlang"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

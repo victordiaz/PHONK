@@ -171,7 +171,7 @@ var SnippetGroupHighlightRules = function() {
 			stack.splice(stack.length);
 			return this.tokenName;
 		}, tokenName: "text", regex: "^(?!\t)", next: "start"}
-	])
+	]);
 	
 };
 
@@ -184,6 +184,7 @@ var FoldMode = require("./folding/coffee").FoldMode;
 var Mode = function() {
     this.HighlightRules = SnippetGroupHighlightRules;
     this.foldingRules = new FoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -196,3 +197,11 @@ exports.Mode = Mode;
 
 
 });
+                (function() {
+                    window.require(["ace/mode/snippets"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

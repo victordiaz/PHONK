@@ -1,4 +1,4 @@
-ace.define("ace/mode/abap_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
+ace.define("ace/mode/abap_highlight_rules",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -9,9 +9,9 @@ var AbapHighlightRules = function() {
     var keywordMapper = this.createKeywordMapper({
         "variable.language": "this",
         "keyword": 
-            "ADD ALIAS ALIASES ASSERT ASSIGN ASSIGNING AT BACK" +
+            "ADD ALIAS ALIASES ASCENDING ASSERT ASSIGN ASSIGNING AT BACK" +
             " CALL CASE CATCH CHECK CLASS CLEAR CLOSE CNT COLLECT COMMIT COMMUNICATION COMPUTE CONCATENATE CONDENSE CONSTANTS CONTINUE CONTROLS CONVERT CREATE CURRENCY" +
-            " DATA DEFINE DEFINITION DEFERRED DELETE DESCRIBE DETAIL DIVIDE DO" +
+            " DATA DEFINE DEFINITION DEFERRED DELETE DESCENDING DESCRIBE DETAIL DIVIDE DO" +
             " ELSE ELSEIF ENDAT ENDCASE ENDCLASS ENDDO ENDEXEC ENDFORM ENDFUNCTION ENDIF ENDIFEND ENDINTERFACE ENDLOOP ENDMETHOD ENDMODULE ENDON ENDPROVIDE ENDSELECT ENDTRY ENDWHILE EVENT EVENTS EXEC EXIT EXPORT EXPORTING EXTRACT" +
             " FETCH FIELDS FORM FORMAT FREE FROM FUNCTION" +
             " GENERATE GET" +
@@ -21,7 +21,7 @@ var AbapHighlightRules = function() {
             " MESSAGE METHOD METHODS MODIFY MODULE MOVE MULTIPLY" +
             " ON OVERLAY OPTIONAL OTHERS" +
             " PACK PARAMETERS PERFORM POSITION PROGRAM PROVIDE PUT" +
-            " RAISE RANGES READ RECEIVE RECEIVING REDEFINITION REFERENCE REFRESH REJECT REPLACE REPORT RESERVE RESTORE RETURNING ROLLBACK" +
+            " RAISE RANGES READ RECEIVE RECEIVING REDEFINITION REFERENCE REFRESH REJECT REPLACE REPORT RESERVE RESTORE RETURN RETURNING ROLLBACK" +
             " SCAN SCROLL SEARCH SELECT SET SHIFT SKIP SORT SORTED SPLIT STANDARD STATICS STEP STOP SUBMIT SUBTRACT SUM SUMMARY SUPPRESS" +
             " TABLES TIMES TRANSFER TRANSLATE TRY TYPE TYPES" +
             " UNASSIGN ULINE UNPACK UPDATE" +
@@ -67,7 +67,7 @@ var AbapHighlightRules = function() {
             {token : "doc.comment", regex : /^\*.+/},
             {token : "comment",  regex : /".+$/},
             {token : "invalid", regex: "\\.{2,}"},
-            {token : "keyword.operator", regex: /\W[\-+\%=<>*]\W|\*\*|[~:,\.&$]|->*?|=>/},
+            {token : "keyword.operator", regex: /\W[\-+%=<>*]\W|\*\*|[~:,\.&$]|->*?|=>/},
             {token : "paren.lparen", regex : "[\\[({]"},
             {token : "paren.rparen", regex : "[\\])}]"},
             {token : "constant.numeric", regex: "[+-]?\\d+\\b"},
@@ -94,7 +94,7 @@ oop.inherits(AbapHighlightRules, TextHighlightRules);
 exports.AbapHighlightRules = AbapHighlightRules;
 });
 
-ace.define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ace/mode/folding/fold_mode","ace/range"], function(require, exports, module) {
+ace.define("ace/mode/folding/coffee",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../../lib/oop");
@@ -181,7 +181,7 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 });
 
-ace.define("ace/mode/abap",["require","exports","module","ace/mode/abap_highlight_rules","ace/mode/folding/coffee","ace/range","ace/mode/text","ace/lib/oop"], function(require, exports, module) {
+ace.define("ace/mode/abap",[], function(require, exports, module) {
 "use strict";
 
 var Rules = require("./abap_highlight_rules").AbapHighlightRules;
@@ -199,28 +199,12 @@ oop.inherits(Mode, TextMode);
 
 (function() {
     
+    this.lineCommentStart = '"';
+    
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
         return indent;
-    };
-    
-    this.toggleCommentLines = function(state, doc, startRow, endRow){
-        var range = new Range(0, 0, 0, 0);
-        for (var i = startRow; i <= endRow; ++i) {
-            var line = doc.getLine(i);
-            if (hereComment.test(line))
-                continue;
-                
-            if (commentLine.test(line))
-                line = line.replace(commentLine, '$1');
-            else
-                line = line.replace(indentation, '$&#');
-    
-            range.end.row = range.start.row = i;
-            range.end.column = line.length + 1;
-            doc.replace(range, line);
-        }
-    };
+    };    
     
     this.$id = "ace/mode/abap";
 }).call(Mode.prototype);
@@ -228,3 +212,11 @@ oop.inherits(Mode, TextMode);
 exports.Mode = Mode;
 
 });
+                (function() {
+                    ace.require(["ace/mode/abap"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

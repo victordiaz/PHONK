@@ -25,3 +25,11 @@ snippet =rpc\n\
 exports.scope = "haml";
 
 });
+                (function() {
+                    window.require(["ace/snippets/haml"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

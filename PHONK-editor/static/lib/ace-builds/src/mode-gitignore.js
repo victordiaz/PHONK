@@ -39,6 +39,7 @@ var GitignoreHighlightRules = require("./gitignore_highlight_rules").GitignoreHi
 
 var Mode = function() {
     this.HighlightRules = GitignoreHighlightRules;
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -49,3 +50,11 @@ oop.inherits(Mode, TextMode);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    window.require(["ace/mode/gitignore"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

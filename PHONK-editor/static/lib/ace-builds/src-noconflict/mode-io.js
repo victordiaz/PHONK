@@ -1,11 +1,10 @@
-ace.define("ace/mode/io_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
+ace.define("ace/mode/io_highlight_rules",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var IoHighlightRules = function() {
-
     this.$rules = { start: 
        [ { token: [ 'text', 'meta.empty-parenthesis.io' ],
            regex: '(\\()(\\))',
@@ -65,7 +64,7 @@ var IoHighlightRules = function() {
            regex: '\\b(?:0(?:x|X)[0-9a-fA-F]*|(?:[0-9]+\\.?[0-9]*|\\.[0-9]+)(?:(?:e|E)(?:\\+|-)?[0-9]+)?)(?:L|l|UL|ul|u|U|F|f)?\\b' },
          { token: 'variable.other.global.io', regex: 'Lobby\\b' },
          { token: 'constant.language.io',
-           regex: '\\b(?:TRUE|true|FALSE|false|NULL|null|Null|Nil|nil|YES|NO)\\b' } ] }
+           regex: '\\b(?:TRUE|true|FALSE|false|NULL|null|Null|Nil|nil|YES|NO)\\b' } ] };
     
     this.normalizeRules();
 };
@@ -73,7 +72,7 @@ var IoHighlightRules = function() {
 IoHighlightRules.metaData = { fileTypes: [ 'io' ],
       keyEquivalent: '^~I',
       name: 'Io',
-      scopeName: 'source.io' }
+      scopeName: 'source.io' };
 
 
 oop.inherits(IoHighlightRules, TextHighlightRules);
@@ -81,7 +80,7 @@ oop.inherits(IoHighlightRules, TextHighlightRules);
 exports.IoHighlightRules = IoHighlightRules;
 });
 
-ace.define("ace/mode/folding/cstyle",["require","exports","module","ace/lib/oop","ace/range","ace/mode/folding/fold_mode"], function(require, exports, module) {
+ace.define("ace/mode/folding/cstyle",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../../lib/oop");
@@ -102,8 +101,8 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 (function() {
     
-    this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
-    this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;
+    this.foldingStartMarker = /([\{\[\(])[^\}\]\)]*$|^\s*(\/\*)/;
+    this.foldingStopMarker = /^[^\[\{\(]*([\}\]\)])|^[\s\*]*(\*\/)/;
     this.singleLineBlockCommentRe= /^\s*(\/\*).*\*\/\s*$/;
     this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/;
     this.startRegionRe = /^\s*(\/\*|\/\/)#?region\b/;
@@ -221,26 +220,34 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 });
 
-ace.define("ace/mode/io",["require","exports","module","ace/lib/oop","ace/mode/text","ace/tokenizer","ace/mode/io_highlight_rules","ace/mode/folding/cstyle"], function(require, exports, module) {
+ace.define("ace/mode/io",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var Tokenizer = require("../tokenizer").Tokenizer;
 var IoHighlightRules = require("./io_highlight_rules").IoHighlightRules;
 var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = IoHighlightRules;
     this.foldingRules = new FoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
 (function() {
     this.lineCommentStart = "//";
     this.blockComment = {start: "/*", end: "*/"};
-    this.$id = "ace/mode/io"
+    this.$id = "ace/mode/io";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    ace.require(["ace/mode/io"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

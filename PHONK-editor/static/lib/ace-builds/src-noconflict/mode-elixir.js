@@ -1,11 +1,10 @@
-ace.define("ace/mode/elixir_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module) {
+ace.define("ace/mode/elixir_highlight_rules",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var ElixirHighlightRules = function() {
-
     this.$rules = { start: 
        [ { token: 
             [ 'meta.module.elixir',
@@ -363,7 +362,7 @@ var ElixirHighlightRules = function() {
               'comment.line.number-sign.elixir' ],
            regex: '(?:^|\\s)(#)(\\s[[a-zA-Z0-9,. \\t?!-][^\\x00-\\x7F]]*$)',
            originalRegex: '(?<=^|\\s)(#)\\s[[a-zA-Z0-9,. \\t?!-][^\\x{00}-\\x{7F}]]*$',
-           comment: 'We are restrictive in what we allow to go after the comment character to avoid false positives, since the availability of comments depend on regexp flags.' } ] }
+           comment: 'We are restrictive in what we allow to go after the comment character to avoid false positives, since the availability of comments depend on regexp flags.' } ] };
     
     this.normalizeRules();
 };
@@ -375,7 +374,7 @@ ElixirHighlightRules.metaData = { comment: 'Textmate bundle for Elixir Programmi
       foldingStopMarker: '^\\s*((\\}|\\]|after|else|catch|rescue)\\s*$|end\\b)',
       keyEquivalent: '^~E',
       name: 'Elixir',
-      scopeName: 'source.elixir' }
+      scopeName: 'source.elixir' };
 
 
 oop.inherits(ElixirHighlightRules, TextHighlightRules);
@@ -383,7 +382,7 @@ oop.inherits(ElixirHighlightRules, TextHighlightRules);
 exports.ElixirHighlightRules = ElixirHighlightRules;
 });
 
-ace.define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ace/mode/folding/fold_mode","ace/range"], function(require, exports, module) {
+ace.define("ace/mode/folding/coffee",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../../lib/oop");
@@ -470,7 +469,7 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 });
 
-ace.define("ace/mode/elixir",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/elixir_highlight_rules","ace/mode/folding/coffee"], function(require, exports, module) {
+ace.define("ace/mode/elixir",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -481,13 +480,22 @@ var FoldMode = require("./folding/coffee").FoldMode;
 var Mode = function() {
     this.HighlightRules = ElixirHighlightRules;
     this.foldingRules = new FoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
 (function() {
     this.lineCommentStart = "#";
-    this.$id = "ace/mode/elixir"
+    this.$id = "ace/mode/elixir";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
+                (function() {
+                    ace.require(["ace/mode/elixir"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

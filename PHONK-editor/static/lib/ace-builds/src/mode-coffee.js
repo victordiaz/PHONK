@@ -13,7 +13,7 @@ define("ace/mode/coffee_highlight_rules",["require","exports","module","ace/lib/
             "this|throw|then|try|typeof|super|switch|return|break|by|continue|" +
             "catch|class|in|instanceof|is|isnt|if|else|extends|for|own|" +
             "finally|function|while|when|new|no|not|delete|debugger|do|loop|of|off|" +
-            "or|on|unless|until|and|yes"
+            "or|on|unless|until|and|yes|yield|export|import|default"
         );
 
         var langConstant = (
@@ -21,9 +21,8 @@ define("ace/mode/coffee_highlight_rules",["require","exports","module","ace/lib/
         );
 
         var illegal = (
-            "case|const|default|function|var|void|with|enum|export|implements|" +
-            "interface|let|package|private|protected|public|static|yield|" +
-            "__hasProp|slice|bind|indexOf"
+            "case|const|function|var|void|with|enum|implements|" +
+            "interface|let|package|private|protected|public|static"
         );
 
         var supportClass = (
@@ -54,7 +53,7 @@ define("ace/mode/coffee_highlight_rules",["require","exports","module","ace/lib/
 
         var functionRule = {
             token: ["paren.lparen", "variable.parameter", "paren.rparen", "text", "storage.type"],
-            regex: /(?:(\()((?:"[^")]*?"|'[^')]*?'|\/[^\/)]*?\/|[^()\"'\/])*?)(\))(\s*))?([\-=]>)/.source
+            regex: /(?:(\()((?:"[^")]*?"|'[^')]*?'|\/[^\/)]*?\/|[^()"'\/])*?)(\))(\s*))?([\-=]>)/.source
         };
 
         var stringEscape = /\\(?:x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.)/;
@@ -348,9 +347,9 @@ oop.inherits(Mode, TextMode);
 
 (function() {
     var indenter = /(?:[({[=:]|[-=]>|\b(?:else|try|(?:swi|ca)tch(?:\s+[$A-Za-z_\x7f-\uffff][$\w\x7f-\uffff]*)?|finally))\s*$|^\s*(else\b\s*)?(?:if|for|while|loop)\b(?!.*\bthen\b)/;
-    var commentLine = /^(\s*)#/;
-    var hereComment = /^\s*###(?!#)/;
-    var indentation = /^\s*/;
+    
+    this.lineCommentStart = "#";
+    this.blockComment = {start: "###", end: "###"};
     
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
@@ -360,25 +359,6 @@ oop.inherits(Mode, TextMode);
             state === 'start' && indenter.test(line))
             indent += tab;
         return indent;
-    };
-    
-    this.toggleCommentLines = function(state, doc, startRow, endRow){
-        console.log("toggle");
-        var range = new Range(0, 0, 0, 0);
-        for (var i = startRow; i <= endRow; ++i) {
-            var line = doc.getLine(i);
-            if (hereComment.test(line))
-                continue;
-                
-            if (commentLine.test(line))
-                line = line.replace(commentLine, '$1');
-            else
-                line = line.replace(indentation, '$&#');
-    
-            range.end.row = range.start.row = i;
-            range.end.column = line.length + 1;
-            doc.replace(range, line);
-        }
     };
     
     this.checkOutdent = function(state, line, input) {
@@ -410,3 +390,11 @@ oop.inherits(Mode, TextMode);
 exports.Mode = Mode;
 
 });
+                (function() {
+                    window.require(["ace/mode/coffee"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

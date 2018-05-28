@@ -68,8 +68,8 @@ var EiffelHighlightRules = function() {
                 regex : /\\\\|\|\.\.\||\.\.|\/[~\/]?|[><\/]=?|[-+*^=~]/
             }, {
                 token : function (v) {
-                    var result = keywordMapper (v);
-                    if (result === "identifier" && v === v.toUpperCase ()) {
+                    var result = keywordMapper(v);
+                    if (result === "identifier" && v === v.toUpperCase()) {
                         result =  "entity.name.type";
                     }
                     return result;
@@ -105,16 +105,16 @@ oop.inherits(EiffelHighlightRules, TextHighlightRules);
 exports.EiffelHighlightRules = EiffelHighlightRules;
 });
 
-define("ace/mode/eiffel",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/eiffel_highlight_rules","ace/range"], function(require, exports, module) {
+define("ace/mode/eiffel",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/eiffel_highlight_rules"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var EiffelHighlightRules = require("./eiffel_highlight_rules").EiffelHighlightRules;
-var Range = require("../range").Range;
 
 var Mode = function() {
     this.HighlightRules = EiffelHighlightRules;
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
@@ -126,3 +126,11 @@ oop.inherits(Mode, TextMode);
 exports.Mode = Mode;
 
 });
+                (function() {
+                    window.require(["ace/mode/eiffel"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            

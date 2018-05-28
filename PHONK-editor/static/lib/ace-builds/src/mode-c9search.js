@@ -16,20 +16,26 @@ var C9SearchHighlightRules = function() {
         "start" : [
             {
                 tokenNames : ["c9searchresults.constant.numeric", "c9searchresults.text", "c9searchresults.text", "c9searchresults.keyword"],
-                regex : "(^\\s+[0-9]+)(:\\s)(.+)",
+                regex : /(^\s+[0-9]+)(:)(\d*\s?)([^\r\n]+)/,
                 onMatch : function(val, state, stack) {
                     var values = this.splitRegex.exec(val);
                     var types = this.tokenNames;
                     var tokens = [{
                         type: types[0],
                         value: values[1]
-                    },{
+                    }, {
                         type: types[1],
                         value: values[2]
                     }];
                     
+                    if (values[3]) {
+                        if (values[3] == " ")
+                            tokens[1] = { type: types[1], value: values[2] + " " };
+                        else
+                            tokens.push({ type: types[1], value: values[3] });
+                    }
                     var regex = stack[1];
-                    var str = values[3];
+                    var str = values[4];
                     
                     var m;
                     var last = 0;
@@ -52,17 +58,13 @@ var C9SearchHighlightRules = function() {
                 }
             },
             {
-                token : ["string", "text"], // single line
-                regex : "(\\S.*)(:$)"
-            },
-            {
-                regex : "Searching for .*$",
+                regex : "^Searching for [^\\r\\n]*$",
                 onMatch: function(val, state, stack) {
                     var parts = val.split("\x01");
                     if (parts.length < 3)
                         return "text";
 
-                    var options, search, replace;
+                    var options, search;
                     
                     var i = 0;
                     var tokens = [{
@@ -76,7 +78,6 @@ var C9SearchHighlightRules = function() {
                         type: "text"
                     }];
                     if (parts[2] !== " in") {
-                        replace = parts[i];
                         tokens.push({
                             value: "'" + parts[i++] + "'",
                             type: "text"
@@ -106,11 +107,6 @@ var C9SearchHighlightRules = function() {
                         });
                     }
                     
-                    if (replace) {
-                        search = replace;
-                        options = "";
-                    }
-                    
                     if (search) {
                         if (!/regex/.test(options))
                             search = lang.escapeRegExp(search);
@@ -131,11 +127,26 @@ var C9SearchHighlightRules = function() {
                 }
             },
             {
-                regex : "\\d+",
-                token: "constant.numeric"
+                regex : "^(?=Found \\d+ matches)",
+                token : "text",
+                next : "numbers"
+            },
+            {
+                token : "string", // single line
+                regex : "^\\S:?[^:]+",
+                next : "numbers"
             }
-        ]
+        ],
+        numbers:[{
+            regex : "\\d+",
+            token : "constant.numeric"
+        }, {
+            regex : "$",
+            token : "text",
+            next : "start"
+        }]
     };
+    this.normalizeRules();
 };
 
 oop.inherits(C9SearchHighlightRules, TextHighlightRules);
@@ -196,20 +207,20 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 (function() {
 
-    this.foldingStartMarker = /^(\S.*\:|Searching for.*)$/;
+    this.foldingStartMarker = /^(\S.*:|Searching for.*)$/;
     this.foldingStopMarker = /^(\s+|Found.*)$/;
     
     this.getFoldWidgetRange = function(session, foldStyle, row) {
         var lines = session.doc.getAllLines(row);
         var line = lines[row];
         var level1 = /^(Found.*|Searching for.*)$/;
-        var level2 = /^(\S.*\:|\s*)$/;
+        var level2 = /^(\S.*:|\s*)$/;
         var re = level1.test(line) ? level1 : level2;
         
         var startRow = row;
         var endRow = row;
 
-        if (this.foldingStartMarker.test(line)) {            
+        if (this.foldingStartMarker.test(line)) {
             for (var i = row + 1, l = session.getLength(); i < l; i++) {
                 if (re.test(lines[i]))
                     break;
@@ -273,3 +284,11 @@ oop.inherits(Mode, TextMode);
 exports.Mode = Mode;
 
 });
+                (function() {
+                    window.require(["ace/mode/c9search"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+            
