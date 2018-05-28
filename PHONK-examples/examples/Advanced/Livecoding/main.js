@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Livecoding feedback
+ * Phonk Example: Livecoding feedback
  *
  * We can execute any line of code whenever we want from the
  * WebIDE, just press
@@ -10,11 +10,10 @@
  */
 
 ui.addTitle(app.name)
-
-ui.addText('Code can be "live executed" from the WebEditor, selecting a line and pressing Ctrl (Cmd) + Shift + X. \n\nTry it out!', 0.1, 0.15, 0.8, -1)
+ui.addSubtitle('Code can be "live executed" from the WebEditor, selecting a line and pressing Ctrl (Cmd) + Shift + X. \n\nTry it out!')
 
 // adding this we can overlay the lines executed in the app
-var l = app.liveCodingFeedback()
+var l = app.liveCodingOverlay()
 						.autoHide(true)
 						.textSize(25)
 						.write('hello')

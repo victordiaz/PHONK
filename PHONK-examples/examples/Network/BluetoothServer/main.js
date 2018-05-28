@@ -1,24 +1,40 @@
 /*
- *  \\\ Example: BluetoothServer
+ *  Phonk Example: BluetoothServer
+ *  It works with just one connected device, if you want to handle more you will have
+ *  to adjust the code
  */
 
 ui.addTitle(app.name)
 ui.addSubtitle('Start a bluetooth "Chat" server')
 
-ui.addButton('Connect to bluetooth', 0.1, 0.72, 0.38, 0.1).onClick(function() {
-  btServer.start()
+var txt = ui.addTextList(0.1, 0.25, 0.8, 0.3).autoScroll(true)
+txt.props.textSize = 15
+
+ui.addToggle('Start Bluetooth Server', 0.1, 0.72, 0.80, 0.1).onChange(function (e) {
+  if (e.checked) {
+    btServer.start()
+    txt.add('Server waiting for connections...')
+  } else {
+    btServer.stop()
+    txt.add('Server stopped')
+  }
 })
 
-ui.addButton('Disconnect', 0.52, 0.72, 0.38, 0.1).onClick(function () {
-  btServer.stop()
+// send bluetooth messages
+var input = ui.addInput('message', 0.1, 0.85, 0.58, 0.1)
+var send = ui.addButton('Send', 0.7, 0.85, 0.2, 0.1).onClick(function () {
+  connectedDevice.send(input.text() + '\n')
 })
 
 var btServer = network.bluetooth.createServer('PROTOCODER_CHAT')
+var connectedDevice
+
 btServer.onNewConnection(function (e) {
-  console.log('new connection ' + e.device.mac)
+  txt.add('new connection from ' + e.device.name + ' ' + e.device.mac)
   e.device.send('yep! you are connected!\n')
+  connectedDevice = e.device
 })
 
 btServer.onNewData(function (e) {
-  console.log('from :' + e.device.mac + ' ' + e.data)
-})
+  txt.add('recevided from ' + e.device.mac + ': ' + e.data)
+ })

@@ -1,8 +1,9 @@
 /*
- *  \\\ Example: QR Codes
+ *  Phonk Example: QR Codes
  */
 
 ui.addTitle(app.name)
+ui.addSubtitle('Generate a QR code from text')
 
 var img = ui.addImage(0.2, 0.2, 0.6, 0.6)
 

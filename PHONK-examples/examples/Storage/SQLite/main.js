@@ -1,15 +1,13 @@
 /*
- * \\\ Example: SQLite database
+ * Phonk Example: SQLite database
  *
  * Use DataBase queries to add and retrieve content
  */
 
 ui.addTitle(app.name)
+ui.addSubtitle('Store and load content using SQLite')
 
-var txt = ui.addText('stored and loaded data: \n\n', 0.1, 0.15, 0.8, 0.5)
-txt.props.background = '#000000'
-txt.props.padding = 20
-txt.props.textSize = 15
+var txt = ui.addTextList(0.1, 0.25, 0.8, 0.5).autoScroll(true)
 
 // opens the db if exists otherwise creates one
 var db = fileio.openSqlLite('mydb.db')
@@ -27,9 +25,9 @@ var columns = ['type', 'color']
 var c = db.query('veggies', columns)
 
 // go through results
-txt.append('we got ' + c.getCount() + ' results \n\n');
+txt.add('we got ' + c.getCount() + ' results');
 while (c.moveToNext()) {
-  txt.append(c.getString(0) + " " + c.getString(1) + '\n')
+  txt.add(c.getString(0) + " " + c.getString(1))
 }
 
 db.close()

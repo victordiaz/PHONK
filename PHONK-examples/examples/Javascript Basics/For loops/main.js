@@ -1,11 +1,9 @@
 /*
- * \\\ Example: For Loop
+ * Phonk Example: For Loop
  */
 
 ui.addTitle(app.name)
-
-var txt = ui.addText('Check the source code to see how for loops work', 0.1, 0.15, 0.8, -1)
-txt.props.textSize = 30
+ui.addSubtitle('Check the source code to see how for loops work')
 
 // for loops have 3 parts
 // init; condition; update

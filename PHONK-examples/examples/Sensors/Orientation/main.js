@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Orientation
+ * Phonk Example: Orientation
  */
 
 ui.addTitle(app.name)

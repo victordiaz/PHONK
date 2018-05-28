@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Load external scripts
+ * Phonk Example: Load external scripts
  */
 
 ui.addTitle(app.name)

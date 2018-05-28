@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Other Sensors
+ * Phonk Example: Other Sensors
  *
  * Barometer and StepDetector
  * Only few devices have them

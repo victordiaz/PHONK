@@ -1,12 +1,12 @@
 /*
- * \\\ Example: Gyroscope
+ * Phonk Example: Gyroscope
  */
 
 ui.addTitle(app.name)
 
-var plotX = ui.addPlot(0.1, 0.15, 0.8, 0.1).name('x')
-var plotY = ui.addPlot(0.1, 0.30, 0.8, 0.1).name('y')
-var plotZ = ui.addPlot(0.1, 0.45, 0.8, 0.1).name('z')
+var plotX = ui.addPlot(0.1, 0.15, 0.8, 0.1).name('x').range(-10, 10)
+var plotY = ui.addPlot(0.1, 0.30, 0.8, 0.1).name('y').range(-10, 10)
+var plotZ = ui.addPlot(0.1, 0.45, 0.8, 0.1).name('z').range(-10, 10)
 
 sensors.gyroscope.onChange(function (data) {
   plotX.update(data.x)

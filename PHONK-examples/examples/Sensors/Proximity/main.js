@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Proximity Sensor
+ * Phonk Example: Proximity Sensor
  */
 
 ui.addTitle(app.name)

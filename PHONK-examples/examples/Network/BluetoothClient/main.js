@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Bluetooth serial
+ * Phonk Example: Bluetooth serial
  *
  * If you want to connect a bluetooth serial module to Arduino this is a
  * good start
@@ -9,24 +9,19 @@
 ui.addTitle(app.name)
 ui.addSubtitle('You can connect to other Android devices, Computers, Arduinos, etc')
 
-var txt = ui.addText('', 0.1, 0.2, 0.8, 0.3)
-txt.props.background = '#000000'
-txt.props.padding = 20
+var txt = ui.addTextList(0.1, 0.25, 0.8, 0.3).autoScroll(true)
 txt.props.textSize = 15
 
 // scan bluetooth networks
 ui.addButton('Scan bluetooth', 0.1, 0.6, 0.8, 0.1).onClick(function () {
   network.bluetooth.scanNetworks(function (e) {
-    txt.append(e.name + ' ' + e.mac + ' ' + e.strength + '\n')
+    txt.add(e.name + ' ' + e.mac + ' ' + e.strength)
   })
 })
 
-ui.addButton('Connect to bluetooth', 0.1, 0.72, 0.38, 0.1).onClick(function () {
-  btClient.connectSerial()
-})
-
-ui.addButton('Disconnect', 0.52, 0.72, 0.38, 0.1).onClick(function () {
-  btClient.disconnect()
+ui.addToggle('Connect to bluetooth', 0.1, 0.72, 0.80, 0.1).onChange(function (e) {
+  if (e.checked) btClient.connectSerial()
+  else btClient.disconnect()
 })
 
 // send bluetooth messages
@@ -39,10 +34,10 @@ var send = ui.addButton('Send', 0.7, 0.85, 0.2, 0.1).onClick(function () {
 var btClient = network.bluetooth.createClient()
 
 btClient.onConnected(function (e) {
-  txt.append('connected ' + e.status + '\n')
+  txt.add('status: ' + e.status + ' ' + e.name + ' ' + e.mac)
 })
 
 // here is we get the received data
 btClient.onNewData(function (e) {
-  txt.append('received ' + e.data + '\n')
+  txt.add('received: ' + e.data)
 })

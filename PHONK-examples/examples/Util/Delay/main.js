@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Delay
+ * Phonk Example: Delay
  *
  * Execute a function after T milliseconds
  */

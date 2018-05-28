@@ -1,11 +1,9 @@
 /*
- * \\\ Example: Functions
+ * Phonk Example: Functions
  */
 
- ui.addTitle(app.name)
-
-var txt = ui.addText('Check the source code to see how functions work', 0.1, 0.15, 0.8, -1)
-txt.props.textSize = 30
+ui.addTitle(app.name)
+ui.addSubtitle('Check the source code to see how functions work')
 
 // define a function with optional parametes
 function saySomething (msg) {

@@ -1,5 +1,5 @@
 /*
- * \\\ Example: HTTP_POST
+ * Phonk Example: HTTP_POST
  *
  * With this code you are able to upload multipart content to a webserver
  * An example of a php file that will handle the upload is included
@@ -17,7 +17,7 @@ var url = 'http://www.protocoder.org/p/post.php'
 var data = [
   { 'name' : 'field_1', 'content' : 'hello', 'type' : 'text' },
   { 'name' : 'field_2', 'content' : 'world', 'type' : 'text' },
-  { 'name' : 'userfile', 'content' : 'patata2.png', 'type' : 'file'}
+  { 'name' : 'userfile', 'content' : 'patata2.png', 'type' : 'file', 'mediaType': 'image/png'}
 ]
 
 network.httpPost(url, data, function (e) {

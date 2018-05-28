@@ -1,5 +1,5 @@
 /*
- *  \\\ Example: MQTT Client
+ *  Phonk Example: MQTT Client
  */
 
 ui.addTitle(app.name)

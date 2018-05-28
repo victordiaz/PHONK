@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Magnetic Sensor
+ * Phonk Example: Magnetic Sensor
  */
 
 ui.addTitle(app.name)

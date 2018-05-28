@@ -1,5 +1,5 @@
 /*
- * \\\ Example: mDNS
+ * Phonk Example: mDNS
  *
  * Register/discover network services using mDns
  */

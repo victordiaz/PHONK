@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Looper / Repeat Interval
+ * Phonk Example: Looper / Repeat Interval
  *
  * Executes a function every T milliseconds
  */

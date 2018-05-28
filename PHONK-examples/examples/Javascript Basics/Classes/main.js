@@ -1,5 +1,5 @@
 /*
- * \\\ Example: Classes
+ * Phonk Example: Classes
  *
  * Javascript doesnt have classes per se,
  * but we can get similar results using the prototype
@@ -7,9 +7,7 @@
  */
 
 ui.addTitle(app.name)
-
-var txt = ui.addText('Check the source code to see how classes work', 0.1, 0.15, 0.8, -1)
-txt.props.textSize = 30
+ui.addSubtitle('Check the source code to see how Javascript classes&objects work')
 
 var Robot = function (name) {
   this.name = name;
