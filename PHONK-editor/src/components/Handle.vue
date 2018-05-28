@@ -1,5 +1,5 @@
 <template>
-  <div id = "handle" v-bind:class = "orientation"> </div>
+  <div id = "handle" v-bind:class = "[orientation, color]"> </div>
 </template>
 
 <script>
@@ -9,7 +9,8 @@ export default {
   name: 'Handle',
   props: {
     orientation: String,
-    container: String
+    container: String,
+    color: String
   },
   mounted () {
     var that = this
@@ -17,7 +18,7 @@ export default {
     this.$nextTick(function () {
       var handle = this.$el
       var container = document.querySelector('#' + this.container)
-      console.log(this.orientation + ' ' + handle + ' ' + this.container)
+      // console.log(this.orientation + ' ' + handle + ' ' + this.container)
 
       handle.onmousedown = function (e) {
         var handlePos
@@ -78,20 +79,23 @@ export default {
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #handle {
-  z-index: 2;
 
   &.vertical, &.horizontal  {
-      &:hover {
-        cursor: col-resize;
-        background: @accentColor;
-      }
+    &.dark {
+      background: #181818;
+    }
 
-      &:active {
-        background: lighten(@accentColor, 10%);
-      }
+    &:hover {
+      cursor: col-resize;
+      background: @accentColor;
+    }
+
+    &:active {
+      background: lighten(@accentColor, 10%);
+    }
   }
 
   &.vertical {
@@ -100,6 +104,7 @@ export default {
     right: 0px;
     top: 0px;
     margin: -3px;
+    z-index: 2;
 
     &:hover {
       cursor: col-resize;

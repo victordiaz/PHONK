@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../../assets/css/variables.less";
+@import (reference) "../../assets/css/variables.less";
 
 .dtext {
   height: 100%;
@@ -33,7 +33,7 @@ export default {
   padding: 10px;
   box-sizing: border-box;
   color: white;
-  font-family: Source Code Pro;
+  font-family: @editorFont;
 }
 
 </style>

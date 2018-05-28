@@ -1,26 +1,47 @@
 <template>
   <div id = "project-load-container" class = "editor_panel panel_above">
+    <div class = "container">
     <!--
     <div class = "btn-sidebar btn-close" v-on:click = "close">
       <i class = "fa fa-close"></i>
     </div>
     -->
 
+    <span class = "debug" v-if = "false">{{store.state.projects['playground']}}</span>
+
     <h3>Create a project</h3>
     <project-new></project-new>
 
     <h3>Load a project</h3>
+
     <div id = "project-load">
       <div class="left">
-        <div class = "project_list" v-for="(p, pindex) in sharedState.projects">
+        <div class = "project_list" v-for="(p, pindex) in store.state.projects">
           <h1> {{pindex}} </h1>
-
           <ul>
             <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name"> {{f.name}} </li>
+            <li v-if = "pindex !== 'examples'" id = "new_folder"><i class = "fa fa-plus"></i></span>New folder</li>
           </ul>
         </div>
       </div>
       <div class="right">
+
+        <transition name = "upanim" mode = "out-in">
+          <div v-show = "isShowingActions" class = "actionable">
+            <!-- <button>rename</button>-->
+            
+            <div v-if = "!isShowingConfirmation">
+              <button v-on:click = "deleteAction">delete</button>
+              <button v-on:click = "cancelActions">cancel</button>
+            </div>
+            <div v-else class = "confirmation">
+              <p>Are you sure?</p>
+              <button v-on:click = "deleteActionSubmit">ok</button>
+              <button v-on:click = "cancelActions">cancel</button>
+            </div>
+          </div>
+        </transition>
+
         <div class = "project_info">
           <p>Double click to open</p>
           <div class="img-cover"></div>
@@ -30,16 +51,19 @@
             <div class="action-element"></div>
           </div>
         </div>
-        <ul>
-          <li v-for = "f in folder_chosen" v-on:click = "load_project(f)"> {{f.name}} </li>
+        <ul v-if = "pselected !== -1">
+          <li v-bind:class="{'selected':actionOnProject === f}" v-for = "f in folder_chosen" v-on:click = "load_project(f)" class = "project_item">
+            <span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action fa fa-ellipsis-v"></i>
+          </li>
         </ul>
       </div>
      </div>
    </div>
+ </div>
 </template>
 
 <script>
-import store from '../Store'
+import Store from '../Store'
 import _ from 'lodash'
 import ProjectNew from './ProjectNew'
 
@@ -50,16 +74,24 @@ export default {
   name: 'ProjectLoad',
   data () {
     return {
-      sharedState: store.state,
-      id: store.state.id,
+      store: Store,
+      id: Store.state.id,
       pselected: -1,
       selected: -1,
-      folder_chosen: [],
       uri: {
         type: '',
         folder: '',
         fullpath: ''
-      }
+      },
+      isShowingActions: false,
+      isShowingConfirmation: false,
+      actionOnProject: null
+    }
+  },
+  computed: {
+    folder_chosen: function () {
+      console.log('qq')
+      return _.orderBy(this.store.state.projects[this.pselected][this.selected].files, 'name')
     }
   },
   methods: {
@@ -72,17 +104,15 @@ export default {
       this.selected = index
 
       this.uri.type = pindex
-      this.uri.folder = this.sharedState.projects[pindex][index].name
+      this.uri.folder = this.store.state.projects[pindex][index].name
 
       // console.log(this.uri.type, this.uri.folder)
       // console.log(this.state.projects[pindex][index].files)
-
-      this.folder_chosen = _.orderBy(this.sharedState.projects[pindex][index].files, 'name')
     },
     load_project: function (project) {
       // this.uri.fullpath = this.uri.folder + '/' + folder.name
-      // store.emit('project_action', '/run', this.uri.fullpath)
-      // store.emit('project_load', this.uri.fullpath)
+      // Store.emit('project_action', '/run', this.uri.fullpath)
+      // Store.emit('project_load', this.uri.fullpath)
       // console.log(this.uri.fullpath, this.uri.type, this.uri.folder, project.name)
 
       this.close()
@@ -96,23 +126,44 @@ export default {
       this.$router.push(to)
     },
     close: function () {
-      this.sharedState.show_load_project = false
-      store.emit('toggle', 'load_project')
+      this.store.state.show_load_project = false
+      Store.emit('toggle', 'load_project')
+    },
+    openActions: function (f) {
+      console.log('openActions', f)
+      this.isShowingActions = true
+      this.actionOnProject = f
+    },
+    deleteAction: function () {
+      this.isShowingConfirmation = true
+    },
+    deleteActionSubmit: function () {
+      if (f) {
+        // TODO api call
+      }
+    },
+    cancelActions: function () {
+      this.isShowingActions = false
+      this.isShowingConfirmation = false
+      this.actionOnProject = null
     }
   },
+  mounted () {
+    this.cancelActions()
+  },
   created () {
-    store.on('new_project', this.new_project)
-    store.on('load_project_from_app', this.load_project_from_app)
+    Store.on('new_project', this.new_project)
+    Store.on('load_project_from_app', this.load_project_from_app)
   },
   destroyed () {
-    store.remove_listener('new_project', this.new_project)
-    store.remove_listener('load_project_from_app', this.load_project_from_app)
+    Store.remove_listener('new_project', this.new_project)
+    Store.remove_listener('load_project_from_app', this.load_project_from_app)
   }
 }
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #project-load-container {
   display: flex;
@@ -123,6 +174,13 @@ export default {
   font-size: 1em;
   color: #222;
   overflow: auto;
+  z-index: 5;
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
 
   h3, #editor_panel_new, #project-load {
     margin: 8px 12%;
@@ -133,6 +191,10 @@ export default {
     font-weight: 700;
     font-size: 0.8em;
     margin-top: 25px;
+  }
+
+  .debug {
+    font-size: 0.7em;
   }
 }
 
@@ -153,11 +215,26 @@ export default {
     li {
       padding: 5px 10px;
       font-weight: 300;
+      display: flex;
+
+      span {
+        flex: 2;
+      }
 
       &:hover, &.selected {
         background-color: @accentColor;
         color: @primaryTextColor;
         border-radius: 1px;
+        position: relative;
+
+        .action {
+          display: block;
+          margin: 0;
+          position: absolute;
+          padding: 0 20px;
+          right: 10px;
+          // background: rgba(255, 255, 255, 0.5);
+        }
       }
 
       &:active {
@@ -185,6 +262,39 @@ export default {
     color: black;
   	text-align: center;
     border-left: 3px solid white;
+    position: relative;
+    overflow: visible;
+
+    .actionable {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: absolute;
+      right: 0;
+      top: -35px;
+
+      p {
+        padding: 5px;
+      }
+
+      .confirmation {
+        display: inherit;
+      }
+    }
+
+
+    .action {
+      display: none;
+      opacity: 1;
+      position: sticky;
+      right: -10px;
+      color: white;
+      padding: 2px 10px;
+
+      &:hover {
+        color: darken(@accentColor, 20%);
+      }
+    }
 
     .project_info {
       display: none;
@@ -210,6 +320,28 @@ export default {
     ul {
       padding: 0.5em;
       font-weight: 500;
+    }
+  }
+
+  #new_folder {
+    font-size: 0.8em;
+    border: 1px dotted #bbbbbb;
+    display: inline-block;
+    border-radius: 2px;
+    margin-left: 10px;
+    margin-top: 28px;
+    color: #bbbbbb;
+    padding: 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+
+    &:hover {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    i {
+      margin-right: 5px;
     }
   }
 }

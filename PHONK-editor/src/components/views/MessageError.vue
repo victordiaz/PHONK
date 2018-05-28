@@ -1,9 +1,8 @@
 <template>
   <div class = "msg_error">
     <p>
-      <slot>
-      No content to display
-      </slot>
+      <slot>{{text}}</slot>
+      <button v-if = "action" id = "reload" v-on:click = "actionfn">{{action}}</button>
     </p>
   </div>
 </template>
@@ -12,8 +11,9 @@
 export default {
   name: 'MessageError',
   props: {
-    prop1: String,
-    prop2: Number
+    text: String,
+    action: String,
+    actionfn: Function
   },
   data () {
     return {
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../../assets/css/variables.less";
+@import (reference) "../../assets/css/variables.less";
 
 .msg_error {
   font-size: 1.1em;
@@ -41,27 +41,28 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
   position: absolute;
-  top: 10px;
-  right: 10px;
+  background: #ff356b61;
+  width: 100%;
+  height: 100%;
 
   p {
     padding: 8px 18px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 58px;
     color: @accentColor;
+    border-radius: 58px;
+    background: @primaryTextColor;
   }
 
-  #reload {
-    border-left: 1px solid rgba(255, 255, 255, 0.5);
+  button {
+    border-left: 1px solid @accentColor;
     padding-left: 12px;
     margin-left: 12px;
     color: white;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     font-size: 0.9em;
     background: none;
+    color: @accentColor;
 
     &:hover {
       text-decoration: underline;

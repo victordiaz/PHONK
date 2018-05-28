@@ -98,7 +98,7 @@ export default {
 }
 </script>
 <style lang = "less">
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #interface_editor {
   background: rgba(255, 255, 255, 1);

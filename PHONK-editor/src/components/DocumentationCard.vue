@@ -1,6 +1,6 @@
 <template>
   <div id = "info">
-    <div class = "btn-sidebar btn-close" v-on:click = "close">
+    <div v-if = "" class = "btn-sidebar btn-close" v-on:click = "close">
       <i class = "fa fa-close"></i>
     </div>
 
@@ -15,9 +15,11 @@
       <h3>example</h3>
       <code class = "code">
         <pre class = "javascript">
+// this is not a real example
 function () {
   console.log('hola')
-}</pre>
+}
+</pre>
       </code>
       <a v-bind:href = "store.get_full_url_for_project(data.method.exampleLink)" target = "_blank">Open full example in new Tab</a>
 
@@ -111,7 +113,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 .vertical #card {
   border-top: solid 0px #54524f;
@@ -126,12 +128,12 @@ export default {
   position: relative;
 
   & > * {
-    padding: 5px 0px;
+    padding: 10px 0px;
     color: black;
   }
 
   h2 {
-    font-family: 'Source Code Pro';
+    font-family: @editorFont;
     font-size: 1em;
     font-weight: 600;
 
@@ -151,20 +153,33 @@ export default {
     width: 100%;
   }
 
+  .params {
+    td {
+      padding: 3px 0;
+    }
+
+    .type {
+      color: gray;
+    }
+  }
+
   code {
-    padding: 5px 5px;
+    padding: 8px 8px;
     box-sizing: border-box;
     width: 100%;
 
-    background: whitesmoke;
+    background: white;
     border-radius: 2px;
-    border: 1px solid rgba(0, 0, 0, 0.08)
+    // border: 1px solid rgba(0, 0, 0, 0.08)
   }
 
   code, .usage>ul, .param, .returns .type, .related{
-    font-family: 'Source Code Pro';
+    font-family: @editorFont;
     overflow: initial;
-    padding: 4px 0px;
+  }
+
+  li {
+    padding: 3px 0;
   }
 
   .description {
@@ -187,7 +202,7 @@ export default {
 
     a {
       padding: 5px 5px;
-      background: #ec4f4f;
+      background: @accentColor;
       border-radius: 2px;
       color: white;
       font-weight: 600;
@@ -214,13 +229,6 @@ export default {
       display: block;
     }
   }
-
-  .btn-close {
-      color: black;
-      right: 0px;
-      top: -8px;
-  }
-
 
   @keyframes fadeIn {
     from { opacity: 0.8; }

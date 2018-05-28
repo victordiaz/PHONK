@@ -4,12 +4,14 @@ import { domain, faIcon } from './filters'
 import App from './App'
 import './assets/css/font-awesome/css/font-awesome.min.css'
 import VueRouter from 'vue-router'
-import Resource from 'vue-resource'
+
 import Login from './components/views/Login.vue'
 import Editor from './components/Editor.vue'
 import TutorialLoader from './components/TutorialLoader'
 import About from './components/About'
 import Preferences from './components/Preferences'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 // import $ from 'jquery'
 // import Store from './Store'
@@ -22,7 +24,7 @@ Vue.filter('faIcon', faIcon)
 Vue.use(VueRouter)
 
 // ajax stuff
-Vue.use(Resource)
+Vue.use(VueAxios, axios)
 
 // routing
 var router = new VueRouter({

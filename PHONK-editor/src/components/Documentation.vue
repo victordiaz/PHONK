@@ -28,11 +28,16 @@
           </ul>
         </div>
       </div>
-
-      <transition name = "upanim" mode = "out-in">
-        <div id = "card" v-if = "show_card">
+      <transition name = "upanim2" mode = "out-in">
+        <div id = "card" :class = "{ inset: view_type === 'vertical' }" v-if = "show_card">
           <documentation-card :data = "selected"></documentation-card>
         </div>
+        <!--
+        <div v-else :class = "{ inset: view_type === 'vertical' }" >
+          <i class = "wifi fa fa-wifi"></i>
+          <p>Your device is disconnected</p>
+        </div>
+        -->
       </transition>
 
     </div>
@@ -149,7 +154,7 @@ export default {
     }
   },
   created () {
-    Store.load_documentation()
+    Store.loadDocumentation()
     Store.on('documentation_loaded', this.load_documentation)
     Store.on('close_card', this.close_card)
   }
@@ -157,7 +162,7 @@ export default {
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 .todo {
   background: cyan;
@@ -180,11 +185,14 @@ export default {
   background: magenta;
 }
 
-
-
-.qq {
-  max-height: 45px;
+.inset {
+  margin: 13px;
+  .main_shadow;
+  margin-top: -10px;
+  z-index: 10;
+  background: white;
 }
+
 #documentation {
   height: 40%;
   background: white;
@@ -239,8 +247,22 @@ export default {
     overflow: hidden;
     position: relative;
 
+    .btn-close {
+        color: gray;
+        right: 5px;
+        top: -8px;
+
+        :hover {
+          color: black;
+        }
+    }
+
     &.horizontal {
       flex-direction: row;
+
+      .btn-close {
+        display: none;
+      }
 
       #browser {
         max-width: 212px;
@@ -321,7 +343,7 @@ export default {
 
           p {
             cursor: pointer;
-            padding: 4px;
+            padding: 5px 4px;
             display: inline-block;
           }
 
@@ -335,7 +357,7 @@ export default {
   }
 
   #card {
-    background: #f3f3f3;
+    background: #f9f9f9;
     flex: 1.5;
     overflow: hidden;
     overflow-y: auto;

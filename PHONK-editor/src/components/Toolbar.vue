@@ -7,7 +7,7 @@
 
         <transition name = "upanim" mode = "out-in">
           <button class = "transparent" key = "show" v-if = "!sharedState.show_load_project" id = "load_project" v-on:click = "toggle_load_project">
-            <p v-if = "not_loaded">/{{sharedState.current_project.project.folder}}/<span class = "name">{{sharedState.current_project.project.name}}</span></p>
+            <p v-if = "not_loaded"><span class = "folder">/{{sharedState.current_project.project.folder}}/</span><span class = "name">{{sharedState.current_project.project.name}}</span></p>
             <p v-else class = "bold">LOAD PROJECT</p>
             <i class = "fa fa-sort-down"></i>
           </button>
@@ -33,9 +33,10 @@
 
 
     <div class = "right_side">
+      <div class = "app_info_msg"><span class = "icon_left fa fa-clock-o"></span>Loading...<span class = "icon_right fa fa-clock-o"></span></div>
       <button class = "fa fa-dashboard transparent" v-show = "false" v-on:click = "toggle_dashboard"></button>
-      <button class = "fa fa-tablet transparent" v-bind:class = "{ 'rotate' : is_rotated }"  v-on:click = "sharedState.show_device_info = !sharedState.show_device_info"></button>
-      <button class = "fa fa-cog transparent" v-on:click = "sharedState.show_preferences = !sharedState.show_preferences"></button>
+      <button class = "fa fa-tablet transparent" v-bind:class = "{ 'rotate' : is_rotated, 'enabled': sharedState.show_device_info, 'device_disabled': !sharedState.device_properties.connected}"  v-on:click = "sharedState.show_device_info = !sharedState.show_device_info"></button>
+      <button class = "fa fa-cog transparent" v-on:click = "sharedState.show_preferences = !sharedState.show_preferences" v-bind:class = "{ 'enabled': sharedState.show_preferences }"></button>
     </div>
 
     <transition name = "upanim">
@@ -103,7 +104,7 @@ export default {
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #toolbar {
   display: flex;
@@ -112,16 +113,18 @@ export default {
   align-items: center;
   justify-content: space-between;
   color: @primaryTextColor;
-  user-select: none;
+  user-select: non;
   background: @backgroundColor;
   z-index: 2;
   height: 52px;
   font-size: 1.2em;
 
+  /*
   background: url('/static/phonk_icon_big_no_text.png') no-repeat @backgroundColor;
   background-position-y: 0px;
   background-size: 120px;
   background-position-x: 0px;
+  */
 
   > * {
     flex: 1;
@@ -129,6 +132,43 @@ export default {
     align-self: center;
     align-items: center;
     padding: 10px;
+  }
+
+  #load_project {
+    font-family: 'Roboto Mono';
+    color: #ffffffa8;
+  }
+
+  .name {
+    color: white;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+
+  // statuses
+  // showing query (show waiting icon) => showing result (show tick result or convert to red if fail)
+  // save / load / trying to reconnect
+
+  .app_info_msg {
+    font-family: 'Roboto Mono';
+    font-size: 0.7em;
+    font-weight: 400;
+    margin-right: 20px;
+    color: white;
+    padding: 5px 0px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+
+    .icon_left, .icon_right {
+      padding: 0px 10px 0px 15px;
+    }
+    .icon_left {
+      border-right: 1px solid #fff0;
+    }
+    .icon_right {
+      color: green;
+    }
+
   }
 
   .transparent {
@@ -166,6 +206,14 @@ export default {
       &.rotate * {
         transform: translate3d(0px, 3px, 0px);
       }
+
+      &.enabled {
+        color: @accentColor;
+      }
+
+      &.device_disabled {
+        opacity: 0.3;
+      }
     }
   }
 
@@ -190,6 +238,7 @@ export default {
       display: inline-flex;
       align-items: center;
     }
+
     p {
       text-transform: none;
       flex: 2;

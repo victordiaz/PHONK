@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../../assets/css/variables.less";
+@import (reference) "../../assets/css/variables.less";
 
 .dslider {
   height: 100%;

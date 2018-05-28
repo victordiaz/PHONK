@@ -11,7 +11,7 @@
         </select>
         -->
 
-        <input id="projectname" name="projectname" type="text" placeholder="MyProject" class="form-control input-md" v-model = "projectName" required="">
+        <input id="projectname" ref = "newproject" name="projectname" type="text" placeholder="MyProject" class="form-control input-md" v-model = "projectName" required="" @keyup.enter = "create_project()">
 
         <div class = "submit">
           <button id="create" name="create" class="btn btn-success" v-on:click = "create_project()">Create</button>
@@ -52,7 +52,11 @@ export default {
     project_created (status) {
       this.status = status
       console.log('created ' + status)
-      if (status) Store.state.show_load_project = false
+      if (status) {
+        Store.state.show_load_project = false
+        this.projectName = ''
+        Store.emit('project_list_all')
+      }
     },
     close () {
       Store.emit('toggle', 'new_project')
@@ -61,6 +65,8 @@ export default {
   },
   created () {
     Store.on('project_created', this.project_created)
+    this.$nextTick(() => this.$refs.newproject.focus())
+    console.log('--------> created')
   },
   destroyed () {
     Store.remove_listener('project_created', this.project_created)
@@ -69,7 +75,7 @@ export default {
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #editor_panel_new {
   .left {

@@ -15,7 +15,7 @@ var WS_PORT = 8587
  */
 var state = {
   DEBUG,
-  projects: [],
+  projects: {},
   examples: [],
   current_project: {
     project: {
@@ -24,16 +24,13 @@ var state = {
     }
   },
   device_properties: {
+    connected: false,
     info: {
-      connected: false,
-      name: 'protophone',
-      screensize: '960x800 landscape',
-      battery: '25%',
-      network_connection: 'Wifi',
-      internet_connection: 'yes',
-      screen: {
-        orientation: 'portrait'
-      }
+      network: { 'ip': 'none' },
+      device: { 'model name': 'none' },
+      script: { 'running script': 'none' },
+      other: { 'debugging': true },
+      screen: { orientation: 'portrait' },
     }
   },
   show_load_project: false,
@@ -76,34 +73,17 @@ store.vm = vm
  * List all projects
  */
 store.project_list_all = function () {
-  // console.log(TAG + ': project_list_all(query)')
+  // console.log('project_list_all(query)')
   var query = { }
 
-  var folder = 'examples/'
+  Vue.axios.get(getUrlWebapp('/api/project/list/'), query).then(function (response) {
+    // console.log('project_list_got', response.data)
+    // store.state.projects = response.data
+    Vue.set(store.state, 'projects', response.data)
+    // store.clearArray(store.state.projects)
+    // store.state.projects.push(...response.data)
 
-  Vue.http({ url: getUrlWebapp('/api/project/list/' + folder), method: 'GET', data: query }).then(function (response) {
-    // console.log(TAG + ': project_list_all(status) > ' + response.status)
-    // copyArray(response.data, store.examples)
-    // console.log(response.data)
-    store.state.projects = response.data
-    console.log(response.data)
-
-    // order folder
-    /*
-    for (var i in store.state.projects) {
-      store.state.projects[i].files.sort(function (a, b) {
-        return (a.name.toString().localeCompare(b.name))
-      })
-
-      // order projects
-      for (var j in store.state.projects[i].files) {
-        store.state.projects[i].files[j].files.sort(function (a, b) {
-          return (a.name.toString().localeCompare(b.name))
-        })
-      }
-      console.log('project_listed 1')
-    }
-    */
+    // store.state.projects = Object.assign({}, response.data)
     store.emit('project_listed_all')
   }, function (response) {
     // console.log(TAG + ': project_list_all(status) > ' + response.status)
@@ -116,13 +96,11 @@ store.project_list_all = function () {
 store.project_load = function (uri) {
   var query = { }
 
-  // console.log(uri)
-
-  Vue.http({ url: getUrlWebapp('/api/project' + uri + '/load'), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project' + uri + '/load'), query).then(function (response) {
     // console.log(TAG + ': project_load(status) > ' + response.status)
     store.state.current_project = response.data
     store.emit('project_loaded', true)
-    store.emit('project_files')
+    store.emit('project_files_list')
     store.load_project_preferences()
     // store.list_files_in_path('')
   }, function (response) {
@@ -133,11 +111,12 @@ store.project_load = function (uri) {
 
 store.load_project_preferences = function () {
   var query = {}
-  Vue.http({ url: this.getUrlForCurrentProject() + 'files/load/app.conf', method: 'GET', query }).then(function (response) {
+  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/app.conf', query).then(function (response) {
     if (response.data.files[0].code) {
       console.log(response)
       var conf = JSON.parse(response.data.files[0].code)
-      store.state.current_project.conf = conf
+
+      if (conf) store.state.current_project.conf = conf
     }
   }, function (response) {
     // console.log(TAG + ': project_save(status) > ' + response.status)
@@ -149,15 +128,37 @@ store.list_files_in_path = function (p) {
   var splitted = p.split('/')
   var toPath = splitted.slice(3, splitted.lenth).join('/')
 
+  console.log('---> ')
+
   // console.log('listing files in path ' + toPath)
-  Vue.http({ url: getUrlWebapp('/api/project' + this.get_current_project() + '/files/list/' + toPath), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + '/files/list/' + toPath), query).then(function (response) {
     // console.log('list_files_in_path(status) > ' + response.status)
 
     store.state.current_project.current_folder = '/' + toPath
     store.state.current_project.files = response.data
 
-    store.emit('project_files')
+    store.emit('project_files_list', true)
+    console.log('---> 1')
   }, function (response) {
+    store.emit('project_files_list', false)
+
+    // console.log('list_files_in_path(status) > ' + response.status)
+  })
+}
+
+store.project_files_delete = function (files) {
+  console.log('files delete')
+  var query = {}
+  query.files = files
+
+  Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/delete/'), query).then(function (response) {
+    console.log('delete_files_in_path(status) > ' + response.status)
+
+    // maybe here refresh again the files
+    store.list_files_in_path(store.state.current_project.current_folder)
+    store.emit('project_files_delete', true)
+  }, function (response) {
+    store.emit('project_files_delete', false)
     // console.log('list_files_in_path(status) > ' + response.status)
   })
 }
@@ -167,7 +168,7 @@ store.list_files_in_path = function (p) {
  */
 store.load_file = function (file) {
   var query = {}
-  Vue.http({ url: this.getUrlForCurrentProject() + 'files/load/' + file.name, method: 'GET', query }).then(
+  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.name, query).then(
   function (response) {
     // console.log(response)
     file.code = response.data.files[0].code
@@ -187,7 +188,7 @@ store.create_file = function (filetype, filename) {
   var query = {}
   query.files = [{ name: filename, path: store.state.current_project.current_folder, type: filetype }]
 
-  Vue.http.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/create'), query).then(function (response) {
+  Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/create'), query).then(function (response) {
     // console.log('create_file(status) OK > ' + response.status)
     store.emit('file_created')
     store.list_files_in_path(store.state.current_project.current_folder)
@@ -206,7 +207,7 @@ store.project_create = function (projectName) {
 
   // vm.$log()
 
-  Vue.http({ url: getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), query).then(function (response) {
     var data = {'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName}
     store.emit('project_created', true, data)
     store.project_list_all()
@@ -228,9 +229,12 @@ store.project_save = function (files) {
   query.files = []
   query.files = Object.assign([], files)
 
-  Vue.http.post(getUrlWebapp('/api/project' + this.get_current_project() + '/save'), query).then(function (response) {
+  Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/save'), query).then(function (response) {
     // console.log('project_save(status) OK > ' + response.status)
     store.emit('project_saved')
+    store.list_files_in_path(store.state.current_project.current_folder)
+
+    if (!store.state.current_project.conf) return
 
     if (store.state.current_project.conf.execute_on_save) {
       // console.log(store.state.current_project.conf.execute_on_save)
@@ -247,7 +251,7 @@ store.project_save = function (files) {
 store.project_action = function (action) {
   var query = { }
 
-  Vue.http({ url: getUrlWebapp('/api/project' + this.get_current_project() + action), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + action), query).then(function (response) {
     // console.log(response.status)
   }, function (response) {
     // console.log(response.status)
@@ -260,7 +264,7 @@ store.project_action = function (action) {
 store.project_run = function (project) {
   var query = { }
 
-  Vue.http({ url: getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), query).then(function (response) {
     // console.log(response.status)
   }, function (response) {
     // console.log(response.status)
@@ -273,7 +277,7 @@ store.project_run = function (project) {
 store.project_stop_all_and_run = function (project) {
   var query = { }
 
-  Vue.http({ url: getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/stop_all_and_run'), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/stop_all_and_run'), query).then(function (response) {
     // console.log(response.status)
   }, function (response) {
     // console.log(response.status)
@@ -287,57 +291,60 @@ store.execute_code = function (code) {
   // console.log('execute_code ' + code)
   var query = { code: code }
 
-  Vue.http.post(getUrlWebapp('/api/project/execute_code'), query).then(function (response) {
+  Vue.axios.post(getUrlWebapp('/api/project/execute_code'), query).then(function (response) {
     // console.log(response.status)
   }, function (response) {
     // console.log(response.status)
   })
 }
 
-store.upload_file = function (file) {
+store.uploadFile = function (file) {
   var formData = new FormData()
   // formData.append('_token', this.token) // just the csrf token
-  // console.log(file)
   formData.append('name', file.data.name)
   formData.append('type', file.data.type)
   formData.append('file', file.data)
+  formData.append('qq', escape('你'))
 
-  Vue.http({
-    url: getUrlWebapp('/api/project' + this.get_current_project() + '/files/upload/'),
-    method: 'POST',
-    data: formData,
-    xhr: {
-      onprogress: function (e) {
-        // console.log(e)
-        // console.log('uploading')
+  let config = {
+    headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
+  }
 
-        if (e.lengthComputable) {
-          // var progress = (e.loaded / e.total) * 100
-          // console.log('p1 ' + progress)
-        }
-      },
-      onreadystatechange: function (e) {
-        // console.log(e + this.readyState)
-        if (this.readyState === 4) {
-          // console.log(e)
-        }
-      }
-    }
-  }).then(function (response) {
-    // console.log('File sent ' + response.data) // this block is never triggered
-    // console.log(response)
+  console.log('uploadFile', file, formData)
+  Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/upload/'), formData, config).then(function (response) {
+    console.log('File upload success', response)
     store.emit('file_uploaded', response.data)
   }, function (response) {
-    // console.log('Error occurred...')
+    console.log('File upload error...', response)
   })
 }
+
+/*
+xhr: {
+  onprogress: function (e) {
+    // console.log(e)
+    // console.log('uploading')
+
+    if (e.lengthComputable) {
+      // var progress = (e.loaded / e.total) * 100
+      // console.log('p1 ' + progress)
+    }
+  },
+  onreadystatechange: function (e) {
+    // console.log(e + this.readyState)
+    if (this.readyState === 4) {
+      // console.log(e)
+    }
+  }
+}
+*/
 
 /*
  * List views
  */
 store.views_list_types = function (action) {
   var query = { }
-  Vue.http({ url: getUrlWebapp('/api/project/views_list_types'), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project/views_list_types'), query).then(function (response) {
     // console.log(response.status)
     // console.log(response.data)
     store.emit('views_list_types', response.data)
@@ -351,7 +358,7 @@ store.views_list_types = function (action) {
  */
 store.views_get_all = function (action) {
   var query = { }
-  Vue.http({ url: getUrlWebapp('/api/project/views_get_all'), method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project/views_get_all'), query).then(function (response) {
     // console.log(response.status)
     // console.log(response.data)
     store.emit('views_get_all', response.data)
@@ -375,7 +382,7 @@ store.get_current_project = function () {
   return '/' + store.state.current_project.project.folder + '/' + store.state.current_project.project.name
 }
 
-store.userproject = {'type': 'user_projects', 'folder': 'User Projects'}
+store.userproject = {'type': 'playground', 'folder': 'User Projects'}
 store.get_userproject_url = function (name) {
   return '/' + store.userproject.type + '/' + store.userproject.folder + '/' + name
 }
@@ -396,7 +403,7 @@ store.copyArray = function (or, dst) {
  */
 var getUrl = function (route) {
   if (DEBUG) {
-    // return '192.168.1.57'
+    // return '192.168.2.151'
     return '127.0.0.1'
   } else {
     return window.location.hostname
@@ -420,10 +427,10 @@ store.getUrlForCurrentProject = function () {
   return getUrlWebapp('/api/project/' + encodeURIComponent(p.folder + '/' + p.name + '/'))
 }
 
-store.load_documentation = function () {
+store.loadDocumentation = function () {
   var query = { }
 
-  Vue.http({ url: '/static/documentation.json', method: 'GET', data: query }).then(function (response) {
+  Vue.axios.get('/static/documentation.json', query).then(function (response) {
     // console.log(TAG + ': project_load(status) > ' + response.status)
     // console.log('loading documentation')
     // console.log(response.data)
@@ -435,12 +442,12 @@ store.load_documentation = function () {
 
 store.save_browser_config = function () {
   localStorage.setItem('browser', JSON.stringify(state.preferences))
-  console.log(state.preferences)
+  // console.log(state.preferences)
 }
 
 store.load_browser_config = function () {
   state.preferences = JSON.parse(localStorage.getItem('browser') || '[]')
-  console.log(state.preferences)
+  // console.log(state.preferences)
 }
 
 /*
@@ -457,7 +464,7 @@ store.websockets_init = function () {
   ws = new WebSocket(getUrlWs())
 
   ws.onopen = function () {
-    // console.log('ws connected')
+    console.log('ws connected')
     wsIsConnected = true
     clearInterval(reconnectionInterval) // _s the reconnection
     store.emit('device', { connected: true })
@@ -467,7 +474,7 @@ store.websockets_init = function () {
   }
 
   ws.onmessage = function (e) {
-    // console.log('ws message', e)
+    console.log('ws message', e)
     var data = JSON.parse(e.data)
     // console.log(e.data)
 
@@ -501,7 +508,7 @@ store.websockets_init = function () {
   }
 
   ws.onclose = function () {
-    // console.log('ws disconnected')
+    console.log('ws disconnected')
     // this.protoEvent.send('ui_appConnected', false)
     wsIsConnected = false
     store.emit('device', { connected: false })
@@ -579,19 +586,20 @@ store.mydragg = function () {
 
 store.loadSettings = function () {
   var savedSettings = localStorage.getItem('preferences')
-  console.log('loadSettings', savedSettings)
+  // console.log('loadSettings', savedSettings)
   if (typeof savedSettings === 'undefined' || !savedSettings || savedSettings === 'null') {
-    console.log('not loading settings')
+    // console.log('not loading settings')
   } else {
-    console.log('loadingSettings')
+    // console.log('loadingSettings')
     store.state.preferences = JSON.parse(savedSettings)
   }
 
-  if (settingsFromAndroid != null) {
-    console.log('isTablet', settingsFromAndroid.isTablet())
-    store.state.preferences['other']['WebIDE as default editor'] = settingsFromAndroid.getWebIde()
+  // we get the settings injected from the app
+  if (typeof settingsFromAndroid !== 'undefined') {
+    console.log('WebIDE is loaded within the app', settingsFromAndroid.isTablet())
+    Vue.set(store.state.preferences['other'], 'WebIDE as default editor', settingsFromAndroid.getWebIde())
   } else {
-    console.log('its not loaded by the app')
+    console.log('WebIDE is not loaded within the app')
   }
 }
 
@@ -599,6 +607,7 @@ store.saveSettings = function () {
   console.log('saveSettings')
   localStorage.setItem('preferences', JSON.stringify(this.state.preferences))
 
+  // console.log('settingsFromAndroid', settingsFromAndroid)
   if (settingsFromAndroid != null) {
     console.log('qq', store.state.preferences['other']['WebIDE as default editor'])
     settingsFromAndroid.setWebIde(store.state.preferences['other']['WebIDE as default editor'])

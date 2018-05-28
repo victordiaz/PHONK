@@ -70,7 +70,7 @@ export default {
 }
 </script>
 <style lang = "less">
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 .tutorial_chooser {
   z-index: 2;
@@ -98,7 +98,7 @@ export default {
   font-size: 1em;
 
   code {
-    font-family: Source Code Pro;
+    font-family: @editorFont;
   }
 
   h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, table, pre {

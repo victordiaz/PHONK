@@ -21,8 +21,8 @@ export default {
   computed: {
     arrowposition: function () {
       // 95 y 308
-      console.log('popup: ' + this.posx + ' ' + this.posy)
-      console.log('popup2: ' + 'top: ' + this.posy + '; left: ' + this.posx + ';')
+      // console.log('popup: ' + this.posx + ' ' + this.posy)
+      // console.log('popup2: ' + 'top: ' + this.posy + '; left: ' + this.posx + ';')
 
       if (this.arrow === 'left') return 'bottom: 20px; left: ' + this.posx + ';'
       else return 'top: ' + this.posy + '; right: ' + this.posx + ';'
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../../assets/css/variables.less";
+@import (reference) "../../assets/css/variables.less";
 
 .popover {
 	background-color: rgba(255, 255, 255, 1);
@@ -45,7 +45,7 @@ export default {
   width: 300px;
   min-height: 100px;
   border-radius: 3px;
-  z-index: 5;
+  z-index: 11;
   border: 0px solid black;
   padding: 5px;
   filter: drop-shadow(0 0 1px rgba(0,0,0,0.4)) drop-shadow(0 3px 4px rgba(0,0,0,0.4));

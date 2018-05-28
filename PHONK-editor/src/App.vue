@@ -56,7 +56,7 @@
           <handle orientation = "horizontal" container = "documentation"></handle>
 
           <file-manager></file-manager>
-          <handle orientation = "horizontal" container = "file_manager"></handle>
+          <handle orientation = "horizontal" color = "dark" container = "file_manager"></handle>
 
           <console></console>
 
@@ -67,7 +67,7 @@
     <debug-panel v-show = "false"></debug-panel>
 
     <transition-group name = "banneranim">
-      <project-load v-show = "sharedState.show_load_project" key = "l_project"></project-load>
+      <project-load v-if = "sharedState.show_load_project" key = "l_project"></project-load>
       <dashboard v-show = "sharedState.show_dashboard" key = "dashboard"></dashboard>
     </transition-group>
 
@@ -165,7 +165,7 @@ export default {
     },
     resize: function () {
       this.isMobile = window.getComputedStyle(document.querySelector('body'), ':before').getPropertyValue('content').replace(/"/g, '') === 'mobile'
-      console.log(this.isMobile)
+      // console.log(this.isMobile)
       this.top_container = !this.isMobile
     }
   },
@@ -197,7 +197,7 @@ export default {
     Store.save_browser_config()
     Store.state.browser = {}
     Store.load_browser_config()
-    console.log(Store.state.browser.editor_width)
+    // console.log(Store.state.browser.editor_width)
 
     var keyShortcuts = [
       { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyL', execute: ['toggle', 'load_project'] },
@@ -220,7 +220,7 @@ export default {
     // dashboard       ctrl + d // cmd + d
     // fullscreen editor ctrl + f // cmd + f
     window.addEventListener('keydown', function (e) {
-      console.log('key pressed', e)
+      // console.log('key pressed', e)
 
       for (var i in keyShortcuts) {
         if (keyShortcuts[i].ctrl === e.ctrlKey &&
@@ -229,7 +229,7 @@ export default {
             keyShortcuts[i].meta === e.metaKey &&
             keyShortcuts[i].key === e.code) {
           Store.emit(keyShortcuts[i].execute[0], keyShortcuts[i].execute[1])
-          console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
+          // console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
           e.preventDefault()
           e.stopPropagation()
           window.event.cancelBubble = true
@@ -485,6 +485,7 @@ body:before {
   flex: 2;
   animation: 0.3s ease-out 0.2s 1 normal initAnim;
   animation-fill-mode: backwards;
+  min-width: 100px;
 }
 
 #right_container {
@@ -626,6 +627,7 @@ button {
         font-weight: 700;
         font-size: 0.9em;
         box-sizing: border-box;
+        user-select: none;
 
         & > * {
           padding: 12px 12px;
@@ -635,7 +637,6 @@ button {
     	  h1 {
     	    text-align: left;
           flex: 1;
-          user-select: none;
           cursor: pointer;
           font-weight: 700;
           font-size: 0.8em;
@@ -663,9 +664,13 @@ button {
     				cursor: pointer;
             font-size: 0.8em;
 
-    				&:hover, &.enabled {
-              color: black;
+    				&:hover {
+              color: @mainColor;
     				}
+
+            &.enabled {
+              color: @accentColor;
+            }
 
     			}
 
@@ -674,7 +679,8 @@ button {
 
       .content {
         color: black;
-        overflow-y: hidden;
+        // overflow-y: hidden;
+        overflow: auto;
         height: 100%;
 
         & > * {
@@ -704,6 +710,16 @@ button {
   transition: all 0.2s ease-in-out;
 }
 
+.upanim2-enter, .upanim2-leave-active {
+  opacity: 0;
+  transform: translate3d(0px, 55px, 0);
+}
+
+.upanim2-enter-active, .upanim2-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
+
 
 
 /*
@@ -729,6 +745,15 @@ button {
 .banner-anim2-enter, .banner-anim2-leave {
   transform: translate3d(0px, -20px, 0) scale3d(1, 1, 1);
   opacity: 0;
+}
+
+
+.actionable {
+  button {
+    padding: 5px 8px;
+    margin-left: 3px;
+    // background: rgba(0, 0, 0, 0.1);
+  }
 }
 
 
@@ -781,8 +806,8 @@ button {
   .title, h3 {
     color: @accentColor;
     text-transform: uppercase;
-    font-size: 0.8em;
-    font-weight: 800;
+    font-size: 0.9em;
+    font-weight: 700;
     padding: 0px 5px;
   }
 
@@ -794,7 +819,8 @@ button {
 }
 
 .disabled {
-  opacity: 0.2;
+  opacity: 0.5;
+  cursor: not-allowed;
   pointer-events: none;
 }
 

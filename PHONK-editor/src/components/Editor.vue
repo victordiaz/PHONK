@@ -10,35 +10,35 @@
         <button id = "project-save" v-on:click="save" v-bind:class = "{ 'shortcut': saveShortcut }"> Save </button>
         <button id = "project-save-as" v-on:click="saveas" v-bind:class = "{ 'shortcut': saveAsShortcut }"> Save As </button>
       </div>
-    </div>
+    </div><<f
     -->
 
-    <transition name = "banneranim">
-  	<div id = "editor_container" class = "" v-show = "true">
+  	<div id = "editor_container" :class = "{'project_loaded': project_loaded}">
       <div id = "nav_tabs" v-if = "sharedState.preferences['editor']['show tab bar']">
         <!-- <div id = "project_name" v-on:click = "store.emit('toggle_section', 'load_project')"> -->
           <button id = "project_run" v-on:click="run" v-bind:class = "{ 'torun' : isConnected, 'shortcut': runShortcut }"> <i class = "fa fa-play" v-if = "button_run_state"></i> <i class = "fa fa-stop" v-else></i></button>
         <!-- </div> -->
         <ul id = "tabs">
-          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click="select_tab(index)" v-for="(t, index) in tabs">{{t.name}}<i class = "close fa fa-times" v-on:click = "close_tab(index)"></i></li>
+          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click.prevent.self="select_tab(index)" v-for="(t, index) in tabs">{{t.name}}<i class = "close fa fa-times" v-on:click = "close_tab(index)"></i></li>
         </ul>
         <!-- <div id = "add_tab" class = "fa fa-plus" v-on:click = "add_tab()"></div> -->
         <button id = "project_save" v-on:click = "save"><i class = "fa fa-save"></i></button>
       </div>
 			<div id = "editor"></div>
-      <div class = "msg_error" v-show = "isError"><p>there is a problem opening the file :/<button id = "reload">try again</button></p></div>
-		</div>
-  </transition>
+  	</div>
+    <message-error v-if = "isError" text="There is a problem opening the file 😅" action = "try again" :actionfn = "try_again"></message-error>
+
   </div>
 </template>
 
 <script>
 import store from '../Store'
+import MessageError from './views/MessageError'
 
 export default {
   name: 'Editor',
   components: {
-
+    MessageError
   },
   data () {
     return {
@@ -54,14 +54,15 @@ export default {
       sessions: [],
       project: '',
       d: null,
-      editor: ''
+      editor: '',
+      project_loaded: true
     }
   },
   watch: {
     '$route': 'fetchData'
   },
   mounted () {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
       this.init_editor()
       this.fetchData()
       // console.log('init editor')
@@ -108,6 +109,8 @@ export default {
       this.title = url
 
       if (!type) this.sharedState.show_load_project = true
+
+      this.project_loaded = false
 
       // console.log(type + ' ' + folder + ' ' + project)
       // this.fetchTutorial(this.$route.params.id)
@@ -215,7 +218,10 @@ export default {
           store.execute_code(liveExec.text)
         }
       })
-      this.editor.session.$worker.send('changeOptions', [{asi: true}])
+      // console.log('qq', that.editor.session)
+      if (that.editor.session.$worker) {
+        that.editor.session.$worker.send('changeOptions', [{asi: true}])
+      }
     },
     run: function () {
       var that = this
@@ -243,6 +249,7 @@ export default {
       // console.log('save project')
       // this.$log()
       store.emit('project_save', this.tabs)
+      store.list_files_in_path(store.state.current_project.current_folder)
       that.saveShortcut = true
       setTimeout(function () {
         that.saveShortcut = false
@@ -264,8 +271,10 @@ export default {
           }
         }
         this.isError = false
+        this.project_loaded = true
       } else { // project couldnt be loaded
-        this.isError = false
+        this.isError = true
+        console.log('error -----> ')
       }
     },
     createSession: function (f) {
@@ -296,6 +305,7 @@ export default {
           // console.log('modified')
         })
 
+        console.log('load_file')
         this.select_tab(this.tabs.length - 1)
       } else {
         // console.log('already exist')
@@ -313,16 +323,23 @@ export default {
       this.tabs.push({name: 'qq', text: 'lala'})
     },
     select_tab: function (index) {
-      // console.log('qq ' + index)
+      // console.log('selecting tab: ' + index)
       this.currentTab = index
       // this.editor.session.setValue(this.tabs[index].code)
       this.editor.setSession(this.sessions[index])
+      this.editor.focus()
     },
     close_tab: function (index) {
+      // console.log('closing tab: ' + index)
       if (this.currentTab > 0) {
         this.tabs.splice(index, 1)
         this.sessions.splice(index, 1)
-        this.select_tab(this.currentTab - 1)
+
+        let tabSelection = -1
+        if (this.tabs.length > 1) tabSelection = index
+        else tabSelection = this.currentTab - 1
+
+        this.select_tab(tabSelection)
       }
     },
     device_update: function (data) {
@@ -353,6 +370,19 @@ export default {
     },
     toggle_left_container: function () {
       store.emit('toggle_left_container')
+    },
+    try_again: function () {
+      console.log('trying again')
+
+      let type = this.$route.params.type
+      let folder = this.$route.params.folder
+      let project = this.$route.params.project
+      console.log(project)
+      let url = type + '/' + folder + '/' + project
+      // store.project_load('/' + url)
+
+      let to = {name: 'editor.load', params: { type: type, folder: folder, project: project }}
+      this.$router.push(to)
     }
 
     /*
@@ -364,7 +394,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #myeditor {
   display: flex;
@@ -380,6 +410,11 @@ export default {
   }
 }
 
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
 #editor_container {
   position: relative;
   width: 100%;
@@ -391,6 +426,12 @@ export default {
   border-bottom: 0px;
   border-radius: 2px 2px 0 0;
   overflow: hidden;
+  opacity: 0;
+
+  &.project_loaded {
+    animation: fadein 1s forwards;
+    animation-delay: 0.3s;
+  }
 
   &.slide {
     transform: translateY(420px);
@@ -448,6 +489,10 @@ export default {
       color: @primaryTextColor;
       font-weight: 600;
       font-size: 0.8em;
+      user-select: none;
+      overflow-y: hidden;
+      overflow-x: auto;
+      white-space: nowrap;
 
       li {
         position: relative;
@@ -563,6 +608,7 @@ export default {
 * TODO move it to a theme
 */
 .ace-monokai {
+  // font-family: @editorFont;
   background-color: transparent !important;
 }
 .ace_gutter {

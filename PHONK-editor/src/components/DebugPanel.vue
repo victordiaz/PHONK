@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style lang = "less">
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 .debug_panel {
   position: absolute;
@@ -51,7 +51,7 @@ export default {
   height: 200px;
   background-color: rgba(0, 255, 255, 0.5);
   padding: 5px;
-  font-family: 'Source Code Pro';
+  font-family: @editorFont;
   box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2);
   z-index: 10;
 

@@ -98,7 +98,7 @@ export default {
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 .check_list {
   background: rgba(0, 0, 0, 0.55);
@@ -166,7 +166,7 @@ export default {
       border-radius: 2px;
       margin: 10px 5px 0px 5px;
       font-size: 0.8em;
-      font-family: 'Source Code Pro';
+      font-family: @editorFont;
       height: 100%;
     }
   }

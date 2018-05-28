@@ -6,8 +6,9 @@
         <input v-show = "false" class = "path" v-model = "current_folder" readonly />
         <ul>
           <!-- <li class="fa fa-folder" for = "get_file"></li> -->
-          <li title = "Create a file or folder" class = "fa fa-plus" v-on:click = "show_create_file_dialog"  v-bind:class="{'enabled':showCreateDialog}"></li>
+          <li title = "Create a file or folder" class = "fa fa-plus" v-on:click = "toggle_create_file_dialog" v-bind:class="{'enabled':showCreateDialog}"></li>
           <li title = "Upload a file" class = "fa fa-upload" for = "get_file" v-on:click = "show_upload_dialog"></li>
+          <li title = "Edit files" class = "fa fa-edit" v-on:click = "edit_files" v-bind:class="{'enabled':isEditingFiles}"></li>
           <li title = "Refresh files" class = "fa fa-refresh" v-on:click = "refresh_files"></li>
         </ul>
         <div id = "upload_container" v-bind:class = "{'show' : isDnd, 'todrop': isReadyToDrop }">
@@ -17,20 +18,45 @@
       </div>
 
       <transition name = "banneranim">
-        <div v-show = "showCreateDialog" class = "new_file">
+        <div v-if = "isEditingFiles" class = "file_editing actionable">
+          <div v-if = "actionable != 'paste'">
+            <div v-if = "!isActionInProcess">
+              <button v-on:click = 'rename_file' :class = "{ disabled: num_files_selected > 1 || num_files_selected === 0 }">rename</button>
+              <button v-on:click = 'cut_files' :class = "{ disabled: num_files_selected === 0 || isRenaming }">cut</button>
+              <button v-on:click = 'delete_files' :class = "{ disabled: num_files_selected === 0 || isRenaming }">delete</button>
+            </div>
+
+            <div v-else>
+              <button v-on:click = 'rename_file_submit' v-if = "isRenaming"><i class = "fa fa-check"></i></button>
+              <button v-on:click = 'cancel_file_operation' v-if = "isRenaming"><i class = "fa fa-times"></i></button>
+              <button v-on:click = 'paste_files' v-if = "isCutting">Paste {{num_files_selected}} files</button>
+            </div>
+          </div>
+          <div v-else>
+            <button v-on:click = 'paste_files'>paste</button>
+            <button v-on:click = 'paste_files_cancel'>cancel</button>
+          </div>
+          <span v-if = "false">Select the files</span>
+        </div>
+      </transition>
+
+      <transition name = "banneranim">
+        <div v-if = "showCreateDialog" class = "new_file">
           <select v-model = "new_file.type">
             <option value = "file">New file</option>
             <option value = "folder">New folder</option>
           </select>
-          <input id = "new_file" type = "text" placeholder="filename.js" v-model = "new_file.name"/>
+          <input id = "new_file" ref = "newfile" type = "text" placeholder="filename.js" v-model = "new_file.name" @keyup.enter = "create_file"/>
           <div class = "button_group">
             <button class = "left" v-on:click = "create_file"><i class = "fa fa-check"></i></button>
-            <button class = "right" v-on:click = "show_create_file_dialog"><i class = "fa fa-times"></i></button>
+            <button class = "right" v-on:click = "toggle_create_file_dialog"><i class = "fa fa-times"></i></button>
           </div>
         </div>
       </transition>
 
+      <code v-if = "false" style = "font-size: 8px; color: black">{{files}}</code>
       <div class = "content">
+        <div class = "num_files_selected" v-if = "isEditingFiles && num_files_selected > 0">{{num_files_selected}}</div>
         <table>
           <thead>
             <tr>
@@ -38,20 +64,19 @@
               <th> name </th>
               <th> size </th>
               <th class = "action"></th>
-            </tr>
+            </tr>
           </thead>
           <tbody>
             <tr id = "back" v-on:click = "change_dir('..')">
               <td><i class = "fa fa-folder-o"></i></td>
               <td> .. </td>
               <td> </td>
-              <td> </td>
             </tr>
             <tr id = "files" v-bind:class="{ 'selected': selected == index }" v-for = "(file, index) in files" v-on:click = "showcontent(index, $event)">
+              <td v-if = "isEditingFiles"><input type="checkbox" v-model="file.selected" :class = "{ disabled: isRenaming }"></td>
               <td><i class = "fa" v-bind:class = "get_icon(file)"></i></td>
-              <td> {{file.name}} </td>
-              <td> {{file.size}} </td>
-              <!-- <td class = "action"><i class = "fa fa-ellipsis-v"></i></td> -->
+              <td><span v-if = "!checkRenaming(isRenaming, file.name)">{{file.name}}</span> <input v-else = "checkRenaming(isRenaming, file.name)" v-model = "file.name"></input> </td>
+              <td class = "file_size"> {{file.size}} </td>
             </tr>
           </tbody>
         </table>
@@ -61,7 +86,7 @@
         <h1> uploading... </h1>
         <ul>
           <li v-for = "u in uploadingFiles" v-show = "u.uploading">
-            {{u.data.name}} {{u.uploading}}
+            {{u.data.name}} <!-- {{u.uploading}} -->
             <div class = "progress pre"></div>
             <div class = "progress"></div>
           </li>
@@ -91,6 +116,7 @@ import helpers from '../Helpers'
 import Popup from './views/Popup'
 import VideoPlayer from './views/VideoPlayer'
 import AudioPlayer from './views/AudioPlayer'
+import Vue from 'vue'
 
 export default {
   name: 'FileManager',
@@ -109,6 +135,12 @@ export default {
       popup_content: '',
       current_folder: '',
       project_name: '',
+      actionable: 'single',
+      isEditingFiles: false,
+      isRenaming: false,
+      isCutting: false,
+      isActionInProcess: false,
+      is_moving_files: false,
       files: [
         /*
         { type: 'folder-o', name: 'qq1.png', size: '25kb' },
@@ -136,13 +168,19 @@ export default {
     }
   },
   computed: {
-
+    num_files_selected: function () {
+      let count = 0
+      for (let i in this.files) {
+        if (this.files[i].selected) count++
+      }
+      return count
+    }
   },
   methods: {
     init_filemanager: function () {
       // console.log('ready')
-      store.on('project_files', this.list_files)
-      store.on('file_uploaded', this.file_uploaded)
+      store.on('project_files_list', this.project_files_list)
+      store.on('project_file_uploaded', this.project_file_uploaded)
 
       var that = this
       var firstTarget
@@ -212,9 +250,12 @@ export default {
       this.popup_content = ''
     },
     showcontent: function (i, e) {
+      if (this.isEditingFiles) return
+      console.log('cuak' + this.isEditingFiles)
+
       console.log('showing content ', e)
       var selectedFile = this.files[i]
-      this.url = store.get_url_for_current_project() + 'files/view/' + selectedFile.name
+      this.url = store.getUrlForCurrentProject() + 'files/view/' + escape(selectedFile.name)
       this.posx = 300 + 'px'
       console.log('target', e.target.offsetLeft)
       this.posy = 0 + 'px' // target.offsetTop + 22 + 'px'
@@ -260,7 +301,9 @@ export default {
       this.showVideoPlayer = false
       this.popup_content = ''
     },
-    list_files: function () {
+    project_files_list: function (filesList, b) {
+      console.log('---> 2')
+      console.log('files' + filesList + ' ' + b)
       // update object
       this.current_folder = store.state.current_project.current_folder
       var files = store.state.current_project.files
@@ -272,6 +315,7 @@ export default {
       })
 
       for (var i in files) {
+        Vue.set(files[i], 'selected', false)
         this.files.push(files[i])
       }
     },
@@ -286,6 +330,11 @@ export default {
     refresh_files: function (e) {
       store.list_files_in_path(store.state.current_project.current_folder)
     },
+    edit_files: function (e) {
+      this.showCreateDialog = false
+      this.isEditingFiles = !this.isEditingFiles
+      console.log('qq ' + this.isEditingFiles)
+    },
     /* file upload */
     onFileChange: function (e) {
       console.log('onFileChange')
@@ -298,43 +347,94 @@ export default {
 
       // send
       for (var i = 0; i < files.length; i++) {
-        // console.log(files[i].name + ' ' + files[i].size + ' ' + files[i].type)
+        console.log('uploading...', files[i].name + ' ' + files[i].size + ' ' + files[i].type)
         this.uploadingFiles.push({data: files[i], uploading: true})
-        store.upload_file(this.uploadingFiles[i])
+        store.uploadFile(this.uploadingFiles[i])
       }
       // if (!files.length) return
       // this.createImage(files[0])
     },
-    file_uploaded: function (name) {
+    project_file_uploaded: function (name) {
       var uploading = false
 
       for (var i = 0; i < this.uploadingFiles.length; i++) {
         if (this.uploadingFiles[i].data.name === name) {
-          // console.log(name + ' is uploaded')
-          // console.log(this.uploadingFiles)
-          // console.log(typeof (this.uploadingFiles))
+          console.log(name + ' is uploaded')
           this.uploadingFiles[i].uploading = false
         }
         uploading = uploading || this.uploadingFiles[i].uploading
-        // console.log(this.uploadingFiles[i].uploading)
         this.uploadingFiles.splice(i, 1) // remove item
       }
 
-      // console.log(this.uploadingFiles)
       if (!uploading) {
         this.showUploadingFiles = false
         store.list_files_in_path('')
       }
     },
-    show_create_file_dialog: function () {
+    toggle_create_file_dialog: function () {
+      this.isEditingFiles = false
       this.showCreateDialog = !this.showCreateDialog
+      this.new_file.name = ''
+      this.$nextTick(() => this.$refs.newfile.focus())
     },
     create_file: function () {
       if (this.new_file.type !== null && this.new_file.name !== null) {
         console.log(this.new_file.type, this.new_file.name)
         store.create_file(this.new_file.type, this.new_file.name)
-        this.show_create_file_dialog()
+        this.toggle_create_file_dialog()
       }
+    },
+    rename_file: function () {
+      this.isRenaming = true
+      this.isActionInProcess = true
+    },
+    checkRenaming: function (isRenaming, fileName) {
+      if (!isRenaming) return false
+
+      let fileToRename = this.files.filter(function (el) {
+        if (el.selected) return el
+      })
+
+      if (fileName === fileToRename[0].name) return true
+      else return false
+    },
+    rename_file_submit: function () {
+      let fileToRename = this.files.filter(function (el) {
+        if (el.selected) return el
+      })
+
+      // TODO send to rename
+      console.log('renaming ' + fileToRename)
+    },
+    cancel_file_operation: function () {
+      for (let i in this.files) {
+        console.log('qq2', this.files)
+        this.files[i].selected = false
+      }
+
+      // this.isEditingFiles = false
+      this.isRenaming = false
+      this.isActionInProcess = false
+    },
+    delete_files: function () {
+      let filesToDelete = this.files.filter(function (el) {
+        if (el.selected) return el
+      })
+      // console.log(this.files, filesToDelete)
+
+      store.project_files_delete(filesToDelete)
+    },
+    cut_files: function () {
+      this.isCutting = true
+      this.isActionInProcess = true
+    },
+    paste_files: function () {
+      let filesToPaste = this.files.filter(function (el) {
+        if (el.selected) return el
+      })
+      console.log('paste_files ' + filesToPaste + ' where ' + this.current_folder)
+
+      this.cancel_file_operation()
     },
     get_icon: function (o) {
       return 'fa-' + o.type + '-o'
@@ -352,13 +452,15 @@ export default {
     document.removeEventListener('dragover')
     document.removeEventListener('dragleave')
     document.removeEventListener('dragcancel')
+
+    store.remove_listener('project_files_list')
+    store.remove_listener('project_file_uploaded')
   }
 }
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
-
+@import (reference) "../assets/css/variables.less";
 
 #file_manager {
   z-index: 1;
@@ -375,6 +477,8 @@ export default {
   }
   .content {
     padding: 10px;
+    overflow-y: auto;
+    overflow: auto;
   }
 
   .path {
@@ -436,6 +540,19 @@ export default {
     }
   }
 
+  .num_files_selected {
+    background: @mainColor;
+    border-radius: 25px;
+    width: 10px;
+    height: 10px;
+    font-size: 0.7em;
+    position: absolute;
+    right: 10px;
+    color: @accentColor;
+    font-weight: bold;
+    text-align: center;
+  }
+
   table {
     width: 100%;
     text-align: left;
@@ -462,13 +579,29 @@ export default {
     tbody {
       font-size: 0.8em;
       td {
-        padding:0.5em;
+        padding: 0.5em;
+        // white-space: nowrap;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
+        // max-width: 15ch;
+      }
+
+      checkbox {
+        border: 1px solid black;
+        margin: 0px;
       }
 
       tr {
         &:hover {
           background: @accentColor;
           color: white;
+
+          .file_size {
+            color: #ffffff88;
+          }
+          .action {
+            // display: block;
+          }
         }
       }
 
@@ -476,11 +609,23 @@ export default {
       }
     }
 
+    .file_size {
+      color: #00000088;
+    }
+
     .action {
-      opacity: 0.2;
+      display: none;
+      opacity: 1;
+      position: sticky;
+      right: -11px;
+      background: @backgroundColor;
+      color: white;
+      padding-left: 15px;
+      padding-right: 15px;
 
       &:hover {
-        opacity: 1;
+        background: dark(@backgroundColor, 10%);
+        color: #ff356b;
       }
     }
   }
@@ -533,35 +678,76 @@ export default {
 
   }
 
-  .new_file {
+  .actionable {
+    & > * {
+      align-items: center;
+      align-content: normal;
+      display: inherit;
+    }
+
+    span {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      color: #fffc;
+      font-weight: 400;
+    }
+  }
+
+  .new_file, .file_editing {
     display: flex;
     align-items: center;
-    background: white;
-    color : @accentColor;
+    align-content: normal;
+    display: inherit;
+    align-items: center;
+    background: @accentColor;
+    color : @primaryTextColor;
     padding: 0px;
-    height: 92px;
+    min-height: 40px;
+    max-height: 40px;
 
     & > * {
-      font-family: 'Open Sans Condensed';
-      font-weight: 100;
+      font-family: 'Roboto';
+      font-weight: 600;
       font-size: 0.8em;
       height: 100%;
       box-sizing: border-box;
+      font-weight: 500;
+      color: white;
     }
 
     input {
+      background: darken(@accentColor, 20%);
+      font-family: 'Roboto Mono';
       padding: 10px;
       flex: 1;
       border: 0px solid transparent;
       border-bottom: 1px solid @accentColor;
       min-width: 20px;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
     }
 
     select {
+      text-transform: uppercase;
       background: transparent;
       border: 0px;
       padding: 10px;
       min-width: 20px;
+      font-size: 0.7em;
+    }
+
+    select option {
+      background: darken(@accentColor, 10%);
+      color: white;
+      padding: 15px;
+    }
+
+    select option:hover, select option:active, select option:active {
+      background: yellow;
     }
 
     .button_group {
@@ -601,7 +787,7 @@ export default {
       flex: 1;
       margin-right: 2px 5px;
       padding: 2px;
-      font-family: 'Source Code Pro';
+      font-family: @editorFont;
     }
 
     a {

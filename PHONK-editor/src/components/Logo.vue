@@ -1,7 +1,8 @@
 <template>
   <div>
   <h1 class = "logo">
-    phonk!
+    <img src = "/static/phonk_underlined.png" />
+    <!-- phonk -->
     <!--
     <span class="accent">&gt;</span>Proto<span class="bolder">coder<span></span></span><span class="accent">_ </span>
     -->
@@ -16,16 +17,16 @@ export default {
 </script>
 
 <style lang='less' scoped>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 img {
-  width: 52px;
-  height: 52px;
+  height: 22px;
+  padding-top: 5px;
 }
 
 /* logo */
 h1.logo {
-  font-family: 'Source Code Pro';
+  font-family: 'Roboto Condensed';
   font-size: 1em;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   font-weight: 100;
@@ -37,7 +38,7 @@ h1.logo {
   // background: rgba(0, 0, 0, 0.1);
 
   color: @primaryTextColor;
-  font-weight: 800;
+  font-weight: 600;
   text-align: center;
 
   .accent {

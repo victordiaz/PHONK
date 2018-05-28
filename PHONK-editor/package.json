@@ -63,13 +63,13 @@
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
     "webpack-merge": "^4.1.0",
-    "vue-resource": "^0.7.0",
     "highlight.js": "^9.1.0",
-    "less": "^2.3.1",
-    "less-loader": "^2.2.2",
+    "less": "^3.0.2",
+    "less-loader": "^4.1.0",
     "marked": "^0.3.5",
     "lodash": "^4.16.3",
-    "p5": "0.5.2"
+    "axios": "^0.18.0",
+    "vue-axios": "^2.1.1"
   },
   "engines": {
     "node": ">= 4.0.0",

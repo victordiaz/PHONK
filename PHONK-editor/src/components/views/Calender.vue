@@ -56,7 +56,7 @@ export default {
 </script>
 
 <style lang = "less" scoped>
-@import "../../assets/css/variables.less";
+@import (reference) "../../assets/css/variables.less";
 
 .calender {
   border: 1px solid black;

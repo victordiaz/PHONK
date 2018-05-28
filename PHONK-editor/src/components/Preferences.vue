@@ -8,7 +8,7 @@
             <p>{{prop}}</p>
             <div class = "widget">
               <input v-show = "valueType(value) == 'boolean'" type="checkbox" id="checkbox" v-model="sharedState.preferences[name][prop]">
-              <div v-show = "valueType(value) == 'number'"><button v-on:click = "decrease_size">-</button><input v-model = "sharedState.preferences[name][prop]" readonly="readonly" /><button v-on:click = "increase_size">+</button></div>
+              <div class = "size" v-show = "valueType(value) == 'number'"><button v-on:click = "decrease_size">-</button><input v-model = "sharedState.preferences[name][prop]" readonly="readonly" /><button v-on:click = "increase_size">+</button></div>
             </div>
           </li>
         </ul>
@@ -58,11 +58,18 @@ export default {
   watch: {
     preferences: {
       handler: function (newVal, oldVal) {
-        console.log('watching', newVal)
+        console.log('watching', oldVal + ' ' + newVal)
         store.saveSettings()
       },
       deep: true
     }
+    /*,
+    "preferences['other']['WebIDE as default editor']": {
+      handler: function (newVal, oldVal) {
+        console.log('changed webid ' + newVal)
+      }
+    }
+    */
   },
   created () {
   },
@@ -72,7 +79,7 @@ export default {
 </script>
 
 <style lang = "less" scoped>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 .popover {
     ul, li {
@@ -96,6 +103,18 @@ li {
 
 .widget {
   display: inline-flex;
+
+  .size {
+    background: #ff356b;
+
+    input {
+      color: white;
+      background: transparent;
+      font-weight: bolder;
+      border-left: 1px solid #fff5;
+      border-right: 1px solid #fff5;
+    }
+  }
 }
 
 button {

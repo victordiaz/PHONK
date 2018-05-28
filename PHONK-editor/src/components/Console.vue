@@ -98,7 +98,7 @@ export default {
 </script>
 
 <style lang='less'>
-@import "../assets/css/variables.less";
+@import (reference) "../assets/css/variables.less";
 
 #console {
   background: rgba(0, 0, 0, 0.9) !important;
@@ -124,7 +124,7 @@ export default {
     li {
       padding: 2px 0px;
       border-bottom: 1px dashed #333;
-      font-family: Source Code Pro;
+      font-family: @editorFont;
       line-height: 1.8em;
       word-break: break-all;
       // .anim-fast;
@@ -135,14 +135,16 @@ export default {
       }
 
       &.log_error {
-        border-left: 2px solid @error;
-        padding-left: 3px;
+        // border-left: 3px solid @accentColor;
+        // padding-left: 3px;
       }
 
       &.log_error::before {
-        content: "error";
+        content: "😭 problem!";
+        font-size: 0.8em;
         background: @error;
-        padding: 1px 2px;
+        padding: 3px 5px;
+        border-radius: 2px;
       }
 
       &.log_error:hover {
