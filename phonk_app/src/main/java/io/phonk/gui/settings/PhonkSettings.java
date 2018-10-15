@@ -33,14 +33,15 @@ public class PhonkSettings extends AppRunnerSettings {
 	/*
 	 * Protocoder app settings
 	 */
-	public final static boolean DEBUG                       = true;
+    public final static boolean DEBUG                       = true;
     public static String PROTO_FILE_EXTENSION               = ".proto";
 
     public static final String APP_FOLDER_CUSTOM_WEBEDITOR  = "webeditors";
     public static final String EXPORTED_FOLDER              = "exported";
     public static final String TEMPLATES_FOLDER             = "templates";
 
-    public static int MIN_SUPPORTED_VERSION                 = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static final String NOTIFICATION_CHANNEL_ID = "io.phonk";
 
     public static final int WEBSOCKET_PORT                  = 8587;
     public static final int HTTP_PORT                       = 8585;

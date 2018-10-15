@@ -59,16 +59,17 @@ public class Project {
         this.name = projectName;
     }
 
-    // TODO this is a hack, separate it to folder and name
     public Project(String script) {
-        this.folder = "";
-        this.name = script;
+        String[] path = script.split("/");
+        this.folder = path[0] + "/" + path[1];
+        this.name = path[2];
     }
 
     public String getName() {
         return this.name;
     }
 
+    // returns something like playground/User Projects
     public String getFolder() {
         return this.folder;
     }

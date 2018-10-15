@@ -48,8 +48,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:scaleType="center"
-            android:src="@drawable/phonk_icon_big_no_text" />
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_partial_land" />
 
         <LinearLayout
             android:id="@+id/logo_area"
@@ -58,12 +58,25 @@
             android:gravity="center"
             android:padding="12dp">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/thingie_undertext" />
+
+            <!--
             <TextView
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/logo"
                 android:visibility="visible" />
+            -->
 
             <View
                 android:layout_width="match_parent"
@@ -139,18 +152,7 @@
             <ImageView
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/phonk_icon_big" />
-
-            <TextView
-                android:id="@+id/textView32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="Protocoder"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:visibility="gone" />
+                android:src="@drawable/logo_and_text" />
 
             <TextView
                 android:id="@+id/textView42"
@@ -167,7 +169,7 @@
 
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

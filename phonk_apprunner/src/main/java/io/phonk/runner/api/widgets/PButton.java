@@ -37,7 +37,7 @@ import io.phonk.runner.base.utils.MLog;
 
 import java.util.Map;
 
-public class PButton extends android.support.v7.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
+public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PButton.class.getSimpleName();
     private final AppRunner mAppRunner;
 

@@ -24,12 +24,13 @@ package io.phonk.runner.api.widgets;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import androidx.core.widget.TextViewCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
@@ -39,7 +40,7 @@ import io.phonk.runner.base.utils.MLog;
 
 import java.util.Map;
 
-public class PText extends TextView implements PViewMethodsInterface, PTextInterface {
+public class PText extends AppCompatTextView implements PViewMethodsInterface, PTextInterface {
 
     public StyleProperties props = new StyleProperties();
     public Styler styler;
@@ -134,6 +135,14 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
     public PText boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
+        return this;
+    }
+
+    @ProtoMethod(description = "Fits the text to the bounding box", example = "")
+    @ProtoMethodParam(params = {"w", "h"})
+    public PText autoFitText(boolean b) {
+        if (b) TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_UNIFORM);
+        else TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_NONE);
         return this;
     }
 

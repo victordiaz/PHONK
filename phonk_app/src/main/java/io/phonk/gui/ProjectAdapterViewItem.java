@@ -27,8 +27,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -164,7 +164,7 @@ public class ProjectAdapterViewItem extends LinearLayout {
                                         EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
                                         MLog.d(TAG, "deleting " + mProject.getFullPath());
                                         Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
-                                        PhonkScriptHelper.deleteFolder(mProject.getFullPath());
+                                        PhonkScriptHelper.deleteFileOrFolder(mProject.getFullPath());
 
                                         break;
 

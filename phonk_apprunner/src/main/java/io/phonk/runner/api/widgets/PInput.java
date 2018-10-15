@@ -41,7 +41,7 @@ import io.phonk.runner.apprunner.StyleProperties;
 
 import java.util.Map;
 
-public class PInput extends android.support.v7.widget.AppCompatEditText implements PViewMethodsInterface, PTextInterface {
+public class PInput extends androidx.appcompat.widget.AppCompatEditText implements PViewMethodsInterface, PTextInterface {
 
     private final AppRunner mAppRunner;
     private EditText mInput;

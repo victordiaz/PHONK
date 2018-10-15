@@ -26,7 +26,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.media.MediaRecorder;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;

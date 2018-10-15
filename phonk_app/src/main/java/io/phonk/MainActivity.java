@@ -29,13 +29,14 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.PopupMenu;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.PopupMenu;
 import android.util.SparseArray;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -260,7 +261,8 @@ public class MainActivity extends BaseActivity {
         moreOptionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu myPopup = new PopupMenu(MainActivity.this, moreOptionsButton);
+                Context wrapper = new ContextThemeWrapper(MainActivity.this, R.style.phonk_PopupMenu);
+                PopupMenu myPopup = new PopupMenu(wrapper, moreOptionsButton);
                 myPopup.inflate(R.menu.more_options);
                 myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -301,8 +303,8 @@ public class MainActivity extends BaseActivity {
         mWebViewFragment = new APIWebviewFragment();
 
         Bundle bundle = new Bundle();
-        // String url = "http://127.0.0.1:8585";
-        String url = "http://10.0.2.2:8080";
+        String url = "http://127.0.0.1:8585";
+        // String url = "http://10.0.2.2:8080";
         bundle.putString("url", url);
         bundle.putBoolean("isTablet", mIsTablet);
         mWebViewFragment.setArguments(bundle);

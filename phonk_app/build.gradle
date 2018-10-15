@@ -1,16 +1,8 @@
 buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
 
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-
 
 // load keyStore properties to sign the apk
 def keystorePropertiesFile = rootProject.file("signing.properties")
@@ -20,16 +12,16 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     // flavorDimensions "phonk_normal", "phonk_extended"
 
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    // buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "io.phonk.beta"
-        minSdkVersion 19 // change to 16
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 28
 
-        versionCode 26
-        versionName "0.26.0"
+        versionCode 30
+        versionName "0.30.0"
         multiDexEnabled true
         setProperty("archivesBaseName", "phonk-$versionName")
 
@@ -97,8 +89,15 @@ android {
 
     dexOptions {
         jumboMode true
-        javaMaxHeapSize "2g"
+        // javaMaxHeapSize "2g"
     }
+
+    /*
+    lintOptions {
+        abortOnError false
+    }
+    */
+
 }
 
 repositories {
@@ -121,12 +120,12 @@ configurations {
 */
 
 dependencies {
-    compile project(path: ':phonk_apprunner')
+    implementation project(path: ':phonk_apprunner')
     // extendedCompile project(path: ':phonk_apprunner')
-    compile 'com.android.support:multidex:1.0.0'
-    compile 'com.android.support:preference-v7:25.4.0'
-    compile 'jp.kshoji:midi-driver:0.1.4:@aar'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
+    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.preference:preference:1.0.0'
+    // implementation 'jp.kshoji:midi-driver:0.1.4:@aar'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true;
     }
 }

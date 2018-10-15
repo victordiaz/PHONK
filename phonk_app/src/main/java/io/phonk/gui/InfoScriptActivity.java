@@ -61,7 +61,7 @@ public class InfoScriptActivity extends BaseActivity {
         // mProjectNameTxt = (TextView) findViewById(R.id.projectName);
         // mProjectNameTxt.setText("Project Info: " + mCurrentProject.name);
 
-        getSupportActionBar().setTitle("Info: " + mCurrentProject.name);
+        getSupportActionBar().setTitle(mCurrentProject.name + " (app.conf)");
 
         Map<String, Object> map = AppRunnerHelper.readProjectProperties(this, mCurrentProject);
 

@@ -39,7 +39,7 @@ public class MyRoundCornerDrawable extends Drawable {
 
     private Paint mPaintBg;
     private final Paint mPaintBorder;
-    private float mRadius = 2;
+    private float mRadius = 22;
 
     public MyRoundCornerDrawable(/* Bitmap bitmap */) {
         /*
@@ -71,7 +71,7 @@ public class MyRoundCornerDrawable extends Drawable {
         // allow drawing out of bounds vertically
         Rect clipBounds = canvas.getClipBounds();
         clipBounds.inset(-12, -12);
-        canvas.clipRect(clipBounds, Region.Op.REPLACE);
+        // canvas.clipRect(clipBounds, Region.Op.DIFFERENCE);
 
         RectF rect = new RectF(0.0f, 0.0f, width, height);
 

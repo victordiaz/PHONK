@@ -46,29 +46,29 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/step_title_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Install examples"
-        android:id="@+id/step_title_2"
-        android:textColor="@color/white"
-        android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/step_body_2"
+        android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/step_body_2"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:text="Install examples"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/phonk_accentColor_primary" />
 
     <TextView
+        android:id="@+id/step_body_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Examples are great for learning. They will be copied in your device memory so you can have full access to modify them. Don't worry if you break them, they can be restored easily :)"
-        android:id="@+id/step_body_2"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:layout_toRightOf="@+id/step_num_2"
         android:layout_below="@+id/step_title_2"
-        android:textColor="#adffffff"
-        android:textSize="16sp"
-        android:maxWidth="500dp" />
+        android:layout_gravity="center"
+        android:layout_toRightOf="@+id/step_num_2"
+        android:layout_weight="1"
+        android:maxWidth="500dp"
+        android:text="Examples are great for learning. They will be copied in your device memory so you can have full access to modify them. Don't worry if you break them, they can be restored easily :)"
+        android:textColor="@color/phonk_textColor_primary"
+        android:textSize="16sp" />
     
     <ImageView
         android:layout_marginTop="15dp"

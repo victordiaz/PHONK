@@ -25,12 +25,13 @@ package io.phonk.gui.editor;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +47,7 @@ import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.FileIO;
+import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
 import io.phonk.server.model.ProtoFile;
 
@@ -63,6 +65,8 @@ public class EditorActivity extends BaseActivity {
     // private static final int MENU_BACK = 10;
     private static final int MENU_FILES = 11;
     private static final int MENU_API = 12;
+    private static final int MENU_INCREASE_FONT = 13;
+    private static final int MENU_DECREASE_FONT = 14;
 
     private boolean isTablet;
 
@@ -141,6 +145,7 @@ public class EditorActivity extends BaseActivity {
     @Override
     protected void setupActivity() {
         super.setupActivity();
+        setSupportActionBar(mToolbar);
 
         enableBackOnToolbar();
     }
@@ -154,6 +159,8 @@ public class EditorActivity extends BaseActivity {
         menu.add(1, MENU_SAVE, 0, "Save File").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         if (!isTablet) menu.add(1, MENU_FILES, 0, "Show Project Files").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(1, MENU_INCREASE_FONT, 0, "Increase font").setIcon(R.drawable.ic_zoom_in_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        menu.add(1, MENU_DECREASE_FONT, 0, "Decrease font").setIcon(R.drawable.ic_zoom_out_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         // onOptionsItemSelected(mMenu.findItem(MENU_FILES));
 
@@ -161,8 +168,14 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void saveAndRun() {
+        Toast.makeText(this, "Code saved and launched", Toast.LENGTH_SHORT).show();
         save();
         run();
+    }
+
+    public void onlySave() {
+        Toast.makeText(this, "Code saved", Toast.LENGTH_SHORT).show();
+        save();
     }
 
 
@@ -206,7 +219,7 @@ public class EditorActivity extends BaseActivity {
                 return true;
 
             case MENU_SAVE:
-                save();
+                onlySave();
 
                 return true;
 
@@ -217,6 +230,16 @@ public class EditorActivity extends BaseActivity {
 
             case MENU_API:
                 toggleApiDrawer();
+
+                return true;
+
+            case MENU_INCREASE_FONT:
+                editorFragment.increaseFont();
+
+                return true;
+
+            case MENU_DECREASE_FONT:
+                editorFragment.decreaseFont();
 
                 return true;
 
@@ -239,7 +262,7 @@ public class EditorActivity extends BaseActivity {
                     break;
 
                 case KeyEvent.KEYCODE_S:
-                    save();
+                    onlySave();
                     break;
 
                 case KeyEvent.KEYCODE_F:
@@ -375,6 +398,8 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void setProjectTitleAndSubtitle(String projectName, String fileName) {
+        MLog.d("qq2", "project: " + projectName);
+
         mToolbar.setTitle(projectName);
         mToolbar.setSubtitle(fileName);
     }

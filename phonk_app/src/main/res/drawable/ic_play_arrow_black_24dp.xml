@@ -22,5 +22,5 @@
 
 <vector android:height="48dp" android:viewportHeight="24.0"
     android:viewportWidth="24.0" android:width="48dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#373234" android:pathData="M8,5v14l11,-7z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M8,5v14l11,-7z"/>
 </vector>

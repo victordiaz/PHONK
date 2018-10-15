@@ -54,7 +54,6 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.media.ArCore;
 import io.phonk.runner.api.media.PAudioPlayer;
 import io.phonk.runner.api.media.PAudioRecorder;
 import io.phonk.runner.api.media.PMidi;
@@ -105,11 +104,6 @@ public class PMedia extends ProtoBase {
     @ProtoMethodParam(params = {"boolean"})
     public void enableSoundEffects(boolean b) {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
-    }
-
-    public ArCore initArCore() {
-        ArCore arcore = new ArCore(getAppRunner());
-        return arcore;
     }
 
     @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")

@@ -38,7 +38,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"/>
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_marginTop="0dp"
         app:theme="@style/ToolBarApp.App"
         android:id="@+id/toolbar2"
@@ -48,6 +48,6 @@
         android:layout_below="@id/statusbarspacer"
         android:layout_alignParentRight="true"
         android:background="@color/phonk_backgroundColor_primary">
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 </RelativeLayout>

@@ -36,6 +36,8 @@ public class ProtoFile {
     public Long size = null;
     public ArrayList<ProtoFile> files = null;
     public boolean isDir;
+    public String formerName;
+    public String formerPath;
 
     public ProtoFile(String path, String name) {
         this.name = name;

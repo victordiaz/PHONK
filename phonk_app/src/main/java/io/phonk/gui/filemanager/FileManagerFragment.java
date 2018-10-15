@@ -30,10 +30,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -242,7 +242,7 @@ public class FileManagerFragment extends BaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case DialogInterface.BUTTON_POSITIVE:
-                                        // deleteFile(index);
+                                        deleteFile(index);
                                         break;
 
                                     case DialogInterface.BUTTON_NEGATIVE:
@@ -279,17 +279,9 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     protected void deleteFile(int position) {
-        File dir = new File(mCurrentFileList.get(position).path);
-
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (String element : children) {
-                new File(dir, element).delete();
-            }
-        }
-        dir.delete();
-
+        PhonkScriptHelper.deleteFileOrFolder(mCurrentFileList.get(position).getFullPath());
         mCurrentFileList.remove(position);
+        mProjectAdapter.notifyDataSetChanged();
     }
 
     private void viewFile(int index) {

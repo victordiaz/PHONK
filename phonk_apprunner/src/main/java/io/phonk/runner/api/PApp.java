@@ -34,9 +34,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,7 @@ import io.phonk.runner.base.SchedulerManager;
 import io.phonk.runner.base.utils.ExecuteCmd;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.models.Project;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -71,6 +73,7 @@ public class PApp extends ProtoBase {
     PEvents pevents;
     public String folder;
     public String name;
+    public Bundle intentData;
 
     public interface onAppStatus {
         public void onStart();
@@ -176,32 +179,57 @@ public class PApp extends ProtoBase {
 
     }
 
+    public Bundle getIntentData() {
+        return intentData;
+    }
+
     class Notification {
         private NotificationManager mNotificationManager;
+        int id;
+        NotificationCompat.Builder mBuilder;
 
         Notification () {
             mNotificationManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
         }
 
-        public Notification show(Map map) {
+        public Notification create(Map map) {
 
             Bitmap iconBmp = null;
             String iconName = (String) map.get("icon");
             if (iconName != null) iconBmp = BitmapFactory.decodeFile(getAppRunner().getProject().getFullPathForFile(iconName));
 
+            String launchOnClick = null;
+            launchOnClick = (String) map.get("launchOnClick");
+            Project p = new Project(launchOnClick);
+
+            String notificationData = null;
+            notificationData = (String) map.get("notificationData");
+            this.id = ((Number) map.get("id")).intValue();
+
             Intent intent = new Intent(getContext(), MyBroadcastReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+            intent.putExtra("notificationData", notificationData);
+            intent.putExtra(Project.FOLDER, p.getFolder());
+            intent.putExtra(Project.NAME, p.getName());
+            intent.putExtra("isNotification", true);
+            intent.putExtra("notificationId", this.id);
+
+            PendingIntent deletePendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
 
             // Creates an explicit intent for an Activity in your app
             Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
+            resultIntent.putExtra("notificationData", notificationData);
+            resultIntent.putExtra(Project.FOLDER, p.getFolder());
+            resultIntent.putExtra(Project.NAME, p.getName());
+            resultIntent.putExtra("isNotification", true);
+            resultIntent.putExtra("notificationId", this.id);
+
             // The stack builder object will contain an artificial back stack for navigating backward from the Activity leads out your application to the Home screen.
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
             stackBuilder.addParentStack(AppRunnerActivity.class);
             stackBuilder.addNextIntent(resultIntent);
             PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            int id = ((Number) map.get("id")).intValue();
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
+            this.mBuilder = new NotificationCompat.Builder(getContext())
                     .setSmallIcon(R.drawable.app_icon)
                     .setContentTitle((CharSequence) map.get("title"))
                     .setContentText((CharSequence) map.get("description"))
@@ -210,11 +238,15 @@ public class PApp extends ProtoBase {
                     .setAutoCancel((Boolean) map.get("autocancel"))
                     .setTicker((String)map.get("ticker"))
                     .setSubText((CharSequence) map.get("subtext"))
-                    .setDeleteIntent(pendingIntent)
+                    .setDeleteIntent(deletePendingIntent)
                     .setContentIntent(resultPendingIntent);
 
-            mNotificationManager.notify(id, mBuilder.build());
 
+            return this;
+        }
+
+        public Notification show() {
+            mNotificationManager.notify(id, mBuilder.build());
             return this;
         }
 

@@ -23,7 +23,7 @@
 package io.phonk.runner.api.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import org.mozilla.javascript.NativeArray;
 import io.phonk.runner.api.common.ReturnInterfaceWithReturn;

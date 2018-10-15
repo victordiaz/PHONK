@@ -24,6 +24,7 @@ package io.phonk.server;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -31,11 +32,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -65,9 +67,9 @@ public class PhonkServerService extends Service {
     private final int NOTIFICATION_ID = 58592;
     private static final String SERVICE_CLOSE = "service_close";
 
-    private NotificationManager mNotifManager;
+    private NotificationManager mNotificationManager;
+    private NotificationChannel mChannel;
     private PendingIntent mRestartPendingIntent;
-    private Toast mToast;
     private EventsProxy mEventsProxy;
 
     /*
@@ -119,7 +121,7 @@ public class PhonkServerService extends Service {
 
             AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mRestartPendingIntent);
-            mNotifManager.cancelAll();
+            mNotificationManager.cancelAll();
 
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(10);
@@ -150,8 +152,9 @@ public class PhonkServerService extends Service {
 
         Intent notificationIntent = new Intent(this, PhonkServerService.class).setAction(SERVICE_CLOSE);
         PendingIntent pendingIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
+        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.phonk_icon)
                 .setContentTitle("Phonk").setContentText("Web Editor access is enabled")
                 .setOngoing(false)
@@ -159,9 +162,17 @@ public class PhonkServerService extends Service {
                 //.setDeleteIntent(pendingIntent)
                 .setContentInfo("1 Connection");
 
-        Notification notification = builder.build();
+        // damm annoying android pofkjpodsjf0ewiah
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            mChannel = new NotificationChannel(PhonkSettings.NOTIFICATION_CHANNEL_ID, this.getString(R.string.app_name), importance);
+            mChannel.setDescription("lalalla");
+            mChannel.enableLights(false);
+            mNotificationManager.createNotificationChannel(mChannel);
+        } else {
+        }
 
-        startForeground(NOTIFICATION_ID, notification);
+        startForeground(NOTIFICATION_ID, builder.build());
 
         phonkHttpServer = new PhonkHttpServer(this, PhonkSettings.HTTP_PORT);
 

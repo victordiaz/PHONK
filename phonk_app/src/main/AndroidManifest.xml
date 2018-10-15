@@ -26,10 +26,6 @@
      xmlns:tools="http://schemas.android.com/tools"
      package="io.phonk">
 
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="24" />
-
     <!-- android:resizeableActivity = "true" -->
 
     <application
@@ -147,7 +143,7 @@
             android:label="InfoScript" >
         </activity>
 
-        <activity android:name="io.phonk.gui.ProtoAppInstallerActivity"
+        <activity android:name="io.phonk.gui.PhonkAppInstallerActivity"
             android:label="@string/activity_name"
             android:theme="@style/PhonkAppTheme"
             android:logo="@drawable/phonk_icon"
@@ -193,7 +189,7 @@
         </receiver>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="io.phonk.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">

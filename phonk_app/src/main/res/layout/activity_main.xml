@@ -48,22 +48,33 @@
             android:layout_height="150dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/phonk_icon_big_no_text"
-            android:visibility="gone" />
+            android:scaleType="fitEnd"
+            android:src="@drawable/logo_partial"
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/logo_area"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="left|center"
             android:padding="12dp">
 
             <TextView
+                style="@style/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/logo"
-              />
+                android:visibility="gone" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:scaleType="fitStart"
+                android:paddingTop="5dp"
+                android:paddingLeft="5dp"
+                android:src="@drawable/thingie_undertext" />
 
             <View
                 android:layout_width="match_parent"
@@ -119,8 +130,6 @@
 
         </RelativeLayout>
 
-
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -140,7 +149,7 @@
             <ImageView
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/phonk_icon_big" />
+                android:src="@drawable/logo_and_text" />
 
             <TextView
                 android:id="@+id/textView32"
@@ -168,7 +177,7 @@
 
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

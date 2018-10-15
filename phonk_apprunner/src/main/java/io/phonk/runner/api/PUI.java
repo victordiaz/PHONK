@@ -32,10 +32,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MotionEventCompat;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,7 +110,6 @@ import java.util.Map;
  */
 @ProtoObject
 public class PUI extends ProtoBase {
-
 
     private final AppRunner mAppRunner;
     private Context mContext;

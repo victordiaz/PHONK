@@ -1,1 +1,1 @@
-include ':phonk_app', ':phonk_apprunner', ':phonk_myscript'
+include ':phonk_app', ':phonk_apprunner'

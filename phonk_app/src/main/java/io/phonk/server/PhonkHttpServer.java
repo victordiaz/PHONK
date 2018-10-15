@@ -24,6 +24,7 @@ package io.phonk.server;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,8 +93,13 @@ public class PhonkHttpServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         Response res = null;
 
+        // this 2 lines add utf-8 support
+        // https://stackoverflow.com/questions/42504056/why-do-i-get-messy-code-of-chinese-filename-when-i-upload-files-to-nanohttpd-ser
+        ContentType ct = new ContentType(session.getHeaders().get("content-type")).tryUTF8();
+        session.getHeaders().put("content-type", ct.getContentTypeHeader());
+
         String uri = session.getUri();
-        MLog.d(TAG, "--> " + uri);
+        // MLog.d(TAG, "--> " + uri);
 
         if (uri.startsWith("/api")) res = serveAPI(session);
         else res = serveWebIDE(session);
@@ -140,9 +147,9 @@ public class PhonkHttpServer extends NanoHTTPD {
         HashMap<String, String> cmd;
 
         // debug the params
-        for (int i = 0; i < uriSplitted.length; i++) {
-            MLog.d(TAG, uriSplitted.length + " " + i + " " + uriSplitted[i]);
-        }
+        // for (int i = 0; i < uriSplitted.length; i++) {
+        //    MLog.d(TAG, uriSplitted.length + " " + i + " " + uriSplitted[i]);
+        // }
 
 
         /**
@@ -155,20 +162,20 @@ public class PhonkHttpServer extends NanoHTTPD {
             if (uriSplitted[COMMAND].equals("list")) {
                 HashMap<String, ArrayList> files = new HashMap<>();
 
-                ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listFilesInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
-                ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listFilesInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
+                ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
+                ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
 
                 files.put(PhonkSettings.USER_PROJECTS_FOLDER, userFolder);
                 files.put(PhonkSettings.EXAMPLES_FOLDER, examplesFolder);
 
                 String jsonFiles = gson.toJson(files);
 
-                MLog.d("list", jsonFiles);
+                // MLog.d("list", jsonFiles);
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
             } else if (uriSplitted[COMMAND].equals("execute_code")) {
-                MLog.d(TAG, "run code");
+                // MLog.d(TAG, "run code");
 
                 // POST DATA
                 String json;
@@ -190,7 +197,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                     return newFixedLengthResponse("NOP");
                 }
             } else if (uriSplitted[COMMAND].equals("stop_all")) {
-                MLog.d(TAG, "stop all");
+                // MLog.d(TAG, "stop all");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
                 res = newFixedLengthResponse("OK");
 
@@ -225,18 +232,18 @@ public class PhonkHttpServer extends NanoHTTPD {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
 
             if (uriSplitted[PROJECT_ACTION].equals("create")) {
-                MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
+                // MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
 
                 if (!p.exists()) {
                     String template = "default";
-                    MLog.d(TAG, p.getParentPath());
+                    // MLog.d(TAG, p.getParentPath());
                     PhonkScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
                     res = newFixedLengthResponse("OK");
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                 }
 
             } else if (uriSplitted[PROJECT_ACTION].equals("save")) {
-                MLog.d(TAG, "project save");
+                // MLog.d(TAG, "project save");
                 String json;
                 final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
 
@@ -255,7 +262,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                     return newFixedLengthResponse("NOP");
                 }
 
-                MLog.d(TAG, json);
+                // MLog.d(TAG, json);
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
 
                 // saving all the files changed
@@ -266,11 +273,13 @@ public class PhonkHttpServer extends NanoHTTPD {
                 res = newFixedLengthResponse("OK");
 
             } else if (uriSplitted[PROJECT_ACTION].equals("load")) {
-                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
+                MLog.d("ww", "--> " + p);
+
+                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, "/", 0);
 
                 // only load main.js & app.conf
                 for (int i = 0; i < files.size(); i++) {
-                    if (files.get(i).name.equals(PhonkSettings.MAIN_FILENAME)) { // || files.get(i).name.equals(PhonkSettings.CONF_FILENAME)) {
+                    if (files.get(i).name.equals(PhonkSettings.MAIN_FILENAME)) {
                         files.get(i).code = PhonkScriptHelper.getCode(p, files.get(i).name);
                     }
                 }
@@ -281,17 +290,16 @@ public class PhonkHttpServer extends NanoHTTPD {
                 neo.current_folder = "/";
 
                 String json = gson.toJson(neo);
-                // MLog.d(TAG, json);
 
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
 
             } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
                 String path = "";
-                // PhonkScriptHelper.deleteFolder(path);
+                // PhonkScriptHelper.deleteFileOrFolder(path);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
-                MLog.d(TAG, "run --> " + p.getFolder());
+                // MLog.d(TAG, "run --> " + p.getFolder());
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
 
                 res = newFixedLengthResponse("OK");
@@ -301,29 +309,30 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                 res = newFixedLengthResponse("STOP_AND_RUN");
             } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
-                MLog.d(TAG, "stop");
+                // MLog.d(TAG, "stop");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
 
                 res = newFixedLengthResponse("OK");
             }
         } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
-            MLog.d(TAG, "-> files ");
+            // MLog.d(TAG, "-> files ");
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
             if (uriSplitted[FILE_ACTION].equals("list")) {
-                MLog.d("list_files");
-                // MLog.d(TAG, uriSplitted);
 
+                MLog.d(TAG, "list_files");
                 String path = StringUtils.join(uriSplitted, "/", FILE_ACTION + 1, uriSplitted.length);
-                MLog.d("getting folder -> " + path);
+                MLog.d(TAG, "getting folder -> " + p.getSandboxPath() + "------" + path);
 
-                // here
-                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInFolder(p.getSandboxPath() + path, 0);
+                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, path, 0);
                 String jsonFiles = gson.toJson(files);
+
+                MLog.d("list", ":/");
 
                 MLog.d("list", jsonFiles);
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
+
             } else if (uriSplitted[FILE_ACTION].equals("view")) {
                 String fileName = uriSplitted[FILE_NAME];
 
@@ -340,20 +349,28 @@ public class PhonkHttpServer extends NanoHTTPD {
 
             } else if (uriSplitted[FILE_ACTION].equals("load")) {
                 // fetch file
-                String fileName = uriSplitted[FILE_NAME];
-                ProtoFile file = new ProtoFile();
-                file.name = fileName;
-                file.code = PhonkScriptHelper.getCode(p, fileName);
+                // String fileName = uriSplitted[FILE_NAME];
+
+                String[] fileNameArray = Arrays.copyOfRange(uriSplitted, FILE_NAME, uriSplitted.length);
+                String path = TextUtils.join(File.separator, fileNameArray);
+
+                File file = new File(path);
+
+                ProtoFile pFile = new ProtoFile(file.getName(), path);
+
+                // MLog.d("qqqq1",  pFile.path);
+                // MLog.d("qqqq1", pFile.name);
+                pFile.code = PhonkScriptHelper.getCode(p, pFile.path);
+                // MLog.d("qqqq1", pFile.code);
+
                 NEOProject neo = new NEOProject();
-                neo.files.add(file);
+                neo.files.add(pFile);
 
                 String json = gson.toJson(neo);
                 // MLog.d(TAG, json);
 
                 // EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
-
-
             } else if (uriSplitted[FILE_ACTION].equals("create")) {
                 final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
 
@@ -368,13 +385,13 @@ public class PhonkHttpServer extends NanoHTTPD {
                     e.printStackTrace();
                 }
 
-                MLog.d(TAG, json);
+                // MLog.d(TAG, json);
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
 
                 for (ProtoFile file : neo.files) {
-                    MLog.d(TAG, "creating file in " + file.path + " " + file.name + " " + file.type);
+                    // MLog.d(TAG, "creating file in " + file.path + " " + file.name + " " + file.type);
                     String path = p.getFullPathForFile(file.path + File.separator + file.name);
-                    MLog.d(TAG, path);
+                    // MLog.d(TAG, path);
 
                     if (!new File(path).exists()) {
                         switch (file.type) {
@@ -397,27 +414,26 @@ public class PhonkHttpServer extends NanoHTTPD {
                 }
 
             } else if (uriSplitted[FILE_ACTION].equals("upload")) {
-                MLog.d(TAG, "upload for " + p.getFullPath());
+                // MLog.d(TAG, "upload for " + p.getFullPath());
                 final HashMap<String, String> files = new HashMap<String, String>();  // POST DATA
                 try {
-                    MLog.d(TAG, "qq1");
+                    // MLog.d(TAG, "parsing body");
                     session.parseBody(files);
                 } catch (IOException e) {
-                    MLog.d(TAG, "qq2");
                     e.printStackTrace();
                 } catch (ResponseException e) {
-                    MLog.d(TAG, "qq2");
                     e.printStackTrace();
                 }
 
                 // get the file and copy it to the project folder
-                String fileName = session.getParms().get("name");
-                String fileType = session.getParms().get("type");
+                String fileName = session.getParameters().get("name").get(0);
+                String fileType = session.getParameters().get("type").get(0);
                 File fileSrc = new File(files.get("file"));
-                File fileDst = new File(p.getFullPathForFile(fileName));
+                String toFolder = session.getParameters().get("toFolder").get(0);
+                File fileDst = new File(p.getFullPathForFile(toFolder + File.separator + fileName));
 
-                MLog.d(TAG, fileSrc.getAbsolutePath());
-                MLog.d(TAG, fileDst.getAbsolutePath());
+                // MLog.d(TAG, fileSrc.getAbsolutePath());
+                // MLog.d(TAG, fileDst.getAbsolutePath());
 
                 // if (fileDst.exists()) {
                 //    res = NanoHTTPD.newFixedLengthResponse(Response.Status.CONFLICT, MIME_PLAINTEXT, "File exist already");
@@ -426,7 +442,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 try {
                     FileIO.copyFile(fileSrc, fileDst);
                 } catch (IOException e) {
-                    MLog.d(TAG, "qq5");
+                    // MLog.d(TAG, "qq5");
                     e.printStackTrace();
                 }
 
@@ -434,6 +450,58 @@ public class PhonkHttpServer extends NanoHTTPD {
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("txt"), fileName);
 
                 // res = NanoHTTPD.newFixedLengthResponse("OK");
+
+            } else if (uriSplitted[FILE_ACTION].equals("delete")) {
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                String json = null;
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
+
+                // MLog.d(TAG, json);
+
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+
+                for (ProtoFile file : neo.files) {
+                    PhonkScriptHelper.deleteFileInProject(p, file.path);
+                }
+
+                // File fileDst = new File(p.getFullPathForFile(fileName));
+                // PhonkScriptHelper.deleteFileOrFolder(fileDst.getAbsolutePath());
+                res = NanoHTTPD.newFixedLengthResponse("OK");
+            } else if (uriSplitted[FILE_ACTION].equals("move")) {
+                // MLog.d(TAG, "move");
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                String json = null;
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                }
+
+                // MLog.d(TAG, json);
+
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+
+                for (ProtoFile file : neo.files) {
+                    PhonkScriptHelper.moveFileFromTo(p, file.formerPath, file.path);
+                }
+
+                // File fileDst = new File(p.getFullPathForFile(fileName));
+                // PhonkScriptHelper.deleteFileOrFolder(fileDst.getAbsolutePath());
+                res = NanoHTTPD.newFixedLengthResponse("OK");
             } else {
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
             }
@@ -442,7 +510,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         /*
 
             // get files
-            ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInFolder(p.getSandboxPath(), 0);
+            ArrayList<ProtoFile> files = PhonkScriptHelper.listProjectsInFolder(p.getSandboxPath(), 0);
 
             for (int i = 0; i < files.size(); i++) {
                 ProtoFile f = files.get(i);
@@ -482,12 +550,12 @@ public class PhonkHttpServer extends NanoHTTPD {
         // Read file and return it, otherwise NOT_FOUND is returned
         AssetManager am = mContext.get().getAssets();
         try {
-            MLog.d(TAG, WEBAPP_DIR + uri);
+            // MLog.d(TAG, WEBAPP_DIR + uri);
             InputStream fi = am.open(WEBAPP_DIR + uri);
             res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
         } catch (IOException e) {
             e.printStackTrace();
-            MLog.d(TAG, e.getStackTrace().toString());
+            // MLog.d(TAG, e.getStackTrace().toString());
             NanoHTTPD.newFixedLengthResponse( Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
         }
 

@@ -33,8 +33,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -198,7 +199,8 @@ public class ProjectItem extends LinearLayout {
 
     private void showMenu(View fromView) {
         MLog.d(TAG, "clicked");
-        PopupMenu myPopup = new PopupMenu(mContext, fromView);
+        Context wrapper = new ContextThemeWrapper(mContext, R.style.phonk_PopupMenu);
+        PopupMenu myPopup = new PopupMenu(wrapper, fromView);
         myPopup.inflate(R.menu.project_actions);
         myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -230,7 +232,7 @@ public class ProjectItem extends LinearLayout {
                                         //mPlf.removeItem(mProject);
                                         MLog.d(TAG, "deleting " + mProject.getFullPath());
                                         Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
-                                        PhonkScriptHelper.deleteFolder(mProject.getFullPath());
+                                        PhonkScriptHelper.deleteFileOrFolder(mProject.getFullPath());
 
                                         break;
 

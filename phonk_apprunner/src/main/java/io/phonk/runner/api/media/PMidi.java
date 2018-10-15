@@ -23,7 +23,7 @@
 package io.phonk.runner.api.media;
 
 import android.hardware.usb.UsbDevice;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;

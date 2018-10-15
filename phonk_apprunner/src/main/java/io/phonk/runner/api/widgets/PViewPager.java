@@ -23,7 +23,7 @@
 package io.phonk.runner.api.widgets;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 
 public class PViewPager extends ViewPager {
 

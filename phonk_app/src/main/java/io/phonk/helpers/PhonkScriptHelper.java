@@ -32,8 +32,11 @@ import android.widget.Toast;
 
 import net.lingala.zip4j.exception.ZipException;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -103,8 +106,12 @@ public class PhonkScriptHelper {
         return newProject;
     }
 
+    public static void deleteFileInProject(Project p, String path) {
+        deleteFileOrFolder(p.getFullPathForFile(path));
+    }
+
     // Delete Project
-    public static void deleteFolder(String path) {
+    public static void deleteFileOrFolder(String path) {
         File dir = new File(path);
 
         if (dir.isDirectory()) {
@@ -133,7 +140,8 @@ public class PhonkScriptHelper {
     }
 
     public static String getCode(Project p, String name) {
-        String path = p.getFullPath() + File.separator + name;
+        String path = p.getFullPath() + name;
+        MLog.d("qqqq1 2", path);
 
         return FileIO.loadStringFromFile(path);
     }
@@ -212,10 +220,28 @@ public class PhonkScriptHelper {
         return protoFiles;
     }
 
+
+
     // List folders in a tree structure
-    public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels) {
-        MLog.d(TAG, folder);
-        return listFilesInFolder(folder, levels, "*");
+    public static ArrayList<ProtoFile> listFilesInProjectFolder(Project p, String folder, int levels) {
+        ArrayList<ProtoFile> files = listFilesInFolder(p.getSandboxPath() + folder, levels, "*");
+
+        // remove the project folder
+        for (ProtoFile file : files) {
+            MLog.d(TAG, "->" + file.path);
+            String[] splittedPath = file.path.split(p.getSandboxPath());
+            file.path = splittedPath[1];
+            MLog.d(TAG, "2 ->" + file.path);
+        }
+
+        return files;
+    }
+
+    // List folders in a tree structure
+    public static ArrayList<ProtoFile> listProjectsInFolder(String folder, int levels) {
+        ArrayList<ProtoFile> files = listFilesInFolder(folder, levels, "*");
+
+        return files;
     }
 
     public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels, String extensionFilter) {
@@ -454,5 +480,18 @@ public class PhonkScriptHelper {
 
     public static void stop_all_scripts() {
         App.myLifecycleHandler.closeAllScripts();
+    }
+
+    public static void moveFileFromTo(Project p, String oldPath, String newPath) {
+        File oldFile = new File(p.getFullPathForFile(oldPath));
+        File newFile = new File(p.getFullPathForFile(newPath));
+
+        MLog.d("ww", oldFile + " --- " + newFile);
+
+        try {
+            FileUtils.moveFile(oldFile, newFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

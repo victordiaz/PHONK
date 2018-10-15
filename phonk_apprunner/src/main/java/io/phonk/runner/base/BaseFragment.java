@@ -24,7 +24,7 @@ package io.phonk.runner.base;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 @SuppressLint("NewApi")
 public abstract class BaseFragment extends Fragment {

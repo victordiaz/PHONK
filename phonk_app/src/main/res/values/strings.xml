@@ -85,7 +85,7 @@
     <!-- Welcome -->
     <string name="welcome_activity_name">Welcome</string>
     <string name="welcome_title">Good to see you.</string>
-    <string name="welcome_body">Creative coding environment for Android devices. \nWrite and edit code using this device or any other computer using the self-hosted WebEditor</string>
+    <string name="welcome_body">Welcome! Phonk is coding environment for Android devices suited for creative people, makers and tinkerers. \nWrite and edit code using this device or with your computer using your web browser</string>
     <string name="welcome_accept">Let\'s go.</string>
 
     <string name="editor_activity_name">Editor</string>

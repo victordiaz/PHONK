@@ -37,7 +37,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.WindowManager;

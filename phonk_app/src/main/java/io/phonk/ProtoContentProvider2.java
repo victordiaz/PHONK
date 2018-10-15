@@ -74,7 +74,7 @@ public class ProtoContentProvider2 extends ContentProvider {
 
         MatrixCursor cursor = new MatrixCursor(COLUMNS);
 
-        // list = ProtoScriptHelper.listFilesInFolder("./", 2);
+        // list = ProtoScriptHelper.listProjectsInFolder("./", 2);
         // for (Project project : list) {
         //    addRow(cursor, project.getName());
         // }

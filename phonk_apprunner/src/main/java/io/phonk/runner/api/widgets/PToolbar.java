@@ -29,7 +29,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;

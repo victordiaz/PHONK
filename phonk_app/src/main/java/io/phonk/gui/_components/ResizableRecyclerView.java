@@ -22,7 +22,7 @@
 
 package io.phonk.gui._components;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ResizableRecyclerView extends RecyclerView {
 

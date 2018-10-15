@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:background="@color/phonk_accentColor_primary"
+        android:background="@color/phonk_backgroundColor_primary"
         android:text="@string/licenses_explanation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textColor="@color/console_textcolor"
-        android:paddingTop="0dp"
+        android:paddingTop="10dp"
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp" />

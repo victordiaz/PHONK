@@ -170,25 +170,17 @@ public class EditorFragment extends BaseFragment {
             }
         });
 
-        Button btnIncreaseSize = (Button) v.findViewById(R.id.increaseSize);
-        btnIncreaseSize.setOnClickListener(new OnClickListener() {
+    }
 
-            @Override
-            public void onClick(View v) {
-                mEditorSettings.fontSize += 1;
-                mEdit.setTextSize(mEditorSettings.fontSize);
-            }
-        });
+    public void increaseFont() {
+        MLog.d(TAG, "size: " + mEdit.getTextSize() + " " + mEditorSettings.fontSize);
+        mEditorSettings.fontSize += 1;
+        mEdit.setTextSize(mEditorSettings.fontSize);
+    }
 
-        Button btnDecreaseSize = (Button) v.findViewById(R.id.decreaseSize);
-        btnDecreaseSize.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mEditorSettings.fontSize -= 1;
-                mEdit.setTextSize(mEditorSettings.fontSize);
-            }
-        });
+    public void decreaseFont() {
+        mEditorSettings.fontSize -= 1;
+        mEdit.setTextSize(mEditorSettings.fontSize);
     }
 
     /**
@@ -357,7 +349,5 @@ public class EditorFragment extends BaseFragment {
                 break;
 
         }
-
-
     }
 }

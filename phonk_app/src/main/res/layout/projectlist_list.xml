@@ -180,7 +180,7 @@
             android:weightSum="3"
             android:visibility="gone">
 
-            <android.support.v7.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -194,7 +194,7 @@
                 android:layout_marginTop="10dp"
                 android:background="#55FFFFFF"></View>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -210,7 +210,7 @@
                 android:background="#55FFFFFF"
                 android:visibility="gone"></View>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
