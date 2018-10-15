@@ -30,7 +30,7 @@ var state = {
       device: { 'model name': 'none' },
       script: { 'running script': 'none' },
       other: { 'debugging': true },
-      screen: { orientation: 'portrait' },
+      screen: { orientation: 'portrait' }
     }
   },
   show_load_project: false,
@@ -125,23 +125,37 @@ store.load_project_preferences = function () {
 
 store.list_files_in_path = function (p) {
   var query = {} // path: p}
-  var splitted = p.split('/')
-  var toPath = splitted.slice(3, splitted.lenth).join('/')
-
-  console.log('---> ')
 
   // console.log('listing files in path ' + toPath)
-  Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + '/files/list/' + toPath), query).then(function (response) {
-    // console.log('list_files_in_path(status) > ' + response.status)
+  Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + '/files/list/' + p), query).then(function (response) {
+    console.log('list_files_in_path(status) > ' + response.status)
 
-    store.state.current_project.current_folder = '/' + toPath
+    store.state.current_project.current_folder = '/' + p
     store.state.current_project.files = response.data
+    console.log(response.data)
 
     store.emit('project_files_list', true)
-    console.log('---> 1')
   }, function (response) {
     store.emit('project_files_list', false)
 
+    // console.log('list_files_in_path(status) > ' + response.status)
+  })
+}
+
+store.project_files_move = function (files) {
+  console.log('files move')
+  var query = {}
+  query.files = files
+  console.log(query)
+
+  Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/move/'), query).then(function (response) {
+    console.log('rename_files_in_path(status) > ' + response.status)
+
+    // maybe here refresh again the files
+    store.list_files_in_path(store.state.current_project.current_folder)
+    store.emit('project_files_action_completed', true)
+  }, function (response) {
+    store.emit('project_files_action_completed', false)
     // console.log('list_files_in_path(status) > ' + response.status)
   })
 }
@@ -156,9 +170,9 @@ store.project_files_delete = function (files) {
 
     // maybe here refresh again the files
     store.list_files_in_path(store.state.current_project.current_folder)
-    store.emit('project_files_delete', true)
+    store.emit('project_files_action_completed', true)
   }, function (response) {
-    store.emit('project_files_delete', false)
+    store.emit('project_files_action_completed', false)
     // console.log('list_files_in_path(status) > ' + response.status)
   })
 }
@@ -168,12 +182,13 @@ store.project_files_delete = function (files) {
  */
 store.load_file = function (file) {
   var query = {}
-  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.name, query).then(
+  console.log('load_file', file)
+  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(
   function (response) {
-    // console.log(response)
+    console.log(response)
     file.code = response.data.files[0].code
 
-    // console.log('load_file(status) > ' + response.status, file.code)
+    console.log('load_file(status) > ' + response.status, file.code)
     store.emit('file_loaded', file)
   }, function (response) {
     // console.log(TAG + ': project_save(status) > ' + response.status)
@@ -190,10 +205,11 @@ store.create_file = function (filetype, filename) {
 
   Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/create'), query).then(function (response) {
     // console.log('create_file(status) OK > ' + response.status)
-    store.emit('file_created')
+    store.emit('project_files_action_completed', true)
     store.list_files_in_path(store.state.current_project.current_folder)
   }, function (response) {
     // console.log('create_file(status) NOP > ' + response.status)
+    store.emit('project_files_action_completed', false)
   })
 }
 
@@ -298,13 +314,13 @@ store.execute_code = function (code) {
   })
 }
 
-store.uploadFile = function (file) {
+store.uploadFile = function (file, folder) {
   var formData = new FormData()
   // formData.append('_token', this.token) // just the csrf token
   formData.append('name', file.data.name)
   formData.append('type', file.data.type)
   formData.append('file', file.data)
-  formData.append('qq', escape('你'))
+  formData.append('toFolder', folder)
 
   let config = {
     headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
@@ -313,7 +329,7 @@ store.uploadFile = function (file) {
   console.log('uploadFile', file, formData)
   Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/upload/'), formData, config).then(function (response) {
     console.log('File upload success', response)
-    store.emit('file_uploaded', response.data)
+    store.emit('project_file_uploaded', response.data)
   }, function (response) {
     console.log('File upload error...', response)
   })
@@ -474,7 +490,7 @@ store.websockets_init = function () {
   }
 
   ws.onmessage = function (e) {
-    console.log('ws message', e)
+    // console.log('ws message', e)
     var data = JSON.parse(e.data)
     // console.log(e.data)
 

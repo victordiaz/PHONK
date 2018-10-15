@@ -374,15 +374,20 @@ export default {
     try_again: function () {
       console.log('trying again')
 
-      let type = this.$route.params.type
-      let folder = this.$route.params.folder
+      // let type = this.$route.params.type
+      // let folder = this.$route.params.folder
       let project = this.$route.params.project
       console.log(project)
-      let url = type + '/' + folder + '/' + project
+      // let url = type + '/' + folder + '/' + project
       // store.project_load('/' + url)
 
+      /*
       let to = {name: 'editor.load', params: { type: type, folder: folder, project: project }}
       this.$router.push(to)
+      */
+
+      // this.$router.go(this.$router.currentRoute)
+      this.sharedState.show_load_project = true
     }
 
     /*
@@ -493,6 +498,7 @@ export default {
       overflow-y: hidden;
       overflow-x: auto;
       white-space: nowrap;
+      margin-bottom: 12px;
 
       li {
         position: relative;

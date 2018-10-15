@@ -49,7 +49,7 @@ export default {
       this.posy = rect.top + rect.height + 5 + 'px'
     },
     device_update: function (data) {
-      console.log('device_update', data)
+      // console.log('device_update', data)
       if (typeof data.info !== 'undefined') {
         // this.device_properties = _.orderBy(data, 'name')
         this.device_properties = data

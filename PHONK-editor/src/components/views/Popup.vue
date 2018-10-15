@@ -1,5 +1,6 @@
 <template>
   <div class = "popover" v-bind:class = "arrow" v-bind:style = "arrowposition">
+    <button v-on:click = "hide_popover">x</button>
     <slot>
     No content to display
     </slot>
@@ -7,12 +8,14 @@
 </template>
 
 <script>
+import store from '../../Store'
+
 export default {
   name: 'Popup',
   props: {
     arrow: String,
     posx: String,
-    posy: String
+    posy: String,
   },
   data () {
     return {
@@ -29,6 +32,9 @@ export default {
     }
   },
   methods: {
+    hide_popover: function () {
+      store.emit('close_popup')
+    }
   }
 }
 </script>
@@ -51,6 +57,23 @@ export default {
   filter: drop-shadow(0 0 1px rgba(0,0,0,0.4)) drop-shadow(0 3px 4px rgba(0,0,0,0.4));
   -webkit-filter: drop-shadow(0 0 1px rgba(0,0,0,0.4)) drop-shadow(0 3px 4px rgba(0,0,0,0.4));
   text-align: left;
+
+  button {
+    color: @accentColor;
+    background: @backgroundColorSecondary;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 100px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    &:hover {
+      background: @accentColor;
+      color: @primaryTextColor;
+    }
+  }
 
   img {
     width: 100%;

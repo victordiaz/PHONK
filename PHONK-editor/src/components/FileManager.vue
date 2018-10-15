@@ -29,7 +29,7 @@
             <div v-else>
               <button v-on:click = 'rename_file_submit' v-if = "isRenaming"><i class = "fa fa-check"></i></button>
               <button v-on:click = 'cancel_file_operation' v-if = "isRenaming"><i class = "fa fa-times"></i></button>
-              <button v-on:click = 'paste_files' v-if = "isCutting">Paste {{num_files_selected}} files</button>
+              <button v-on:click = 'paste_files' v-if = "isCutting">Paste {{filesToPaste.length}} file(s)</button>
             </div>
           </div>
           <div v-else>
@@ -54,7 +54,6 @@
         </div>
       </transition>
 
-      <code v-if = "false" style = "font-size: 8px; color: black">{{files}}</code>
       <div class = "content">
         <div class = "num_files_selected" v-if = "isEditingFiles && num_files_selected > 0">{{num_files_selected}}</div>
         <table>
@@ -73,9 +72,9 @@
               <td> </td>
             </tr>
             <tr id = "files" v-bind:class="{ 'selected': selected == index }" v-for = "(file, index) in files" v-on:click = "showcontent(index, $event)">
-              <td v-if = "isEditingFiles"><input type="checkbox" v-model="file.selected" :class = "{ disabled: isRenaming }"></td>
+              <td v-if = "isEditingFiles && !isCutting"><input type="checkbox" v-model="file.selected" :class = "{ disabled: isRenaming}"></td>
               <td><i class = "fa" v-bind:class = "get_icon(file)"></i></td>
-              <td><span v-if = "!checkRenaming(isRenaming, file.name)">{{file.name}}</span> <input v-else = "checkRenaming(isRenaming, file.name)" v-model = "file.name"></input> </td>
+              <td><span v-if = "!checkRenaming(isRenaming, file.name)">{{file.name}}</span> <input v-else = "checkRenaming(isRenaming, file.name)" v-model = "file.name" v-on:keyup.enter = "rename_file_submit"></input> </td>
               <td class = "file_size"> {{file.size}} </td>
             </tr>
           </tbody>
@@ -138,7 +137,9 @@ export default {
       actionable: 'single',
       isEditingFiles: false,
       isRenaming: false,
+      fileToRename: '',
       isCutting: false,
+      filesToPaste: [],
       isActionInProcess: false,
       is_moving_files: false,
       files: [
@@ -181,6 +182,8 @@ export default {
       // console.log('ready')
       store.on('project_files_list', this.project_files_list)
       store.on('project_file_uploaded', this.project_file_uploaded)
+      store.on('project_files_action_completed', this.project_files_action_completed)
+      store.on('close_popup', this.close_popup)
 
       var that = this
       var firstTarget
@@ -250,14 +253,11 @@ export default {
       this.popup_content = ''
     },
     showcontent: function (i, e) {
-      if (this.isEditingFiles) return
-      console.log('cuak' + this.isEditingFiles)
+      if (this.isEditingFiles && !this.isCutting) return
 
-      console.log('showing content ', e)
       var selectedFile = this.files[i]
       this.url = store.getUrlForCurrentProject() + 'files/view/' + escape(selectedFile.name)
       this.posx = 300 + 'px'
-      console.log('target', e.target.offsetLeft)
       this.posy = 0 + 'px' // target.offsetTop + 22 + 'px'
 
       this.playersOff()
@@ -302,8 +302,8 @@ export default {
       this.popup_content = ''
     },
     project_files_list: function (filesList, b) {
-      console.log('---> 2')
-      console.log('files' + filesList + ' ' + b)
+      // console.log('---> 2')
+      // console.log('files' + filesList + ' ' + b)
       // update object
       this.current_folder = store.state.current_project.current_folder
       var files = store.state.current_project.files
@@ -316,10 +316,22 @@ export default {
 
       for (var i in files) {
         Vue.set(files[i], 'selected', false)
+        Vue.set(files[i], 'formerName', files[i].name)
+        Vue.set(files[i], 'formerPath', files[i].path)
         this.files.push(files[i])
       }
     },
     change_dir: function (path) {
+      console.log('-->', this.current_folder + ' ' + path)
+
+      if (path === '..') {
+        let splittedPath = this.current_folder.split('/')
+        console.log(splittedPath)
+        path = splittedPath.slice(0, splittedPath.length - 1).join('/')
+        console.log(path)
+        console.log('-------------__***SA *SA*SASA ')
+      }
+
       console.log('changing dir ' + path)
       store.list_files_in_path(path)
     },
@@ -349,12 +361,14 @@ export default {
       for (var i = 0; i < files.length; i++) {
         console.log('uploading...', files[i].name + ' ' + files[i].size + ' ' + files[i].type)
         this.uploadingFiles.push({data: files[i], uploading: true})
-        store.uploadFile(this.uploadingFiles[i])
+        store.uploadFile(this.uploadingFiles[i], this.current_folder)
       }
       // if (!files.length) return
       // this.createImage(files[0])
     },
     project_file_uploaded: function (name) {
+      console.log('------> uploaded ')
+
       var uploading = false
 
       for (var i = 0; i < this.uploadingFiles.length; i++) {
@@ -368,7 +382,7 @@ export default {
 
       if (!uploading) {
         this.showUploadingFiles = false
-        store.list_files_in_path('')
+        store.list_files_in_path(this.current_folder)
       }
     },
     toggle_create_file_dialog: function () {
@@ -391,10 +405,14 @@ export default {
     checkRenaming: function (isRenaming, fileName) {
       if (!isRenaming) return false
 
+      // mark which file is selected to renaming
       let fileToRename = this.files.filter(function (el) {
         if (el.selected) return el
       })
 
+      console.log('------->', fileToRename)
+
+      // return true to mark the checkbox
       if (fileName === fileToRename[0].name) return true
       else return false
     },
@@ -403,12 +421,15 @@ export default {
         if (el.selected) return el
       })
 
-      // TODO send to rename
-      console.log('renaming ' + fileToRename)
+      let fileToRenameSplitted = fileToRename[0].formerPath.split('/')
+      fileToRename[0].path = fileToRenameSplitted.slice(0, fileToRenameSplitted.length - 1).join('/') + '/' + fileToRename[0].name
+
+      store.project_files_move(fileToRename)
+      this.isRenaming = false
+      this.isActionInProcess = false
     },
     cancel_file_operation: function () {
       for (let i in this.files) {
-        console.log('qq2', this.files)
         this.files[i].selected = false
       }
 
@@ -427,14 +448,34 @@ export default {
     cut_files: function () {
       this.isCutting = true
       this.isActionInProcess = true
+
+      for (let i in this.files) {
+        if (this.files[i].selected) {store.on
+          this.filesToPaste.push(this.files[i])
+        }
+      }
+
     },
     paste_files: function () {
-      let filesToPaste = this.files.filter(function (el) {
-        if (el.selected) return el
-      })
-      console.log('paste_files ' + filesToPaste + ' where ' + this.current_folder)
+      console.log('paste_files ', this.filesToPaste, ' where ' + this.current_folder)
+
+      for (let i in this.filesToPaste) {
+        this.filesToPaste[i].path = this.current_folder + '/' + this.filesToPaste[i].name
+        console.log('--> paste from', this.filesToPaste[i].formerPath + ' to ' + this.filesToPaste[i].path)
+      }
+
+      store.project_files_move(this.filesToPaste)
 
       this.cancel_file_operation()
+    },
+    project_files_action_completed: function () {
+      this.isRenaming = false
+      this.filesToPaste = []
+      this.isCutting = false
+      this.isActionInProcess = false
+    },
+    close_popup: function () {
+      this.showpopover = false
     },
     get_icon: function (o) {
       return 'fa-' + o.type + '-o'
@@ -455,6 +496,8 @@ export default {
 
     store.remove_listener('project_files_list')
     store.remove_listener('project_file_uploaded')
+    store.remove_listener('project_files_action_completed')
+    store.remove_listener('close_popup')
   }
 }
 </script>

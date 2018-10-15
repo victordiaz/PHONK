@@ -8,7 +8,7 @@
         <transition name = "upanim" mode = "out-in">
           <button class = "transparent" key = "show" v-if = "!sharedState.show_load_project" id = "load_project" v-on:click = "toggle_load_project">
             <p v-if = "not_loaded"><span class = "folder">/{{sharedState.current_project.project.folder}}/</span><span class = "name">{{sharedState.current_project.project.name}}</span></p>
-            <p v-else class = "bold">LOAD PROJECT</p>
+            <p v-else class = "bold">load project</p>
             <i class = "fa fa-sort-down"></i>
           </button>
 
@@ -33,7 +33,7 @@
 
 
     <div class = "right_side">
-      <div class = "app_info_msg"><span class = "icon_left fa fa-clock-o"></span>Loading...<span class = "icon_right fa fa-clock-o"></span></div>
+      <div v-if = "false" class = "app_info_msg"><span class = "icon_left fa fa-clock-o"></span>Loading...<span class = "icon_right fa fa-clock-o"></span></div>
       <button class = "fa fa-dashboard transparent" v-show = "false" v-on:click = "toggle_dashboard"></button>
       <button class = "fa fa-tablet transparent" v-bind:class = "{ 'rotate' : is_rotated, 'enabled': sharedState.show_device_info, 'device_disabled': !sharedState.device_properties.connected}"  v-on:click = "sharedState.show_device_info = !sharedState.show_device_info"></button>
       <button class = "fa fa-cog transparent" v-on:click = "sharedState.show_preferences = !sharedState.show_preferences" v-bind:class = "{ 'enabled': sharedState.show_preferences }"></button>
@@ -135,7 +135,7 @@ export default {
   }
 
   #load_project {
-    font-family: 'Roboto Mono';
+    font-family: @editorFont;
     color: #ffffffa8;
   }
 

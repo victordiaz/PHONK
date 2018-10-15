@@ -20,7 +20,9 @@
           <h1> {{pindex}} </h1>
           <ul>
             <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name"> {{f.name}} </li>
+            <!--
             <li v-if = "pindex !== 'examples'" id = "new_folder"><i class = "fa fa-plus"></i></span>New folder</li>
+            -->
           </ul>
         </div>
       </div>
@@ -29,7 +31,7 @@
         <transition name = "upanim" mode = "out-in">
           <div v-show = "isShowingActions" class = "actionable">
             <!-- <button>rename</button>-->
-            
+
             <div v-if = "!isShowingConfirmation">
               <button v-on:click = "deleteAction">delete</button>
               <button v-on:click = "cancelActions">cancel</button>
@@ -138,7 +140,7 @@ export default {
       this.isShowingConfirmation = true
     },
     deleteActionSubmit: function () {
-      if (f) {
+      if (this.actionOnProject) {
         // TODO api call
       }
     },
