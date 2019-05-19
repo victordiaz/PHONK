@@ -16,12 +16,12 @@ android {
     // buildToolsVersion '26.0.2'
 
     defaultConfig {
-        applicationId "io.phonk.beta"
+        applicationId "io.phonk"
         minSdkVersion 16
         targetSdkVersion 28
 
-        versionCode 30
-        versionName "0.30.0"
+        versionCode 37
+        versionName "1.0.0"
         multiDexEnabled true
         setProperty("archivesBaseName", "phonk-$versionName")
 
@@ -92,11 +92,10 @@ android {
         // javaMaxHeapSize "2g"
     }
 
-    /*
     lintOptions {
-        abortOnError false
+        // abortOnError false
+        disable 'InvalidPackage'
     }
-    */
 
 }
 
@@ -108,7 +107,6 @@ repositories {
 
     mavenCentral()
     //mavenLocal()
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://maven.google.com" }
 }
 
@@ -125,7 +123,4 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     // implementation 'jp.kshoji:midi-driver:0.1.4:@aar'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
-        transitive = true;
-    }
 }

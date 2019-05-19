@@ -188,6 +188,7 @@
             </intent-filter>
         </receiver>
 
+        <!--
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="io.phonk.fileprovider"
@@ -199,6 +200,7 @@
                 android:resource="@xml/file_provider_paths" />
 
         </provider>
+        -->
 
         <meta-data
             android:name="io.fabric.ApiKey"
