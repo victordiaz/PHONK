@@ -26,13 +26,13 @@
 
     <item
         android:id="@+id/menu_new"
-        android:icon="@drawable/ic_content_new"
+        android:icon="@drawable/ic_note_add_white_24dp"
         app:showAsAction="never"
         android:title="@string/menu_label_new">
     </item>
     <item
         android:id="@+id/menu_help"
-        android:icon="@drawable/ic_action_help"
+        android:icon="@drawable/ic_help_white_24dp"
         app:showAsAction="never"
         android:title="@string/menu_label_help">
     </item>

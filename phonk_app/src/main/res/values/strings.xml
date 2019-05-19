@@ -116,7 +116,7 @@
 
 
     <string name="setting_enable_servers_on_start_title">Start server on app launch</string>
-    <string name="setting_enable_servers_on_start_description">The servers will start automatically when Phonk is launched</string>
+    <string name="setting_enable_servers_on_start_description">WebEditor is ready to use when Phonk is launched</string>
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Overwrite all the examples with the default ones</string>
     <string name="settings_activity_name">Settings</string>
@@ -130,7 +130,7 @@
     <string name="setting_show_websocket_title">Websocket port</string>
     <string name="setting_show_websocket"></string>
     <string name="setting_device_id_title"> Device ID </string>
-    <string name="setting_device_id_description">This ID is generated the first time you install the app. You can always change it!</string>
+    <string name="setting_device_id_description">You can access this ID from your script. It is randomly generated on install time and you can always change it</string>
 
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>

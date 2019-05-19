@@ -41,11 +41,9 @@
         android:id="@+id/name"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/thingie_undertext"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/step_body_1"
-        android:layout_alignStart="@+id/step_body_1"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp"
+        app:srcCompat="@drawable/thingie_undertext_bak" />
 
     <TextView
         android:id="@+id/welcome_body"

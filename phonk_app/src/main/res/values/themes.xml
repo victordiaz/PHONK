@@ -84,7 +84,7 @@
     </style>
 
     <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_action_overflow</item>
+        <item name="android:src">@drawable/ic_more_vert_white_24dp</item>
     </style>
 
     <style name="PhonkAppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">

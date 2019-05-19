@@ -33,6 +33,7 @@
           android:title="@string/menu_label_help" />
     <item android:id="@+id/more_options_about"
           android:icon="@drawable/phonk_icon"
+          android:visible="false"
           android:title="@string/menu_label_about" />
 
     <!--  Bean is broken disabled till fixed

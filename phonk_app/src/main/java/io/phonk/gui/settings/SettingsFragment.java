@@ -141,7 +141,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefNewVersionCheck.setChecked((Boolean) mUserPreferences.get("notify_new_version"));
 
 
-        // Notify new version
+        /*
+        // Send usage log
         final TwoStatePreference prefSendUsageLog = (TwoStatePreference) findPreference("send_usage_log");
         prefSendUsageLog.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -152,7 +153,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
         prefSendUsageLog.setChecked((Boolean) mUserPreferences.get("send_usage_log"));
-
+        */
 
         // WebIDE mode
         final TwoStatePreference prefWebIdeMode = (TwoStatePreference) findPreference("webide_mode");
@@ -233,6 +234,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        /*
         Preference btnShowAbout = findPreference("app_about");
         btnShowAbout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -241,6 +243,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+        */
 
         Preference btnReinstall = findPreference("reinstall_examples");
         btnReinstall.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

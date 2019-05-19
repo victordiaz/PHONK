@@ -20,58 +20,69 @@
   ~
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <PreferenceCategory android:title="@string/setting_options_title" >
 
         <EditTextPreference
+            android:icon="@drawable/ic_smartphone_black_24dp"
             android:key="device_id"
             android:summary="@string/setting_device_id_description"
             android:title="@string/setting_device_id_title" />
 
         <CheckBoxPreference
+            android:icon="@drawable/ic_screen_lock_portrait_black_24dp"
             android:checked="false"
             android:key="screen_always_on"
             android:summary="@string/setting_screen_on_description"
             android:title="@string/setting_screen_on_title" />
 
         <CheckBoxPreference
+            android:icon="@drawable/ic_web_black_24dp"
             android:checked="false"
             android:key="servers_enabled_on_start"
             android:summary="@string/setting_enable_servers_on_start_description"
             android:title="@string/setting_enable_servers_on_start_title" />
 
         <CheckBoxPreference
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:checked="true"
             android:key="notify_new_version"
             android:summary="@string/setting_new_version_description"
             android:title="@string/setting_new_version_title" />
 
+        <!--
         <CheckBoxPreference
+            android:icon="@drawable/ic_cloud_black_24dp"
             android:checked="true"
             android:key="send_usage_log"
             android:summary="@string/setting_send_usage_log_description"
             android:title="@string/setting_send_usage_log_title" />
+        -->
 
         <CheckBoxPreference
+            android:icon="@drawable/ic_featured_play_list_black_24dp"
             android:checked="true"
             android:key="webide_mode"
             android:summary="@string/setting_show_html5_mode"
             android:title="@string/setting_show_html5_mode_title" />
 
          <CheckBoxPreference
+            android:icon="@drawable/ic_timer_black_24dp"
             android:checked="true"
             android:key="launch_on_device_boot"
             android:summary="@string/setting_launch_on_device_boot_description"
             android:title="@string/setting_launch_on_device_boot_title" />
 
         <EditTextPreference
+            android:icon="@drawable/ic_description_black_24dp"
             android:key="launch_script_on_app_launch"
             android:summary="@string/setting_launch_script_on_app_launch_description"
             android:title="@string/setting_launch_script_on_app_launch_title" />
 
         <!--
         <CheckBoxPreference
+            app:iconSpaceReserved="false"
             android:checked="false"
             android:key="apps_in_list_mode"
             android:summary="@string/setting_list_mode_description"
@@ -80,6 +91,7 @@
 
         <!--
         <CheckBoxPreference
+            app:iconSpaceReserved="false"
             android:selected="false"
             android:key="pref_background_mode"
             android:summary="@string/setting_background_mode_description"
@@ -87,11 +99,13 @@
             />
 
         <EditTextPreference
+            app:iconSpaceReserved="false"
             android:key="pref_app_color"
             android:summary="@string/setting_app_color_description"
             android:title="@string/setting_app_color_title" />
         -->
         <Preference
+            android:icon="@drawable/ic_refresh_black_24dp"
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"
             android:title="@string/setting_reinstall_title" />
@@ -125,14 +139,18 @@
 
     <PreferenceCategory android:title="@string/setting_about_title" >
         <Preference
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:key="licenses_detail"
             android:summary="@string/setting_opensource_description"
             android:title="@string/setting_opensource_title" />
 
+        <!--
         <Preference
+            app:iconSpaceReserved="false"
             android:key="app_about"
             android:summary="@string/setting_about_description"
             android:title="@string/setting_about_title" />
+            -->
 
     </PreferenceCategory>
 

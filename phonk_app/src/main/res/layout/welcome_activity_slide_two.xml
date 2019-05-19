@@ -68,7 +68,7 @@
         android:layout_toRightOf="@+id/step_num_1"
         android:layout_weight="1"
         android:maxWidth="500dp"
-        android:text="In order to make cool programs we need some permissions, such as Camera, Sensors, etc. If you are not using a feature, you can say no. Remember that you can always enable or disable them from the Settings section."
+        android:text="In order to make cool programs we need some permissions, such as Camera, Sensors, etc. \nIn order to run all the examples and demos is recommended to grant all of them. \nRemember that you can always enable or disable them from the Settings section!"
         android:textColor="@color/phonk_textColor_primary"
         android:textSize="16sp" />
 

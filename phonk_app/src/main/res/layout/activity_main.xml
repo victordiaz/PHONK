@@ -74,7 +74,7 @@
                 android:scaleType="fitStart"
                 android:paddingTop="5dp"
                 android:paddingLeft="5dp"
-                android:src="@drawable/thingie_undertext" />
+                android:src="@drawable/thingie_undertext_bak" />
 
             <View
                 android:layout_width="match_parent"
@@ -147,6 +147,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:visibility="visible"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/logo_and_text" />
