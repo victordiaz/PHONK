@@ -267,7 +267,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                 // saving all the files changed
                 for (ProtoFile file : neo.files) {
-                    PhonkScriptHelper.saveCodeFromSandboxPath(file.path, file.code);
+                    PhonkScriptHelper.saveCodeFromSandboxPath(p.getSandboxPath() + file.path, file.code);
                 }
 
                 res = newFixedLengthResponse("OK");

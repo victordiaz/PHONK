@@ -126,7 +126,7 @@ public class PhonkScriptHelper {
     // Write a file with code
     public static void saveCodeFromSandboxPath(String relativePath, String code) {
         String absolutePath = getAbsolutePathFromRelative(relativePath);
-        MLog.d("absolutePath", absolutePath);
+        MLog.d("qq", absolutePath);
         saveCodeFromAbsolutePath(absolutePath, code);
     }
 
