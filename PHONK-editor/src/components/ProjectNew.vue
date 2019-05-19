@@ -49,7 +49,7 @@ export default {
     create_project: function () {
       Store.project_create(this.projectName)
     },
-    project_created (status) {
+    project_created: function (status) {
       this.status = status
       console.log('created ' + status)
       if (status) {
@@ -66,10 +66,10 @@ export default {
   created () {
     Store.on('project_created', this.project_created)
     this.$nextTick(() => this.$refs.newproject.focus())
-    console.log('--------> created')
+    // console.log('--------> created')
   },
   destroyed () {
-    Store.remove_listener('project_created', this.project_created)
+    // Store.remove_listener('project_created', this.project_created)
   }
 }
 </script>

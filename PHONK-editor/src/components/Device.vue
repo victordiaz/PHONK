@@ -2,8 +2,8 @@
   <popup arrow = "top" :posx = "posx" :posy = "posy">
     <div class = "popup_content">
       <ul v-if = "sharedState.device_properties.connected" >
-        <li v-for = "(prop, key1) in sharedState.device_properties.info">
-          <div class = "title">{{key1}}</div>
+        <li class = "block" v-for = "(prop, key1) in sharedState.device_properties.info">
+          <h3 class = "title">{{key1}}</h3>
           <ul>
             <li v-for = "(value, key2) in prop"><span class = "key">{{ key2 }} :</span> <span class = "value">{{ value }}</span></li>
           </ul>
@@ -87,7 +87,12 @@ export default {
     background: darken(@accentColor, 10%);
     border-radius: 0px;
   }
+}
 
+ul {
+  li {
+    padding-bottom: 0.4em;
+  }
 }
 
 .disconnected {
@@ -100,7 +105,14 @@ export default {
   .icon { font-size: 1em; text-align: center; }
   .wifi { opacity: 0.3; }
   .ban { color: rgba(255, 0, 0, 0.8); font-size: 1.5em; padding: 10px 0px 0 10px}
-  p { margin-top: 22px; font-size: 1.2em; color: lighten(@mainColor, 30%); font-weight: 600; }
+
+  p {
+    margin-top: 22px;
+    font-size: 1.2em;
+    line-height: 1.3em;
+    color: lighten(@mainColor, 30%);
+    font-weight: 600;
+  }
 }
 
 </style>

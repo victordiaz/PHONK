@@ -14,20 +14,16 @@
 
     <h3>Load a project</h3>
 
-    <div id = "project-load">
+    <div v-if = "store.state.projects" id = "project-load">
       <div class="left">
         <div class = "project_list" v-for="(p, pindex) in store.state.projects">
           <h1> {{pindex}} </h1>
           <ul>
             <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name"> {{f.name}} </li>
-            <!--
-            <li v-if = "pindex !== 'examples'" id = "new_folder"><i class = "fa fa-plus"></i></span>New folder</li>
-            -->
           </ul>
         </div>
       </div>
       <div class="right">
-
         <transition name = "upanim" mode = "out-in">
           <div v-show = "isShowingActions" class = "actionable">
             <!-- <button>rename</button>-->
@@ -59,7 +55,10 @@
           </li>
         </ul>
       </div>
-     </div>
+    </div>
+    <div v-else class = "no-projects">
+      <p>There is a problem loading your projects</p>
+    </div>
    </div>
  </div>
 </template>
@@ -191,8 +190,10 @@ export default {
   h3 {
     // text-transform: uppercase;
     font-weight: 700;
-    font-size: 0.8em;
-    margin-top: 25px;
+    font-size: 0.9em;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #5f5659;
   }
 
   .debug {
@@ -207,6 +208,17 @@ export default {
   font-size: 1em;
   font-weight: 100;
 
+  .no-projects {
+    p {
+      font-size: 1.5em;
+      line-height: 1.3em;
+      color: #cecece;
+      font-weight: 600;
+      padding: 2em;
+      text-align: center;
+    }
+  }
+
   ul {
     text-align: left;
     list-style: none;
@@ -218,6 +230,7 @@ export default {
       padding: 5px 10px;
       font-weight: 300;
       display: flex;
+      line-height: 1.2em;
 
       span {
         flex: 2;

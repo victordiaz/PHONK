@@ -1,7 +1,7 @@
 <template>
   <popup arrow = "top" :posx = "posx" :posy = "posy">
     <div class = "popup_content">
-      <div v-for = "(v, name) in sharedState.preferences">
+      <div class = "block" v-for = "(v, name) in sharedState.preferences">
         <h3>{{name}}</h3>
         <ul>
           <li v-for = "(value, prop) in v">

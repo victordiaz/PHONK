@@ -6,7 +6,7 @@
       <div class = "project_actions">
 
         <transition name = "upanim" mode = "out-in">
-          <button class = "transparent" key = "show" v-if = "!sharedState.show_load_project" id = "load_project" v-on:click = "toggle_load_project">
+          <button class = "transparent" key = "show" v-if = "!sharedState.show_load_project" v-on:click = "toggle_load_project">
             <p v-if = "not_loaded"><span class = "folder">/{{sharedState.current_project.project.folder}}/</span><span class = "name">{{sharedState.current_project.project.name}}</span></p>
             <p v-else class = "bold">load project</p>
             <i class = "fa fa-sort-down"></i>
@@ -78,13 +78,13 @@ export default {
   },
   methods: {
     toggle_load_project: function () {
-      console.log('qq')
+      // console.log('qq')
       this.sharedState.show_load_project = !this.sharedState.show_load_project
     },
     toggle_dashboard: function () {
       // Store.emit('toggle_dashboard')
       this.sharedState.show_dashboard = !this.sharedState.show_dashboard
-      console.log('toggling dashboard')
+      // console.log('toggling dashboard')
     }
   },
   computed: {
@@ -132,11 +132,6 @@ export default {
     align-self: center;
     align-items: center;
     padding: 10px;
-  }
-
-  #load_project {
-    font-family: @editorFont;
-    color: #ffffffa8;
   }
 
   .name {
@@ -237,6 +232,8 @@ export default {
     button {
       display: inline-flex;
       align-items: center;
+      font-family: @editorFont;
+      color: #ffffffa8;
     }
 
     p {

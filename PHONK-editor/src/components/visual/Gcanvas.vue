@@ -2,8 +2,8 @@
   <div class = "gcanvas">
     <gpalette :amodules = "addedModules" :modules = "modules"></gpalette>
     <div class = "modules_container">
-      <gmodule v-if = "m.display" v-for = "m in addedModules" :module = "m"></gmodule>
-      <gconector v-for = "c in addedConnectors"></gconector>
+      <gmodule v-if = "m.display" v-for = "m in addedModules" :module = "m" :key = "m.id"></gmodule>
+      <gconector v-for = "c in addedConnectors" :key = "c.id"></gconector>
       <button v-on:click = "load">load</button>
     </div>
   </div>

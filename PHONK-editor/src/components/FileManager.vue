@@ -450,11 +450,10 @@ export default {
       this.isActionInProcess = true
 
       for (let i in this.files) {
-        if (this.files[i].selected) {store.on
+        if (this.files[i].selected) {
           this.filesToPaste.push(this.files[i])
         }
       }
-
     },
     paste_files: function () {
       console.log('paste_files ', this.filesToPaste, ' where ' + this.current_folder)

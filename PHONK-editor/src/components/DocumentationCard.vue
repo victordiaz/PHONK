@@ -5,26 +5,24 @@
     </div>
 
     <h2><span class = "object">{{data.object.name}}.</span><span class = "method">{{data.method.name}}()</span></h2>
-    <div class = "stub">
-      <a href = "http://" target = "_blank">Help to improve the Docs</a>
-      <a v-bind:href = "getGithubUrl(data.method)" target = "_blank"><i class = "fa fa-github"></i> This in Github</a>
-    </div>
     <p class = "description">{{data.method.description}}</p>
 
     <div class = "example">
       <h3>example</h3>
-      <code class = "code">
-        <pre class = "javascript">
+      <div class = "code_wrapper">
+        <code class = "code">
+          <pre class = "javascript">
 // this is not a real example
 function () {
   console.log('hola')
 }
-</pre>
-      </code>
-      <a v-bind:href = "store.get_full_url_for_project(data.method.exampleLink)" target = "_blank">Open full example in new Tab</a>
-
+          </pre>
+        </code>
+        <!--
+        <a v-bind:href = "store.get_full_url_for_project(data.method.exampleLink)" target = "_blank">Open in Tab</a>
+        -->
+      </div>
     </div>
-
 
     <div class = "usage">
       <h3>Usage</h3>
@@ -34,6 +32,7 @@ function () {
         </li>
       </ul>
     </div>
+
     <div class = "params">
       <h3>params</h3>
       <table>
@@ -44,6 +43,7 @@ function () {
         </tr>
       </table>
     </div>
+
     <div class = "returns">
       <h3>returns</h3>
       <table>
@@ -53,12 +53,19 @@ function () {
         </tr>
       </table>
     </div>
+
     <div class = "related">
       <h3>Related</h3>
       <ul>
         <li v-for = "p in data.method.see">{{p}}</li>
       </ul>
     </div>
+
+    <div class = "stub">
+      <a href = "http://" target = "_blank">Help improve this doc</a>
+      <a v-bind:href = "getGithubUrl(data.method)" target = "_blank"><i class = "fa fa-github"></i> Show method sourcecode</a>
+    </div>
+
   </div>
 </template>
 
@@ -143,8 +150,8 @@ export default {
   }
   h3 {
     padding: 5px 0px;
-    color: #555;
-    font-weight: 300;
+    color: @accentColor;
+    font-weight: 500;
     font-size: 0.9em;
     text-transform: uppercase;
   }
@@ -163,6 +170,13 @@ export default {
     }
   }
 
+  .code_wrapper {
+    position: relative;
+    box-shadow: 0 0 5px -1px #9f9f9f;
+    overflow: hidden;
+    margin: 0.8em 0;
+  }
+
   code {
     padding: 8px 8px;
     box-sizing: border-box;
@@ -170,7 +184,7 @@ export default {
 
     background: white;
     border-radius: 2px;
-    // border: 1px solid rgba(0, 0, 0, 0.08)
+    line-height: 1.3em;
   }
 
   code, .usage>ul, .param, .returns .type, .related{
@@ -197,7 +211,6 @@ export default {
     margin: 10px 0px;
     display: block;
     color: white;
-    font-size: 0.8em;
     /* animation: fadeIn 1s infinite alternate; */
 
     a {
@@ -224,9 +237,14 @@ export default {
 
   .example {
     a {
-      color: @accentColor;
-      margin: 10px 0px;
+      background: @accentColor;
       display: block;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      color: white;
+      padding: 3px 10px;
+      text-decoration: none;
     }
   }
 

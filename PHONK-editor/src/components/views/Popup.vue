@@ -1,6 +1,6 @@
 <template>
   <div class = "popover" v-bind:class = "arrow" v-bind:style = "arrowposition">
-    <button v-on:click = "hide_popover">x</button>
+    <button id = "close" v-on:click = "hide_popover">x</button>
     <slot>
     No content to display
     </slot>
@@ -15,7 +15,7 @@ export default {
   props: {
     arrow: String,
     posx: String,
-    posy: String,
+    posy: String
   },
   data () {
     return {
@@ -58,7 +58,8 @@ export default {
   -webkit-filter: drop-shadow(0 0 1px rgba(0,0,0,0.4)) drop-shadow(0 3px 4px rgba(0,0,0,0.4));
   text-align: left;
 
-  button {
+  #close {
+    display: none;
     color: @accentColor;
     background: @backgroundColorSecondary;
     position: absolute;
@@ -88,9 +89,6 @@ export default {
 
     .value {
       font-weight: 500;
-    }
-    li {
-      padding-bottom: 0.4em;
     }
   }
 
@@ -134,7 +132,14 @@ export default {
       */
     }
   }
-}
 
+  h3 {
+    padding-bottom: 0.4em;
+  }
+
+  .block {
+    padding: 0.4em 0;
+  }
+}
 
 </style>

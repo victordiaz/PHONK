@@ -142,11 +142,11 @@ export default {
           this.view_type = 'vertical'
           break
         case 'vertical':
-          this.view_type = 'over'
+          this.view_type = 'vertical'
           break
-        case 'over':
-          this.view_type = 'horizontal'
-          break
+        // case 'over':
+        //  this.view_type = 'horizontal'
+        //  break
       }
     },
     close_card: function () {

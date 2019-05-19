@@ -779,6 +779,13 @@ button {
     }
   }
 
+  #toolbar {
+    button {
+      max-width: 200px;
+      direction: rtl;
+    }
+  }
+
 }
 
 .panel_above {

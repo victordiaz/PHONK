@@ -305,7 +305,7 @@ export default {
           // console.log('modified')
         })
 
-        console.log('load_file')
+        // console.log('load_file')
         this.select_tab(this.tabs.length - 1)
       } else {
         // console.log('already exist')

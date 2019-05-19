@@ -182,13 +182,13 @@ store.project_files_delete = function (files) {
  */
 store.load_file = function (file) {
   var query = {}
-  console.log('load_file', file)
+  // console.log('load_file', file)
   Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(
   function (response) {
-    console.log(response)
+    // console.log(response)
     file.code = response.data.files[0].code
 
-    console.log('load_file(status) > ' + response.status, file.code)
+    // console.log('load_file(status) > ' + response.status, file.code)
     store.emit('file_loaded', file)
   }, function (response) {
     // console.log(TAG + ': project_save(status) > ' + response.status)

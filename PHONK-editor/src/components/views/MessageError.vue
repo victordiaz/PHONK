@@ -48,13 +48,14 @@ export default {
 
   p {
     padding: 8px 18px;
+    margin: 10px;
     color: @accentColor;
     border-radius: 58px;
     background: @primaryTextColor;
   }
 
   button {
-    border-left: 1px solid @accentColor;
+    text-decoration: underline;
     padding-left: 12px;
     margin-left: 12px;
     color: white;
@@ -65,7 +66,11 @@ export default {
     color: @accentColor;
 
     &:hover {
-      text-decoration: underline;
+      color: lighten(@accentColor, 10%);
+    }
+
+    &:active {
+      color: darken(@accentColor, 10%);
     }
   }
 }
