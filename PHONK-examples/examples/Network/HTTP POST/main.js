@@ -12,7 +12,7 @@
 
 ui.addTitle(app.name)
 
-var url = 'http://www.protocoder.org/p/post.php'
+var url = 'http://yoururlhere'
 
 var data = [
   { 'name' : 'field_1', 'content' : 'hello', 'type' : 'text' },

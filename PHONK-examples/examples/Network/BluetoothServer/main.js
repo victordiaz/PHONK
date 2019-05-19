@@ -26,7 +26,7 @@ var send = ui.addButton('Send', 0.7, 0.85, 0.2, 0.1).onClick(function () {
   connectedDevice.send(input.text() + '\n')
 })
 
-var btServer = network.bluetooth.createServer('PROTOCODER_CHAT')
+var btServer = network.bluetooth.createServer('PHONK_CHAT')
 var connectedDevice
 
 btServer.onNewConnection(function (e) {

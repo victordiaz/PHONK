@@ -1,16 +1,17 @@
 /*
  * Phonk Example:	Video playback
  *
- * video of cityfireflies by uncoded.es
- * Sergio Galan and Victor Diaz
+ * Big Buck Bunny video excerpt
+ * Blender Foundation | www.blender.org
+ *
  */
 
 ui.addTitle(app.name)
 
 var player = media.createVideoPlayer()
-ui.add(player.getPreview(), 0.1, 0.15, 0.8, 0.4)
+ui.add(player.getPreview(), 0.1, 0.15, 0.8, 0.3)
 
-player.load('cityfireflies.m4v')
+player.load('bigbuckbunny.m4v')
 player.play()
 
 util.loop(500, function () {
@@ -31,3 +32,4 @@ ui.addSlider(0.05, 0.75, 0.9, 0.05).range(0, 1).onChange(function (e) {
   console.log(pos)
   player.seekTo(pos)
 })
+

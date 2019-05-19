@@ -13,7 +13,7 @@ var camera = ui.addCameraView('back', 0, 0, 1, 1)
 // take a picture and save it
 ui.addButton('Take pic', 0.2, 0.8, 0.2, 0.1).onClick(function () {
     camera.takePicture('picture.png', function () {
-        console.logImage(protocoder.urlForFiles() + 'picture.png')
+      console.logImage(pApp.fullPath() + 'picture.png')
     })
 })
 
