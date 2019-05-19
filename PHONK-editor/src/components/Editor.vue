@@ -627,7 +627,7 @@ export default {
 }
 
 .ace_dark .ace_gutter-cell.ace_info {
-    background-image: none;
+    background-image: none !important;
 }
 
 .ace-tm .ace_marker-layer .run_code{
