@@ -4,9 +4,6 @@
 [![github version](https://img.shields.io/github/license/victordiaz/phonk.svg)](https//github.com/victordiaz/phonk)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.editor/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 
-[![lala](./images/rect2.png)](https://itunes.apple.com/us/app/gitpoint/id1251245162?mt=8)
-[![lala](./images/rect2.png)](https://itunes.apple.com/us/app/gitpoint/id1251245162?mt=8)
-
 ## Introduction
 :tada: Hello! I'm happy to see you here reading about Phonk!!
 
@@ -38,9 +35,13 @@ Pick an old phone (or new) from the drawer and transform it into a robot, a musi
 - OpenStreetMaps and muuuch more!
 
 ## How to install it
-Get it from [F-droid](), [Play Store](), [APK](Download from http://phonk.io) or just [compile it your self]().
+Get it from
+- [APK](https://github.com/victordiaz/phonk/releases)
+- ~~[F-droid](https://github.com/victordiaz/phonk/issues/6)~~ (Need help)
+- ~~[Play Store]()~~ (Waiting for approval)
+- ~~or just [compile it your self]().~~
 
-If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](./lalla).
+If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](https://github.com/victordiaz/phonk/issues/new).
 
 ## How to create your first script
 Run the Phonk app in your Android device. You can create your first script within the device although it might be a bit cumbersome using the device virtual keyboard.
