@@ -41,6 +41,10 @@ Get it from
 
 If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](https://github.com/victordiaz/phonk/issues/new).
 
+During the first install, the app will
+1. Ask you for a bunch of permissions. I recommend to accept all of them to be able to run the examples. You can always revoke them :)
+2. Install the examples in the device "sdcard" folder. Doing this we can easily access the examples and self-made scripts from any other app.
+
 ## How to create your first script
 Run the Phonk app in your Android device. You can create your first script within the device although it might be a bit cumbersome using the device virtual keyboard.
 
