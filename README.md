@@ -13,8 +13,8 @@ Pick an old phone (or new) from the drawer and transform it into a robot, a musi
 
 <p style="text-align: center; margin: 50px 0px;">
   <img src="./images/phonk_app.png" width="150" />
-  <img src="./images/phonk_script.png" width="150" />
   <img src="./images/phonk_webide.png" width="320" />
+  <img src="./images/phonk_script.png" width="150" />
 </p>
 
 <div style="text-align:center; margin: 50px 0">
