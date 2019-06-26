@@ -27,7 +27,7 @@ import android.os.Looper;
 
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.ProtocoderNativeArray;
+import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.base.utils.MLog;
 
 import java.io.IOException;
@@ -102,7 +102,7 @@ public class OSC {
                 public void onMessage(final OSCMessage msg) {
                     MLog.d(TAG, "message received " + msg);
 
-                    final ProtocoderNativeArray valuesArray = new ProtocoderNativeArray(0);
+                    final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
                     for (int i = 0; i < msg.getArgCount(); i++) {
                         valuesArray.put(valuesArray.size(), valuesArray, msg.getArg(i));
                     }

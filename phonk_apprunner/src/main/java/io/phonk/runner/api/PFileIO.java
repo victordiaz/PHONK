@@ -33,7 +33,7 @@ import org.apache.commons.io.FileUtils;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.other.PSqLite;
-import io.phonk.runner.api.other.ProtocoderNativeArray;
+import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
@@ -280,16 +280,16 @@ public class PFileIO extends ProtoBase {
 
     @ProtoMethod(description = "List all the files in the directory", example = "")
     @ProtoMethodParam(params = {"path"})
-    public ProtocoderNativeArray list(String path) {
+    public PhonkNativeArray list(String path) {
         return list(path, "");
     }
 
     @ProtoMethod(description = "List all the files with a given extension", example = "")
     @ProtoMethodParam(params = {"fileName"})
-    public ProtocoderNativeArray list(String path, String filter) {
+    public PhonkNativeArray list(String path, String filter) {
         File files[] = FileIO.listFiles(getAppRunner().getProject().getFullPathForFile(path), filter);
 
-        ProtocoderNativeArray nativeArray = new ProtocoderNativeArray(files.length);
+        PhonkNativeArray nativeArray = new PhonkNativeArray(files.length);
         for (int i = 0; i < files.length; i++) {
             nativeArray.addPE(i, files[i].getName());
         }

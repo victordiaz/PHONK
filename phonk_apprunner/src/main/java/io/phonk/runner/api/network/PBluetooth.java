@@ -37,7 +37,7 @@ import org.mozilla.javascript.NativeArray;
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.ProtocoderNativeArray;
+import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
@@ -172,7 +172,7 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         Set<BluetoothDevice> listDevices = mAdapter.getBondedDevices();
         MLog.d(TAG, "listDevices " + listDevices);
         int listSize = listDevices.size();
-        ProtocoderNativeArray array = new ProtocoderNativeArray(listSize);
+        PhonkNativeArray array = new PhonkNativeArray(listSize);
         MLog.d(TAG, "array " + array);
 
 

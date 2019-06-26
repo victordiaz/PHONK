@@ -25,9 +25,9 @@ package io.phonk.runner.api.other;
 import org.mozilla.javascript.NativeArray;
 import io.phonk.runner.base.ProtoSingleton;
 
-public class ProtocoderNativeArray extends NativeArray {
+public class PhonkNativeArray extends NativeArray {
 
-    public ProtocoderNativeArray(int length) {
+    public PhonkNativeArray(int length) {
         super(length);
     }
 

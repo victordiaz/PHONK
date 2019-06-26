@@ -61,7 +61,7 @@ import io.phonk.runner.api.media.PPureData;
 import io.phonk.runner.api.media.PTextToSpeech;
 import io.phonk.runner.api.media.PVideo;
 import io.phonk.runner.api.media.PWave;
-import io.phonk.runner.api.other.ProtocoderNativeArray;
+import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apidoc.annotation.ProtoObject;
@@ -174,7 +174,7 @@ public class PMedia extends ProtoBase {
 
                 @Override
                 public void onNewResult(ArrayList<String> matches) {
-                    ProtocoderNativeArray retMatches = new ProtocoderNativeArray(matches.size());
+                    PhonkNativeArray retMatches = new PhonkNativeArray(matches.size());
 
                     for (int i = 0; i < matches.size(); i++) {
                         retMatches.addPE(i, matches.get(i));
@@ -242,7 +242,7 @@ public class PMedia extends ProtoBase {
 
                     ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
-                    ProtocoderNativeArray retMatches = new ProtocoderNativeArray(matches.size());
+                    PhonkNativeArray retMatches = new PhonkNativeArray(matches.size());
 
                     for (int i = 0; i < matches.size(); i++) {
                         retMatches.addPE(i, matches.get(i));

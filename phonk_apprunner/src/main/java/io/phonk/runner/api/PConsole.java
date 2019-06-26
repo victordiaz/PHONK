@@ -222,7 +222,7 @@ public class PConsole extends ProtoBase {
             String out = "";
             Gson gson = ProtoSingleton.getInstance().getGson();
             // if (output instanceof ReturnObject)out = gson.toJson(output);
-            //else if (output instanceof ProtocoderNativeArray)out = gson.toJson(output);
+            //else if (output instanceof PhonkNativeArray)out = gson.toJson(output);
             // else
             out = output.toString();
             builder.append(" ").append(out);

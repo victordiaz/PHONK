@@ -52,11 +52,11 @@ import io.phonk.runner.R;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.media.PCamera;
+import io.phonk.runner.api.media.PCameraOld;
 import io.phonk.runner.api.media.PCamera2;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.api.other.PProcessing;
-import io.phonk.runner.api.other.ProtocoderNativeArray;
+import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.api.widgets.PAbsoluteLayout;
 import io.phonk.runner.api.widgets.PButton;
 import io.phonk.runner.api.widgets.PCanvas;
@@ -1254,7 +1254,7 @@ public class PUI extends ProtoBase {
             pCamera = new PCamera2(getAppRunner());
         } else {
             if (check("camera", PackageManager.FEATURE_CAMERA, Manifest.permission.CAMERA)) {
-                pCamera = new PCamera(getAppRunner(), camNum);
+                pCamera = new PCameraOld(getAppRunner(), camNum);
             }
         }
 
@@ -1934,8 +1934,8 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      */
     @ProtoMethod
-    public void onTouches2(View view, final ReturnInterface callback) {
-        final ProtocoderNativeArray ar = new ProtocoderNativeArray(20);
+    public void onTouches(View view, final ReturnInterface callback) {
+        final PhonkNativeArray ar = new PhonkNativeArray(20);
         final HashMap<Integer, Touch> touches = new HashMap<Integer, Touch>();
 
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -1986,17 +1986,17 @@ public class PUI extends ProtoBase {
                 }
 
 
-                ProtocoderNativeArray ar = new ProtocoderNativeArray(touches.size());
+                PhonkNativeArray ar = new PhonkNativeArray(touches.size());
                 int toRemove = -1;
                 int i = 0;
 
-                MLog.d("qq2", ">>>>>>>>>>>>>>>>>>>>> ");
+                MLog.d(TAG, ">>>>>>>>>>>>>>>>>>>>> ");
 
                 for (Integer key : touches.keySet()) {
                     Touch touch = touches.get(key);
 
                     if (touch.action.equals("up")) {
-                        MLog.d("qq2", "to remove");
+                        MLog.d(TAG, "to remove");
                         toRemove = key;
                     }
 
@@ -2005,14 +2005,14 @@ public class PUI extends ProtoBase {
                     t.put("y", touch.y);
                     t.put("id", touch.id);
                     t.put("action", touch.action);
-                    MLog.d("qq1", "" + i + " " + touch.id + " action " + touch.action);
+                    MLog.d(TAG, "" + i + " " + touch.id + " action " + touch.action);
 
                     ar.addPE(i, t);
                     i++;
                 }
 
                 if (toRemove != -1) {
-                    MLog.d("qq", "removing " + toRemove + " of " + touches.size());
+                    MLog.d(TAG, "removing " + toRemove + " of " + touches.size());
                     touches.remove(toRemove);
                 }
 
@@ -2033,72 +2033,6 @@ public class PUI extends ProtoBase {
 
 
                 callback.event(returnObject);
-
-                return ret;
-            }
-        });
-    }
-
-    /**
-     * Attach callback to a view that will output multitouch events
-     *
-     * @param view
-     * @param callback
-     *
-     * @status TOREVIEW
-     */
-    @ProtoMethod
-    public void onTouches(View view, final ReturnInterface callback) {
-        /* Maybe this?
-        view.setOnGenericMotionListener(new View.OnGenericMotionListener() {
-            @Override
-            public boolean onGenericMotion(View view, MotionEvent motionEvent) {
-                return false;
-            }
-        });
-        */
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int numPoints = event.getPointerCount();
-
-                ProtocoderNativeArray ar = new ProtocoderNativeArray(numPoints);
-                int action = MotionEventCompat.getActionMasked(event);
-                int index = MotionEventCompat.getActionIndex(event);
-
-                String actionString = AndroidUtils.actionToString(action);
-                // MLog.d(TAG, "pointer " + index + " " + actionString);
-
-                boolean ret = false;
-                try {
-                    for (int i = 0; i < numPoints; i++) {
-                        int id = event.getPointerId(i);
-                        ReturnObject r = new ReturnObject();
-                        r.put("x", event.getX(id));
-                        r.put("y", event.getY(id));
-                        r.put("id", id);
-                        r.put("action", "move");
-                        ar.addPE(i, r);
-                    }
-
-                    if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-                        ReturnObject r = (ReturnObject) ar.get(index);
-                        r.put("action", "down");
-                        ret = true;
-                    } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
-                        ReturnObject r = (ReturnObject) ar.get(index);
-                        r.put("action", "up");
-                        MLog.d("touch", "" + index + " " + "up");
-                    }
-
-                    ReturnObject returnObject = new ReturnObject();
-                    returnObject.put("touches", ar);
-                    returnObject.put("count", numPoints);
-
-                    callback.event(returnObject);
-                } catch (IllegalArgumentException e) {}
-
 
                 return ret;
             }
