@@ -122,7 +122,6 @@ public class ProjectItem extends LinearLayout {
     }
 
     public void setImage(Bitmap bmp) {
-        MLog.d(TAG, "setting image in cuak cuak " + customIcon);
         customIcon.setVisibility(View.VISIBLE);
         customIcon.setImageBitmap(bmp);
         txtProjectIcon.setVisibility(View.INVISIBLE);
