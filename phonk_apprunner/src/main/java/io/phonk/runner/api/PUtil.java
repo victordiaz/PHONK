@@ -43,6 +43,7 @@ import android.view.animation.LinearInterpolator;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 import io.phonk.runner.api.common.ReturnObject;
+import io.phonk.runner.api.other.PDelay;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.api.other.SignalUtils;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
@@ -60,12 +61,8 @@ import java.util.Map;
 @ProtoObject
 public class PUtil extends ProtoBase {
 
-    private final Handler handler;
-    ArrayList<Runnable> rl = new ArrayList<Runnable>();
-
     public PUtil(AppRunner appRunner) {
         super(appRunner);
-        handler = new Handler();
     }
 
     // --------- getRequest ---------//
@@ -141,38 +138,10 @@ public class PUtil extends ProtoBase {
         return new PLooper(getAppRunner(), duration, null);
     }
 
-    // --------- delay ---------//
-    public interface delayCB {
-        void event();
-    }
-
     @ProtoMethod(description = "Delay a given function 'n' milliseconds", example = "")
     @ProtoMethodParam(params = {"milliseconds", "function()"})
-    public void delay(final int duration, final delayCB fn) {
-
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                // handler.postDelayed(this, duration);
-                fn.event();
-                handler.removeCallbacks(this);
-                rl.remove(this);
-            }
-        };
-        handler.postDelayed(task, duration);
-
-        rl.add(task);
-    }
-
-
-    @ProtoMethod(description = "Stop all timers", example = "")
-    @ProtoMethodParam(params = {""})
-    public void stopAllTimers() {
-        Iterator<Runnable> ir = rl.iterator();
-        while (ir.hasNext()) {
-            handler.removeCallbacks(ir.next());
-            // handler.post(ir.next());
-        }
+    public PDelay delay(final int delay, final PDelay.DelayCB fn) {
+        return new PDelay(getAppRunner(), delay, fn);
     }
 
     // http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
@@ -307,9 +276,8 @@ public class PUtil extends ProtoBase {
         return new SignalUtils(getAppRunner(), n);
     }
 
-
     @Override
     public void __stop() {
-        stopAllTimers();
+
     }
 }

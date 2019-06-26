@@ -63,6 +63,7 @@ import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.api.PUtil;
+import io.phonk.runner.api.other.PDelay;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.network.NetworkUtils;
@@ -101,6 +102,7 @@ public class MainActivity extends BaseActivity {
     private boolean isWebIdeMode = false;
     private boolean isServersEnabledOnStart;
     private boolean mShowProjectsInFolder = false;
+    private PDelay mDelay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +136,7 @@ public class MainActivity extends BaseActivity {
             PhonkAppHelper.launchScript(this, p);
         }
 
-        mAppRunner.pUtil.delay(2000, new PUtil.delayCB() {
+        mDelay = mAppRunner.pUtil.delay(2000, new PDelay.DelayCB() {
             @Override
             public void event() {
                 mViewPager.setCurrentItem(1);
@@ -232,6 +234,8 @@ public class MainActivity extends BaseActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mDelay.cancel();
+
                 if (position == 0) {
                     MLog.d(TAG, position + " " + positionOffset + " " + positionOffsetPixels);
                     mHeader2.setAlpha(1 - positionOffset);
@@ -243,8 +247,6 @@ public class MainActivity extends BaseActivity {
                     mHeader.setAlpha(positionOffset);
                 }
             }
-
-
 
             @Override
             public void onPageSelected(int position) {
