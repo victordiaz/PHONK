@@ -59,10 +59,12 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
     private int mWidth;
     private int mHeight;
     private float mappedVal;
+    private float unmappedVal;
+    private float rangeFrom = 0;
+    private float rangeTo = 360;
 
     public PKnob(AppRunner appRunner) {
         super(appRunner);
-        MLog.d(TAG, "create knob");
 
         draw = mydraw;
         styler = new Styler(appRunner, this, props);
@@ -77,7 +79,7 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                firstY = x;
+                firstY = y;
                 prevVal = val;
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -85,7 +87,8 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
                 val = prevVal - delta;
                 if (val < 0) val = 0;
                 if (val > mHeight) val = mHeight;
-                mappedVal = CanvasUtils.map(val, 0, mHeight, 0, 360);
+                unmappedVal = CanvasUtils.map(val, 0, mHeight, 0, 360);
+                mappedVal = CanvasUtils.map(val, 0, mHeight, rangeFrom, rangeTo);
 
                 break;
             case MotionEvent.ACTION_UP:
@@ -94,15 +97,19 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
                 return false;
         }
 
+        executeCallback();
+
+        invalidate();
+
+        return true;
+    }
+
+    private void executeCallback() {
         if (callback != null) {
             ReturnObject ret = new ReturnObject();
             ret.put("value", mappedVal);
             callback.event(ret);
         }
-
-        invalidate();
-
-        return true;
     }
 
     OnDrawCallback mydraw = new OnDrawCallback() {
@@ -132,7 +139,7 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
             c.stroke(styler.knobProgressColor); // styler.sliderBorderColor);
 
             float d = diameter - styler.knobBorderWidth - styler.knobProgressWidth - styler.knobProgressSeparation;
-            c.arc(posX, posY, d, d, 180, mappedVal, false);
+            c.arc(posX, posY, d, d, 180, unmappedVal, false);
 
             /*
             c.noFill();
@@ -176,6 +183,21 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
         this.callback = callbackfn;
 
         return this;
+    }
+
+    public PKnob range(float from, float to) {
+        rangeFrom = from;
+        rangeTo = to;
+
+        return this;
+    }
+
+    public void value(float val) {
+        this.mappedVal = val;
+        this.unmappedVal = CanvasUtils.map(val, rangeFrom, rangeTo, 0, 360);
+
+        executeCallback();
+        this.invalidate();
     }
 
     @Override

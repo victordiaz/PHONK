@@ -51,13 +51,13 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
     private ReturnInterface callback;
     private int mWidth;
     private int mHeight;
+    private float unmappedVal;
     private float mappedVal;
     private float rangeFrom = 0;
     private float rangeTo = 1;
 
     public PSlider(AppRunner appRunner) {
         super(appRunner);
-        MLog.d(TAG, "create slider");
 
         draw = mydraw;
         styler = new Styler(appRunner, this, props);
@@ -74,6 +74,7 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
         if (y < 0) y = 0;
         if (y > mHeight) y = mHeight;
 
+        unmappedVal = x;
         mappedVal = CanvasUtils.map(x, 0, mWidth, rangeFrom, rangeTo);
 
         switch (event.getAction()) {
@@ -87,14 +88,19 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
                 return false;
         }
 
+        executeCallback();
+        invalidate();
+
+        return true;
+    }
+
+    private void executeCallback() {
         if (callback != null) {
+            MLog.d(TAG, "yep");
             ReturnObject ret = new ReturnObject();
             ret.put("value", mappedVal);
             callback.event(ret);
         }
-
-        invalidate();
-        return true;
     }
 
     OnDrawCallback mydraw = new OnDrawCallback() {
@@ -110,7 +116,8 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
             else c.fill(styler.sliderPressed);
             c.strokeWidth(styler.sliderBorderSize);
             c.stroke(styler.sliderBorderColor);
-            c.rect(0, 0, x, c.height);
+            MLog.d(TAG, "" + unmappedVal);
+            c.rect(0, 0, unmappedVal, c.height);
         }
     };
 
@@ -126,7 +133,15 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
 
         return this;
     }
-    
+
+    public void value(float val) {
+        this.mappedVal = val;
+        this.unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, mWidth);
+
+        executeCallback();
+        this.invalidate();
+    }
+
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);

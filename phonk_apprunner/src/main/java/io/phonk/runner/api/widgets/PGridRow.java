@@ -43,7 +43,7 @@ public class PGridRow extends LinearLayout {
     public PGridRow addViewInRow(View v) {
         LinearLayout.LayoutParams lParams = (LinearLayout.LayoutParams) getLayoutParams(); //or create new LayoutParams...
 
-        if (v.getClass().equals(PSlider_.class)) {
+        if (v.getClass().equals(PSlider.class)) {
             lParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         } else {
             lParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
