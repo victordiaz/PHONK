@@ -76,9 +76,9 @@ public class PMap extends MapView {
 
         // Create the mapview with the custom tile provider array
         this.mapView = this;
-        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
+        mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setTilesScaledToDpi(true);
-        mapView.setBuiltInZoomControls(true);
+        mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
         mapView.setClickable(true);
@@ -173,6 +173,18 @@ public class PMap extends MapView {
         PMapPath path = new PMapPath();
         path.setColor(Color.parseColor(color));
         mapView.getOverlays().add(path);
+
+        return path;
+    }
+
+    /**
+     * Removes a path from the map
+     * @param PMapPath
+     * @return
+     */
+    @ProtoMethod
+    public PMapPath removePath(PMapPath path) {
+        mapView.getOverlays().remove(path);
 
         return path;
     }
@@ -369,7 +381,7 @@ public class PMap extends MapView {
      * @return
      */
     @ProtoMethod
-    public MapView zoomLimits(int min, int max) {
+    public MapView zoomLimits(double min, double max) {
         mapView.setMinZoomLevel(min);
         mapView.setMaxZoomLevel(max);
 
@@ -547,16 +559,6 @@ public class PMap extends MapView {
         @ProtoMethodParam(params = {"path", "latitude", "longitude"})
         public PMapPath addGeoPoint(double lat, double lon) {
             addPoint(new GeoPoint(lat, lon));
-            mapView.invalidate();
-
-            return this;
-        }
-
-
-        @ProtoMethod(description = "Clear the path", example = "")
-        @ProtoMethodParam(params = {"path"})
-        public PMapPath clear() {
-            clearPath();
             mapView.invalidate();
 
             return this;

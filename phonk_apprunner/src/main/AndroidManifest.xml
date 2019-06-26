@@ -21,6 +21,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.phonk.runner">
 
     <uses-feature
@@ -168,5 +169,7 @@
             android:process=":remote" >
         </receiver>
     </application>
+
+    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core" />
 
 </manifest>
