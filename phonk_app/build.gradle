@@ -13,7 +13,6 @@ android {
     // flavorDimensions "phonk_normal", "phonk_extended"
 
     compileSdkVersion 28
-    // buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "io.phonk"

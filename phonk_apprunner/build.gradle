@@ -6,7 +6,6 @@ android {
     flavorDimensions "default_apprunner"
 
     compileSdkVersion 28
-    // buildToolsVersion '26.0.2'
 
     //defaultPublishConfig "normalrunnerDebug"
     //defaultPublishConfig "extendedrunnerDebug"

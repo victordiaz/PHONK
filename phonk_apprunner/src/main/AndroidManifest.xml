@@ -127,7 +127,6 @@
         <service
             android:name="io.phonk.runner.AppRunnerService"
             android:process=":AppRunner"
-            android:icon="@drawable/icon"
             android:label="AppRunnerService" >
 
             <!-- intent to close the runner -->
