@@ -80,8 +80,10 @@
 
         <Button
             android:id="@+id/next_step_button"
-            android:layout_width="126dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:background="@drawable/solid_dark_grey_button"
             android:text="@string/welcome_accept"
             android:textColor="#ffffff"
