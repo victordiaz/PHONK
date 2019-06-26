@@ -37,9 +37,6 @@ import io.phonk.runner.base.views.CanvasUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by biquillo on 11/09/16.
- */
 public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterface {
 
     private static final String TAG = PKnob.class.getSimpleName();

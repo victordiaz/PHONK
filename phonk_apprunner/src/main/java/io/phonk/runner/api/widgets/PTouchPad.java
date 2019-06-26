@@ -25,62 +25,90 @@ package io.phonk.runner.api.widgets;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.other.PLooper;
-import io.phonk.runner.api.other.ProtocoderNativeArray;
+import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.base.views.CanvasUtils;
 
 import java.util.Map;
 
-/**
- * Created by biquillo on 11/09/16.
- */
 public class PTouchPad extends PCanvas implements PViewMethodsInterface {
 
     private static final String TAG = PTouchPad.class.getSimpleName();
 
     public StyleProperties props = new StyleProperties();
     public Styler styler;
-    private ProtocoderNativeArray touches;
-    private ReturnInterface onTouch;
+    private PhonkNativeArray touches;
+    private ReturnInterface onTouchCallback;
+    private int mWidth;
+    private int mHeight;
+    private float rangeXFrom = 0;
+    private float rangeXTo = 1.0f;
+    private float rangeYFrom = 0;
+    private float rangeYTo = 1.0f;
 
     public PTouchPad(AppRunner appRunner) {
         super(appRunner);
-        MLog.d(TAG, "create touchpad");
 
         draw = mydraw;
         styler = new Styler(appRunner, this, props);
         styler.apply();
 
-        appRunner.pUi.onTouches2(this, new ReturnInterface() {
+        appRunner.pUi.onTouches(this, new ReturnInterface() {
             @Override
             public void event(ReturnObject r) {
+            // remap values
+            touches = (PhonkNativeArray) r.get("touches");
+            PhonkNativeArray remmapedTouches = new PhonkNativeArray(touches.size());
+            if (touches != null) {
 
-                onTouch.event(r);
-                touches = (ProtocoderNativeArray) r.get("touches");
+                for (int i = 0; i < touches.size(); i++) {
+                    ReturnObject t = (ReturnObject) touches.get(i);
+                    float unmappedXVal = (float) t.get("x");
+                    float unmappedYVal = (float) t.get("y");
+                    float mappedXVal = CanvasUtils.map(unmappedXVal, 0, mWidth, rangeXFrom, rangeXTo);
+                    float mappedYVal = CanvasUtils.map(unmappedYVal, 0, mHeight, rangeYFrom, rangeYTo);
 
-                // MLog.d("touches", "size " + touches.size());
+                    if (mappedXVal < rangeXFrom) mappedXVal = rangeXFrom;
+                    if (mappedXVal > rangeXTo) mappedXVal = rangeXTo;
 
-                if (touches.size() > 0 && !looper.isLooping()) {
-                    MLog.d(TAG, "start touch");
-                    looper.start();
-                // if the last pointer is up then stop animation
-                } else if (touches.size() == 1) {
-                    ReturnObject t = ((ReturnObject) touches.get(0));
-                    if (t.get("action") == "up") {
-                        MLog.d(TAG, "stop touch");
-                        touches = null;
-                        invalidate();
-                        looper.stop();
-                    }
+                    if (mappedYVal < rangeYFrom) mappedYVal = rangeYFrom;
+                    if (mappedYVal > rangeXTo) mappedYVal = rangeYTo;
+
+                    ReturnObject tRemapped = new ReturnObject();
+                    tRemapped.put("x", mappedXVal);
+                    tRemapped.put("y", mappedYVal);
+                    tRemapped.put("action", t.get("action"));
+                    remmapedTouches.addPE(i, tRemapped);
                 }
-                // invalidate();
+            }
+            ReturnObject ro = new ReturnObject();
+            ro.put("touches", remmapedTouches);
+            ro.put("count", touches.size());
+            onTouchCallback.event(ro);
+
+            // trigger animation
+            if (touches.size() > 0 && !looper.isLooping()) {
+                MLog.d(TAG, "start touch");
+                looper.start();
+            // if the last pointer is up then stop animation
+            } else if (touches.size() == 1) {
+                ReturnObject t = ((ReturnObject) touches.get(0));
+                if (t.get("action") == "up") {
+                    MLog.d(TAG, "stop touch");
+                    touches = null;
+                    invalidate();
+                    looper.stop();
+                }
+            }
+            // invalidate();
             }
         });
     }
 
     public PTouchPad onTouch(ReturnInterface callback) {
-        onTouch = callback;
+        onTouchCallback = callback;
 
         return this;
     }
@@ -93,33 +121,60 @@ public class PTouchPad extends PCanvas implements PViewMethodsInterface {
         }
     });
 
+    private void executeCallback() {
+        if (onTouchCallback != null) {
+
+        }
+    }
+
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
+            mWidth = c.width;
+            mHeight = c.height;
+
             c.clear();
             c.mode(false);
 
             if (touches != null) {
                 for (int i = 0; i < touches.size(); i++) {
                     ReturnObject r = (ReturnObject) touches.get(i);
-                    float x = (float) r.get("x");
-                    float y = (float) r.get("y");
+                    float unmappedXVal = (float) r.get("x");
+                    float unmappedYVal = (float) r.get("y");
 
-                    if (true) {
-                        if (x < 0) x = 0;
-                        if (x > width) x = width;
-                        if (y < 0) y = 0;
-                        if (y > height) y = height;
-                    }
+                    if (unmappedXVal < 0) unmappedXVal = 0;
+                    if (unmappedXVal > width) unmappedXVal = width;
+                    if (unmappedYVal < 0) unmappedYVal = 0;
+                    if (unmappedYVal > height) unmappedYVal = height;
 
                     c.fill(styler.padColor);
                     c.stroke(styler.padBorderColor);
                     c.strokeWidth(styler.padBorderSize);
-                    c.ellipse(x, y, styler.padSize, styler.padSize);
+                    c.ellipse(unmappedXVal, unmappedYVal, styler.padSize, styler.padSize);
                 }
             }
         }
     };
+
+    public PTouchPad range(float fromX, float toX, float fromY, float toY) {
+        rangeXFrom = fromX;
+        rangeXTo = toX;
+        rangeYFrom = fromY;
+        rangeYTo = toY;
+
+        return this;
+    }
+
+    public void value(int index, String action, float valX, float valY) {
+        float mappedXVal = valX;
+        float mappedYVal = valY;
+
+        float unmappedXVal = CanvasUtils.map(valX, rangeXFrom, rangeXTo, 0, mWidth);
+        float unmappedYVal = CanvasUtils.map(valY, rangeYFrom, rangeYTo, 0, mHeight);
+
+        executeCallback();
+        this.invalidate();
+    }
 
     @Override
     public void set(float x, float y, float w, float h) {

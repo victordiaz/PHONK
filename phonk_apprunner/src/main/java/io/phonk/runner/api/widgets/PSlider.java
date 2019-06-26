@@ -34,9 +34,6 @@ import io.phonk.runner.base.views.CanvasUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by biquillo on 11/09/16.
- */
 public class PSlider extends PCanvas implements PViewMethodsInterface {
 
     private static final String TAG = PSlider.class.getSimpleName();
