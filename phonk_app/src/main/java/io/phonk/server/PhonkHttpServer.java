@@ -273,8 +273,6 @@ public class PhonkHttpServer extends NanoHTTPD {
                 res = newFixedLengthResponse("OK");
 
             } else if (uriSplitted[PROJECT_ACTION].equals("load")) {
-                MLog.d("ww", "--> " + p);
-
                 ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, "/", 0);
 
                 // only load main.js & app.conf

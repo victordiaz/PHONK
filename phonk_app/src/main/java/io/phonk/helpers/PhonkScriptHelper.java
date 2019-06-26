@@ -228,10 +228,8 @@ public class PhonkScriptHelper {
 
         // remove the project folder
         for (ProtoFile file : files) {
-            MLog.d(TAG, "->" + file.path);
             String[] splittedPath = file.path.split(p.getSandboxPath());
-            file.path = splittedPath[1];
-            MLog.d(TAG, "2 ->" + file.path);
+            file.path = file.path.replace(p.getSandboxPath(), "");
         }
 
         return files;
