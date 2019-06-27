@@ -23,6 +23,7 @@
 package io.phonk.runner.api.other;
 
 import org.mozilla.javascript.NativeArray;
+
 import io.phonk.runner.base.ProtoSingleton;
 
 public class PhonkNativeArray extends NativeArray {

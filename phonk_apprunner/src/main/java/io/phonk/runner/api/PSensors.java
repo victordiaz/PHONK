@@ -24,9 +24,9 @@ package io.phonk.runner.api;
 
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.sensors.PAccelerometer;
-import io.phonk.runner.api.sensors.PLocation;
 import io.phonk.runner.api.sensors.PGyroscope;
 import io.phonk.runner.api.sensors.PLightIntensity;
+import io.phonk.runner.api.sensors.PLocation;
 import io.phonk.runner.api.sensors.PMagnetic;
 import io.phonk.runner.api.sensors.POrientation;
 import io.phonk.runner.api.sensors.PPressure;

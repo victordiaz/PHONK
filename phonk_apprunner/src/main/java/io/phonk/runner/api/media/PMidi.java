@@ -23,6 +23,7 @@
 package io.phonk.runner.api.media;
 
 import android.hardware.usb.UsbDevice;
+
 import androidx.annotation.NonNull;
 
 import io.phonk.runner.api.ProtoBase;
@@ -30,7 +31,6 @@ import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
-
 import jp.kshoji.driver.midi.device.MidiInputDevice;
 import jp.kshoji.driver.midi.device.MidiOutputDevice;
 import jp.kshoji.driver.midi.util.UsbMidiDriver;

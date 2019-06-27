@@ -30,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -38,18 +37,20 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import io.phonk.runner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {

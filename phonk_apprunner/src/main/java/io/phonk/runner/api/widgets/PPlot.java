@@ -26,13 +26,13 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by biquillo on 11/09/16.

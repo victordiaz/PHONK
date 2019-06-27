@@ -40,6 +40,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
@@ -48,10 +52,6 @@ import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.FeatureNotAvailableException;
 import io.phonk.runner.base.utils.MLog;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class PLocation extends ProtoBase {

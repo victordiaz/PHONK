@@ -23,8 +23,9 @@
 package io.phonk.gui.projectlist;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 

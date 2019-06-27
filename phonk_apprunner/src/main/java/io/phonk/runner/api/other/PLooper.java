@@ -24,11 +24,11 @@ package io.phonk.runner.api.other;
 
 import android.os.Handler;
 
+import java.util.ArrayList;
+
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-
-import java.util.ArrayList;
 
 public class PLooper implements WhatIsRunningInterface {
     private final AppRunner mAppRunner;

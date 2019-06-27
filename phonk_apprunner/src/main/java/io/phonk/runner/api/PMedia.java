@@ -52,6 +52,9 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
@@ -69,9 +72,6 @@ import io.phonk.runner.apidoc.annotation.ProtoObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
 
 @ProtoObject
 public class PMedia extends ProtoBase {

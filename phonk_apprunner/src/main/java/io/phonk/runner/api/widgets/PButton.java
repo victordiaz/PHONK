@@ -27,6 +27,8 @@ import android.graphics.Typeface;
 import android.text.Html;
 import android.view.View;
 
+import java.util.Map;
+
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
@@ -34,8 +36,6 @@ import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.Map;
 
 public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PButton.class.getSimpleName();

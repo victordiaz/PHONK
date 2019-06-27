@@ -27,14 +27,6 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import org.mozilla.javascript.NativeArray;
-import io.phonk.runner.api.ProtoBase;
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.MLog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +36,15 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
+
+import io.phonk.runner.api.ProtoBase;
+import io.phonk.runner.api.common.ReturnInterface;
+import io.phonk.runner.api.common.ReturnObject;
+import io.phonk.runner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.base.utils.MLog;
 
 public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterface {
 

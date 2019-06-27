@@ -22,9 +22,9 @@
 
 package io.phonk.runner.models;
 
-import io.phonk.runner.apprunner.AppRunnerSettings;
-
 import java.io.File;
+
+import io.phonk.runner.apprunner.AppRunnerSettings;
 
 public class Project {
 

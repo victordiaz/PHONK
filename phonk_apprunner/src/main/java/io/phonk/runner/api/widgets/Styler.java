@@ -29,12 +29,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
 

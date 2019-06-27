@@ -26,7 +26,6 @@ import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.gui.Camera;
 import io.phonk.runner.base.gui.CameraNew;
-import io.phonk.runner.base.gui.CameraNew2;
 
 public class PCamera extends Camera implements PCameraInterface {
 

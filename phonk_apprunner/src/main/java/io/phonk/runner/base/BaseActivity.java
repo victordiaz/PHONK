@@ -29,11 +29,6 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,13 +36,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import java.util.ArrayList;
+
 import io.phonk.runner.R;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.media.Audio;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
 
 @SuppressLint("NewApi")
 public class BaseActivity extends AppCompatActivity {

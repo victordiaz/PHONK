@@ -27,13 +27,13 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.models.Project;
-
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.phonk.runner.base.utils.FileIO;
+import io.phonk.runner.models.Project;
 
 public class AppRunnerHelper {
 

@@ -24,21 +24,22 @@ package io.phonk.runner.api.widgets;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import androidx.core.widget.TextViewCompat;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.widget.TextViewCompat;
+
+import java.util.Map;
+
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.Map;
 
 public class PText extends AppCompatTextView implements PViewMethodsInterface, PTextInterface {
 

@@ -25,7 +25,6 @@ package io.phonk.runner.api.other;
 import android.annotation.SuppressLint;
 
 import io.phonk.runner.apprunner.AppRunner;
-
 import processing.android.PFragment;
 import processing.cardboard.PCardboard;
 import processing.core.PApplet;

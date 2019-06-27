@@ -29,11 +29,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import io.phonk.runner.base.BaseActivity;
-import io.phonk.runner.base.utils.MLog;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.phonk.runner.base.BaseActivity;
+import io.phonk.runner.base.utils.MLog;
 
 public class PermissionsActivity extends BaseActivity {
 

@@ -25,6 +25,11 @@ package io.phonk.runner.apprunner;
 import android.content.Context;
 
 import org.mozilla.javascript.Scriptable;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.api.PApp;
 import io.phonk.runner.api.PBoards;
@@ -43,10 +48,6 @@ import io.phonk.runner.api.other.WhatIsRunning;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AppRunner {
 

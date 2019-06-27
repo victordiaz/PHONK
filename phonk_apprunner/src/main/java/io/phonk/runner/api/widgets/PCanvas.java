@@ -36,6 +36,9 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apidoc.annotation.ProtoField;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
@@ -43,9 +46,6 @@ import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.Image;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class PCanvas extends View {

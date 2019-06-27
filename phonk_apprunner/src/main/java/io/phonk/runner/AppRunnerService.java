@@ -37,12 +37,13 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
-import androidx.core.app.NotificationCompat;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

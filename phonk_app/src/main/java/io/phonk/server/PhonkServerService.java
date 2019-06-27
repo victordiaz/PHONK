@@ -23,7 +23,6 @@
 package io.phonk.server;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -37,8 +36,9 @@ import android.os.FileObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import androidx.core.app.NotificationCompat;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
 

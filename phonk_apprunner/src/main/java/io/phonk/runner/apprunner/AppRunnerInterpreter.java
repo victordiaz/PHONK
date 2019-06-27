@@ -31,6 +31,7 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.debug.Debugger;
+
 import io.phonk.runner.base.utils.MLog;
 
 public class AppRunnerInterpreter {

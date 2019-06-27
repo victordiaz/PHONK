@@ -25,15 +25,6 @@ package io.phonk.runner.api.network;
 import android.os.Handler;
 import android.os.Looper;
 
-import io.phonk.runner.api.common.ReturnInterfaceWithReturn;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.models.Project;
-import io.phonk.runner.base.network.NetworkUtils;
-import io.phonk.runner.base.utils.MLog;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,6 +34,14 @@ import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
+import io.phonk.runner.api.common.ReturnInterfaceWithReturn;
+import io.phonk.runner.api.common.ReturnObject;
+import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.base.network.NetworkUtils;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.models.Project;
 
 public class PSimpleHttpServer extends NanoHTTPD {
     public static final String TAG = PSimpleHttpServer.class.getSimpleName();

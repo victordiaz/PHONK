@@ -37,11 +37,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
+
 import androidx.core.app.NotificationCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;
+
+import java.util.Iterator;
+import java.util.Map;
+
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.R;
 import io.phonk.runner.api.common.ReturnInterface;
@@ -57,9 +62,6 @@ import io.phonk.runner.base.utils.ExecuteCmd;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
-
-import java.util.Iterator;
-import java.util.Map;
 
 @ProtoObject
 public class PApp extends ProtoBase {

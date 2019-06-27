@@ -24,15 +24,15 @@ package io.phonk.runner.api.widgets;
 
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class PSlider extends PCanvas implements PViewMethodsInterface {
 

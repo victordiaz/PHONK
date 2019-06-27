@@ -23,11 +23,12 @@
 package io.phonk.runner.api.other;
 
 import org.mozilla.javascript.NativeObject;
+
+import java.util.ArrayList;
+
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.StrUtils;
-
-import java.util.ArrayList;
 
 public class PEvents extends ProtoBase {
     ArrayList<EventItem> eventsList;

@@ -26,6 +26,7 @@ import android.content.Context;
 import android.widget.LinearLayout;
 
 import org.mozilla.javascript.NativeArray;
+
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 

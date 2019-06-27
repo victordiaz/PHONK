@@ -20,7 +20,6 @@
   ~
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.phonkrunner">
+<manifest package="io.phonkrunner">
 
 </manifest>

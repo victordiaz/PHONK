@@ -32,10 +32,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,17 +39,28 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.view.MotionEventCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.mozilla.javascript.NativeArray;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.R;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.media.PCameraOld;
 import io.phonk.runner.api.media.PCamera2;
+import io.phonk.runner.api.media.PCameraOld;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.api.other.PProcessing;
 import io.phonk.runner.api.other.PhonkNativeArray;
@@ -98,11 +105,6 @@ import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.gui.CameraNew;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Hola

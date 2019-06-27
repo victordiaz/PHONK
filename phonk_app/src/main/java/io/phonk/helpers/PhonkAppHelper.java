@@ -26,8 +26,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import androidx.fragment.app.FragmentManager;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentManager;
 
 import org.greenrobot.eventbus.EventBus;
 

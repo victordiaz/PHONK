@@ -43,13 +43,18 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+
+import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.api.common.ReturnInterface;
@@ -61,10 +66,6 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.Intents;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @ProtoObject
 public class PDevice extends ProtoBase {

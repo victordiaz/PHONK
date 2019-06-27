@@ -30,13 +30,14 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class PWebSocketClient extends ProtoBase {
 

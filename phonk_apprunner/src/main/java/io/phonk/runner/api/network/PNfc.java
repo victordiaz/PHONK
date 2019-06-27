@@ -31,16 +31,16 @@ import android.nfc.TagLostException;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Locale;
+
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Locale;
 
 public class PNfc extends ProtoBase {
 

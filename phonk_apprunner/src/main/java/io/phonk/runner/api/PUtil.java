@@ -29,7 +29,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.FaceDetector;
-import android.os.Handler;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -42,6 +41,11 @@ import android.view.animation.LinearInterpolator;
 
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Map;
+
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.other.PDelay;
 import io.phonk.runner.api.other.PLooper;
@@ -52,11 +56,6 @@ import io.phonk.runner.apidoc.annotation.ProtoObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
 @ProtoObject
 public class PUtil extends ProtoBase {

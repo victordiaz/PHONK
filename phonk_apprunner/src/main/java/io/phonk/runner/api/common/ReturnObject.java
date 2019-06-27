@@ -23,12 +23,13 @@
 package io.phonk.runner.api.common;
 
 import org.mozilla.javascript.Scriptable;
-import io.phonk.runner.base.ProtoSingleton;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import io.phonk.runner.base.ProtoSingleton;
 
 // http://stackoverflow.com/questions/7519399/how-to-convert-java-map-to-a-basic-javascript-object
 public class ReturnObject implements Scriptable, Map {

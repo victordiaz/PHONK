@@ -42,8 +42,6 @@ import android.nfc.tech.NfcF;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -51,8 +49,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 import io.phonk.runner.api.PDevice;
 import io.phonk.runner.api.PMedia;
@@ -66,9 +70,6 @@ import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.StrUtils;
 import io.phonk.runner.events.Events;
 import io.phonk.runner.models.Project;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class AppRunnerActivity extends BaseActivity {
 

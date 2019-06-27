@@ -30,14 +30,14 @@ import android.content.SharedPreferences;
 
 import com.google.gson.reflect.TypeToken;
 
-import io.phonk.runner.base.services.AlarmReceiver;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import io.phonk.runner.base.services.AlarmReceiver;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.models.Project;
 
 public class SchedulerManager {
 

@@ -34,6 +34,9 @@ import android.widget.Toast;
 
 import org.mozilla.javascript.NativeArray;
 
+import java.util.Set;
+import java.util.UUID;
+
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
@@ -43,9 +46,6 @@ import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
-
-import java.util.Set;
-import java.util.UUID;
 
 public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
