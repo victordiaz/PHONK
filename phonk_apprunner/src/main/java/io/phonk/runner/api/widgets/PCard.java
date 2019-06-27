@@ -53,8 +53,8 @@ public class PCard extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.pwidget_card, this, true);
 
-        title = (TextView) findViewById(R.id.cardTitle);
-        cardLl = (LinearLayout) findViewById(R.id.cardWidgets);
+        title = findViewById(R.id.cardTitle);
+        cardLl = findViewById(R.id.cardWidgets);
 
     }
 
@@ -100,7 +100,7 @@ public class PCard extends LinearLayout {
     @ProtoMethod(description = "Card with horizontal views", example = "")
     @ProtoMethodParam(params = {""})
     public void setHorizontal() {
-        LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
+        LinearLayout ll = findViewById(R.id.cardWidgets);
         ll.setOrientation(LinearLayout.HORIZONTAL);
     }
 
@@ -108,7 +108,7 @@ public class PCard extends LinearLayout {
     @ProtoMethod(description = "Card with vertical views", example = "")
     @ProtoMethodParam(params = {""})
     public void setVertical() {
-        LinearLayout ll = (LinearLayout) findViewById(R.id.cardWidgets);
+        LinearLayout ll = findViewById(R.id.cardWidgets);
         ll.setOrientation(LinearLayout.VERTICAL);
     }
 

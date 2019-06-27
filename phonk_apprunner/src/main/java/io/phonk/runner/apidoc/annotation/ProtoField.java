@@ -35,8 +35,8 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface ProtoField {
 
-    public String description() default "";
+    String description() default "";
 
-    public String example() default "";
+    String example() default "";
 
 }

@@ -179,7 +179,7 @@ public class AppRunnerActivity extends BaseActivity {
         // add AppRunnerFragment
         mAppRunnerFragment = AppRunnerFragment.newInstance(mBundle, scriptSettings);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FrameLayout fl = (FrameLayout) findViewById(R.id.apprunner_fragment);
+        FrameLayout fl = findViewById(R.id.apprunner_fragment);
         ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
         ft.commit();
     }
@@ -233,7 +233,7 @@ public class AppRunnerActivity extends BaseActivity {
 
         unregisterEventBus();
 
-        Intent i = new Intent("org.protocoder.intent.CLOSED");
+        Intent i = new Intent("io.phonk.intent.CLOSED");
         sendBroadcast(i);
     }
 
@@ -270,7 +270,7 @@ public class AppRunnerActivity extends BaseActivity {
     private void addDebugFragment() {
         mDebugFragment = DebugFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FrameLayout fl = (FrameLayout) findViewById(R.id.debug_fragment);
+        FrameLayout fl = findViewById(R.id.debug_fragment);
         ft.add(fl.getId(), mDebugFragment, String.valueOf(fl.getId()));
         ft.commit();
 
@@ -497,16 +497,11 @@ public class AppRunnerActivity extends BaseActivity {
     public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) { onVoiceRecognitionListener = onVoiceRecognitionListener2; }
 
     public boolean checkBackKey(int keyCode) {
-        if (ignoreBackEnabled && keyCode == KeyEvent.KEYCODE_BACK) return true;
-        else return false;
+        return ignoreBackEnabled && keyCode == KeyEvent.KEYCODE_BACK;
     }
 
     public boolean checkVolumeKeys(int keyCode) {
-        if (ignoreVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-            return true;
-        } else {
-            return false;
-        }
+        return ignoreVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -522,7 +517,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Subscribe
     public void onEventMainThread(Events.LogEvent e) {
-        Intent i = new Intent("org.protocoder.intent.CONSOLE");
+        Intent i = new Intent("io.phonk.intent.CONSOLE");
 
         String action = e.getAction();
         String time = e.getTime();
@@ -544,7 +539,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     public void startStopActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoderrunner.intent.CLOSE");
+        filterSend.addAction("io.phonk.intent.CLOSE");
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
@@ -560,7 +555,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     public void executeCodeActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoderrunner.intent.EXECUTE_CODE");
+        filterSend.addAction("io.phonkrunner.intent.EXECUTE_CODE");
         registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 

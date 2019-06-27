@@ -96,7 +96,7 @@ public class PMqtt extends ProtoBase {
                     ReturnObject ret = new ReturnObject();
                     ret.put("status", "publish");
                     ret.put("topic", topic);
-                    ret.put("data", data.toString());
+                    ret.put("data", data);
                     mCallback.event(ret);
                 }
 
@@ -173,7 +173,7 @@ public class PMqtt extends ProtoBase {
     }
 
     public PMqtt unsubscribe(final String topic) {
-        UTF8Buffer topics[] = new UTF8Buffer[1];
+        UTF8Buffer[] topics = new UTF8Buffer[1];
         topics[0] = new UTF8Buffer(topic);
 
         mConnection.unsubscribe(topics, new Callback<Void>() {

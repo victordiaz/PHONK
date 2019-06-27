@@ -33,7 +33,7 @@ public class PEvents extends ProtoBase {
     ArrayList<EventItem> eventsList;
 
     public interface EventCB {
-        public void event(NativeObject obj);
+        void event(NativeObject obj);
 
     }
 

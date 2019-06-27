@@ -80,7 +80,7 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
                 prevVal = val;
                 return true;
             case MotionEvent.ACTION_MOVE:
-                float delta = (float) y - firstY;
+                float delta = y - firstY;
                 val = prevVal - delta;
                 if (val < 0) val = 0;
                 if (val > mHeight) val = mHeight;
@@ -169,7 +169,7 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
             c.noStroke();
             mPaintFill.setTypeface(Typeface.MONOSPACE);
 
-            if (autoTextSize) c.textSize((int) (diameter / 5));
+            if (autoTextSize) c.textSize((diameter / 5));
             else c.textSize(AndroidUtils.spToPixels(getContext(), (int) styler.textSize));
 
             c.drawTextCentered("" + Math.round(mappedVal));

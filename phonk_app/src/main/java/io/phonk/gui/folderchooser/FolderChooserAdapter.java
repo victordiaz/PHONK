@@ -50,11 +50,11 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
 
             switch (viewType) {
                 case FolderAdapterData.TYPE_TITLE:
-                    textView = (TextView) v.findViewById(R.id.textType);
+                    textView = v.findViewById(R.id.textType);
 
                     break;
                 case (FolderAdapterData.TYPE_FOLDER_NAME):
-                    textView = (TextView) v.findViewById(R.id.textFolder);
+                    textView = v.findViewById(R.id.textFolder);
 
                     break;
             }

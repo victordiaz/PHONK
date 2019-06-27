@@ -79,7 +79,7 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
     public void connectSerial() {
         final NativeArray nativeArray = mPBluetooth.getBondedDevices();
-        String[] arrayStrings = new String[(int) nativeArray.size()];
+        String[] arrayStrings = new String[nativeArray.size()];
         for (int i = 0; i < nativeArray.size(); i++) {
             ReturnObject o = (ReturnObject) nativeArray.get(i, null);
             arrayStrings[i] = o.get("name") + " " + o.get("mac");
@@ -225,12 +225,12 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
 
             // Get mContext BluetoothSocket for mContext connection with the given BluetoothDevice
             try {
-                tmpSocket = device.createRfcommSocketToServiceRecord(mPBluetooth.UUID_SPP);
+                tmpSocket = device.createRfcommSocketToServiceRecord(PBluetooth.UUID_SPP);
                 MLog.d(TAG, "socketTmp " + tmpSocket);
             } catch (IOException e) {
                 Log.e(TAG, "create socket failed, trying with new fallback", e);
 
-                Method m = device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
+                Method m = device.getClass().getMethod("createRfcommSocket", int.class);
                 tmpSocket = (BluetoothSocket) m.invoke(device, 1);
                 MLog.d(TAG, "socketTmp 2" + tmpSocket);
             }

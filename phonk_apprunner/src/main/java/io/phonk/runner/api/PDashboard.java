@@ -56,7 +56,7 @@ public class PDashboard extends ProtoBase {
 
         // register log broadcast
         IntentFilter filterSendDashboard = new IntentFilter();
-        filterSendDashboard.addAction("org.protocoder.intent.WEBEDITOR_RECEIVER");
+        filterSendDashboard.addAction("io.phonk.intent.WEBEDITOR_RECEIVER");
         appRunner.getAppContext().registerReceiver(dashboardBroadcastReceiver, filterSendDashboard);
 
         mDashboard = new PDashboardMainObject(getAppRunner(), mDashboardServer);

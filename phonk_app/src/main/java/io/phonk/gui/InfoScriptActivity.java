@@ -57,7 +57,7 @@ public class InfoScriptActivity extends BaseActivity {
             mCurrentProject = new Project(folder, name);
         }
 
-        mLicenseList = (LinearLayout) findViewById(R.id.properties_list);
+        mLicenseList = findViewById(R.id.properties_list);
         // mProjectNameTxt = (TextView) findViewById(R.id.projectName);
         // mProjectNameTxt.setText("Project Info: " + mCurrentProject.name);
 
@@ -70,8 +70,8 @@ public class InfoScriptActivity extends BaseActivity {
                 MLog.d(TAG, entry.getKey() + entry.getValue().toString());
 
                 View v = getLayoutInflater().inflate(R.layout.infoscript_keyvalue_view, null);
-                TextView txtKey = (TextView) v.findViewById(R.id.key);
-                EditText txtValue = (EditText) v.findViewById(R.id.value);
+                TextView txtKey = v.findViewById(R.id.key);
+                EditText txtValue = v.findViewById(R.id.value);
                 txtKey.setText(entry.getKey());
                 txtValue.setText(entry.getValue().toString());
 

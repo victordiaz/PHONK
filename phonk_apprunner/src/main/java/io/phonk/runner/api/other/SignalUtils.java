@@ -31,7 +31,7 @@ import io.phonk.runner.base.utils.FFT;
 public class SignalUtils extends ProtoBase {
 
     FFT fft;
-    double im[];
+    double[] im;
 
     public SignalUtils(AppRunner appRunner, int n) {
         super(appRunner);

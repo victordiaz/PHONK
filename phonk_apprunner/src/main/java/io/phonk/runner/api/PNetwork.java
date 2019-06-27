@@ -156,7 +156,7 @@ public class PNetwork extends ProtoBase {
 
     @ProtoMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
     public void downloadWithSystemManager(String url, final ReturnInterface callback) {
-        final DownloadManager dm = (DownloadManager) getContext().getSystemService(getContext().DOWNLOAD_SERVICE);
+        final DownloadManager dm = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         final long enqueue = dm.enqueue(request);
 
@@ -355,7 +355,7 @@ public class PNetwork extends ProtoBase {
     @ProtoMethod(description = "Send an E-mail. It requires passing a configuration object with (host, user, password, port, auth, ttl) parameters", example = "")
     @ProtoMethodParam(params = {"url", "function(data)"})
     public void sendEmail(String from, String to, String subject, String text, final HashMap<String, String> emailSettings)
-            throws AddressException, MessagingException {
+            throws MessagingException {
 
         if (emailSettings == null) {
             return;
@@ -526,9 +526,9 @@ public class PNetwork extends ProtoBase {
                     NativeObject o = (NativeObject) parts.get(i);
 
                     // go through elements
-                    String name = (String) o.get("name").toString();
-                    String content = (String) o.get("content").toString();
-                    String type = (String) o.get("type").toString();
+                    String name = o.get("name").toString();
+                    String content = o.get("content").toString();
+                    String type = o.get("type").toString();
 
                     if (type.equals("file")) {
                         String mediaType = (String) o.get("mediaType");
@@ -779,7 +779,7 @@ public class PNetwork extends ProtoBase {
     @ProtoMethodParam(params = {"boolean, apName"})
     public void wifiAP(boolean enabled, String wifiName) {
 
-        WifiManager wifi = (WifiManager) getContext().getSystemService(getContext().WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
         Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
         for (Method method : wmMethods) {

@@ -42,7 +42,7 @@ public class AboutActivity extends BaseActivity {
 
         setupActivity();
 
-        FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentWebview);
+        FrameLayout fl = findViewById(R.id.fragmentWebview);
         fl.setVisibility(View.VISIBLE);
         MLog.d(TAG, "using webide");
         APIWebviewFragment webViewFragment = new APIWebviewFragment();

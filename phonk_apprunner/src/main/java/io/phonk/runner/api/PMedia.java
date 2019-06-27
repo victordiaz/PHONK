@@ -52,6 +52,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.media.PAudioPlayer;
@@ -191,7 +192,7 @@ public class PMedia extends ProtoBase {
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
             intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, "Tell me something!");
-            getActivity().startActivityForResult(intent, getActivity().VOICE_RECOGNITION_REQUEST_CODE);
+            getActivity().startActivityForResult(intent, AppRunnerActivity.VOICE_RECOGNITION_REQUEST_CODE);
         } else {
             final SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(getContext());
 
@@ -275,7 +276,7 @@ public class PMedia extends ProtoBase {
     }
 
     public interface onVoiceRecognitionListener {
-        public void onNewResult(ArrayList<String> text);
+        void onNewResult(ArrayList<String> text);
     }
 
     @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")

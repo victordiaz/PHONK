@@ -97,7 +97,7 @@ public class UserPreferences {
     }
 
     public void save() {
-        String p = gson.toJson(pref).toString();
+        String p = gson.toJson(pref);
         FileIO.saveStringToFile(p, PhonkSettings.getPrefUrl());
     }
 

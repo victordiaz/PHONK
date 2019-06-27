@@ -44,12 +44,12 @@ android {
         	minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.releaseConfig;
+            signingConfig signingConfigs.releaseConfig
             zipAlignEnabled true
         }
 
         debug {
-            debuggable true;
+            debuggable true
             //applicationIdSuffix ".nineteen";
         }
     }

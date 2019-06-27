@@ -48,7 +48,7 @@ public class OSC {
     protected static final String TAG = "OSC";
 
     public interface OSCServerListener {
-        public void onMessage(OSCMessage msg);
+        void onMessage(OSCMessage msg);
     }
 
     public class Server {

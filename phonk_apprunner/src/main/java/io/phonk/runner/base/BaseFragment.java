@@ -32,8 +32,8 @@ public abstract class BaseFragment extends Fragment {
     private static final String TAG = BaseFragment.class.getSimpleName();
 
     public interface FragmentListener {
-        public void onReady();
-        public void onFinish(boolean finished);
+        void onReady();
+        void onFinish(boolean finished);
     }
 
     FragmentListener fragmentListener;

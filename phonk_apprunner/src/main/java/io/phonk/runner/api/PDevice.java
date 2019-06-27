@@ -333,7 +333,7 @@ public class PDevice extends ProtoBase {
 
                 // Process the sms format and extract body and phone number
                 msg = msg.replace("\n", "");
-                String body = msg.substring(msg.lastIndexOf(":") + 1, msg.length());
+                String body = msg.substring(msg.lastIndexOf(":") + 1);
                 String pNumber = msg.substring(0, msg.lastIndexOf(":"));
 
                 ReturnObject ret = new ReturnObject();
@@ -621,11 +621,7 @@ public class PDevice extends ProtoBase {
 
                 if (status == BatteryManager.BATTERY_PLUGGED_AC) {
                     isConnected = true;
-                } else if (status == BatteryManager.BATTERY_PLUGGED_USB) {
-                    isConnected = true;
-                } else {
-                    isConnected = false;
-                }
+                } else isConnected = status == BatteryManager.BATTERY_PLUGGED_USB;
 
                 ReturnObject o = new ReturnObject();
 
@@ -820,7 +816,7 @@ public class PDevice extends ProtoBase {
      */
     @ProtoMethod
     public List listInstalledApps() {
-        ArrayList<ApplicationInfo> mApplications = new ArrayList<ApplicationInfo>();;
+        ArrayList<ApplicationInfo> mApplications = new ArrayList<ApplicationInfo>();
 
         // get installed apps
         PackageManager pm = getContext().getPackageManager();

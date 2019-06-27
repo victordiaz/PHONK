@@ -106,7 +106,7 @@ public class SchedulerManager {
     }
 
     public SchedulerManager loadTasks() {
-        mPreferences = c.getSharedPreferences("org.protocoder.scheduler", c.MODE_PRIVATE);
+        mPreferences = c.getSharedPreferences("io.phonk.scheduler", Context.MODE_PRIVATE);
         String tasksString = mPreferences.getString("tasks", "");
         tasks = ProtoSingleton.getInstance().getGson().fromJson(tasksString, new TypeToken<ArrayList<Task>>(){}.getType());
 

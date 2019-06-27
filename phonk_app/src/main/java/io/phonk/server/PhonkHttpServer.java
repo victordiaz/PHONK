@@ -142,7 +142,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         Response res = null;
 
         String uri = session.getUri();
-        String uriSplitted[] = uri.split("/");
+        String[] uriSplitted = uri.split("/");
 
         HashMap<String, String> cmd;
 
@@ -173,7 +173,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 // MLog.d("list", jsonFiles);
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
             } else if (uriSplitted[COMMAND].equals("execute_code")) {
                 // MLog.d(TAG, "run code");
 
@@ -210,7 +210,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 arrayList.add("slider");
                 arrayList.add("knob");
                 String json = gson.toJson(arrayList);
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
             } else if (uriSplitted[COMMAND].equals("views_get_all")) {
                 if (views == null) {
                     res = newFixedLengthResponse("NOP");
@@ -290,7 +290,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 String json = gson.toJson(neo);
 
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
                 String path = "";
@@ -329,7 +329,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 MLog.d("list", jsonFiles);
                 EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles.toString());
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
 
             } else if (uriSplitted[FILE_ACTION].equals("view")) {
                 String fileName = uriSplitted[FILE_NAME];
@@ -368,7 +368,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 // MLog.d(TAG, json);
 
                 // EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json.toString());
+                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
             } else if (uriSplitted[FILE_ACTION].equals("create")) {
                 final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
 
@@ -541,7 +541,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         uri = uri.trim().replace(File.separatorChar, '/');
         if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
         if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
-        if (uri.charAt(0) == '/') uri = uri.substring(1, uri.length()); // using assets, so we can't have leading '/'
+        if (uri.charAt(0) == '/') uri = uri.substring(1); // using assets, so we can't have leading '/'
 
         String mime = getMimeType(uri); // Get MIME type
 

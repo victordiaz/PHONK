@@ -38,7 +38,7 @@ public class PWave extends ProtoBase {
     private boolean isRunning = true;
 
     AudioTrack audioTrack;
-    short samples[];
+    short[] samples;
 
     private float mFreq;
     private float mPeriod;

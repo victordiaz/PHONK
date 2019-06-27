@@ -70,13 +70,13 @@ public class ProjectAdapterViewItem extends LinearLayout {
 
         if (listMode) {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_list, this, true);
-            this.txtProjectIcon = (TextView) findViewById(R.id.txtProjectIcon);
+            this.txtProjectIcon = findViewById(R.id.txtProjectIcon);
         } else {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_grid, this, true);
         }
 
-        textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
-        customIcon = (ImageView) mItemView.findViewById(R.id.iconImg);
+        textViewName = mItemView.findViewById(R.id.customViewText);
+        customIcon = mItemView.findViewById(R.id.iconImg);
 
         this.setOnClickListener(new OnClickListener() {
             @Override
@@ -111,7 +111,7 @@ public class ProjectAdapterViewItem extends LinearLayout {
     boolean isPlayOnPress = true;
 
     public void setMenu() {
-        mMenuButton = (ImageView) findViewById(R.id.card_menu_button);
+        mMenuButton = findViewById(R.id.card_menu_button);
 
         // show / hide right menu
         if (!isPlayOnPress) mMenuButton.setVisibility(View.GONE);

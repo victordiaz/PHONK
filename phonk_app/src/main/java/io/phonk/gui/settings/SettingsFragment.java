@@ -97,7 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 prefDeviceId.setText((String) newValue);
-                mUserPreferences.set("device_id", (String) newValue).save();
+                mUserPreferences.set("device_id", newValue).save();
                 return false;
             }
         });
@@ -188,7 +188,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 prefLaunchScript.setText((String) newValue);
-                mUserPreferences.set("launch_on_device_boot", (String) newValue).save();
+                mUserPreferences.set("launch_on_device_boot", newValue).save();
                 return false;
             }
         });

@@ -23,11 +23,11 @@
 package io.phonk.runner.base.hardware;
 
 public interface HardwareCallback {
-    public void onConnect(Object obj);
+    void onConnect(Object obj);
 
-    public void setup();
+    void setup();
 
-    public void loop();
+    void loop();
 
-    public void onComplete();
+    void onComplete();
 }

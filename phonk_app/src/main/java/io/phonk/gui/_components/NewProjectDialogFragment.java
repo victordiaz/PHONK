@@ -68,7 +68,7 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
                 });
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.newproject_dialog, null);
-        mEditText = (EditText) view.findViewById(R.id.dialog_new_project_name_input);
+        mEditText = view.findViewById(R.id.dialog_new_project_name_input);
 
         // Show soft keyboard automatically
         mEditText.requestFocus();

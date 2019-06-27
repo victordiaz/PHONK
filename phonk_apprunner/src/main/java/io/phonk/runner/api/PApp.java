@@ -76,10 +76,10 @@ public class PApp extends ProtoBase {
     public Bundle intentData;
 
     public interface onAppStatus {
-        public void onStart();
-        public void onPause();
-        public void onResume();
-        public void onStop();
+        void onStart();
+        void onPause();
+        void onResume();
+        void onStop();
     }
 
     public PApp(AppRunner appRunner) {
@@ -189,7 +189,7 @@ public class PApp extends ProtoBase {
         NotificationCompat.Builder mBuilder;
 
         Notification () {
-            mNotificationManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
         public Notification create(Map map) {

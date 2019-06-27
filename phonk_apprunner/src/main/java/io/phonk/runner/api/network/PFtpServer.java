@@ -59,7 +59,7 @@ public class PFtpServer {
 
 
     public interface FtpServerCb {
-        public void event(String status);
+        void event(String status);
     }
 
     public PFtpServer(int port, FtpServerCb callback) {

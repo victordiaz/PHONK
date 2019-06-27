@@ -77,7 +77,7 @@ public class APIManager {
             MLog.d(TAG, "" + c.getName());
 
             // getting all the methods
-            Method m[] = c.getDeclaredMethods();
+            Method[] m = c.getDeclaredMethods();
             for (Method element : m) {
 
                 // get method
@@ -91,13 +91,13 @@ public class APIManager {
                 String[] paramsType = new String[param.length];
 
                 for (int j = 0; j < param.length; j++) {
-                    String p = param[j].getSimpleName().toString();
+                    String p = param[j].getSimpleName();
                     paramsType[j] = p;
                 }
                 apiMethod.paramsType = paramsType;
 
                 // return type
-                apiMethod.returnType = element.getReturnType().getSimpleName().toString();
+                apiMethod.returnType = element.getReturnType().getSimpleName();
 
                 // get method information
                 if (apiMethod.name.contains("$") == false) {
@@ -176,7 +176,7 @@ public class APIManager {
         Gson gson = new Gson();
         String json = gson.toJson(doc);
 
-        return json.toString();
+        return json;
     }
 
     public void clear() {

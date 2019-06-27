@@ -167,11 +167,7 @@ public class TouchAreaView extends View {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                if (xPointer > 0 && xPointer < mWidth && yPointer > 0 && yPointer < mHeight) {
-                    touching = true;
-                } else {
-                    touching = false;
-                }
+                touching = xPointer > 0 && xPointer < mWidth && yPointer > 0 && yPointer < mHeight;
                 break;
 
         }
@@ -194,7 +190,7 @@ public class TouchAreaView extends View {
     }
 
     public interface OnTouchAreaListener {
-        public abstract void onTouch(TouchAreaView touchAreaView, boolean touching, float xPointer, float yPointer);
+        void onTouch(TouchAreaView touchAreaView, boolean touching, float xPointer, float yPointer);
     }
 
     void printSamples(MotionEvent ev) {

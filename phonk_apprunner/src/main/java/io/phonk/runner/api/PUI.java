@@ -389,8 +389,8 @@ public class PUI extends ProtoBase {
 
                 // send event
                 MLog.d("views", "sending event");
-                Intent i = new Intent("org.protocoder.intent.VIEWS_UPDATE");
-                i.putExtra("views", json.toString());
+                Intent i = new Intent("io.phonk.intent.VIEWS_UPDATE");
+                i.putExtra("views", json);
                 mAppRunner.getAppContext().sendBroadcast(i);
 
             }

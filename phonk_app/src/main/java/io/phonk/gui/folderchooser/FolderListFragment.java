@@ -82,7 +82,7 @@ public class FolderListFragment extends BaseFragment {
         }
 
         // Attach the adapter with the folders data
-        mFolderRecyclerView = (ResizableRecyclerView) v.findViewById(R.id.folderList);
+        mFolderRecyclerView = v.findViewById(R.id.folderList);
         mFolderRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mFolderRecyclerView.setLayoutManager(linearLayoutManager);
@@ -90,7 +90,7 @@ public class FolderListFragment extends BaseFragment {
         mFolderRecyclerView.setAdapter(folderChooserAdapter);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
-        LinearLayout llChooseFolder = (LinearLayout) v.findViewById(R.id.choosefolder);
+        LinearLayout llChooseFolder = v.findViewById(R.id.choosefolder);
         if (mIsTablet) llChooseFolder.setVisibility(View.GONE);
 
         return v;

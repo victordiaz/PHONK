@@ -50,11 +50,11 @@ public class VideoPlayerFragment extends VideoView {
 
     public interface VideoListener {
 
-        public void onReady(boolean ready);
+        void onReady(boolean ready);
 
-        public void onFinish(boolean finished);
+        void onFinish(boolean finished);
 
-        public void onTimeUpdate(int ms, int totalDuration);
+        void onTimeUpdate(int ms, int totalDuration);
     }
 
     /**

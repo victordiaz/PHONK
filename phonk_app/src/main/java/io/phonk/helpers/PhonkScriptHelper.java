@@ -358,7 +358,7 @@ public class PhonkScriptHelper {
 
     public static ArrayList<ProtoFile> listFilesInProject(Project p) {
         File f = new File(p.getSandboxPath());
-        File file[] = f.listFiles();
+        File[] file = f.listFiles();
 
         ArrayList<ProtoFile> protoFiles = new ArrayList<>();
 
@@ -378,7 +378,7 @@ public class PhonkScriptHelper {
 
     public void listProcesses(Context context) {
         ActivityManager actvityManager = (ActivityManager)
-                context.getSystemService( context.ACTIVITY_SERVICE );
+                context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
 
         for(ActivityManager.RunningAppProcessInfo runningProInfo:procInfos) {

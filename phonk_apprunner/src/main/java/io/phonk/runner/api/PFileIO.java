@@ -287,7 +287,7 @@ public class PFileIO extends ProtoBase {
     @ProtoMethod(description = "List all the files with a given extension", example = "")
     @ProtoMethodParam(params = {"fileName"})
     public PhonkNativeArray list(String path, String filter) {
-        File files[] = FileIO.listFiles(getAppRunner().getProject().getFullPathForFile(path), filter);
+        File[] files = FileIO.listFiles(getAppRunner().getProject().getFullPathForFile(path), filter);
 
         PhonkNativeArray nativeArray = new PhonkNativeArray(files.length);
         for (int i = 0; i < files.length; i++) {

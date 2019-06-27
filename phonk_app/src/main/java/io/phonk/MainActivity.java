@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity {
         startBroadCastReceiver();
 
         // send appIsClosed
-        Intent i = new Intent("org.protocoder.intent.CLOSED");
+        Intent i = new Intent("io.phonk.intent.CLOSED");
         sendBroadcast(i);
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity {
         removeFragment(mProjectListFragment);
         removeFragment(mFolderListFragment);
         if (mCombinedFolderAndProjectFragment != null) removeFragment(mCombinedFolderAndProjectFragment);
-        RelativeLayout mainContent = (RelativeLayout) findViewById(R.id.main_content);
+        RelativeLayout mainContent = findViewById(R.id.main_content);
         mainContent.removeAllViews();
         super.onConfigurationChanged(newConfig);
         loadUI();
@@ -213,12 +213,12 @@ public class MainActivity extends BaseActivity {
             mUiInit = true;
         }
 
-        mHeader = (RelativeLayout) findViewById(R.id.header);
-        mHeader2 = (RelativeLayout) findViewById(R.id.textgroup2);
+        mHeader = findViewById(R.id.header);
+        mHeader2 = findViewById(R.id.textgroup2);
 
-        mConnectionInfo = (RelativeLayout) findViewById(R.id.ip_container);
+        mConnectionInfo = findViewById(R.id.ip_container);
 
-        mToggleConnectionInfo = (ImageButton) findViewById(R.id.toggleConnectionInfo);
+        mToggleConnectionInfo = findViewById(R.id.toggleConnectionInfo);
         mToggleConnectionInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,7 +228,7 @@ public class MainActivity extends BaseActivity {
         });
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -259,7 +259,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        final ImageButton moreOptionsButton = (ImageButton) findViewById(R.id.more_options);
+        final ImageButton moreOptionsButton = findViewById(R.id.more_options);
         moreOptionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -299,7 +299,7 @@ public class MainActivity extends BaseActivity {
 
         if (mWebViewFragment != null) return;
 
-        FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentEditor);
+        FrameLayout fl = findViewById(R.id.fragmentEditor);
         fl.setVisibility(View.VISIBLE);
         MLog.d(TAG, "using webide");
         mWebViewFragment = new APIWebviewFragment();
@@ -366,10 +366,10 @@ public class MainActivity extends BaseActivity {
     private void startBroadCastReceiver() {
         if (PhonkSettings.DEBUG) {
             //execute commands from intents
-            //ie: adb shell am broadcast -a org.protocoder.intent.EXECUTE --es cmd "device.vibrate(100)"
+            //ie: adb shell am broadcast -a io.phonk.intent.EXECUTE --es cmd "device.vibrate(100)"
 
             IntentFilter filterSend = new IntentFilter();
-            filterSend.addAction("org.protocoder.intent.EXECUTE");
+            filterSend.addAction("io.phonk.intent.EXECUTE");
             registerReceiver(adbBroadcastReceiver, filterSend);
         }
     }

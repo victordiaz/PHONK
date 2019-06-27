@@ -53,7 +53,7 @@ public class SchedulerActivity extends BaseActivity {
         SchedulerManager schedulerManager = new SchedulerManager(this, null);
         tasks = schedulerManager.loadTasks().getTasks();
 
-        mScheduleTasks = (ListView) findViewById(R.id.task_list);
+        mScheduleTasks = findViewById(R.id.task_list);
         final MyAdapter myAdapter = new MyAdapter(this, tasks);
         mScheduleTasks.setAdapter(myAdapter);
 
@@ -80,13 +80,13 @@ public class SchedulerActivity extends BaseActivity {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.scheduler_task_item, parent, false);
             }
 
-            TextView txtTaskProjectName = (TextView) convertView.findViewById(R.id.txtTaskProjectName);
-            TextView txtTaskId = (TextView) convertView.findViewById(R.id.txtTaskId);
-            TextView txtTaskType = (TextView) convertView.findViewById(R.id.txtTaskType);
-            TextView txtTaskWhen = (TextView) convertView.findViewById(R.id.txtTaskWhen);
-            TextView txtTaskInterval = (TextView) convertView.findViewById(R.id.txtTaskInterval);
-            CheckBox bRepeating = (CheckBox) convertView.findViewById(R.id.bTaskRepeating);
-            CheckBox bWakeUpScreen = (CheckBox) convertView.findViewById(R.id.bTaskWakeUpScreen);
+            TextView txtTaskProjectName = convertView.findViewById(R.id.txtTaskProjectName);
+            TextView txtTaskId = convertView.findViewById(R.id.txtTaskId);
+            TextView txtTaskType = convertView.findViewById(R.id.txtTaskType);
+            TextView txtTaskWhen = convertView.findViewById(R.id.txtTaskWhen);
+            TextView txtTaskInterval = convertView.findViewById(R.id.txtTaskInterval);
+            CheckBox bRepeating = convertView.findViewById(R.id.bTaskRepeating);
+            CheckBox bWakeUpScreen = convertView.findViewById(R.id.bTaskWakeUpScreen);
 
             SchedulerManager.Task task = getItem(position);
 

@@ -181,9 +181,9 @@ public class Styler {
 
     private void fromTo(Map<String, Object> styleFrom, StyleProperties styleTo) {
         for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
-            MLog.d(TAG, "" + entry.getKey().toString() + " " + entry.getValue());
+            MLog.d(TAG, "" + entry.getKey() + " " + entry.getValue());
 
-            styleTo.put(entry.getKey().toString(), styleTo, entry.getValue());
+            styleTo.put(entry.getKey(), styleTo, entry.getValue());
         }
     }
 

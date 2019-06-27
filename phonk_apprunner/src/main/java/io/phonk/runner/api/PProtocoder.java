@@ -251,12 +251,12 @@ public class PProtocoder extends ProtoBase {
 
 
     @ProtoMethod(description = "Install a Proto app programatically", example = "")
-    public void installProtoApp(String src, boolean b) {
+    public void installPhonkApp(String src, boolean b) {
         //TODO reenable this
         final String projectPath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath();
 
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName("org.protocoder", "org.protocoder.ProtoAppInstallerActivity"));
+        intent.setComponent(new ComponentName("io.phonk", "io.phonk.PhonkAppInstallerActivity"));
         intent.setData(Uri.parse(projectPath + "/" + src));
         intent.putExtra("autoInstall", b);
         // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

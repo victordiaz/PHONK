@@ -33,6 +33,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class SysFs {
 
@@ -58,7 +59,7 @@ public class SysFs {
                     Log.i(TAG, "Could not write to " + filename + " (exit: " + p.exitValue() + ")");
                     InputStream in = p.getErrorStream();
                     StringBuilder sb = new StringBuilder();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
                     String line = bufferedReader.readLine();
                     while (line != null) {
                         sb.append(line);

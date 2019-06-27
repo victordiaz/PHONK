@@ -50,6 +50,7 @@ import io.phonk.runner.apprunner.AppRunnerSettings;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class AndroidUtils {
      * Show an event in the LogCat view, for debugging
      */
     public static void dumpMotionEvent(MotionEvent event) {
-        String names[] = {"DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?"};
+        String[] names = {"DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?"};
         StringBuilder sb = new StringBuilder();
         int action = event.getAction();
         int actionCode = action & MotionEvent.ACTION_MASK;
@@ -425,7 +426,7 @@ public class AndroidUtils {
 
     public static String sha1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
-        md.update(text.getBytes("iso-8859-1"), 0, text.length());
+        md.update(text.getBytes(StandardCharsets.ISO_8859_1), 0, text.length());
         byte[] sha1hash = md.digest();
         return convertToHex(sha1hash);
     }

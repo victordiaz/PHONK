@@ -51,7 +51,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface FtpConnectedCb {
-        public void event(boolean connected);
+        void event(boolean connected);
     }
 
 
@@ -87,7 +87,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface GetCurrentDirCb {
-        public void event(String msg);
+        void event(String msg);
     }
 
 
@@ -113,7 +113,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface ChangeDirectoryCb {
-        public void event(boolean msg);
+        void event(boolean msg);
     }
 
 
@@ -135,7 +135,7 @@ public class PFtpClient extends ProtoBase {
 
 
     public interface GetFileListCb {
-        public void event(ArrayList<ListDir> msg);
+        void event(ArrayList<ListDir> msg);
     }
 
     class ListDir {
@@ -179,7 +179,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface DownloadFiletCb {
-        public void event(boolean msg);
+        void event(boolean msg);
     }
 
 
@@ -209,7 +209,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface UploadCb {
-        public void event(boolean msg);
+        void event(boolean msg);
     }
 
 
@@ -248,7 +248,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface DeleteFileCb {
-        public void event(boolean msg);
+        void event(boolean msg);
     }
 
 
@@ -273,7 +273,7 @@ public class PFtpClient extends ProtoBase {
     }
 
     public interface DisconnectCb {
-        public void event(Boolean msg);
+        void event(Boolean msg);
     }
 
 

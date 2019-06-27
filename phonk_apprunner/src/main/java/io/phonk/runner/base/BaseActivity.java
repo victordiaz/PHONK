@@ -95,7 +95,7 @@ public class BaseActivity extends AppCompatActivity {
     // Create the action bar programmatically
     protected void setupActivity () {
         if (!AndroidUtils.isWear(this)) {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar2);
+            mToolbar = findViewById(R.id.toolbar2);
             setSupportActionBar(mToolbar);
             // getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
@@ -197,7 +197,7 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public void addFragment(Fragment f, int id, String tag) {
-        FrameLayout fl = (FrameLayout) findViewById(id);
+        FrameLayout fl = findViewById(id);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(fl.getId(), f, tag);
         ft.commit();

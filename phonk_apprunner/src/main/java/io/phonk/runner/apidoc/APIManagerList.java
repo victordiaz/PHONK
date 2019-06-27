@@ -64,7 +64,7 @@ public class APIManagerList {
         MLog.d(TAG, " -- adding new object with Class " + cls.getName() + " " + cls.getSimpleName());
 
         // searching fields with annotations
-        Field attr[] = cls.getDeclaredFields();
+        Field[] attr = cls.getDeclaredFields();
         MLog.d(TAG, "Declared annotations " + cls.getDeclaredAnnotations());
 
         for (int i = 0; i < attr.length; i++) {
@@ -75,7 +75,7 @@ public class APIManagerList {
             Class<?> type = attr[i].getType();
 
             // foreach annotation in this object
-            Annotation a[] = attr[i].getAnnotations();
+            Annotation[] a = attr[i].getAnnotations();
             for (int j = 0; j < a.length; j++) {
 
                 String objectName = a[j].annotationType().getSimpleName();
@@ -93,7 +93,7 @@ public class APIManagerList {
         }
 
         // ------------------ get declared methods
-        Method methods[] = cls.getDeclaredMethods();
+        Method[] methods = cls.getDeclaredMethods();
 
         for (int i = 0; i < methods.length; i++) {
 
@@ -102,7 +102,7 @@ public class APIManagerList {
             String name = methods[i].getName();
 
             // foreach annotation in this object
-            Annotation a[] = method.getAnnotations();
+            Annotation[] a = method.getAnnotations();
             for (int j = 0; j < a.length; j++) {
 
                 String objectName = a[j].annotationType().getSimpleName();

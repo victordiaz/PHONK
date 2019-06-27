@@ -65,7 +65,7 @@ public class PBluetoothServer extends ProtoBase {
 
     public PBluetoothServer start() throws IOException {
         MLog.d(TAG, "bbt Bluetooth server start");
-        mBluetoothServer = mPBluetooth.getAdapter().listenUsingRfcommWithServiceRecord(name, mPBluetooth.UUID_SPP);
+        mBluetoothServer = mPBluetooth.getAdapter().listenUsingRfcommWithServiceRecord(name, PBluetooth.UUID_SPP);
 
         mServerListenNewConnectionsThread = new ServerListenNewConnectionsThread();
         mServerListenNewConnectionsThread.start();

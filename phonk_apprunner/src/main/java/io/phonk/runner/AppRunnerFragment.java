@@ -194,17 +194,17 @@ public class AppRunnerFragment extends Fragment {
         View v = getLayoutInflater(null).inflate(R.layout.apprunner_fragment, null);
 
         // add main layout
-        mainLayout = (RelativeLayout) v.findViewById(R.id.main);
+        mainLayout = v.findViewById(R.id.main);
 
         // set the parent
-        parentScriptedLayout = (RelativeLayout) v.findViewById(R.id.scriptedLayout);
+        parentScriptedLayout = v.findViewById(R.id.scriptedLayout);
 
         liveCoding = new PLiveCodingFeedback(mContext);
         mainLayout.addView(liveCoding.add());
 
-        infoLayout = (RelativeLayout) v.findViewById(R.id.infoLayout);
-        txtTitle = (TextView) v.findViewById(R.id.txtTitle);
-        txtSubtitle = (TextView) v.findViewById(R.id.txtSubtitle);
+        infoLayout = v.findViewById(R.id.infoLayout);
+        txtTitle = v.findViewById(R.id.txtTitle);
+        txtSubtitle = v.findViewById(R.id.txtSubtitle);
 
         return mainLayout;
     }

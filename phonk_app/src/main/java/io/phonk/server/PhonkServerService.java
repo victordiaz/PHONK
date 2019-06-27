@@ -251,12 +251,12 @@ public class PhonkServerService extends Service {
 
         // register log broadcast
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoder.intent.CONSOLE");
+        filterSend.addAction("io.phonk.intent.CONSOLE");
         registerReceiver(logBroadcastReceiver, filterSend);
 
         // register webide broadcast
         IntentFilter filterWebEditorSend = new IntentFilter();
-        filterWebEditorSend.addAction("org.protocoder.intent.WEBEDITOR_SEND");
+        filterWebEditorSend.addAction("io.phonk.intent.WEBEDITOR_SEND");
         registerReceiver(webEditorBroadcastReceiver, filterWebEditorSend);
         MLog.d("qq22", "registering receiver");
 
@@ -382,8 +382,7 @@ public class PhonkServerService extends Service {
     BroadcastReceiver webEditorBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, intent.getAction());
-            MLog.d("qq22", "onReceive");
+            MLog.d(TAG, "onReceive" + intent.getAction());
 
             HashMap hashMap = new HashMap();
             hashMap.put("module", "webeditor");
@@ -409,12 +408,12 @@ public class PhonkServerService extends Service {
             mProjectRunning = e.getProject();
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
             // ProtoScriptHelper.stop_all_scripts();
-            Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
+            Intent i = new Intent("io.phonkrunner.intent.CLOSE");
             sendBroadcast(i);
             PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
 
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
-            Intent i = new Intent("org.protocoderrunner.intent.CLOSE");
+            Intent i = new Intent("io.phonkrunner.intent.CLOSE");
             sendBroadcast(i);
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
@@ -433,7 +432,7 @@ public class PhonkServerService extends Service {
 
     @Subscribe
     public void onEventMainThread(Events.ExecuteCodeEvent e) {
-        Intent i = new Intent("org.protocoderrunner.intent.EXECUTE_CODE");
+        Intent i = new Intent("io.phonkrunner.intent.EXECUTE_CODE");
         i.putExtra("code", e.getCode());
         sendBroadcast(i);
     }
@@ -449,7 +448,7 @@ public class PhonkServerService extends Service {
      */
     public void startStopActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoder.intent.CLOSED");
+        filterSend.addAction("io.phonk.intent.CLOSED");
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
@@ -469,7 +468,7 @@ public class PhonkServerService extends Service {
         MLog.d("registerreceiver", "sending event");
 
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoder.intent.VIEWS_UPDATE");
+        filterSend.addAction("io.phonk.intent.VIEWS_UPDATE");
         registerReceiver(viewsUpdateBroadcastReceiver, filterSend);
     }
 

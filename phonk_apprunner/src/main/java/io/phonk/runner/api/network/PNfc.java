@@ -108,11 +108,11 @@ public class PNfc extends ProtoBase {
     }
 
     public interface onNFCWrittenListener {
-        public void onNewTag();
+        void onNewTag();
     }
 
     public interface onNFCListener {
-        public void onNewTag(String id, String nfcMessage);
+        void onNewTag(String id, String nfcMessage);
     }
 
 
@@ -130,7 +130,7 @@ public class PNfc extends ProtoBase {
         NdefRecord appRecord = NdefRecord.createApplicationRecord(context.getPackageName());
 
         // Record with actual data we care about
-        NdefRecord relayRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, new String("application/"
+        NdefRecord relayRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, ("application/"
                 + context.getPackageName()).getBytes(Charset.forName("US-ASCII")), null, data.getBytes());
 
         // Complete NDEF message with both records

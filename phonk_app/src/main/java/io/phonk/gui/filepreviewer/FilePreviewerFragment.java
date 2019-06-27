@@ -114,11 +114,11 @@ public class FilePreviewerFragment extends BaseFragment {
      * Bind the UI
      */
     private void bindUI() {
-        mEdit = (EditText) v.findViewById(R.id.editText1);
-        mImageContainer = (RelativeLayout) v.findViewById(R.id.preview_image);
-        mVideoContainer = (RelativeLayout) v.findViewById(R.id.preview_video);
-        mTextContainer = (RelativeLayout) v.findViewById(R.id.preview_text);
-        mWebContainer = (WebView) v.findViewById(R.id.preview_web);
+        mEdit = v.findViewById(R.id.editText1);
+        mImageContainer = v.findViewById(R.id.preview_image);
+        mVideoContainer = v.findViewById(R.id.preview_video);
+        mTextContainer = v.findViewById(R.id.preview_text);
+        mWebContainer = v.findViewById(R.id.preview_web);
     }
 
 
@@ -150,7 +150,7 @@ public class FilePreviewerFragment extends BaseFragment {
 
     private void loadImage(String file) {
         mImageContainer.setVisibility(View.VISIBLE);
-        ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
+        ImageView imageView = v.findViewById(R.id.imageView);
 
         imageView.setImageBitmap(Image.loadBitmap(file));
     }

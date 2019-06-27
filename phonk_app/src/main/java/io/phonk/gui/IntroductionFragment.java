@@ -54,12 +54,12 @@ public class IntroductionFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContext = (Context) getActivity();
+        mContext = getActivity();
 
         View v = inflater.inflate(R.layout.introduction_fragment, container, false);
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) v.findViewById(R.id.pager);
+        mPager = v.findViewById(R.id.pager);
         mPagerAdapter = new IntroductionPagerAdapter();
         mPager.setAdapter(mPagerAdapter);
 
@@ -108,12 +108,12 @@ public class IntroductionFragment extends BaseFragment {
 
         @Override
         public void destroyItem(ViewGroup collection, int position, Object view) {
-            ((ViewPager) collection).removeView((TextView) view);
+            collection.removeView((TextView) view);
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view == ((View) object);
+            return view == object;
         }
 
         @Override

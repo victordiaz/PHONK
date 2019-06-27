@@ -75,9 +75,9 @@ public class CustomCameraView extends TextureView {
 
     public interface CameraListener {
 
-        public void onPicTaken();
+        void onPicTaken();
 
-        public void onVideoRecorded();
+        void onVideoRecorded();
 
     }
 

@@ -55,7 +55,7 @@ public class NotificationService extends NotificationListenerService {
             String text = "";
             if (extras != null) {
                 title = extras.getString("android.title");
-                text = getString(extras.getCharSequence("android.text")).toString();
+                text = getString(extras.getCharSequence("android.text"));
             }
 
             Log.i("Package", pack);

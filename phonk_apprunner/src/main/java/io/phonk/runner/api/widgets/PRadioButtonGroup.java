@@ -65,7 +65,7 @@ public class PRadioButtonGroup extends RadioGroup {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 ReturnObject r = new ReturnObject(PRadioButtonGroup.this);
-                PRadioButton rb = (PRadioButton) findViewById(checkedId);
+                PRadioButton rb = findViewById(checkedId);
                 r.put("selected", rb.getText());
                 cb.event(r);
             }

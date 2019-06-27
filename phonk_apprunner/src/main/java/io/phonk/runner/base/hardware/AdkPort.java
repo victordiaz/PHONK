@@ -93,7 +93,7 @@ public class AdkPort implements Runnable {
 
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (this) {
-                    UsbAccessory accessory = (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+                    UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
 
                     if (intent.getBooleanExtra(
                             UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
@@ -104,7 +104,7 @@ public class AdkPort implements Runnable {
 
                 }
             } else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
-                UsbAccessory accessory = (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+                UsbAccessory accessory = intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
                 if (accessory != null && accessory.equals(mAccessory)) {
                     closeAccessory();
                 }
@@ -222,7 +222,7 @@ public class AdkPort implements Runnable {
 
     // Notifiers
     public interface MessageNotifier {
-        public void onNew();
+        void onNew();
     }
 
     // Attach a notifier
@@ -343,7 +343,7 @@ public class AdkPort implements Runnable {
 
     public int read() {
 
-        return (int) buffer.getC();
+        return buffer.getC();
     }
 
 }

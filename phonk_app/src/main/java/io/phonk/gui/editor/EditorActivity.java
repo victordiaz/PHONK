@@ -340,7 +340,7 @@ public class EditorActivity extends BaseActivity {
             bundle.putString(EditorFragment.FILE_PATH, mCurrentProject.getFullPath());
             bundle.putString(EditorFragment.FILE_NAME, PhonkSettings.MAIN_FILENAME);
             editorFragment = EditorFragment.newInstance(bundle);
-            FrameLayout fl = (FrameLayout) findViewById(R.id.editor_container);
+            FrameLayout fl = findViewById(R.id.editor_container);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), editorFragment, FRAGMENT_EDITOR);
             ft.commit();
@@ -352,7 +352,7 @@ public class EditorActivity extends BaseActivity {
     private void addFilePreviewerFragment(Bundle savedInstance) {
         if (savedInstance == null) {
             filePreviewerFragment = FilePreviewerFragment.newInstance(savedInstance);
-            FrameLayout fl = (FrameLayout) findViewById(R.id.filepreviewer_container);
+            FrameLayout fl = findViewById(R.id.filepreviewer_container);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(fl.getId(), filePreviewerFragment, FRAGMENT_FILE_PREVIEWER);
             ft.commit();
@@ -365,7 +365,7 @@ public class EditorActivity extends BaseActivity {
      * Show / hide file manager
      */
     public void showFileManagerDrawer(boolean show) {
-        FrameLayout fileManager = (FrameLayout) findViewById(R.id.fragmentFileManager);
+        FrameLayout fileManager = findViewById(R.id.fragmentFileManager);
 
         if (show) {
             fileManager.setVisibility(View.VISIBLE);
@@ -375,7 +375,7 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void showFilePreviewerFragment(boolean show) {
-        FrameLayout filePreviewerContainer = (FrameLayout) findViewById(R.id.filepreviewer_container);
+        FrameLayout filePreviewerContainer = findViewById(R.id.filepreviewer_container);
 
         if (show) {
             filePreviewerContainer.setVisibility(View.VISIBLE);

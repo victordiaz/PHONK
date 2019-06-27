@@ -22,6 +22,7 @@
 
 package io.phonk.runner.api.other;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -48,7 +49,7 @@ public class PSqLite extends ProtoBase {
     @ProtoMethod(description = "Open a SQLite ", example = "")
     @ProtoMethodParam(params = {"dirName"})
     public void open(String dbName) {
-        db = getContext().openOrCreateDatabase(getAppRunner().getProject().getFullPathForFile(dbName), getContext().MODE_PRIVATE, null);
+        db = getContext().openOrCreateDatabase(getAppRunner().getProject().getFullPathForFile(dbName), Context.MODE_PRIVATE, null);
     }
 
     @ProtoMethod(description = "Executes a SQL sentence", example = "")

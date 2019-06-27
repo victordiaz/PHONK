@@ -96,7 +96,7 @@ public class PPureDataBackupNewer extends ProtoBase {
             @Override
             public void run() {
                 getContext().bindService(new Intent(getContext(), PdService.class),
-                        serviceConnection, getContext().BIND_AUTO_CREATE);
+                        serviceConnection, Context.BIND_AUTO_CREATE);
             }
         }.start();
     }

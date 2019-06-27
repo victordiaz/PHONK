@@ -220,19 +220,19 @@ public class AppRunnerInterpreter {
 
                 if (e.getWrappedException() instanceof PermissionNotGrantedException) {
                     String message = ((Throwable) e).getMessage();
-                    message = message.replace("org.protocoderrunner.api.PermissionNotGrantedException:", "");
+                    message = message.replace("io.phonkrunner.api.PermissionNotGrantedException:", "");
 
                     mAppRunnerInterpretter.processResult(RESULT_PERMISSION_ERROR, message);
                 } else {
                     String message = ((Throwable) e).getMessage();
-                    message = message.replace("org.protocoderrunner.api.P", "");
+                    message = message.replace("io.phonkrunner.api.P", "");
 
                     mAppRunnerInterpretter.processResult(RESULT_ERROR, message);
                 }
                 return e;
             } catch (org.mozilla.javascript.EcmaError e) {
                 String message = ((Throwable) e).getMessage();
-                message = message.replace("org.protocoderrunner.api.P", "");
+                message = message.replace("io.phonkrunner.api.P", "");
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, message);
                 // mAppRunnerInterpretter.stop();
                 return e;

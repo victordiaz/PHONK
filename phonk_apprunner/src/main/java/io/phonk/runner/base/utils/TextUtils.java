@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 public class TextUtils {
     public static void changeFont(Context c, int id, View parentView, String fontName) {
-        TextView txt = (TextView) parentView.findViewById(id);
+        TextView txt = parentView.findViewById(id);
 
         // Typeface font = Typeface.createFromAsset(c.getAssets(),
         // "brownproregular.otf");
@@ -47,7 +47,7 @@ public class TextUtils {
     }
 
     public static void changeFont(Activity activity, int id, String fontName) {
-        TextView txt = (TextView) activity.findViewById(id);
+        TextView txt = activity.findViewById(id);
 
         // Typeface font = Typeface.createFromAsset(c.getAssets(),
         // "brownproregular.otf");

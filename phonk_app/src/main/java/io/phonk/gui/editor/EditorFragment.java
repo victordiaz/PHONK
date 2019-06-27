@@ -141,7 +141,7 @@ public class EditorFragment extends BaseFragment {
      * Bind the UI
      */
     private void bindUI() {
-        mEdit = (EditText) v.findViewById(R.id.editText1);
+        mEdit = v.findViewById(R.id.editText1);
         mEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -189,7 +189,7 @@ public class EditorFragment extends BaseFragment {
     private void setExtraKeysBar() {
         if (mEditorSettings.extraKeysBarEnabled == false) return;
 
-        mExtraKeyBar = (HorizontalScrollView) v.findViewById(R.id.extraKeyBar);
+        mExtraKeyBar = v.findViewById(R.id.extraKeyBar);
 
         mEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +203,7 @@ public class EditorFragment extends BaseFragment {
         });
 
         // detect if key board is open or close
-        final RelativeLayout rootView = (RelativeLayout) v.findViewById(R.id.rootEditor);
+        final RelativeLayout rootView = v.findViewById(R.id.rootEditor);
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -220,7 +220,7 @@ public class EditorFragment extends BaseFragment {
 
 
         // set all the extra buttons
-        LinearLayout extraKeyBarLl = (LinearLayout) v.findViewById(R.id.extraKeyBarLl);
+        LinearLayout extraKeyBarLl = v.findViewById(R.id.extraKeyBarLl);
         for (int i = 0; i < extraKeyBarLl.getChildCount(); i++) {
             final Button b = (Button) extraKeyBarLl.getChildAt(i);
 

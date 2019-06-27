@@ -41,7 +41,7 @@ public class HelpActivity extends BaseActivity {
 
         setupActivity();
 
-        FrameLayout fl = (FrameLayout) findViewById(R.id.fragmentWebview2);
+        FrameLayout fl = findViewById(R.id.fragmentWebview2);
         fl.setVisibility(View.VISIBLE);
         APIWebviewFragment webViewFragment = new APIWebviewFragment();
         Bundle bundle = new Bundle();

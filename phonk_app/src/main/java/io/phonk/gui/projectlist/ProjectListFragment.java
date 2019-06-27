@@ -110,21 +110,21 @@ public class ProjectListFragment extends BaseFragment {
         }
 
         // Get GridView and set adapter
-        mGrid = (FitRecyclerView) v.findViewById(R.id.gridprojects);
+        mGrid = v.findViewById(R.id.gridprojects);
         mGrid.setItemAnimator(new DefaultItemAnimator());
 
         // set the empty state
-        mEmptyGrid = (LinearLayout) v.findViewById(R.id.empty_grid_view);
+        mEmptyGrid = v.findViewById(R.id.empty_grid_view);
         // checkEmptyState();
         registerForContextMenu(mGrid);
 
         if (mProjectFolder != "") loadFolder(mProjectFolder);
 
-        mBackToFolderButton = (ImageButton) v.findViewById(R.id.backToFolders);
-        mTxtParentFolder = (TextView) v.findViewById(R.id.parentFolder);
-        mTxtFolder = (TextView) v.findViewById(R.id.folder);
-        mFolderPath = (LinearLayout) v.findViewById(R.id.folderPath);
-        mSelectFolder = (LinearLayout) v.findViewById(R.id.select_folder);
+        mBackToFolderButton = v.findViewById(R.id.backToFolders);
+        mTxtParentFolder = v.findViewById(R.id.parentFolder);
+        mTxtFolder = v.findViewById(R.id.folder);
+        mFolderPath = v.findViewById(R.id.folderPath);
+        mSelectFolder = v.findViewById(R.id.select_folder);
 
         mBackToFolderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,11 +137,11 @@ public class ProjectListFragment extends BaseFragment {
         });
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
-        LinearLayout llFolderLocation = (LinearLayout) v.findViewById(R.id.folderLocation2);
+        LinearLayout llFolderLocation = v.findViewById(R.id.folderLocation2);
         if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
 
         // TODO add the bottom bar any day.....
-        mBottomBar = (LinearLayout) v.findViewById(R.id.bottombar);
+        mBottomBar = v.findViewById(R.id.bottombar);
         mBottomBar.setVisibility(View.GONE);
         /*
         mBottomBar.setTranslationY(AndroidUtils.dpToPixels(mContext, 52));

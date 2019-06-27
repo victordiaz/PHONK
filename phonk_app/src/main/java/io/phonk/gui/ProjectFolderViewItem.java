@@ -47,7 +47,7 @@ public class ProjectFolderViewItem extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mItemView = inflater.inflate(R.layout.projectlist_item_folder_list, this, true);
 
-        textViewName = (TextView) mItemView.findViewById(R.id.customViewText);
+        textViewName = mItemView.findViewById(R.id.customViewText);
     }
 
     public void setText(String text) {

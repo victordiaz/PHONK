@@ -82,7 +82,7 @@ public abstract class PDashboardWidget extends ProtoBase {
                 .put("values", values);
 
         // send to app that manages the websocket
-        Intent i = new Intent("org.protocoder.intent.WEBEDITOR_SEND");
+        Intent i = new Intent("io.phonk.intent.WEBEDITOR_SEND");
         i.putExtra("data", msg.toString());
         mContext.sendBroadcast(i);
     }

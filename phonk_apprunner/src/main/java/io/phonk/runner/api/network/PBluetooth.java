@@ -56,7 +56,7 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
     // interface to get info from the activity when requesting to enable the bluetooth adapter
     public interface onBluetoothListener {
-        public void onActivityResult(int requestCode, int resultCode, Intent data);
+        void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
     public PBluetooth(AppRunner appRunner) {

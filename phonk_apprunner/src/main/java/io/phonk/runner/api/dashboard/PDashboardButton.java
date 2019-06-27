@@ -44,7 +44,7 @@ public class PDashboardButton extends PDashboardWidget {
             public void onUpdated(JSONObject jsonObject) {
                 ReturnObject ret = new ReturnObject();
                 mCallback.event(null);
-            };
+            }
         });
     }
 

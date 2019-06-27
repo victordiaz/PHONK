@@ -42,6 +42,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -205,11 +206,7 @@ public class PArduino extends ProtoBase {
             int readSize = mPhysicaloid.read(buf);
 
             if (readSize > 0) {
-                try {
-                    str = new String(buf, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    MLog.d(TAG, e.toString());
-                }
+                str = new String(buf, StandardCharsets.UTF_8);
             }
         } else {
             MLog.d(TAG, "Cannot read from the device. The device is not opened");
@@ -230,14 +227,8 @@ public class PArduino extends ProtoBase {
                 public void onRead(int size) {
                     byte[] buf = new byte[size];
                     mPhysicaloid.read(buf, size);
-                    try {
-                        readStr = new String(buf, "UTF-8");
-                        // MLog.d(TAG, " " + readStr);
-
-                    } catch (UnsupportedEncodingException e) {
-                        // MLog.d(TAG, e.toString());
-                        return;
-                    }
+                    readStr = new String(buf, StandardCharsets.UTF_8);
+                    // MLog.d(TAG, " " + readStr);
 
 
                     //MLog.network(mContext, TAG, "msg " + msg);
@@ -252,7 +243,7 @@ public class PArduino extends ProtoBase {
 
                         if (newLineIndex != -1) {
                             msgReturn = msg.substring(0, newLineIndex);
-                            msg = msg.substring(newLineIndex + 1, msg.length());
+                            msg = msg.substring(newLineIndex + 1);
                             //MLog.network(mContext, TAG, "msgReturn " + msgReturn);
 
                         }

@@ -91,7 +91,7 @@ public class AppRunnerService extends Service {
         mAppRunner = new AppRunner(mContext);
         mAppRunner.hasUserInterface = false;
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings());
-        mAppRunner.pApp.folder = intent.getStringExtra(Project.FOLDER);;
+        mAppRunner.pApp.folder = intent.getStringExtra(Project.FOLDER);
         mAppRunner.pApp.name = intent.getStringExtra(Project.NAME);
         mAppRunner.pDevice.deviceId = intent.getStringExtra(Project.DEVICE_ID);
 
@@ -142,7 +142,7 @@ public class AppRunnerService extends Service {
         createNotification(mNotificationId, mAppRunner.getProject().getFolder(), mAppRunner.getProject().getName());
 
         //just in case it crash
-        Intent restartIntent = new Intent("org.protocoder.LauncherActivity"); //getApplicationContext(), AppRunnerActivity.class);
+        Intent restartIntent = new Intent("io.phonk.LauncherActivity"); //getApplicationContext(), AppRunnerActivity.class);
         restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         restartIntent.putExtra("wasCrash", true);
 
@@ -217,7 +217,7 @@ public class AppRunnerService extends Service {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setContentIntent(resultPendingIntent);
-        mNotificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(notificationId, mBuilder.build());
         Thread.setDefaultUncaughtExceptionHandler(handler);
 
@@ -293,7 +293,7 @@ public class AppRunnerService extends Service {
 
         if (mOverlayIsEnabled) windowManager.removeView(mainLayout);
 
-        Intent i = new Intent("org.protocoder.intent.CLOSED");
+        Intent i = new Intent("io.phonk.intent.CLOSED");
         sendBroadcast(i);
         unregisterReceiver(stopActivitiyBroadcastReceiver);
         unregisterReceiver(executeCodeActivitiyBroadcastReceiver);
@@ -309,7 +309,7 @@ public class AppRunnerService extends Service {
      */
     @Subscribe
     public void onEventMainThread(Events.LogEvent e) {
-        Intent i = new Intent("org.protocoder.intent.CONSOLE");
+        Intent i = new Intent("io.phonk.intent.CONSOLE");
 
         String action = e.getAction();
         String data = e.getData();
@@ -324,7 +324,7 @@ public class AppRunnerService extends Service {
      */
     public void startStopActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoderrunner.intent.CLOSE");
+        filterSend.addAction("io.phonkrunner.intent.CLOSE");
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
@@ -340,7 +340,7 @@ public class AppRunnerService extends Service {
      */
     public void executeCodeActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("org.protocoderrunner.intent.EXECUTE_CODE");
+        filterSend.addAction("io.phonkrunner.intent.EXECUTE_CODE");
         registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 

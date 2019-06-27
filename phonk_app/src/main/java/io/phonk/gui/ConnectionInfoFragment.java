@@ -44,8 +44,12 @@ import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.models.Project;
 
 public class ConnectionInfoFragment extends Fragment {
+
+    private final String TAG = ConnectionInfoFragment.class.getSimpleName();
 
     private static AppRunner mAppRunner;
     private View rootView;
@@ -76,14 +80,14 @@ public class ConnectionInfoFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.connection_info_fragment, container, false);
 
-        mTxtConnectionMessage = (TextView) rootView.findViewById(R.id.connection_message);
-        mTxtConnectionIp = (TextView) rootView.findViewById(R.id.connection_ip);
+        mTxtConnectionMessage = rootView.findViewById(R.id.connection_message);
+        mTxtConnectionIp = rootView.findViewById(R.id.connection_ip);
 
-        mConnectionButtons = (LinearLayout) rootView.findViewById(R.id.connection_buttons);
+        mConnectionButtons = rootView.findViewById(R.id.connection_buttons);
 
-        mToggleServers = (ToggleButton) rootView.findViewById(R.id.webide_connection_toggle);
-        Button connectWifi = (Button) rootView.findViewById(R.id.connect_to_wifi);
-        Button startHotspot = (Button) rootView.findViewById(R.id.start_hotspot);
+        mToggleServers = rootView.findViewById(R.id.webide_connection_toggle);
+        Button connectWifi = rootView.findViewById(R.id.connect_to_wifi);
+        Button startHotspot = rootView.findViewById(R.id.start_hotspot);
         // Button webide_connection_help = (Button) findViewById(R.id.webide_connection_help);
 
         connectWifi.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +116,7 @@ public class ConnectionInfoFragment extends Fragment {
             mToggleServers.performClick(); // startServers();
         }
 
-        mComputerText = (TextView) rootView.findViewById(R.id.computerText);
+        mComputerText = rootView.findViewById(R.id.computerText);
         mComputerText.setMovementMethod(new ScrollingMovementMethod());
 
         mAppRunner.pUtil.loop(1000, new PLooper.LooperCB() {
@@ -171,12 +175,42 @@ public class ConnectionInfoFragment extends Fragment {
         }
     }
 
+    public void addTextToConsole(String text) {
+        mComputerText.append(text + "\n> ");
+
+    }
+
 
     // folder choose
     @Subscribe
     public void onEventMainThread(Events.FolderChosen e) {
         // MLog.d(TAG, "< Event (folderChosen)");
-        mComputerText.append("ls " + e.getFullFolder() + "\n> ");
+        addTextToConsole("ls " + e.getFullFolder());
+    }
+
+
+    @Subscribe
+    public void onEventMainThread(Events.ProjectEvent e) {
+        MLog.d(TAG, "event -> " + e.getAction());
+
+        String action = e.getAction();
+        Project p = e.getProject();
+
+        if (action.equals(Events.PROJECT_RUN)) {
+            addTextToConsole("run " + p.getSandboxPath());
+
+        } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
+            addTextToConsole("stop " + p.getSandboxPath());
+        } else if (action.equals(Events.PROJECT_STOP_ALL)) {
+        } else if (action.equals(Events.PROJECT_SAVE)) {
+            addTextToConsole("saving... " + p.getSandboxPath());
+        } else if (action.equals(Events.PROJECT_NEW)) {
+            addTextToConsole("new project");
+        } else if (action.equals(Events.PROJECT_UPDATE)) {
+            //mProtocoder.protoScripts.listRefresh();
+        } else if (action.equals(Events.PROJECT_EDIT)) {
+            addTextToConsole("edit project" + p.getSandboxPath());
+        }
     }
 
 }

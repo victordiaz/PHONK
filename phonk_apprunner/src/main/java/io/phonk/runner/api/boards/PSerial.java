@@ -148,7 +148,7 @@ public class PSerial extends ProtoBase {
                         String msgReturn = "";
                         if (newLineIndex != -1) {
                             msgReturn = msg.substring(0, newLineIndex);
-                            msg = msg.substring(newLineIndex + 1, msg.length());
+                            msg = msg.substring(newLineIndex + 1);
 
                         }
 

@@ -99,8 +99,8 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     protected Parameters mParameters;
 
     public interface CameraListener {
-        public void onPicTaken();
-        public void onVideoRecorded();
+        void onPicTaken();
+        void onVideoRecorded();
     }
 
     public CameraNew(AppRunner appRunner, int camera, int colorMode) {

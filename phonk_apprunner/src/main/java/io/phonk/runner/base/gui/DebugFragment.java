@@ -52,7 +52,6 @@ public class DebugFragment extends Fragment {
     private View v;
     private RecyclerView mListView;
     private ArrayList<DebugFragment.LogData> mLogArray = new ArrayList<>();
-    ;
     private MyAdapter mArrayAdapter;
     private LinearLayoutManager mLayoutManager;
     private boolean isLockPosition = false;
@@ -70,7 +69,7 @@ public class DebugFragment extends Fragment {
 
         v = inflater.inflate(R.layout.debug_fragment, container, false);
 
-        mListView = (RecyclerView) v.findViewById(R.id.logwrapper);
+        mListView = v.findViewById(R.id.logwrapper);
 
         mArrayAdapter = new MyAdapter();
         mListView.setAdapter(mArrayAdapter);
@@ -82,7 +81,7 @@ public class DebugFragment extends Fragment {
             }
         });
 
-        ToggleButton toggleLock = (ToggleButton) v.findViewById(R.id.toogleLockList);
+        ToggleButton toggleLock = v.findViewById(R.id.toogleLockList);
         toggleLock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -90,7 +89,7 @@ public class DebugFragment extends Fragment {
             }
         });
 
-        Button close = (Button) v.findViewById(R.id.close);
+        Button close = v.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,10 +229,10 @@ public class DebugFragment extends Fragment {
             super(v);
             this.viewType = viewType;
             ll = v;
-            consoleText = (TextView) ll.findViewById(R.id.console_text);
+            consoleText = ll.findViewById(R.id.console_text);
 
             if (viewType == AppRunnerInterpreter.RESULT_PERMISSION_ERROR) {
-                btnGrantPermissions = (Button) ll.findViewById(R.id.grantPermissionsBtn);
+                btnGrantPermissions = ll.findViewById(R.id.grantPermissionsBtn);
             }
         }
     }

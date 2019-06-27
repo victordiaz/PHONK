@@ -76,18 +76,18 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.welcome_activity);
         setupActivity();
 
-        viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+        viewFlipper = findViewById(R.id.viewFlipper);
         viewFlipper.setInAnimation(this, R.anim.slide_in_left);
         viewFlipper.setOutAnimation(this, R.anim.slide_out_right);
 
-        mNextStepButton = (Button) findViewById(R.id.next_step_button);
+        mNextStepButton = findViewById(R.id.next_step_button);
         mNextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToStep(mNextStep);
             }
         });
-        mLoading = (LinearLayout) findViewById(R.id.loading);
+        mLoading = findViewById(R.id.loading);
 
         goToStep(STEP_WELCOME);
     }

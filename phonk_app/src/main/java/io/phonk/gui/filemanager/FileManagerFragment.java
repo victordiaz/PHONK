@@ -133,10 +133,10 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     private void bindUI(View v) {
-        mRecyclerFileList = (RecyclerView) v.findViewById(R.id.llFile);
+        mRecyclerFileList = v.findViewById(R.id.llFile);
 
         // bind up button
-        Button btnDirUp = (Button) v.findViewById(R.id.dir_up);
+        Button btnDirUp = v.findViewById(R.id.dir_up);
         btnDirUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +161,7 @@ public class FileManagerFragment extends BaseFragment {
         });
 
         // bind path
-        mTxtPath = (TextView) v.findViewById(R.id.path);
+        mTxtPath = v.findViewById(R.id.path);
     }
 
     @Override
@@ -296,7 +296,6 @@ public class FileManagerFragment extends BaseFragment {
         MLog.d(TAG, "File path " + file.getAbsoluteFile() + " fileExtension " + fileExt + " mimeType " + mimeType);
 
         Uri uri = FileProvider.getUriForFile(getContext(), "io.phonk.fileprovider", file);
-        //Uri uri = Uri.parse("content://org.protocoder.fileprovider/file" + path);
 
         MLog.d(TAG, "uri: " + uri);
 

@@ -87,7 +87,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
         mAppRunner = appRunner;
         mProject = mAppRunner.getProject();
         String ip = (String) NetworkUtils.getLocalIpAddress(mAppRunner.getAppContext()).get("ip");
-        MLog.d(TAG, "Launched server at http://" + ip.toString() + ":" + port);
+        MLog.d(TAG, "Launched server at http://" + ip + ":" + port);
 
         appRunner.whatIsRunning.add(this);
     }
@@ -156,7 +156,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
         if (mCallback == null) return null;
 
         ReturnObject ret = new ReturnObject();
-        ret.put("uri", session.getUri().toString());
+        ret.put("uri", session.getUri());
         ret.put("method", session.getMethod().toString());
         ret.put("header", session.getHeaders());
         ret.put("params", session.getParameters());

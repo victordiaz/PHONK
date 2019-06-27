@@ -55,7 +55,7 @@ public class LicenseActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.license_activity);
-        mLicenseList = (ListView) findViewById(R.id.license_list);
+        mLicenseList = findViewById(R.id.license_list);
 
         final MyAdapter myAdapter = new MyAdapter(this, mLicenseFileContent);
         mLicenseList.setAdapter(myAdapter);
@@ -87,7 +87,7 @@ public class LicenseActivity extends BaseActivity {
                     public void run() {
                         for (int i = 0; i < mLicenseFiles.length; i++) {
                             View v = getLayoutInflater().inflate(R.layout.license_view, null);
-                            TextView txtView = (TextView) v.findViewById(R.id.license_title);
+                            TextView txtView = v.findViewById(R.id.license_title);
                             txtView.setText(mLicenseFiles[i]);
 
                             myAdapter.notifyDataSetChanged();
@@ -149,8 +149,8 @@ public class LicenseActivity extends BaseActivity {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.license_view, parent, false);
             }
-            TextView txtTitle = (TextView) convertView.findViewById(R.id.license_title);
-            final TextView txtText = (TextView) convertView.findViewById(R.id.license_body);
+            TextView txtTitle = convertView.findViewById(R.id.license_title);
+            final TextView txtText = convertView.findViewById(R.id.license_body);
 
             final License license = getItem(position);
             txtTitle.setText(license.title);

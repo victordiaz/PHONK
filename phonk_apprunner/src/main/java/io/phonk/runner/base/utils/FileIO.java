@@ -219,7 +219,7 @@ public class FileIO {
 
     public static void copyFileOrDir(Context c, String path) {
         AssetManager assetManager = c.getAssets();
-        String assets[] = null;
+        String[] assets = null;
         try {
             assets = assetManager.list(path);
             if (assets.length == 0) {

@@ -96,7 +96,7 @@ public class APIWebviewFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         MLog.d(TAG, "onActivityCreated");
-        webView = (WebView) v.findViewById(R.id.webView1);
+        webView = v.findViewById(R.id.webView1);
         MLog.d(TAG, "Loaded WebView");
 
         webView.setHorizontalScrollBarEnabled(false);

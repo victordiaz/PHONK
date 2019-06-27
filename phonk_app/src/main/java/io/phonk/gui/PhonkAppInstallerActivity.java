@@ -55,16 +55,16 @@ public class PhonkAppInstallerActivity extends BaseActivity {
 
         setContentView(R.layout.activity_phonk_installer);
 
-        TextView txtProto = (TextView) findViewById(R.id.text_proto_install_info);
-        TextView txtOrigin = (TextView) findViewById(R.id.from_url);
-        TextView txtDestiny = (TextView) findViewById(R.id.to_url);
-        TextView txtWarning = (TextView) findViewById(R.id.text_proto_install_warning);
+        TextView txtProto = findViewById(R.id.text_proto_install_info);
+        TextView txtOrigin = findViewById(R.id.from_url);
+        TextView txtDestiny = findViewById(R.id.to_url);
+        TextView txtWarning = findViewById(R.id.text_proto_install_warning);
 
-        mLl = (LinearLayout) findViewById(R.id.proto_install_group);
-        Button btnInstall = (Button) findViewById(R.id.button_proto_install_ok);
-        Button btnCancel = (Button) findViewById(R.id.button_proto_install_cancel);
-        mBtnFinish = (Button) findViewById(R.id.button_proto_install_finish);
-        mProgress = (ProgressBar) findViewById(R.id.progressBar_installing);
+        mLl = findViewById(R.id.proto_install_group);
+        Button btnInstall = findViewById(R.id.button_proto_install_ok);
+        Button btnCancel = findViewById(R.id.button_proto_install_cancel);
+        mBtnFinish = findViewById(R.id.button_proto_install_finish);
+        mProgress = findViewById(R.id.progressBar_installing);
 
         Intent intent = getIntent();
         if (intent == null) {

@@ -56,10 +56,10 @@ public class PWindow extends RelativeLayout {
         inflater.inflate(R.layout.pwidget_window, this, true);
 
         mWindow = this;
-        mBar = (RelativeLayout) findViewById(R.id.pWidgetWindowBar);
-        mTitle = (TextView) findViewById(R.id.pWidgetWindowTitle);
-        mBtnClose = (Button) findViewById(R.id.pWidgetWindowClose);
-        mMainContainer = (LinearLayout) findViewById(R.id.pWidgetWindowMainContainer);
+        mBar = findViewById(R.id.pWidgetWindowBar);
+        mTitle = findViewById(R.id.pWidgetWindowTitle);
+        mBtnClose = findViewById(R.id.pWidgetWindowClose);
+        mMainContainer = findViewById(R.id.pWidgetWindowMainContainer);
 
         //setOnTouchListener(this);
 

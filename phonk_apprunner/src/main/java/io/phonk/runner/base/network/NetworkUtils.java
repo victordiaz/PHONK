@@ -69,7 +69,7 @@ public class NetworkUtils {
         private final String path;
 
         public interface DownloadListener {
-            public void onUpdate(int progress);
+            void onUpdate(int progress);
         }
 
         public DownloadTask(Context c, String url, String fileName) {
@@ -129,7 +129,7 @@ public class NetworkUtils {
                     input = connection.getInputStream();
                     output = new FileOutputStream(this.path);
 
-                    byte data[] = new byte[4096];
+                    byte[] data = new byte[4096];
                     long total = 0;
                     int count;
                     while ((count = input.read(data)) != -1) {
@@ -222,7 +222,7 @@ public class NetworkUtils {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()
                             && inetAddress.isSiteLocalAddress()) {
-                        IFCONFIG.append(inetAddress.getHostAddress().toString() + "\n");
+                        IFCONFIG.append(inetAddress.getHostAddress() + "\n");
                     }
 
                 }
@@ -318,7 +318,7 @@ public class NetworkUtils {
     }
 
     public static WifiInfo getWifiInfo(Context c) {
-        WifiManager wifiManager = (WifiManager) c.getSystemService(c.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
         return wifiInfo;
