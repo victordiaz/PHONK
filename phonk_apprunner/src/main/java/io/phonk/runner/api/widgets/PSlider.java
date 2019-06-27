@@ -93,7 +93,6 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
 
     private void executeCallback() {
         if (callback != null) {
-            MLog.d(TAG, "yep");
             ReturnObject ret = new ReturnObject();
             ret.put("value", mappedVal);
             callback.event(ret);
@@ -113,7 +112,6 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
             else c.fill(styler.sliderPressed);
             c.strokeWidth(styler.sliderBorderSize);
             c.stroke(styler.sliderBorderColor);
-            MLog.d(TAG, "" + unmappedVal);
             c.rect(0, 0, unmappedVal, c.height);
         }
     };

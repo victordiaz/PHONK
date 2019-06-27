@@ -189,7 +189,7 @@ public class ConnectionInfoFragment extends Fragment {
         addTextToConsole("ls " + e.getFullFolder());
     }
 
-
+    /*
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
         MLog.d(TAG, "event -> " + e.getAction());
@@ -213,5 +213,6 @@ public class ConnectionInfoFragment extends Fragment {
             addTextToConsole("edit project" + p.getSandboxPath());
         }
     }
+    */
 
 }

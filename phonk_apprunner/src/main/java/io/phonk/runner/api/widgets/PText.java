@@ -173,7 +173,6 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
     @ProtoMethodParam(params = {"Typeface"})
     public PText font(Typeface f) {
         this.currentFont = f;
-        MLog.d("yep", "called " + f.toString() + " " + f.getClass().getSimpleName());
         this.setTypeface(f);
         return this;
     }

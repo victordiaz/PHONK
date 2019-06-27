@@ -139,8 +139,6 @@ public class PSerial extends ProtoBase {
                         //        callbackfn.event(readMsg);
                         //    }
                         //});
-                        //MLog.d("qq", "" + readMsg);
-
 
                         msg = msg + readMsg;
                         int newLineIndex = msg.indexOf('\n');

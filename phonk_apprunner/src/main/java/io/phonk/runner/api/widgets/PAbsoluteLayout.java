@@ -61,15 +61,11 @@ public class PAbsoluteLayout extends FixedLayout {
         int w = (int) appRunner.pDevice.info().get("screenWidth");
         int h = (int) appRunner.pDevice.info().get("screenHeight");
 
-        MLog.d(TAG, "qq2 pre " + w + " " + h);
-        MLog.d("qq2", "" + appRunner.pApp.settings.get("orientation").equals("landscape"));
-
         int statusBar = getStatusBarHeight();
 
         if (appRunner.pApp.settings.get("orientation").equals("landscape")) {
             if (w > h) { mWidth = w; mHeight = h; }
             else { mWidth = h; mHeight = w; }
-            MLog.d("qq2", "entered");
 
             if (appRunner.pApp.settings.get("screen_mode").equals("fullscreen")) {
                 int navigationBar = getNavigationBarSize(getContext()).x;
@@ -85,15 +81,6 @@ public class PAbsoluteLayout extends FixedLayout {
                 mHeight += statusBar + navigationBar;
             }
         }
-
-        MLog.d(TAG, "qq2 post " + mWidth + " " + mHeight);
-
-
-        // MLog.d(TAG, "qq " + statusBar + " " + navigationBar);
-
-
-        MLog.d(TAG, "mm " + mWidth + " " + mHeight);
-
     }
 
     @Override

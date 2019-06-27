@@ -90,8 +90,6 @@ public class ProjectItem extends LinearLayout {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // MLog.d(TAG, " " + position + " " + getPosition());
-
                 /*
                 AnimatorSet animSpin;
                 animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.run);
@@ -169,7 +167,7 @@ public class ProjectItem extends LinearLayout {
     }
 
     public void setMenu() {
-        // MLog.d("TAG", "setting menu for " + mProject.getName());
+        // setting menu for mProject.getName());
         mMenuButton = findViewById(R.id.card_menu_button);
 
         mItemView.setOnLongClickListener(new OnLongClickListener() {
@@ -198,7 +196,6 @@ public class ProjectItem extends LinearLayout {
     }
 
     private void showMenu(View fromView) {
-        MLog.d(TAG, "clicked");
         Context wrapper = new ContextThemeWrapper(mContext, R.style.phonk_PopupMenu);
         PopupMenu myPopup = new PopupMenu(wrapper, fromView);
         myPopup.inflate(R.menu.project_actions);
@@ -230,7 +227,6 @@ public class ProjectItem extends LinearLayout {
                                     case DialogInterface.BUTTON_POSITIVE:
                                         EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
                                         //mPlf.removeItem(mProject);
-                                        MLog.d(TAG, "deleting " + mProject.getFullPath());
                                         Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
                                         PhonkScriptHelper.deleteFileOrFolder(mProject.getFullPath());
 

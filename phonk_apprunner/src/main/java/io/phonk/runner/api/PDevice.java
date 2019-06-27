@@ -120,7 +120,6 @@ public class PDevice extends ProtoBase {
             MLog.d(TAG, "product id: " + device.getProductId());
             MLog.d(TAG, "name: " + device.getName());
             MLog.d(TAG, "descriptor: " + device.getDescriptor());
-            KeyCharacterMap qq = device.getKeyCharacterMap();
 
             int sources = device.getSources();
 

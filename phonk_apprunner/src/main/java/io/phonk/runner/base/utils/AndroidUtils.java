@@ -177,13 +177,10 @@ public class AndroidUtils {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
-        // MLog.d("qq", "no android L " + Build.VERSION.SDK + " " + L);
-
         if (isVersionLollipop()) {
 
             ViewOutlineProvider viewOutlineProvider = null;
 
-            //MLog.d("qq", "is android L");
             if (type == CLIP_RECT) {
 
                 viewOutlineProvider = new ViewOutlineProvider() {

@@ -76,7 +76,6 @@ public class PhonkHttpServer extends NanoHTTPD {
         super(port);
 
         mContext = new WeakReference<Context>(context);
-        MLog.d(TAG, "port -> " + port);
 
         gson = new GsonBuilder().setPrettyPrinting().create();
         //addMappings();
@@ -99,7 +98,6 @@ public class PhonkHttpServer extends NanoHTTPD {
         session.getHeaders().put("content-type", ct.getContentTypeHeader());
 
         String uri = session.getUri();
-        // MLog.d(TAG, "--> " + uri);
 
         if (uri.startsWith("/api")) res = serveAPI(session);
         else res = serveWebIDE(session);
@@ -297,16 +295,20 @@ public class PhonkHttpServer extends NanoHTTPD {
                 // PhonkScriptHelper.deleteFileOrFolder(path);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
-                // MLog.d(TAG, "run --> " + p.getFolder());
+                MLog.d(TAG, "run --> " + p.getFolder());
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
 
                 res = newFixedLengthResponse("OK");
 
             } else if (uriSplitted[PROJECT_ACTION].equals("stop_all_and_run")) {
+                MLog.d(TAG, "stop_all_and_run --> ");
+
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
 
                 res = newFixedLengthResponse("STOP_AND_RUN");
             } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
+                MLog.d(TAG, "stop --> ");
+
                 // MLog.d(TAG, "stop");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
 

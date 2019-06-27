@@ -234,7 +234,7 @@ public class AppRunnerActivity extends BaseActivity {
 
         unregisterEventBus();
 
-        Intent i = new Intent("io.phonk.intent.CLOSED");
+        Intent i = new Intent("io.phonk.runner.intent.CLOSED");
         sendBroadcast(i);
     }
 
@@ -377,8 +377,6 @@ public class AppRunnerActivity extends BaseActivity {
                     for (int i = 0; i < len; i++) {
                         recTypes[i] = new String(ndefRecords[i].getType());
                         recPayloads[i] = new String(ndefRecords[i].getPayload());
-                        MLog.d(TAG, "qq " + i + " " + recTypes[i] + " " + recPayloads[i]);
-
                     }
                     nfcMessage = recPayloads[0];
                 }
@@ -540,7 +538,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     public void startStopActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.intent.CLOSE");
+        filterSend.addAction("io.phonk.runner.intent.CLOSE");
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
@@ -556,7 +554,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     public void executeCodeActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonkrunner.intent.EXECUTE_CODE");
+        filterSend.addAction("io.phonk.runner.intent.EXECUTE_CODE");
         registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 

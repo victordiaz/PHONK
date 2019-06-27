@@ -59,7 +59,6 @@ public class PSocketIOClient extends ProtoBase {
             @Override
             public void onMessage(String message) {
                 if (mCallbackfn != null) mCallbackfn.event("onMessage", null, null);
-                //MLog.d("qq", "onMessage");
             }
 
             @Override
@@ -75,13 +74,11 @@ public class PSocketIOClient extends ProtoBase {
             @Override
             public void onDisconnect(int code, String reason) {
                 if (mCallbackfn != null) mCallbackfn.event("disconnect", reason, null);
-                // MLog.d("qq", "disconnected");
             }
 
             @Override
             public void onConnect() {
                 if (mCallbackfn != null) mCallbackfn.event("connected", null, null);
-                // MLog.d("qq", "connected");
             }
 
             @Override
@@ -92,8 +89,6 @@ public class PSocketIOClient extends ProtoBase {
             @Override
             public void on(String event, JSONArray arguments) {
                 if (mCallbackfn != null) mCallbackfn.event("on", event, arguments);
-                // MLog.d("qq", "onmessage");
-
             }
         };
 

@@ -191,7 +191,6 @@ public class PUI extends ProtoBase {
             allowScroll(isScrollEnabled);
 
             // Create the main layout. This is where all the items actually go
-            MLog.d("qq2", "creating absolute layout");
             uiAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
             uiAbsoluteLayout.setLayoutParams(layoutParams);
             uiScrollView.addView(uiAbsoluteLayout);
@@ -2021,18 +2020,6 @@ public class PUI extends ProtoBase {
                 ReturnObject returnObject = new ReturnObject();
                 returnObject.put("touches", ar);
                 returnObject.put("count", motionEvent.getPointerCount());
-
-
-                /*
-                for (int j = 0; j < ar.size(); j++) {
-                    ReturnObject t = (ReturnObject) ar.get(i);
-                    MLog.d("qq2", "" + t);
-                    MLog.d("qq2", "" + t.get("id") + " " + t.get("action"));
-                }
-                */
-
-                MLog.d("qq2", "<<<<<<<<<<<<<<<<<<<<<");
-
 
                 callback.event(returnObject);
 

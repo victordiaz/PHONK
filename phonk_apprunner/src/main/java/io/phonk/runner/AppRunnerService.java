@@ -325,7 +325,7 @@ public class AppRunnerService extends Service {
      */
     public void startStopActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonkrunner.intent.CLOSE");
+        filterSend.addAction("io.phonk.runner.intent.CLOSE");
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
@@ -341,7 +341,7 @@ public class AppRunnerService extends Service {
      */
     public void executeCodeActivityBroadcastReceiver() {
         IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonkrunner.intent.EXECUTE_CODE");
+        filterSend.addAction("io.phonk.runner.intent.EXECUTE_CODE");
         registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 

@@ -64,8 +64,6 @@ public class PSqLite extends ProtoBase {
     @ProtoMethodParam(params = {"table", "colums[]"})
     public Cursor query(String table, String[] columns) {
         for (String column : columns) {
-            //MLog.d("qq", column);
-
         }
         Cursor c = db.query(table, columns, null, null, null, null, null);
 

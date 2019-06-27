@@ -49,7 +49,6 @@ public class AboutActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("url", "http://127.0.0.1:8585");
         webViewFragment.setArguments(bundle);
-        // addFragment(webViewFragment, R.id.fragmentEditor, "qq");
     }
 
     @Override

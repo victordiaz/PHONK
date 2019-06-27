@@ -134,39 +134,30 @@ public class CustomCameraView extends TextureView {
                     mCamera = Camera.open();
                 }
 
-                MLog.d("qq", "qq1 " + mCamera);
                 try {
 
                     Camera.Parameters parameters = mCamera.getParameters();
-                    MLog.d("qq", "qq2 " + mCamera);
 
                     if (modeColor == MODE_COLOR_BW && parameters.getSupportedColorEffects() != null) {
                         // parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
                     }
-                    MLog.d("qq", "qq3 " + mCamera);
 
                     if (c.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
                         // parameters.set("orientation", "PORTRAIT"); // For
                         // Android Version 2.2 and above
-                        MLog.d("qq", "qq4 " + mCamera);
                         mCamera.setDisplayOrientation(90);
-                        MLog.d("qq", "qq5" + mCamera);
                         // For Android Version 2.0 and above
                         parameters.setRotation(90);
-                        MLog.d("qq", "qq6" + mCamera);
                     } else if (modeCamera == MODE_CAMERA_FRONT) {
 
                     }
 
-                    MLog.d("qq", "qq 7" + mCamera);
                     List<Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
                     parameters.setPreviewSize(supportedPreviewSizes.get(0).width, supportedPreviewSizes.get(0).height);
 
                     mCamera.setParameters(parameters);
                     mCamera.setPreviewTexture(surface);
-                    MLog.d("qq", "primer mCamera " + mCamera);
                 } catch (IOException exception) {
-                    MLog.d("qq", "camara released");
                     mCamera.release();
                 }
 
@@ -178,8 +169,6 @@ public class CustomCameraView extends TextureView {
     }
 
     protected void stopCamera() {
-        MLog.d("qq", "segunda mCamera " + mCamera);
-
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.setPreviewCallback(null);
@@ -209,7 +198,6 @@ public class CustomCameraView extends TextureView {
         // AudioManager.STREAM_NOTIFICATION, 0);
         // final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
-        MLog.d("qq", "tercera mCamera " + mCamera);
 
         // System.gc();
         mCamera.setPreviewCallback(null);
@@ -217,9 +205,6 @@ public class CustomCameraView extends TextureView {
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                MLog.d("qq", "" + data.length);
-                MLog.d("qq", "" + camera);
-
                 Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
                 // soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);

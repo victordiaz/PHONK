@@ -153,9 +153,6 @@ public class AppRunner {
 
     public AppRunner loadProject(String folder, String name) {
         mProject = new Project(folder, name);
-
-        MLog.d("qq2", folder + " " + name + " " + mProject.getFullPath());
-
         mScript = AppRunnerHelper.getCode(mProject);
 
         return this;

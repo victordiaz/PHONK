@@ -408,12 +408,12 @@ public class PhonkServerService extends Service {
             mProjectRunning = e.getProject();
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
             // ProtoScriptHelper.stop_all_scripts();
-            Intent i = new Intent("io.phonkrunner.intent.CLOSE");
+            Intent i = new Intent("io.phonk.runner.intent.CLOSE");
             sendBroadcast(i);
             PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
 
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
-            Intent i = new Intent("io.phonkrunner.intent.CLOSE");
+            Intent i = new Intent("io.phonk.runner.intent.CLOSE");
             sendBroadcast(i);
         } else if (action.equals(Events.PROJECT_SAVE)) {
             //Project p = evt.getProject();
@@ -432,7 +432,7 @@ public class PhonkServerService extends Service {
 
     @Subscribe
     public void onEventMainThread(Events.ExecuteCodeEvent e) {
-        Intent i = new Intent("io.phonkrunner.intent.EXECUTE_CODE");
+        Intent i = new Intent("io.phonk.runner.intent.EXECUTE_CODE");
         i.putExtra("code", e.getCode());
         sendBroadcast(i);
     }

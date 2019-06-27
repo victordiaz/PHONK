@@ -164,7 +164,6 @@ public class Styler {
         fromTo(styles.get("*"), props);
 
         StyleProperties p = styles.get(viewName);
-        MLog.d("qq", "viewname " + viewName);
         if (p != null) {
             MLog.d(TAG, "" + p.size());
             MLog.d(TAG, "applying view specific style for " + viewName);

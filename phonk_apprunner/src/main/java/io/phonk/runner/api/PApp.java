@@ -473,7 +473,6 @@ public class PApp extends ProtoBase {
         while(iterator.hasNext()) {
             String key = iterator.next();
             String value = (String) extras.get(key);
-            MLog.d("qq", key + " " + value);
             intent.putExtra(key, value);
         }
 
@@ -482,10 +481,6 @@ public class PApp extends ProtoBase {
 
         String type = (String) jsonParams.get("type");
         intent.setType(type);
-
-        MLog.d("qq", action + " " + data + " " + type);
-
-
 
         JSONObject component = (JSONObject) jsonParams.get("component");
         intent.setComponent(new ComponentName("com.example", "com.example.MyExampleActivity"));

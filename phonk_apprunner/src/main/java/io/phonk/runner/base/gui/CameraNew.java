@@ -183,7 +183,6 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
     public void addCallbackData(CallbackData callbackData) {
-        MLog.d(TAG, "qq 1");
         this.callbackData = callbackData;
         startOnFrameProcessing();
     }
@@ -510,7 +509,6 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
     public void turnOnFlash(boolean b) {
-        MLog.d(TAG, "qq " + b + " " + isFlashAvailable());
         if (isFlashAvailable()) {
             if (b) mParameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
             else mParameters.setFlashMode(Parameters.FLASH_MODE_OFF);

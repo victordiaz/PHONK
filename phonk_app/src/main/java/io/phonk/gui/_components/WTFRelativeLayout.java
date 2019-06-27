@@ -54,9 +54,7 @@ public class WTFRelativeLayout extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-//
-//        MLog.d(TAG, changed + " " + l + " " + t + " " + r + " " + b);
-//
+////
 //        rectf = new RectF(l, t, r, b);
 //
 //        va = ValueAnimator.ofFloat(rectf.height(), 0);
@@ -67,7 +65,6 @@ public class WTFRelativeLayout extends RelativeLayout {
 //            public void onAnimationUpdate(ValueAnimator animation) {
 //                Float value = (Float) animation.getAnimatedValue();
 ////                rectf.bottom = 200; //value;
-//                MLog.d(TAG, "" + value);
 //                invalidate();
 //            }
 //        });

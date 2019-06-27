@@ -98,7 +98,6 @@ public class PLiveCodingFeedback {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         // liveRLayout.setVisibility(View.GONE);
-                        // MLog.d("qq", "anim stop");
                     }
 
                     @Override

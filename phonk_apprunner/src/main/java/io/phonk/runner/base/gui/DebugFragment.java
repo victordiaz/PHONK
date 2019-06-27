@@ -203,7 +203,6 @@ public class DebugFragment extends Fragment {
                 holder.btnGrantPermissions.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        MLog.d(TAG, "qq");
                     }
                 });
             }

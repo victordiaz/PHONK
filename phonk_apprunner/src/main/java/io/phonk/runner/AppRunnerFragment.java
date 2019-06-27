@@ -139,7 +139,6 @@ public class AppRunnerFragment extends Fragment {
         };
         mAppRunner.interp.addListener(appRunnerCb);
 
-        MLog.d(TAG, "QQ initProject");
         mAppRunner.initProject();
 
         // nfc
@@ -213,13 +212,6 @@ public class AppRunnerFragment extends Fragment {
     public void startFileObserver() {
 
         if (mAppRunner.mIsProjectLoaded) {
-
-            MLog.d(TAG, "fileObserver -> ");
-
-            MLog.d(TAG, "qq1: " + mAppRunner);
-            MLog.d(TAG, "qq2: " + mAppRunner.getProject());
-            MLog.d(TAG, "qq3: " + mAppRunner.getProject().getSandboxPath());
-
             // set up a file observer to watch this directory on sd card
             fileObserver = new FileObserver(mAppRunner.getProject().getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
 
