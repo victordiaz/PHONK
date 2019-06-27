@@ -25,9 +25,10 @@ package io.phonk.runner.base.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.util.AttributeSet;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
 
 public class FitRecyclerView extends RecyclerView {
     private GridLayoutManager manager;

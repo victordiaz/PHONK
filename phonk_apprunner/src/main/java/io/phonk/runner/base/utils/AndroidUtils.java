@@ -44,9 +44,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
-import io.phonk.runner.R;
-import io.phonk.runner.apprunner.AppRunnerSettings;
-
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,6 +51,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
+import io.phonk.runner.R;
+import io.phonk.runner.apprunner.AppRunnerSettings;
 
 public class AndroidUtils {
 

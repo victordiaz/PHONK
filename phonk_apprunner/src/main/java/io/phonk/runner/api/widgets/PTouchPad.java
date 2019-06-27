@@ -22,6 +22,8 @@
 
 package io.phonk.runner.api.widgets;
 
+import java.util.Map;
+
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.other.PLooper;
@@ -30,8 +32,6 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
-
-import java.util.Map;
 
 public class PTouchPad extends PCanvas implements PViewMethodsInterface {
 

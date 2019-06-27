@@ -33,9 +33,9 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import io.phonk.runner.base.utils.MLog;
-
 import java.util.Vector;
+
+import io.phonk.runner.base.utils.MLog;
 
 @SuppressLint("NewApi")
 public class VideoPlayerFragment extends VideoView {

@@ -29,15 +29,13 @@ import android.net.nsd.NsdServiceInfo;
 import android.os.Build;
 import android.util.Log;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import javax.mail.internet.InternetAddress;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class ServiceDiscovery {

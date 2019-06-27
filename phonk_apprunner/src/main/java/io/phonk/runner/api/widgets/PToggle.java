@@ -28,14 +28,14 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
+import java.util.Map;
+
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
-
-import java.util.Map;
 
 public class PToggle extends ToggleButton implements PViewMethodsInterface, PTextInterface {
 

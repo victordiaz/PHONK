@@ -24,12 +24,13 @@ package io.phonk.runner.api.dashboard;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.UnknownHostException;
+
 import io.phonk.runner.api.PDashboard;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-
-import java.net.UnknownHostException;
 
 public class PDashboardText extends PDashboardWidget {
 

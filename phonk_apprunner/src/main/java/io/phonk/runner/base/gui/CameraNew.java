@@ -50,11 +50,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.utils.TimeUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,6 +57,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Vector;
+
+import io.phonk.runner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.base.utils.TimeUtils;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")

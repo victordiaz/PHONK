@@ -30,13 +30,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.lang.reflect.InvocationTargetException;
+
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class PAbsoluteLayout extends FixedLayout {
 

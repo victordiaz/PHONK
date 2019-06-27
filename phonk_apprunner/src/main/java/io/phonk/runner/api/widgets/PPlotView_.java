@@ -32,15 +32,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.views.CanvasUtils;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+
+import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.base.views.CanvasUtils;
 
 public class PPlotView_ extends View {
 

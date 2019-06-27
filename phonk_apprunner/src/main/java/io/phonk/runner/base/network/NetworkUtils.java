@@ -33,10 +33,6 @@ import android.os.PowerManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.base.utils.MLog;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +48,10 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.Enumeration;
+
+import io.phonk.runner.api.common.ReturnObject;
+import io.phonk.runner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.base.utils.MLog;
 
 public class NetworkUtils {
 

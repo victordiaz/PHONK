@@ -28,10 +28,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.Map;
+
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
-
-import java.util.Map;
 
 public class PWebView extends WebView implements PViewMethodsInterface {
 

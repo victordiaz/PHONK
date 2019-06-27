@@ -27,13 +27,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import io.phonk.runner.AppRunnerFragment;
-import io.phonk.runner.base.utils.MLog;
 import org.puredata.android.io.AudioParameters;
 import org.puredata.android.service.PdService;
 import org.puredata.core.PdBase;
 
 import java.io.IOException;
+
+import io.phonk.runner.AppRunnerFragment;
+import io.phonk.runner.base.utils.MLog;
 
 public class AudioServicePd {
 

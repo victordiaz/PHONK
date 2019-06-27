@@ -27,12 +27,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
-
-import java.util.HashMap;
 
 public class PLinearLayout extends LinearLayout {
 

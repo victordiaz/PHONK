@@ -29,7 +29,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import io.phonk.runner.base.utils.MLog;
-
 import ioio.lib.api.IOIO;
 
 public class IOIOBoard extends HardwareBase {
