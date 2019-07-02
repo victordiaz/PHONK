@@ -12,12 +12,12 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     // flavorDimensions "phonk_normal", "phonk_extended"
 
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "io.phonk"
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode 37
         versionName "1.0.0"

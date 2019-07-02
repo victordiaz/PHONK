@@ -5,7 +5,7 @@ apply plugin: 'com.android.library'
 android {
     flavorDimensions "default_apprunner"
 
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     //defaultPublishConfig "normalrunnerDebug"
     //defaultPublishConfig "extendedrunnerDebug"
@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         versionCode 37
         versionName "1.0.0"
