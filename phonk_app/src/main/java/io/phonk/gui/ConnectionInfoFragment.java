@@ -159,6 +159,8 @@ public class ConnectionInfoFragment extends Fragment {
         String type = e.getType();
         String address = e.getAddress();
 
+        MLog.d("qq", type);
+
         if (type == "wifi") {
             mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_wifi));
             mTxtConnectionIp.setText("http://" + address);
@@ -173,6 +175,22 @@ public class ConnectionInfoFragment extends Fragment {
             mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_not_connected));
             mTxtConnectionIp.setVisibility(View.GONE);
             // mConnectionButtons.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Subscribe
+    public void onEventMainThread(Events.AppUiEvent e) {
+        String action = e.getAction();
+        Object value = e.getValue();
+        MLog.d("qq", "got AppUiEvent 2"  + action);
+
+        switch (action) {
+            case "stopServers":
+                mToggleServers.setChecked(false);
+                break;
+            case "startServers":
+                mToggleServers.setChecked(true);
+                break;
         }
     }
 

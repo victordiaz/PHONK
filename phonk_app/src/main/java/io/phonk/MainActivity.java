@@ -435,7 +435,6 @@ public class MainActivity extends BaseActivity {
                 // recreate();
                 // finish();
                 break;
-
         }
     }
 

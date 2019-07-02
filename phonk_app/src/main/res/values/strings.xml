@@ -23,9 +23,9 @@
 
 <resources>
 
-    <string name="app_name">Phonk!</string>
-    <string name="activity_name">Phonk!</string>
-    <string name="runner_name">Phonk! Runner</string>
+    <string name="app_name">Phonk</string>
+    <string name="activity_name">Phonk</string>
+    <string name="runner_name">Phonk Runner</string>
     <string name="connect_message">Click to connect</string>
     <string name="connection_message_connected">Point the web browser in your computer to</string>
     <string name="connection_message_wifi">Connected to WIFI. Point your computer\'s web browser to this address</string>
@@ -138,4 +138,6 @@
     <string name="resource">Normal</string>
     <string name="licenses_explanation">Phonk includes different open source libraries and without them this project would not be possible.  Below you can check each individual license. Click to expand</string>
 
+    <string name="notification_description">Web Editor access is enabled</string>
+    <string name="notification_stop">Stop Server</string>
 </resources>

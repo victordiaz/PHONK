@@ -59,10 +59,13 @@ public class NotificationService extends NotificationListenerService {
                 text = getString(extras.getCharSequence("android.text"));
             }
 
+            /*
             Log.i("Package", pack);
             Log.i("Ticker", ticker);
             Log.i("Title", title);
             Log.i("Text", text);
+            */
+
             Intent msgrcv = new Intent("Msg");
             msgrcv.putExtra("package", pack);
             msgrcv.putExtra("ticker", ticker);

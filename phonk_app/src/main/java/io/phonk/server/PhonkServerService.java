@@ -39,6 +39,7 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 
 import com.google.gson.Gson;
 
@@ -48,6 +49,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
+import io.phonk.MainActivity;
 import io.phonk.R;
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;
@@ -89,7 +91,10 @@ public class PhonkServerService extends Service {
 
         if (intent != null) {
             AndroidUtils.debugIntent(TAG, intent);
-            if (intent.getAction() == SERVICE_CLOSE) stopSelf();
+            if (intent.getAction() == SERVICE_CLOSE) {
+                EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
+                stopSelf();
+            }
         }
 
         return Service.START_STICKY;
@@ -150,23 +155,38 @@ public class PhonkServerService extends Service {
 
         EventBus.getDefault().register(this);
 
+        /*
+        // go back to app intent
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        // The stack builder object will contain an artificial back stack for
+        // navigating backward from the Activity leads out your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        */
+
+        // close server intent
         Intent notificationIntent = new Intent(this, PhonkServerService.class).setAction(SERVICE_CLOSE);
-        PendingIntent pendingIntent = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
+        PendingIntent pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.phonk_icon)
-                .setContentTitle("Phonk").setContentText("Web Editor access is enabled")
+                .setSmallIcon(R.drawable.icon_phonk_service)
+                .setContentTitle(this.getString(R.string.app_name))
+                .setContentText(this.getString(R.string.notification_description))
                 .setOngoing(false)
-                .addAction(R.drawable.ic_action_stop, "stop", pendingIntent)
-                //.setDeleteIntent(pendingIntent)
-                .setContentInfo("1 Connection");
+                // .setContentIntent(pendingIntent)
+                .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
+                // .setContentInfo("1 Connection");
 
         // damm annoying android pofkjpodsjf0ewiah
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_LOW;
             mChannel = new NotificationChannel(PhonkSettings.NOTIFICATION_CHANNEL_ID, this.getString(R.string.app_name), importance);
-            mChannel.setDescription("lalalla");
+            // mChannel.setDescription("lalalla");
             mChannel.enableLights(false);
             mNotificationManager.createNotificationChannel(mChannel);
         } else {
@@ -258,7 +278,7 @@ public class PhonkServerService extends Service {
         IntentFilter filterWebEditorSend = new IntentFilter();
         filterWebEditorSend.addAction("io.phonk.intent.WEBEDITOR_SEND");
         registerReceiver(webEditorBroadcastReceiver, filterWebEditorSend);
-        MLog.d("qq22", "registering receiver");
+        MLog.d(TAG, "registering receiver");
 
         // register a broadcast to receive the notification commands
         IntentFilter filter = new IntentFilter();
@@ -315,42 +335,7 @@ public class PhonkServerService extends Service {
     /*
      * Notification that show if the server is ON
      */
-    private void createNotification() {
-        /*
-        //create pending intent that will be triggered if the notification is clicked
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SERVICE_CLOSE);
-        // registerReceiver(mNotificationReceiver, filter);
-
-        Intent stopIntent = new Intent(SERVICE_CLOSE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(org.protocoderrunner.R.drawable.phonk_icon)
-                .setContentTitle("Protocoder").setContentText("Running service ")
-                .setOngoing(false)
-                .addAction(org.protocoderrunner.R.drawable.ic_action_stop, "stop", pendingIntent)
-                .setDeleteIntent(pendingIntent);
-
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        // The stack builder object will contain an artificial back stack for
-        // navigating backward from the Activity leads out your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(AppRunnerActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_SERVER_ID, mBuilder.build());
-
-        Thread.setDefaultUncaughtExceptionHandler(handler);
-        */
-    }
-
+ 
     /**
      * Events
      *
