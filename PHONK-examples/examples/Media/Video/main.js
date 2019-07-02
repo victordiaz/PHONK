@@ -9,13 +9,17 @@
 ui.addTitle(app.name)
 
 var player = media.createVideoPlayer()
-ui.add(player.getPreview(), 0.1, 0.15, 0.8, 0.3)
 
 player.load('bigbuckbunny.m4v')
-player.play()
+player.onLoaded(function () {
+  var playerWidth = 0.8
+  var playerHeight = playerWidth / player.getClipAspectRatio() + 'w'
+  ui.add(player.getPreview(), 0.1, 0.15, playerWidth, playerHeight)
+  player.play()
+})
 
 util.loop(500, function () {
-  console.log(player.position() + ' of ' + player.duration())
+  slider.value(player.position() / player.duration())
 }).start()
 
 
@@ -27,9 +31,7 @@ ui.addButton('Pause', 0.55, 0.85, 0.40, 0.1).onClick(function() {
   player.pause()
 })
 
-ui.addSlider(0.05, 0.75, 0.9, 0.05).range(0, 1).onChange(function (e) {
+var slider = ui.addSlider(0.05, 0.75, 0.9, 0.05).range(0, 1).onChange(function (e) {
   var pos = e.value * player.duration()
-  console.log(pos)
   player.seekTo(pos)
 })
-
