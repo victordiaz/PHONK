@@ -118,7 +118,7 @@ public class PAbsoluteLayout extends FixedLayout {
         int returnVal = -1;
 
         if (val instanceof String) {
-            MLog.d(TAG, "oo is string");
+            // MLog.d(TAG, "oo is string");
             String str = (String) val;
             String[] splitted = str.split("(?<=\\d)(?=[a-zA-Z%])|(?<=[a-zA-Z%])(?=\\d)");
 
@@ -127,7 +127,7 @@ public class PAbsoluteLayout extends FixedLayout {
 
             returnVal = transform(type, value, toValue);
         } else if (val instanceof Double) {
-            MLog.d(TAG, "oo is double " + val);
+            // MLog.d(TAG, "oo is double " + val);
 
             returnVal = transform("", (Double) val, toValue);
         }
@@ -137,7 +137,7 @@ public class PAbsoluteLayout extends FixedLayout {
     }
 
     private int transform(String type, Double value, int toValue) {
-        MLog.d(TAG, "oo transform");
+        // MLog.d(TAG, "oo transform");
 
         int retValue = -1;
 
@@ -146,13 +146,13 @@ public class PAbsoluteLayout extends FixedLayout {
                 retValue = value.intValue();
                 break;
             case "dp":
-                MLog.d(TAG, "retValue dp " + value + " " + retValue);
+                // MLog.d(TAG, "retValue dp " + value + " " + retValue);
                 retValue = AndroidUtils.dpToPixels(mContext, value.intValue());
                 MLog.d(TAG, "retValue dp " + value + " " + retValue);
                 break;
             case "":
                 retValue = (int) (value * toValue);
-                MLog.d(TAG, "retValue ''" + value + " " + retValue);
+                // MLog.d(TAG, "retValue ''" + value + " " + retValue);
                 break;
             /*
             case "%":
@@ -169,7 +169,7 @@ public class PAbsoluteLayout extends FixedLayout {
                 break;
         }
 
-        MLog.d(TAG, "oo --> " + retValue);
+        // MLog.d(TAG, "oo --> " + retValue);
         return retValue;
     }
 

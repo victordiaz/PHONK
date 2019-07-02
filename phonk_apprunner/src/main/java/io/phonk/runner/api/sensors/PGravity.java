@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,7 +15,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
@@ -29,21 +29,18 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
-public class PPressure extends CustomSensorManager implements WhatIsRunningInterface {
+public class PGravity extends CustomSensorManager {
 
-    private final static String TAG = PPressure.class.getSimpleName();
+    private final static String TAG = PGravity.class.getSimpleName();
 
-    public PPressure(AppRunner appRunner) {
+    public PGravity(AppRunner appRunner) {
         super(appRunner);
 
-        type = Sensor.TYPE_PRESSURE;
+        type = Sensor.TYPE_GRAVITY;
     }
-
 
     public void start() {
         super.start();
@@ -52,10 +49,17 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                ReturnObject r = new ReturnObject();
-                r.put("bar", event.values[0]);
-                mCallback.event(r);
+                if (mCallback != null) {
+                    ReturnObject r = new ReturnObject();
+                    r.put("x", event.values[0]);
+                    r.put("y", event.values[1]);
+                    r.put("z", event.values[2]);
+                    float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
+                    r.put("force", force);
+                    mCallback.event(r);
+                }
             }
+
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -78,17 +82,14 @@ public class PPressure extends CustomSensorManager implements WhatIsRunningInter
 
     @Override
     public String units() {
-        return "hPa";
+        return "m/s^2";
     }
 
-
-    @ProtoMethod(description = "Start the pressure sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
-    public PPressure onChange(final ReturnInterface callbackfn) {
+    @ProtoMethod
+    public PGravity onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
-        
+
         return this;
     }
-
 
 }

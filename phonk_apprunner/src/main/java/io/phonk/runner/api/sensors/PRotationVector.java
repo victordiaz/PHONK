@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,7 +15,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
@@ -29,25 +29,19 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
-public class PMagnetic extends CustomSensorManager implements WhatIsRunningInterface {
+public class PRotationVector extends CustomSensorManager {
 
-    private final static String TAG = PMagnetic.class.getSimpleName();
+    private final static String TAG = PRotationVector.class.getSimpleName();
 
-    private ReturnInterface mCallbackMagneticChange;
-
-    public PMagnetic(AppRunner appRunner) {
+    public PRotationVector(AppRunner appRunner) {
         super(appRunner);
 
-        type = Sensor.TYPE_MAGNETIC_FIELD;
+        type = Sensor.TYPE_ROTATION_VECTOR;
     }
 
-    @ProtoMethod(description = "Start the magnetic sensor", example = "")
-    @ProtoMethodParam(params = {"function(value)"})
     public void start() {
         super.start();
 
@@ -55,12 +49,15 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
 
             @Override
             public void onSensorChanged(SensorEvent event) {
-                ReturnObject r = new ReturnObject();
-                r.put("x", event.values[0]);
-                r.put("y", event.values[1]);
-                r.put("z", event.values[2]);
-                mCallbackMagneticChange.event(r);
+                if (mCallback != null) {
+                    ReturnObject r = new ReturnObject();
+                    r.put("x", event.values[0]);
+                    r.put("y", event.values[1]);
+                    r.put("z", event.values[2]);
+                    mCallback.event(r);
+                }
             }
+
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -83,17 +80,14 @@ public class PMagnetic extends CustomSensorManager implements WhatIsRunningInter
 
     @Override
     public String units() {
-        return "uT";
+        return "quaternion";
     }
 
-
-    @ProtoMethod(description = "Start the magnetic sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
-    public PMagnetic onChange(final ReturnInterface callbackfn) {
-        mCallbackMagneticChange = callbackfn;
+    @ProtoMethod
+    public PRotationVector onChange(final ReturnInterface callbackfn) {
+        mCallback = callbackfn;
 
         return this;
     }
-
 
 }
