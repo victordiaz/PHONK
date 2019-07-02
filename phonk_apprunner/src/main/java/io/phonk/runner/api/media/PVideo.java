@@ -27,6 +27,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 
+import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -90,15 +91,21 @@ public class PVideo extends PAudioPlayer {
         return mTextureView;
     }
 
-    @ProtoMethod(description = "Gets the video width", example = "")
+    @ProtoMethod(description = "Gets the video width and height", example = "")
     @ProtoMethodParam(params = {""})
-    public int getVideoWidth() {
-        return mMediaPlayer.getVideoWidth();
+    public ReturnObject getClipSize() {
+        ReturnObject r = new ReturnObject();
+        r.put("width", mMediaPlayer.getVideoWidth());
+        r.put("height", mMediaPlayer.getVideoHeight());
+        return r;
     }
 
-    @ProtoMethod(description = "Gets the video height", example = "")
+    @ProtoMethod(description = "Gets the video aspect ratio", example = "")
     @ProtoMethodParam(params = {""})
-    public int getVideoHeight() {
-        return mMediaPlayer.getVideoHeight();
+    public float getClipAspectRatio() {
+        return (float) ((float) mMediaPlayer.getVideoWidth() / (float) mMediaPlayer.getVideoHeight());
     }
+
+
+
 }

@@ -29,6 +29,8 @@ import android.media.PlaybackParams;
 import java.io.IOException;
 
 import io.phonk.runner.api.ProtoBase;
+import io.phonk.runner.api.common.ReturnInterface;
+import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -38,6 +40,7 @@ public class PAudioPlayer extends ProtoBase {
 
     private final String TAG = PAudioPlayer.class.getSimpleName();
     protected MediaPlayer mMediaPlayer;
+    private ReturnInterface callbackfn;
 
     public interface OnFinishCB {
         void event();
@@ -54,7 +57,11 @@ public class PAudioPlayer extends ProtoBase {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 MLog.d(TAG, "prepared");
+
+                ReturnObject r = new ReturnObject();
+                callbackfn.event(r);
                 //mMediaPlayer.start();
+
             }
         });
 
@@ -99,6 +106,11 @@ public class PAudioPlayer extends ProtoBase {
             e.printStackTrace();
         }
 
+        return this;
+    }
+
+    public PAudioPlayer onLoaded(ReturnInterface callbackfn) {
+        this.callbackfn = callbackfn;
         return this;
     }
 
