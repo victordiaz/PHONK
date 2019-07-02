@@ -74,7 +74,7 @@
                 android:scaleType="fitStart"
                 android:paddingTop="5dp"
                 android:paddingLeft="5dp"
-                android:src="@drawable/thingie_undertext_bak" />
+                android:src="@drawable/thingie_undertext" />
 
             <View
                 android:layout_width="match_parent"

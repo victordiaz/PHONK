@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="12dp"
-        app:srcCompat="@drawable/thingie_undertext_bak" />
+        app:srcCompat="@drawable/thingie_undertext" />
 
     <TextView
         android:id="@+id/welcome_body"
