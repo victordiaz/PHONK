@@ -171,7 +171,7 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
             if (autoTextSize) c.textSize((diameter / 5));
             else c.textSize(AndroidUtils.spToPixels(getContext(), (int) styler.textSize));
 
-            c.drawTextCentered("" + Math.round(mappedVal));
+            c.drawTextCentered("" + Math.round(mappedVal * 100.0f) / 100.0f);
         }
     };
 
@@ -192,8 +192,12 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
         this.mappedVal = val;
         this.unmappedVal = CanvasUtils.map(val, rangeFrom, rangeTo, 0, 360);
 
-        executeCallback();
         this.invalidate();
+    }
+
+    public void valueAndTriggerEvent(float val) {
+        this.value(val);
+        executeCallback();
     }
 
     @Override

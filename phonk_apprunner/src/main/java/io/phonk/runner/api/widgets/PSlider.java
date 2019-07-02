@@ -133,8 +133,12 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
         this.mappedVal = val;
         this.unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, mWidth);
 
-        executeCallback();
         this.invalidate();
+    }
+
+    public void valueAndTriggerEvent(float val) {
+        this.value(val);
+        executeCallback();
     }
 
     @Override
