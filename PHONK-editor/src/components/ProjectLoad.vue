@@ -51,7 +51,7 @@
         </div>
         <ul v-if = "pselected !== -1">
           <li v-bind:class="{'selected':actionOnProject === f}" v-for = "f in folder_chosen" v-on:click = "load_project(f)" class = "project_item">
-            <span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action fa fa-ellipsis-v"></i>
+            <span class = "icon">{{f.name.substr(0, 2)}}</span><span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action fa fa-ellipsis-v"></i>
           </li>
         </ul>
       </div>
@@ -225,12 +225,28 @@ export default {
     margin: 0;
     padding: 0;
     cursor: pointer;
+    user-select: none;
 
     li {
       padding: 5px 10px;
       font-weight: 300;
       display: flex;
       line-height: 1.2em;
+      align-items: center;
+      
+      .icon {
+        max-width: 30px;
+        height: 30px;
+        border: 1px solid @accentColor;
+        color: @accentColor;
+        font-weight: 800;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        margin-right: 10px;
+        padding: 5px;
+      }
 
       span {
         flex: 2;
@@ -241,6 +257,12 @@ export default {
         color: @primaryTextColor;
         border-radius: 1px;
         position: relative;
+
+        
+        .icon {
+          color: white;
+          border-color: white;
+        }
 
         .action {
           display: block;

@@ -238,7 +238,7 @@ export default {
         this.run_button_state = 'run'
       }
 
-      // higlihht run button
+      // higlight run button
       that.runShortcut = true
       setTimeout(function () {
         that.runShortcut = false
@@ -434,7 +434,7 @@ export default {
   opacity: 0;
 
   &.project_loaded {
-    animation: fadein 1s forwards;
+    animation: fadein 0.3s forwards;
     animation-delay: 0.3s;
   }
 
