@@ -1,5 +1,5 @@
 # ![logo](./images/logo2.png) Phonk
-** Phonk is a self-contained, creative coding environment for Android Devices.**
+**Phonk is a self-contained, creative coding environment for Android Devices.**
 
 [![github version](https://img.shields.io/github/license/victordiaz/phonk.svg)](https//github.com/victordiaz/phonk)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhnent/tui.editor/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
@@ -7,19 +7,17 @@
 ## Introduction
 :tada: Hello! I'm happy to see you here reading about Phonk!!
 
-Phonk is an app for your Android device(s) that lets you make cool stuff programming your phone or tablet in an easy, fast and enjoyable way.
-
+Phonk is an app for your Android device(s) that lets you make cool stuff programming your phone or tablet in an easy, fast and enjoyable way.<br />
 You can code directly from the Android device or using the remote Editor from your computer using your web browser.
-
 Pick an old phone (or new) from the drawer and transform it into a robot, a music device, or make cool graphics.
 
-<div style="text-align: center; margin: 50px 0px;">
-  <img src="./images/phonk_app.png" width="180" />
-  <img src="./images/phonk_script.png" width="180" />
-</div>
+<p style="text-align: center; margin: 50px 0px;">
+  <img src="./images/phonk_app.png" width="150" />
+  <img src="./images/phonk_webide.png" width="320" />
+  <img src="./images/phonk_script.png" width="150" />
+</p>
 
 <div style="text-align:center; margin: 50px 0">
-  <img src="./images/phonk_webide.png" width="400" />
 </div>
 
 ## Features
@@ -42,6 +40,10 @@ Get it from
 - ~~or just [compile it your self]().~~
 
 If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](https://github.com/victordiaz/phonk/issues/new).
+
+During the first install, the app will
+1. Ask you for a bunch of permissions. I recommend to accept all of them to be able to run the examples. You can always revoke them :)
+2. Install the examples in the device "sdcard" folder. Doing this we can easily access the examples and self-made scripts from any other app.
 
 ## How to create your first script
 Run the Phonk app in your Android device. You can create your first script within the device although it might be a bit cumbersome using the device virtual keyboard.
