@@ -178,6 +178,7 @@ public class PhonkServerService extends Service {
                 .setContentTitle(this.getString(R.string.app_name))
                 .setContentText(this.getString(R.string.notification_description))
                 .setOngoing(false)
+                .setColor(this.getResources().getColor(R.color.phonk_accentColor_primary))
                 // .setContentIntent(pendingIntent)
                 .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
                 // .setContentInfo("1 Connection");
@@ -335,7 +336,7 @@ public class PhonkServerService extends Service {
     /*
      * Notification that show if the server is ON
      */
- 
+
     /**
      * Events
      *
