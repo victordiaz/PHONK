@@ -130,16 +130,17 @@ export default {
       })
     },
     switch_view: function () {
+      console.log('switching view')
       switch (this.view_type) {
         case 'horizontal':
-          this.view_type = 'vertical'
+          this.view_type = 'over'
           break
-        case 'vertical':
-          this.view_type = 'vertical'
-          break
-        // case 'over':
-        //  this.view_type = 'horizontal'
+        // case 'vertical':
+        //  this.view_type = 'over'
         //  break
+        case 'over':
+          this.view_type = 'horizontal'
+          break
       }
     },
     close_card: function () {
