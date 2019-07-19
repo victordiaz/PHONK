@@ -251,7 +251,6 @@ public class PMap extends MapView {
 
         if (mapId != null) {
             tileSource.setMapboxMapid(mapId);
-            tileSource.
         }
         mapView.setTileSource(tileSource);
 
