@@ -31,8 +31,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.MapBoxTileSource;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
@@ -47,6 +49,7 @@ import org.osmdroid.views.overlay.Polyline;
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.phonk.runner.BuildConfig;
 import io.phonk.runner.R;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
@@ -73,6 +76,7 @@ public class PMap extends MapView {
         mAppRunner = appRunner;
         this.mContext = appRunner.getAppContext();
         // super(appRunner, pixelTileSize);
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         // Create the mapview with the custom tile provider array
         this.mapView = this;
@@ -211,6 +215,13 @@ public class PMap extends MapView {
         return this;
     }
 
+    /**
+     * Set a new tile source such as mapbox and others
+     *
+     * @param type
+     * @return
+     */
+    @ProtoMethod
     public MapView tileSource(String type) {
         OnlineTileSourceBase source;
         if (type.equals("hikebikemap")) {
@@ -222,6 +233,29 @@ public class PMap extends MapView {
         mapView.setTileSource(source);
 
         return mapView;
+    }
+
+    /**
+     * Set a new tile source such as mapbox and others
+     *
+     * @param accessToken
+     * @param mapId
+     * @return
+     */
+    @ProtoMethod
+    public MapView mapBoxTileSource(String accessToken, String mapId) {
+        final MapBoxTileSource tileSource = new MapBoxTileSource();
+
+        // option 2, provide them programmatically
+        tileSource.setAccessToken(accessToken);
+
+        if (mapId != null) {
+            tileSource.setMapboxMapid(mapId);
+            tileSource.
+        }
+        mapView.setTileSource(tileSource);
+
+        return this;
     }
 
     /**
