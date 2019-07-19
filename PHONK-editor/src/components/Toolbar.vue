@@ -109,7 +109,7 @@ export default {
       this.infoMsg = msg
       this.isShowingInfo = true
       this.infoIcon = icon
-      
+
       setTimeout(() => {
         this.isShowingInfo = false
       }, 2000)
