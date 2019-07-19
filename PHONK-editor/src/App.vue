@@ -661,8 +661,8 @@ button {
     			li {
     				display: inline-block;
     				padding: 0px 5px;
-    				cursor: pointer;
-            font-size: 0.8em;
+            cursor: pointer;
+            font-size: 1em;
 
     				&:hover {
               color: @mainColor;

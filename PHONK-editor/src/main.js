@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import store from './Store'
-import { domain, faIcon } from './filters'
+import { domain } from './filters'
 import App from './App'
-import './assets/css/font-awesome/css/font-awesome.min.css'
 import VueRouter from 'vue-router'
 
 import Login from './components/views/Login.vue'
@@ -18,7 +17,6 @@ import VueAxios from 'vue-axios'
 
 // register filters globally
 Vue.filter('domain', domain)
-Vue.filter('faIcon', faIcon)
 
 // install router
 Vue.use(VueRouter)

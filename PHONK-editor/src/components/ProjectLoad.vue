@@ -1,11 +1,6 @@
 <template>
   <div id = "project-load-container" class = "editor_panel panel_above">
     <div class = "container">
-    <!--
-    <div class = "btn-sidebar btn-close" v-on:click = "close">
-      <i class = "fa fa-close"></i>
-    </div>
-    -->
 
     <span class = "debug" v-if = "false">{{store.state.projects['playground']}}</span>
 
@@ -51,7 +46,7 @@
         </div>
         <ul v-if = "pselected !== -1">
           <li v-bind:class="{'selected':actionOnProject === f}" v-for = "f in folder_chosen" v-on:click = "load_project(f)" class = "project_item">
-            <span class = "icon">{{f.name.substr(0, 2)}}</span><span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action fa fa-ellipsis-v"></i>
+            <span class = "icon">{{f.name.substr(0, 2)}}</span><span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action material-icons">more_vert</i>
           </li>
         </ul>
       </div>

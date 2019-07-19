@@ -5,11 +5,10 @@
         <h1 v-on:click = "expanded = !expanded">Files</h1>
         <input v-show = "false" class = "path" v-model = "current_folder" readonly />
         <ul>
-          <!-- <li class="fa fa-folder" for = "get_file"></li> -->
-          <li title = "Create a file or folder" class = "fa fa-plus" v-on:click = "toggle_create_file_dialog" v-bind:class="{'enabled':showCreateDialog}"></li>
-          <li title = "Upload a file" class = "fa fa-upload" for = "get_file" v-on:click = "show_upload_dialog"></li>
-          <li title = "Edit files" class = "fa fa-edit" v-on:click = "edit_files" v-bind:class="{'enabled':isEditingFiles}"></li>
-          <li title = "Refresh files" class = "fa fa-refresh" v-on:click = "refresh_files"></li>
+          <li title = "Create a file or folder" class = "material-icons" v-on:click = "toggle_create_file_dialog" v-bind:class="{'enabled':showCreateDialog}">add</li>
+          <li title = "Upload a file" class = "material-icons" for = "get_file" v-on:click = "show_upload_dialog">cloud_upload</li>
+          <li title = "Edit files" class = "material-icons" v-on:click = "edit_files" v-bind:class="{'enabled':isEditingFiles}">edit</li>
+          <li title = "Refresh files" class = "material-icons" v-on:click = "refresh_files">refresh</li>
         </ul>
         <div id = "upload_container" v-bind:class = "{'show' : isDnd, 'todrop': isReadyToDrop }">
           <p>Drop the files here</p>
@@ -27,8 +26,8 @@
             </div>
 
             <div v-else>
-              <button v-on:click = 'rename_file_submit' v-if = "isRenaming"><i class = "fa fa-check"></i></button>
-              <button v-on:click = 'cancel_file_operation' v-if = "isRenaming"><i class = "fa fa-times"></i></button>
+              <button v-on:click = 'rename_file_submit' v-if = "isRenaming"><i class = "material-icons">check</i></button>
+              <button v-on:click = 'cancel_file_operation' v-if = "isRenaming"><i class = "material-icons">close</i></button>
               <button v-on:click = 'paste_files' v-if = "isCutting">Paste {{filesToPaste.length}} file(s)</button>
             </div>
           </div>
@@ -48,8 +47,8 @@
           </select>
           <input id = "new_file" ref = "newfile" type = "text" placeholder="filename.js" v-model = "new_file.name" @keyup.enter = "create_file"/>
           <div class = "button_group">
-            <button class = "left" v-on:click = "create_file"><i class = "fa fa-check"></i></button>
-            <button class = "right" v-on:click = "toggle_create_file_dialog"><i class = "fa fa-times"></i></button>
+            <button class = "left" v-on:click = "create_file"><i class = "material-icons">check</i></button>
+            <button class = "right" v-on:click = "toggle_create_file_dialog"><i class = "material-icons">close</i></button>
           </div>
         </div>
       </transition>
@@ -67,13 +66,13 @@
           </thead>
           <tbody>
             <tr id = "back" v-on:click = "change_dir('..')">
-              <td><i class = "fa fa-folder-o"></i></td>
+              <td><i class = "material-icons">folder</i></td>
               <td> .. </td>
               <td> </td>
             </tr>
             <tr id = "files" v-bind:class="{ 'selected': selected == index }" v-for = "(file, index) in files" v-on:click = "showcontent(index, $event)">
               <td v-if = "isEditingFiles && !isCutting"><input type="checkbox" v-model="file.selected" :class = "{ disabled: isRenaming}"></td>
-              <td><i class = "fa" v-bind:class = "get_icon(file)"></i></td>
+              <td><i class = "material-icons">{{get_icon(file)}}</i></td>
               <td><span v-if = "!checkRenaming(isRenaming, file.name)">{{file.name}}</span> <input v-else = "checkRenaming(isRenaming, file.name)" v-model = "file.name" v-on:keyup.enter = "rename_file_submit"></input> </td>
               <td class = "file_size"> {{file.size}} </td>
             </tr>
@@ -99,7 +98,7 @@
 
       <div class = "file_info">
         <input type = "text" v-model = "url" />
-        <a v-bind:href = "url" download><i class = "fa fa-download"></i></a>
+        <a v-bind:href = "url" download><i class = "material-icons">cloud_download</i></a>
       </div>
       <!--
       <video-player src = "https://www.youtube.com/embed/BC2dRkm8ATU"></video-player>
@@ -477,7 +476,11 @@ export default {
       this.showpopover = false
     },
     get_icon: function (o) {
-      return 'fa-' + o.type + '-o'
+      if (o.type === 'file') {
+        return 'insert_drive_file'
+      } else if (o.type === 'folder') {
+        return 'folder'
+      }
     }
   },
   mounted () {
@@ -593,9 +596,13 @@ export default {
     color: @accentColor;
     font-weight: bold;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   table {
+    table-layout: fixed;
     width: 100%;
     text-align: left;
     cursor: pointer;
@@ -634,10 +641,20 @@ export default {
       }
 
       tr {
+        display: flex;
+        align-items: center;
+        .material-icons {
+          color: #b7b7b7;
+        }
+
         &:hover {
           background: @accentColor;
           color: white;
 
+          .material-icons {
+            color: white;
+          }
+          
           .file_size {
             color: #ffffff88;
           }

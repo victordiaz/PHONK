@@ -10,10 +10,7 @@
         </li>
       </ul>
       <div v-else class = "disconnected">
-        <div class = "icon fa fa-stack">
-          <i class = "wifi fa fa-wifi fa-stack-2x"></i>
-          <i class = "ban fa fa-times fa-stack-2x"></i>
-        </div>
+        <i class = "material-icons">wifi_off</i>
         <p>Your device is disconnected, please double check the connection among both devices.</p>
       </div>
     </div>
@@ -35,7 +32,7 @@ export default {
     return {
       // device_properties: store.state.device_properties,
       ready: false,
-      posx: '35px',
+      posx: '45px',
       posy: '48px',
       device_properties: {},
       sharedState: Store.state

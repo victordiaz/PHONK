@@ -9,12 +9,12 @@
           <button class = "transparent" key = "show" v-if = "!sharedState.show_load_project" v-on:click = "toggle_load_project">
             <p v-if = "not_loaded"><span class = "folder">/{{sharedState.current_project.project.folder}}/</span><span class = "name">{{sharedState.current_project.project.name}}</span></p>
             <p v-else class = "bold">load project</p>
-            <i class = "fa fa-sort-down"></i>
+            <i class = "material-icons closer">arrow_drop_down</i>
           </button>
 
           <button class = "transparent" key = "hide" v-else v-on:click = "toggle_load_project">
             <p class = "bold">back to editor</p>
-            <i class = "fa fa-sort-up"></i>
+            <i class = "material-icons closer">arrow_drop_up</i>
           </button>
         </transition>
 
@@ -31,12 +31,16 @@
     </div>
     -->
 
-
     <div class = "right_side">
-      <div v-if = "false" class = "app_info_msg"><span class = "icon_left fa fa-clock-o"></span>Loading...<span class = "icon_right fa fa-clock-o"></span></div>
-      <button class = "fa fa-dashboard transparent" v-show = "false" v-on:click = "toggle_dashboard"></button>
-      <button class = "fa fa-tablet transparent" v-bind:class = "{ 'rotate' : is_rotated, 'enabled': sharedState.show_device_info, 'device_disabled': !sharedState.device_properties.connected}"  v-on:click = "sharedState.show_device_info = !sharedState.show_device_info"></button>
-      <button class = "fa fa-cog transparent" v-on:click = "sharedState.show_preferences = !sharedState.show_preferences" v-bind:class = "{ 'enabled': sharedState.show_preferences }"></button>
+      <transition name = "upanim" mode = "out-in">
+        <div v-if = "isShowingInfo" class = "app_info_msg">
+          <span class = "icon_left material-icons">{{infoIcon}}</span>
+          <span>{{infoMsg}}</span>
+        </div>
+      </transition>
+      <button class = "material-icons transparent" v-show = "false" v-on:click = "toggle_dashboard">dashboard</button>
+      <button class = "material-icons transparent" v-bind:class = "{ 'rotate' : is_rotated, 'enabled': sharedState.show_device_info, 'device_disabled': !sharedState.device_properties.connected}"  v-on:click = "sharedState.show_device_info = !sharedState.show_device_info">phone_android</button>
+      <button class = "material-icons transparent" v-on:click = "sharedState.show_preferences = !sharedState.show_preferences" v-bind:class = "{ 'enabled': sharedState.show_preferences }">settings</button>
     </div>
 
     <transition name = "upanim">
@@ -55,6 +59,7 @@ import Store from '../Store'
 import Logo from './Logo'
 import Device from './Device'
 import Preferences from './Preferences'
+import { setTimeout } from 'timers'
 
 export default {
   name: 'Toolbar',
@@ -73,7 +78,11 @@ export default {
       runShortcut: false,
       saveShortcut: false,
       saveAsShortcut: false,
-      sharedState: Store.state
+      sharedState: Store.state,
+      isShowingInfo: false,
+      infoMsg: 'message...',
+      infoIcon: null,
+      isProjectRunning: false
     }
   },
   methods: {
@@ -85,6 +94,25 @@ export default {
       // Store.emit('toggle_dashboard')
       this.sharedState.show_dashboard = !this.sharedState.show_dashboard
       // console.log('toggling dashboard')
+    },
+    project_saved: function () {
+      this.showInfo('save', 'Saved')
+    },
+    project_action: function (state) {
+      if (state === '/run') {
+        this.showInfo('play_arrow', 'Running...')
+      } else {
+        this.showInfo('stop', 'Stopping...')
+      }
+    },
+    showInfo (icon, msg) {
+      this.infoMsg = msg
+      this.isShowingInfo = true
+      this.infoIcon = icon
+      
+      setTimeout(() => {
+        this.isShowingInfo = false
+      }, 2000)
     }
   },
   computed: {
@@ -97,8 +125,12 @@ export default {
     }
   },
   created () {
+    Store.on('project_saved', this.project_saved)
+    Store.on('project_action', this.project_action)
   },
   destroyed () {
+    Store.remove_listener('project_saved', this.project_saved)
+    Store.remove_listener('project_action', this.project_action)
   }
 }
 </script>
@@ -150,12 +182,14 @@ export default {
     font-weight: 400;
     margin-right: 20px;
     color: white;
-    padding: 5px 0px;
+    padding: 5px 15px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
+    display: flex;
+    align-items: center;
 
     .icon_left, .icon_right {
-      padding: 0px 10px 0px 15px;
+      padding-right: 10px;
     }
     .icon_left {
       border-right: 1px solid #fff0;
@@ -245,6 +279,10 @@ export default {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+    }
+
+    .closer {
+      margin-left: -5px;
     }
 
   }

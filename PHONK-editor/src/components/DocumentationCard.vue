@@ -1,7 +1,7 @@
 <template>
   <div id = "info">
     <div v-if = "" class = "btn-sidebar btn-close" v-on:click = "close">
-      <i class = "fa fa-close"></i>
+      <i class = "material-icons">close</i>
     </div>
 
     <h2><span class = "object">{{data.object.name}}.</span><span class = "method">{{data.method.name}}()</span></h2>
@@ -62,8 +62,13 @@ function () {
     </div>
 
     <div class = "stub">
-      <a href = "http://" target = "_blank">Help improve this doc</a>
-      <a v-bind:href = "getGithubUrl(data.method)" target = "_blank"><i class = "fa fa-github"></i> Show method sourcecode</a>
+      <a href = "http://" target = "_blank">
+        <span>Help improve this doc</span>
+      </a>
+      <a v-bind:href = "getGithubUrl(data.method)" target = "_blank">
+        <i class = "material-icons">link</i>
+        <span>Show method sourcecode</span>
+      </a>
     </div>
 
   </div>
@@ -211,6 +216,7 @@ export default {
     margin: 10px 0px;
     display: block;
     color: white;
+    display: inline-flex;
     /* animation: fadeIn 1s infinite alternate; */
 
     a {
@@ -221,9 +227,14 @@ export default {
       font-weight: 600;
       text-decoration: none;
       display: inline-block;
-      margin-right: 2px;
+      margin-right: 5px;
       margin-bottom: 2px;
       border: 1px solid rgba(255, 255, 255, 0.11);
+      display: inline-flex;
+
+      span {
+        padding: 5px;
+      }
 
       &:hover {
         opacity: 0.8;

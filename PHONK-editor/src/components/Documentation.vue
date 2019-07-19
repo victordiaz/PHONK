@@ -6,8 +6,7 @@
       <h1 class = "title" v-on:click = "expanded = !expanded">Docs</h1>
       <input type = "text" v-model = "search" placeholder="type to filter..." />
       <ul>
-        <!-- <li class="fa fa-folder" for = "get_file"></li> -->
-        <li title = "Switch view" class = "fa fa-reorder" v-on:click = "switch_view"></li>
+        <li title = "Switch view" class = "material-icons" v-on:click = "switch_view">reorder</li>
       </ul>
     </div>
 
@@ -32,12 +31,6 @@
         <div id = "card" :class = "{ inset: view_type === 'vertical' }" v-if = "show_card">
           <documentation-card :data = "selected"></documentation-card>
         </div>
-        <!--
-        <div v-else :class = "{ inset: view_type === 'vertical' }" >
-          <i class = "wifi fa fa-wifi"></i>
-          <p>Your device is disconnected</p>
-        </div>
-        -->
       </transition>
 
     </div>

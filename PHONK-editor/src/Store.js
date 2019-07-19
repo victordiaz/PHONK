@@ -533,7 +533,7 @@ store.websockets_init = function () {
     reconnectionInterval = setTimeout(function () {
       console.log('trying to reconnect')
       that.websockets_init()
-    }, 1000)
+    }, 200)
   }
 }
 

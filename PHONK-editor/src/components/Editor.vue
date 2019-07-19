@@ -1,28 +1,18 @@
 <template>
   <div id = "myeditor">
-    <!--
-    <div id = "project-options">
-      <div id = "project-actions" class ="">
-        <div class = "btn-sidebar btn-open" v-on:click = "toggle_left_container">
-          <i class = "fa fa-bars"></i>
-        </div>
-
-        <button id = "project-save" v-on:click="save" v-bind:class = "{ 'shortcut': saveShortcut }"> Save </button>
-        <button id = "project-save-as" v-on:click="saveas" v-bind:class = "{ 'shortcut': saveAsShortcut }"> Save As </button>
-      </div>
-    </div><<f
-    -->
 
   	<div id = "editor_container" :class = "{'project_loaded': project_loaded}">
       <div id = "nav_tabs" v-if = "sharedState.preferences['editor']['show tab bar']">
         <!-- <div id = "project_name" v-on:click = "store.emit('toggle_section', 'load_project')"> -->
-          <button id = "project_run" v-on:click="run" v-bind:class = "{ 'torun' : isConnected, 'shortcut': runShortcut }"> <i class = "fa fa-play" v-if = "button_run_state"></i> <i class = "fa fa-stop" v-else></i></button>
+          <button id = "project_run" v-on:click="run" v-bind:class = "{ 'torun' : isConnected, 'shortcut': runShortcut }"> 
+            <i class = "material-icons" v-if = "button_run_state">play_arrow</i> 
+            <i class = "material-icons" v-else>stop</i>
+          </button>
         <!-- </div> -->
         <ul id = "tabs">
-          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click.prevent.self="select_tab(index)" v-for="(t, index) in tabs">{{t.name}}<i class = "close fa fa-times" v-on:click = "close_tab(index)"></i></li>
+          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click.prevent.self="select_tab(index)" v-for="(t, index) in tabs">{{t.name}}<i class = "close material-icons" v-on:click = "close_tab(index)">close</i></li>
         </ul>
-        <!-- <div id = "add_tab" class = "fa fa-plus" v-on:click = "add_tab()"></div> -->
-        <button id = "project_save" v-on:click = "save"><i class = "fa fa-save"></i></button>
+        <button id = "project_save" v-on:click = "save"><i class = "material-icons">save</i></button>
       </div>
 			<div id = "editor"></div>
   	</div>
@@ -86,6 +76,7 @@ export default {
     store.remove_listener('device', this.device_update)
     store.remove_listener('project_created', this.project_created)
     store.remove_listener('font_changed', this.changeFontSize)
+    store.remove_listener('project_saved', this.project_saved)
 
     this.editor.remove()
   },
@@ -343,8 +334,6 @@ export default {
       }
     },
     device_update: function (data) {
-      // console.log(data)
-
       if (typeof data.info !== 'undefined') {
         if (data.info.script['running script'] === 'none') {
           this.button_run_state = true
@@ -458,10 +447,6 @@ export default {
 
     #project_run {
       padding: 0 20px;
-    }
-
-    #project_save {
-      padding: 0 10px;
     }
 
     button {

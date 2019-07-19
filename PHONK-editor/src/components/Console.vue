@@ -4,9 +4,9 @@
       <div class = "actionbar">
         <h1 v-on:dblclick = "hideshow">console</h1>
         <ul>
-          <li title = "Show time" class = "fa fa-clock-o" v-on:click="showTime()" v-bind:class="{'enabled':showingTime}"></li>
-          <li title = "Lock scrolling" class = "fa fa-lock" v-on:click="toggleLock()" v-bind:class="{'enabled':lock}"></li>
-          <li title = "Clear console" class = "fa fa-trash" v-on:click="clear()"></li>
+          <li title = "Show time" class = "material-icons" v-on:click="showTime()" v-bind:class="{'enabled':showingTime}">access_time</li>
+          <li title = "Lock scrolling" class = "material-icons" v-on:click="toggleLock()" v-bind:class="{'enabled':lock}">lock</li>
+          <li title = "Clear console" class = "material-icons" v-on:click="clear()">delete</li>
         </ul>
       </div>
       <div class = "content" v-show = "showing">
