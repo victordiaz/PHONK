@@ -58,8 +58,10 @@ public class PAudioPlayer extends ProtoBase {
             public void onPrepared(MediaPlayer mp) {
                 MLog.d(TAG, "prepared");
 
-                ReturnObject r = new ReturnObject();
-                callbackfn.event(r);
+                if (callbackfn != null) {
+                    ReturnObject r = new ReturnObject();
+                    callbackfn.event(r);
+                }
                 //mMediaPlayer.start();
 
             }
