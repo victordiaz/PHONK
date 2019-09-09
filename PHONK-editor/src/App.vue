@@ -11,7 +11,7 @@
       <project-checker v-show = "false"></project-checker>
 
       <transition name = "banneranim">
-      <tutorial-loader v-show = "false" transition="banner-anim"></tutorial-loader>
+        <tutorial-loader v-show = "false" transition="banner-anim"></tutorial-loader>
       </transition>
 
       <!--

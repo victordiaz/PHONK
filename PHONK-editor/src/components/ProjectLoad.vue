@@ -1,28 +1,19 @@
 <template>
   <div id = "project-load-container" class = "editor_panel panel_above">
     <div class = "container">
+      <span class = "debug" v-if = "false">{{store.state.projects['playground']}}</span>
 
-    <span class = "debug" v-if = "false">{{store.state.projects['playground']}}</span>
-
-    <h3>Create a project</h3>
-    <project-new></project-new>
-
-    <h3>Load a project</h3>
-
-    <div v-if = "store.state.projects" id = "project-load">
-      <div class="left">
-        <div class = "project_list" v-for="(p, pindex) in store.state.projects">
-          <h1> {{pindex}} </h1>
-          <ul>
-            <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name"> {{f.name}} </li>
-          </ul>
-        </div>
+      <div>
+        <h3>Create a project</h3>
+        <project-new></project-new>
       </div>
-      <div class="right">
+
+      <div class = "section">
+        <h3>Load a project</h3>
         <transition name = "upanim" mode = "out-in">
           <div v-show = "isShowingActions" class = "actionable">
             <!-- <button>rename</button>-->
-
+            
             <div v-if = "!isShowingConfirmation">
               <button v-on:click = "deleteAction">delete</button>
               <button v-on:click = "cancelActions">cancel</button>
@@ -35,26 +26,37 @@
           </div>
         </transition>
 
-        <div class = "project_info">
-          <p>Double click to open</p>
-          <div class="img-cover"></div>
-          <div class = "actions">
-            <div class="action-element"></div>
-            <div class="action-element"></div>
-            <div class="action-element"></div>
+        <div v-if = "store.state.projects" id = "project-load">
+          <div class="left">
+            <div class = "project_list" v-for="(p, pindex) in projectsOrdered">
+              <h1> {{pindex}} </h1>
+              <ul>
+                <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name"> {{f.name}} </li>
+              </ul>
+            </div>
+          </div>
+          <div class="right">        
+            <div class = "project_info">
+              <p>Double click to open</p>
+              <div class="img-cover"></div>
+              <div class = "actions">
+                <div class="action-element"></div>
+                <div class="action-element"></div>
+                <div class="action-element"></div>
+              </div>
+            </div>
+            <ul v-if = "pselected !== -1">
+              <li v-bind:class="{'selected':actionOnProject === f}" v-for = "f in folder_chosen" v-on:click = "load_project(f)" class = "project_item">
+                <span class = "icon">{{f.name.substr(0, 2)}}</span><span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action material-icons">more_vert</i>
+              </li>
+            </ul>
           </div>
         </div>
-        <ul v-if = "pselected !== -1">
-          <li v-bind:class="{'selected':actionOnProject === f}" v-for = "f in folder_chosen" v-on:click = "load_project(f)" class = "project_item">
-            <span class = "icon">{{f.name.substr(0, 2)}}</span><span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action material-icons">more_vert</i>
-          </li>
-        </ul>
+        <div v-else class = "no-projects">
+          <p>There is a problem loading your projects</p>
+        </div>
       </div>
-    </div>
-    <div v-else class = "no-projects">
-      <p>There is a problem loading your projects</p>
-    </div>
-   </div>
+   </div> <!-- container -->
  </div>
 </template>
 
@@ -86,8 +88,21 @@ export default {
   },
   computed: {
     folder_chosen: function () {
-      console.log('qq')
       return _.orderBy(this.store.state.projects[this.pselected][this.selected].files, 'name')
+    },
+    projectsOrdered: function () {
+      // return _.sortKeysBy(this.store.state.projects)
+      // const ordered = {}
+      /*
+      Object.keys(this.store.state.projects).sort().forEach((key) => {
+        ordered[key] = this.store.state.projects[key]
+      });
+      */
+      const ordered = {
+        playground: this.store.state.projects['playground'],
+        examples: this.store.state.projects['examples']
+      }
+      return ordered
     }
   },
   methods: {
@@ -194,6 +209,27 @@ export default {
   .debug {
     font-size: 0.7em;
   }
+
+  .section {
+    position: relative;
+
+     .actionable {
+      position: absolute;
+      top: -10px;
+      right: 120px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      p {
+        padding: 5px;
+      }
+
+      .confirmation {
+        display: inherit;
+      }
+    }
+  }
 }
 
 #project-load {
@@ -202,6 +238,8 @@ export default {
   flex-direction: row;
   font-size: 1em;
   font-weight: 100;
+  // max-height: 100%;
+  height: calc(100vh - 288px);
 
   .no-projects {
     p {
@@ -231,6 +269,7 @@ export default {
       
       .icon {
         max-width: 30px;
+        min-width: 30px;
         height: 30px;
         border: 1px solid @accentColor;
         color: @accentColor;
@@ -295,25 +334,7 @@ export default {
   	text-align: center;
     border-left: 3px solid white;
     position: relative;
-    overflow: visible;
-
-    .actionable {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      position: absolute;
-      right: 0;
-      top: -35px;
-
-      p {
-        padding: 5px;
-      }
-
-      .confirmation {
-        display: inherit;
-      }
-    }
-
+    overflow-y: auto;
 
     .action {
       display: none;
@@ -352,6 +373,7 @@ export default {
     ul {
       padding: 0.5em;
       font-weight: 500;
+      height: 100%;
     }
   }
 
