@@ -31,10 +31,9 @@ import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.StyleProperties;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
-public class PSlider extends PCanvas implements PViewMethodsInterface {
+public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     private static final String TAG = PSlider.class.getSimpleName();
 
@@ -101,12 +100,12 @@ public class PSlider extends PCanvas implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvas c) {
+        public void event(PCanvasM c) {
             mWidth = c.width;
             mHeight = c.height;
 
             c.clear();
-            c.mode(true);
+            c.cornerMode(true);
 
             if (!touching) c.fill(styler.slider);
             else c.fill(styler.sliderPressed);

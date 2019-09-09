@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,7 +15,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
@@ -34,28 +34,21 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.view.View;
+import android.graphics.Typeface;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apidoc.annotation.ProtoField;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
 import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.Image;
-import io.phonk.runner.base.utils.MLog;
 
+public class PCanvasM {
+    private static final String TAG = PCustomView.class.getSimpleName();
+    private final AppRunner mAppRunner;
 
-public class PCanvas extends View {
-
-    private static final String TAG = PCanvas.class.getSimpleName();
-
-    protected final AppRunner mAppRunner;
-
-    @ProtoField(description = "Object that contains the layers", example = "")
-    public Layers layers;
+    // @ProtoField(description = "Object that contains the layers", example = "")
+    // public Layers layers;
+    private Canvas mCanvasBuffer;
     public Canvas mCanvas;
 
     @ProtoField(description = "Canvas width", example = "")
@@ -64,72 +57,21 @@ public class PCanvas extends View {
     @ProtoField(description = "Canvas height", example = "")
     public int height;
 
-    @ProtoField(description = "Time interval between draws", example = "")
-    private int drawInterval = 35;
-
-
-    public boolean MODE_CORNER = true;
-    public boolean MODE_CENTER = false;
-
     private RectF mRectf;
+    private Bitmap mTransparentBmp;
     private Paint mPaintBackground;
     public Paint mPaintFill;
     private Paint mPaintStroke;
-    protected boolean mAutoDraw = false;
     private boolean fillOn = true;
     private boolean strokeOn = false;
-    private boolean mModeCorner = MODE_CORNER;
+    private boolean mModeCorner = true;
 
-
-    // Autodraw
-    private PLooper loop;
-    int looperSpeed = 35;
     private boolean absoluteMode = false;
 
-    public interface OnSetupCallback { void event (PCanvas c); }
-    public interface OnDrawCallback { void event (PCanvas c); }
+    PCanvasM(AppRunner appRunner) {
+        this.mAppRunner = appRunner;
 
-    public OnSetupCallback setup;
-    public OnDrawCallback draw;
-
-
-    public PCanvas(AppRunner appRunner, int w, int h) {
-        this(appRunner);
-        width = w;
-        height = h;
-
-        absoluteMode = true;
-        post_init();
-    }
-
-    public PCanvas(AppRunner appRunner) {
-        super(appRunner.getAppContext());
-        mAppRunner = appRunner;
-
-        prepareLooper();
         init();
-    }
-
-    private void prepareLooper() {
-        loop = mAppRunner.pUtil.loop(drawInterval, new PLooper.LooperCB() {
-            @Override
-            public void event() {
-                if (draw != null) {
-                    draw.event(PCanvas.this);
-                    invalidate();
-                }
-            }
-        });
-        loop.speed(looperSpeed);
-    }
-
-    private void startLooper() {
-        loop.start();
-        mAutoDraw = true;
-    }
-
-    public void drawInterval(int ms) {
-        loop.speed(ms);
     }
 
     public void init() {
@@ -139,40 +81,7 @@ public class PCanvas extends View {
         mPaintStroke = new Paint();
         mPaintFill.setAntiAlias(true);
         mPaintStroke.setAntiAlias(true);
-    }
-
-    public void post_init() {
-        mCanvas = new Canvas();
-        layers = new Layers();
-
-        if (setup != null) setup.event(PCanvas.this);
-        // startLooper();
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        MLog.d(TAG, "new size --> " + w + " " + h);
-
-        if (!absoluteMode) {
-            width = w;
-            height = h;
-            post_init();
-            invalidate();
-        }
-    }
-
-    public void onDraw(OnDrawCallback callback) {
-        draw = callback;
-    }
-
-    @Override
-    protected synchronized void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        // MLog.d(TAG, "onDraw");
-
-        if (!mAutoDraw && draw != null) draw.event(this);
-        layers.drawAll(canvas);
+        // layers = new Layers();
     }
 
     /**
@@ -181,13 +90,13 @@ public class PCanvas extends View {
     @ProtoMethod(description = "Clear the canvas", example = "")
     @ProtoMethodParam(params = {})
     public void clear() {
-        mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        mCanvasBuffer.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         refresh();
     }
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"hex"})
-    public PCanvas fill(String hex) {
+    public PCanvasM fill(String hex) {
         fill(Color.parseColor(hex));
 
         return this;
@@ -195,7 +104,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
-    public PCanvas fill(int r, int g, int b, int alpha) {
+    public PCanvasM fill(int r, int g, int b, int alpha) {
         fill(Color.argb(alpha, r, g, b));
 
         return this;
@@ -203,7 +112,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
-    public PCanvas fill(int r, int g, int b) {
+    public PCanvasM fill(int r, int g, int b) {
         fill(Color.argb(255, r, g, b));
 
         return this;
@@ -211,7 +120,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the filling color", example = "")
     @ProtoMethodParam(params = {"hex"})
-    public PCanvas fill(int c) {
+    public PCanvasM fill(int c) {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setColor(c);
         fillOn = true;
@@ -227,7 +136,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
-    public PCanvas stroke(int r, int g, int b, int alpha) {
+    public PCanvasM stroke(int r, int g, int b, int alpha) {
         stroke(Color.argb(alpha, r, g, b));
 
         return this;
@@ -235,7 +144,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
-    public PCanvas stroke(int r, int g, int b) {
+    public PCanvasM stroke(int r, int g, int b) {
         stroke(Color.argb(255, r, g, b));
 
         return this;
@@ -243,7 +152,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"hex"})
-    public PCanvas stroke(String c) {
+    public PCanvasM stroke(String c) {
         stroke(Color.parseColor(c));
 
         return this;
@@ -251,7 +160,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Sets the stroke color", example = "")
     @ProtoMethodParam(params = {"hex"})
-    public PCanvas stroke(int c) {
+    public PCanvasM stroke(int c) {
         mPaintStroke.setStyle(Paint.Style.STROKE);
         mPaintStroke.setColor(c);
         strokeOn = true;
@@ -261,21 +170,21 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Removes the stroke color", example = "")
     @ProtoMethodParam(params = {})
-    public PCanvas noStroke() {
+    public PCanvasM noStroke() {
         strokeOn = false;
         return this;
     }
 
     @ProtoMethod(description = "Sets a stroke width", example = "")
     @ProtoMethodParam(params = {"width"})
-    public PCanvas strokeWidth(float w) {
+    public PCanvasM strokeWidth(float w) {
         mPaintStroke.setStrokeWidth(w);
         return this;
     }
 
     @ProtoMethod(description = "Sets a stroke cap", example = "")
     @ProtoMethodParam(params = {"cap"})
-    public PCanvas strokeCap(String cap) {
+    public PCanvasM strokeCap(String cap) {
 
         Paint.Cap c = Paint.Cap.SQUARE;
 
@@ -301,21 +210,21 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Change the background color with alpha value", example = "")
     @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
-    public PCanvas background(int r, int g, int b, int alpha) {
+    public PCanvasM background(int r, int g, int b, int alpha) {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
-        mCanvas.drawRect(0, 0, width, height, mPaintBackground);
+        mCanvasBuffer.drawRect(0, 0, width, height, mPaintBackground);
         refresh();
 
         return this;
     }
 
     /**
-     * Drawing mode
+     * Drawing cornerMode
      */
     @ProtoMethod(description = "Drawing will be done from a corner if true, otherwise from the center", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PCanvas mode(boolean mode) {
+    public PCanvasM cornerMode(boolean mode) {
         mModeCorner = mode;
 
         return this;
@@ -326,7 +235,7 @@ public class PCanvas extends View {
      */
     @ProtoMethod(description = "Change the background color", example = "")
     @ProtoMethodParam(params = {"r", "g", "b"})
-    public PCanvas background(int r, int g, int b) {
+    public PCanvasM background(int r, int g, int b) {
         background(r, g, b, 255);
         refresh();
 
@@ -335,22 +244,22 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Draw a point", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PCanvas point(float x, float y) {
-        mCanvas.drawPoint(x, y, mPaintStroke);
+    public PCanvasM point(float x, float y) {
+        mCanvasBuffer.drawPoint(x, y, mPaintStroke);
         refresh();
         return this;
     }
 
-    public PCanvas line(float x1, float y1, float x2, float y2) {
-        mCanvas.drawLine(x1, y1, x2, y2, mPaintStroke);
+    public PCanvasM line(float x1, float y1, float x2, float y2) {
+        mCanvasBuffer.drawLine(x1, y1, x2, y2, mPaintStroke);
         return this;
     }
 
     @ProtoMethod(description = "Draws a rectangle", example = "")
     @ProtoMethodParam(params = {"x", "y", "width", "height"})
-    public PCanvas rect(float x, float y, float width, float height) {
-        if (fillOn) mCanvas.drawRect(place(x, y, width, height), mPaintFill);
-        if (strokeOn) mCanvas.drawRect(place(x, y, width, height), mPaintStroke);
+    public PCanvasM rect(float x, float y, float width, float height) {
+        if (fillOn) mCanvasBuffer.drawRect(place(x, y, width, height), mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawRect(place(x, y, width, height), mPaintStroke);
         refresh();
 
         return this;
@@ -358,9 +267,9 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Draws a rectangle with a given roundness value", example = "")
     @ProtoMethodParam(params = {"x", "y", "width", "height", "rx", "ry"})
-    public PCanvas rect(float x, float y, float width, float height, float rx, float ry) {
-        if (fillOn) mCanvas.drawRoundRect(place(x, y, width, height), rx, ry, mPaintFill);
-        if (strokeOn) mCanvas.drawRoundRect(place(x, y, width, height), rx, ry, mPaintStroke);
+    public PCanvasM rect(float x, float y, float width, float height, float rx, float ry) {
+        if (fillOn) mCanvasBuffer.drawRoundRect(place(x, y, width, height), rx, ry, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawRoundRect(place(x, y, width, height), rx, ry, mPaintStroke);
         refresh();
 
         return this;
@@ -368,9 +277,9 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Draws and ellipse", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "width", "height"})
-    public PCanvas ellipse(float x, float y, float width, float height) {
-        if (fillOn) mCanvas.drawOval(place(x, y, width, height), mPaintFill);
-        if (strokeOn) mCanvas.drawOval(place(x, y, width, height), mPaintStroke);
+    public PCanvasM ellipse(float x, float y, float width, float height) {
+        if (fillOn) mCanvasBuffer.drawOval(place(x, y, width, height), mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawOval(place(x, y, width, height), mPaintStroke);
         refresh();
 
         return this;
@@ -378,17 +287,17 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Draws an arc", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center"})
-    public PCanvas arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
-        if (fillOn) mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
-        if (strokeOn) mCanvas.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
+    public PCanvasM arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
+        if (fillOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
         refresh();
 
         return this;
     }
 
     public void drawPath(Path p1) {
-        if (fillOn) mCanvas.drawPath(p1, mPaintFill);
-        if (strokeOn) mCanvas.drawPath(p1, mPaintStroke);
+        if (fillOn) mCanvasBuffer.drawPath(p1, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawPath(p1, mPaintStroke);
     }
 
     public Path path() {
@@ -406,8 +315,8 @@ public class PCanvas extends View {
             path.lineTo(p[i][0], p[i][1]);
         }
 
-        if (fillOn) mCanvas.drawPath(path, mPaintFill);
-        if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
+        if (fillOn) mCanvasBuffer.drawPath(path, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawPath(path, mPaintStroke);
         refresh();
     }
 
@@ -427,8 +336,8 @@ public class PCanvas extends View {
     }
 
     public void closePath() {
-        if (fillOn) mCanvas.drawPath(path, mPaintFill);
-        if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
+        if (fillOn) mCanvasBuffer.drawPath(path, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawPath(path, mPaintStroke);
         refresh();
     }
 
@@ -437,13 +346,13 @@ public class PCanvas extends View {
      */
     @ProtoMethod(description = "Sets the size of the text", example = "")
     @ProtoMethodParam(params = {"size"})
-    public PCanvas textSize(int size) {
+    public PCanvasM textSize(int size) {
         mPaintFill.setTextSize(size);
         mPaintStroke.setTextSize(size);
         return this;
     }
 
-    public PCanvas textAlign(String alignTo) {
+    public PCanvasM textAlign(String alignTo) {
         Paint.Align alignment = Paint.Align.LEFT;
 
         switch (alignTo) {
@@ -468,16 +377,16 @@ public class PCanvas extends View {
 
     // TODO this only works on api 21
     //public PCanvas textSpacing(float spacing) {
-        //mPaintFill.setLetterSpacing(spacing);
-        //mPaintStroke.setLetterSpacing(spacing);
+    //mPaintFill.setLetterSpacing(spacing);
+    //mPaintStroke.setLetterSpacing(spacing);
     //    return this;
     //}
 
     @ProtoMethod(description = "Writes text", example = "")
     @ProtoMethodParam(params = {"text", "x", "y"})
-    public PCanvas text(String text, float x, float y) {
-        if (fillOn) mCanvas.drawText(text, x, y, mPaintFill);
-        if (strokeOn) mCanvas.drawText(text, x, y, mPaintStroke);
+    public PCanvasM text(String text, float x, float y) {
+        if (fillOn) mCanvasBuffer.drawText(text, x, y, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawText(text, x, y, mPaintStroke);
         refresh();
 
         return this;
@@ -485,22 +394,43 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Draws a text on a path", example = "")
     @ProtoMethodParam(params = {"text", "path", "initOffset", "outOffsett"})
-    public PCanvas text(String text, Path path, float initOffset, float outOffset) {
-        if (fillOn) mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintFill);
-        if (strokeOn) mCanvas.drawTextOnPath(text, path, initOffset, outOffset, mPaintStroke);
+    public PCanvasM text(String text, Path path, float initOffset, float outOffset) {
+        if (fillOn) mCanvasBuffer.drawTextOnPath(text, path, initOffset, outOffset, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawTextOnPath(text, path, initOffset, outOffset, mPaintStroke);
         refresh();
 
         return this;
     }
 
     public void drawTextCentered(String text){
-        int cx = mCanvas.getWidth() / 2;
-        int cy = mCanvas.getHeight() / 2;
+        int cx = mCanvasBuffer.getWidth() / 2;
+        int cy = mCanvasBuffer.getHeight() / 2;
 
         Rect textBounds = new Rect();
 
         mPaintFill.getTextBounds(text, 0, text.length(), textBounds);
-        mCanvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
+        mCanvasBuffer.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
+    }
+
+
+    public void setTypeface(String type) {
+        Typeface selectedType;
+
+        switch(type) {
+            case "monospace":
+                selectedType = Typeface.MONOSPACE;
+                break;
+            case "sans":
+                selectedType = Typeface.SANS_SERIF;
+                break;
+            case "serif":
+                selectedType = Typeface.SERIF;
+                break;
+            default:
+                selectedType = Typeface.DEFAULT;
+
+        }
+        mPaintFill.setTypeface(selectedType);
     }
 
     @ProtoMethod(description = "Load an image", example = "")
@@ -511,18 +441,18 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Draws an image", example = "")
     @ProtoMethodParam(params = {"bitmap", "x", "y"})
-    public PCanvas image(Bitmap bmp, int x, int y) {
-        mCanvas.drawBitmap(bmp, x, y, mPaintBackground);
+    public PCanvasM image(Bitmap bmp, int x, int y) {
+        mCanvasBuffer.drawBitmap(bmp, x, y, mPaintBackground);
         refresh();
         return this;
     }
 
     @ProtoMethod(description = "Draws an image", example = "")
     @ProtoMethodParam(params = {"bitmap", "x", "y", "w", "h"})
-    public PCanvas image(Bitmap bmp, int x, int y, int w, int h) {
+    public PCanvasM image(Bitmap bmp, int x, int y, int w, int h) {
         Rect rectSrc = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
         RectF rectDst = new RectF(x, y, x + w, y + h);
-        mCanvas.drawBitmap(bmp, rectSrc, rectDst, mPaintStroke);
+        mCanvasBuffer.drawBitmap(bmp, rectSrc, rectDst, mPaintStroke);
         refresh();
 
         return this;
@@ -534,43 +464,43 @@ public class PCanvas extends View {
      */
     @ProtoMethod(description = "push", example = "")
     @ProtoMethodParam(params = {})
-    public PCanvas push() {
-        mCanvas.save();
+    public PCanvasM push() {
+        mCanvasBuffer.save();
         return this;
     }
 
     @ProtoMethod(description = "Rotate given degrees", example = "")
     @ProtoMethodParam(params = {"degrees"})
-    public PCanvas rotate(float degrees) {
-        mCanvas.rotate(degrees);
+    public PCanvasM rotate(float degrees) {
+        mCanvasBuffer.rotate(degrees);
         return this;
     }
 
     @ProtoMethod(description = "Translate", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PCanvas translate(float x, float y) {
-        mCanvas.translate(x, y);
+    public PCanvasM translate(float x, float y) {
+        mCanvasBuffer.translate(x, y);
         return this;
     }
 
     @ProtoMethod(description = "Skew values 0 - 1)", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PCanvas skew(float x, float y) {
-        mCanvas.skew(x, y);
+    public PCanvasM skew(float x, float y) {
+        mCanvasBuffer.skew(x, y);
         return this;
     }
 
     @ProtoMethod(description = "Scale", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PCanvas scale(float x, float y) {
-        mCanvas.scale(x, y);
+    public PCanvasM scale(float x, float y) {
+        mCanvasBuffer.scale(x, y);
         return this;
     }
 
     @ProtoMethod(description = "Restore", example = "")
     @ProtoMethodParam(params = {"x", "y"})
-    public PCanvas pop() {
-        mCanvas.restore();
+    public PCanvasM pop() {
+        mCanvasBuffer.restore();
         return this;
     }
 
@@ -591,7 +521,7 @@ public class PCanvas extends View {
      */
     @ProtoMethod(description = "Sets the shadow fill", example = "")
     @ProtoMethodParam(params = {"x", "y", "radius", "colorHext"})
-    public PCanvas shadow(int x, int y, float radius, String colorHex) {
+    public PCanvasM shadow(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintFill.setShadowLayer(radius, x, y, c);
         return this;
@@ -599,7 +529,7 @@ public class PCanvas extends View {
 
     @ProtoMethod(description = "Set the shadow stroke", example = "")
     @ProtoMethodParam(params = {"x", "y", "radius", "colorHex"})
-    public PCanvas shadowStroke(int x, int y, float radius, String colorHex) {
+    public PCanvasM shadowStroke(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintStroke.setShadowLayer(radius, x, y, c);
         return this;
@@ -629,31 +559,14 @@ public class PCanvas extends View {
      */
     @ProtoMethod(description = "Enable/Disable antialiasing", example = "")
     @ProtoMethodParam(params = {"boolean"})
-    public PCanvas antiAlias(boolean b) {
+    public PCanvasM antiAlias(boolean b) {
         mPaintFill.setAntiAlias(b);
         mPaintStroke.setAntiAlias(b);
         return this;
     }
 
-    @ProtoMethod(description = "For each change in the canvas it will redraw it self. Have in mind that mainly to try out things as is not very fast.", example = "")
-    @ProtoMethodParam(params = {"boolean"})
-    public PCanvas autoDraw(boolean b) {
-        mAutoDraw = b;
-        loop.start();
-        return this;
-    }
-
-    /*
-    public PCanvas ref() {
-        draw.event(PCanvas.this);
-        invalidate();
-
-        return this;
-    }
-    */
-
     private RectF place(float x, float y, float w, float h) {
-        if (mModeCorner == MODE_CORNER) {
+        if (mModeCorner) {
             mRectf.set(x, y, x + w, y + h);
         } else {
             mRectf.set(x - w / 2, y - h / 2, x + w / 2, y + h / 2);
@@ -662,18 +575,16 @@ public class PCanvas extends View {
         return mRectf;
     }
 
-    /**
-     * refresh the canvas after painting if the flag is true
-     */
-    private PCanvas refresh() {
-        if (mAutoDraw) invalidate();
-        return this;
+    public void setCanvas(Canvas canvas) {
+        this.width = canvas.getWidth();
+        this.height = canvas.getHeight();
+        this.mCanvas = canvas;
     }
-
 
     /**
      * Layer class stuff
      */
+    /*
     public class Layer {
         public Bitmap bitmap;
         public boolean visibility = true;
@@ -684,7 +595,6 @@ public class PCanvas extends View {
     }
 
     public class Layers {
-
         ArrayList<Layer> layers = new ArrayList<>();
 
         Layers() {
@@ -715,7 +625,7 @@ public class PCanvas extends View {
 
         public void setCurrent(int index) {
             MLog.d(TAG, index + " " + layers.size());
-            mCanvas.setBitmap(layers.get(index).bitmap);
+            mCanvasBuffer.setBitmap(layers.get(index).bitmap);
         }
 
         public void show(int index, boolean b) {
@@ -732,5 +642,27 @@ public class PCanvas extends View {
             }
         }
     }
+    */
 
+    public void refresh() {
+
+    }
+
+    public void prepare(int w, int h) {
+        if (mTransparentBmp != null) {
+            mTransparentBmp.recycle();
+        }
+        // mCanvasBuffer = new Canvas();
+
+        mCanvasBuffer = new Canvas();
+        mTransparentBmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        mCanvasBuffer.setBitmap(mTransparentBmp);
+
+        // mPCanvas.setCanvas(canvas);
+
+    }
+
+    public void drawAll() {
+        mCanvas.drawBitmap(mTransparentBmp, 0, 0, null);
+    }
 }

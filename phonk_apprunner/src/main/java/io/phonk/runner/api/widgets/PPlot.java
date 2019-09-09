@@ -34,10 +34,7 @@ import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
-/**
- * Created by biquillo on 11/09/16.
- */
-public class PPlot extends PCanvas implements PViewMethodsInterface {
+public class PPlot extends PCustomView implements PViewMethodsInterface {
 
     private static final String TAG = PPlot.class.getSimpleName();
     private final Handler handler;
@@ -56,6 +53,8 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
 
     String name = "";
     private boolean isRange = false;
+    private int mWidth;
+    private int mHeight;
 
     public PPlot(AppRunner appRunner) {
         super(appRunner);
@@ -86,8 +85,8 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
                     for (int i = 0; i < arrayData.size(); i++) {
                         PlotPoint p = arrayData.get(i);
 
-                        float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 0 + 10, width - 10);
-                        float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 0 + 20, height - 20);
+                        float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 0 + 10, mWidth - 10);
+                        float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 0 + 20, mHeight - 20);
                         arrayViz.add(new PlotPoint(x, y));
 
                         // MLog.d(TAG, width + " " + height);
@@ -111,11 +110,13 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvas c) {
+        public void event(PCanvasM c) {
+            mWidth = c.width;
+            mHeight = c.height;
             // MLog.d(TAG, "paint ");
 
             c.clear();
-            c.mode(false);
+            c.cornerMode(false);
 
             /*
             Shader shader = new LinearGradient(0, 0, 0, c.height, new int[] {Color.parseColor("#00000000"), Color.parseColor("#000000") }, null, Shader.TileMode.MIRROR);
@@ -167,7 +168,7 @@ public class PPlot extends PCanvas implements PViewMethodsInterface {
             c.noStroke();
             c.textAlign("right");
 
-            c.text(name, width - 20, 50);
+            c.text(name, mWidth - 20, 50);
         }
     };
 

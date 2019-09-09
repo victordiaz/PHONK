@@ -33,7 +33,7 @@ import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
-public class PTouchPad extends PCanvas implements PViewMethodsInterface {
+public class PTouchPad extends PCustomView implements PViewMethodsInterface {
 
     private static final String TAG = PTouchPad.class.getSimpleName();
 
@@ -129,12 +129,12 @@ public class PTouchPad extends PCanvas implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvas c) {
+        public void event(PCanvasM c) {
             mWidth = c.width;
             mHeight = c.height;
 
             c.clear();
-            c.mode(false);
+            c.cornerMode(false);
 
             if (touches != null) {
                 for (int i = 0; i < touches.size(); i++) {
@@ -143,9 +143,9 @@ public class PTouchPad extends PCanvas implements PViewMethodsInterface {
                     float unmappedYVal = (float) r.get("y");
 
                     if (unmappedXVal < 0) unmappedXVal = 0;
-                    if (unmappedXVal > width) unmappedXVal = width;
+                    if (unmappedXVal > c.width) unmappedXVal = c.width;
                     if (unmappedYVal < 0) unmappedYVal = 0;
-                    if (unmappedYVal > height) unmappedYVal = height;
+                    if (unmappedYVal > c.height) unmappedYVal = c.height;
 
                     c.fill(styler.padColor);
                     c.stroke(styler.padBorderColor);

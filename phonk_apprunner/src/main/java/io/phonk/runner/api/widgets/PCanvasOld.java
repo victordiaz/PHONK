@@ -67,7 +67,7 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     public void draw(PCanvasInterfaceDraw pCanvasInterface) {
-        pCanvasInterface.onDraw(mCanvas);
+        pCanvasInterface.onDraw(mCanvasBuffer);
     }
 
     public void onTouch(PCanvasInterfaceTouch pCanvasInterfaceTouch) {
@@ -80,7 +80,7 @@ public class PCanvas extends View implements PViewInterface {
     //@APIMethod(description = "", example = "")
     //@APIParam(params = { "x", "y" })
     public PCanvas points(float[] points) {
-        mCanvas.drawPoints(points, mPaintStroke);
+        mCanvasBuffer.drawPoints(points, mPaintStroke);
         refresh();
         return this;
     }
@@ -90,7 +90,7 @@ public class PCanvas extends View implements PViewInterface {
     //@APIMethod(description = "", example = "")
     //@APIParam(params = { "x", "y" })
     public PCanvas points(float[] points, int offset, int count) {
-        mCanvas.drawPoints(points, offset, count, mPaintStroke);
+        mCanvasBuffer.drawPoints(points, offset, count, mPaintStroke);
         refresh();
         return this;
     }
@@ -98,7 +98,7 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Draw a line", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2"})
     public PCanvas line(float x1, float y1, float x2, float y2) {
-        mCanvas.drawLine(x1, y1, x2, y2, mPaintStroke);
+        mCanvasBuffer.drawLine(x1, y1, x2, y2, mPaintStroke);
         refresh();
         return this;
     }
@@ -125,8 +125,8 @@ public class PCanvas extends View implements PViewInterface {
     @ProtoMethod(description = "Draw a path", example = "")
     @ProtoMethodParam(params = {"path"})
     public PCanvas path(Path path) {
-        if (fillOn) mCanvas.drawPath(path, mPaintFill);
-        if (strokeOn) mCanvas.drawPath(path, mPaintStroke);
+        if (fillOn) mCanvasBuffer.drawPath(path, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawPath(path, mPaintStroke);
         refresh();
 
         return this;
@@ -145,11 +145,11 @@ public class PCanvas extends View implements PViewInterface {
 
 
     public void drawTextCentered(String text){
-        int cx = mCanvas.getWidth() / 2;
-        int cy = mCanvas.getHeight() / 2;
+        int cx = mCanvasBuffer.getWidth() / 2;
+        int cy = mCanvasBuffer.getHeight() / 2;
 
         mPaintFill.getTextBounds(text, 0, text.length(), textBounds);
-        mCanvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
+        mCanvasBuffer.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
     }
 
 
@@ -182,9 +182,9 @@ public class PCanvas extends View implements PViewInterface {
 
     @ProtoMethod(description = "", example = "")
     @ProtoMethodParam(params = {"filter"})
-    public PCanvas filter(PorterDuff.Mode mode) {
-        mPaintFill.setXfermode(new PorterDuffXfermode(mode));
-        mPaintStroke.setXfermode(new PorterDuffXfermode(mode));
+    public PCanvas filter(PorterDuff.Mode cornerMode) {
+        mPaintFill.setXfermode(new PorterDuffXfermode(cornerMode));
+        mPaintStroke.setXfermode(new PorterDuffXfermode(cornerMode));
         return this;
     }
 
@@ -192,8 +192,8 @@ public class PCanvas extends View implements PViewInterface {
 
     @ProtoMethod(description = "Create a bitmap shader", example = "")
     @ProtoMethodParam(params = {"bitmap", "tileMode"})
-    public Shader createBitmapShader(Bitmap bitmap, TileMode mode) {
-        BitmapShader shader = new BitmapShader(bitmap, mode, mode);
+    public Shader createBitmapShader(Bitmap bitmap, TileMode cornerMode) {
+        BitmapShader shader = new BitmapShader(bitmap, cornerMode, cornerMode);
         return shader;
     }
 
@@ -201,12 +201,12 @@ public class PCanvas extends View implements PViewInterface {
 
     @ProtoMethod(description = "Create a linear shader", example = "")
     @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "ArrayColorHex", "ArrayPositions", "tileMode"})
-    public Shader linearShader(float x1, float y1, float x2, float y2, String[] colorsStr, float[] positions, TileMode mode) {
+    public Shader linearShader(float x1, float y1, float x2, float y2, String[] colorsStr, float[] positions, TileMode cornerMode) {
         int colors[] = new int[colorsStr.length];
         for (int i = 0; i < colors.length; i++) {
             colors[i] = Color.parseColor(colorsStr[i]);
         }
-        Shader shader = new LinearGradient(x1, y1, x2, y2, colors, positions, mode);
+        Shader shader = new LinearGradient(x1, y1, x2, y2, colors, positions, cornerMode);
         return shader;
     }
 
@@ -218,9 +218,9 @@ public class PCanvas extends View implements PViewInterface {
     }
 
     @ProtoMethod(description = "Compose two shaders", example = "")
-    @ProtoMethodParam(params = {"shader1", "shader2", "mode"})
-    public Shader composeShader(Shader s1, Shader s2, PorterDuff.Mode mode) {
-        Shader shader = new ComposeShader(s1, s2, mode);
+    @ProtoMethodParam(params = {"shader1", "shader2", "cornerMode"})
+    public Shader composeShader(Shader s1, Shader s2, PorterDuff.Mode cornerMode) {
+        Shader shader = new ComposeShader(s1, s2, cornerMode);
         return shader;
     }
 

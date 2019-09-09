@@ -66,7 +66,7 @@ import io.phonk.runner.api.other.PProcessing;
 import io.phonk.runner.api.other.PhonkNativeArray;
 import io.phonk.runner.api.widgets.PAbsoluteLayout;
 import io.phonk.runner.api.widgets.PButton;
-import io.phonk.runner.api.widgets.PCanvas;
+import io.phonk.runner.api.widgets.PCustomView;
 import io.phonk.runner.api.widgets.PCheckBox;
 import io.phonk.runner.api.widgets.PImage;
 import io.phonk.runner.api.widgets.PImageButton;
@@ -400,7 +400,7 @@ public class PUI extends ProtoBase {
     }
 
     /**
-     * Changes the position mode.
+     * Changes the position cornerMode.
      * By default, Protocoder places the widgets using normalized coordinates (0 to 1)
      * Sometimes we need a bit more control on how to create layouts so we can specify that the
      * views will lay out using pixel or dp (density independent pixels) units
@@ -1416,9 +1416,9 @@ public class PUI extends ProtoBase {
      * @status OK
      */
     @ProtoMethod
-    public PCanvas newCanvas() {
-        PCanvas canvasView = new PCanvas(mAppRunner);
-        return canvasView;
+    public PCustomView newCanvas() {
+        PCustomView customview = new PCustomView(mAppRunner);
+        return customview;
     }
 
     /*
@@ -1439,8 +1439,8 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      */
     @ProtoMethod
-    public PCanvas addCanvas(Object x, Object y, Object w, Object h) {
-        final PCanvas canvasView = newCanvas(); // (int) w, (int) h);
+    public PCustomView addCanvas(Object x, Object y, Object w, Object h) {
+        final PCustomView canvasView = newCanvas(); // (int) w, (int) h);
         addViewAbsolute(canvasView, x, y, w, h);
 
         return canvasView;

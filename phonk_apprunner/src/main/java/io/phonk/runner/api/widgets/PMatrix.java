@@ -36,7 +36,7 @@ import io.phonk.runner.base.utils.MLog;
 /**
  * Created by biquillo on 11/09/16.
  */
-public class PMatrix extends PCanvas implements PViewMethodsInterface {
+public class PMatrix extends PCustomView implements PViewMethodsInterface {
 
     private static final String TAG = PMatrix.class.getSimpleName();
 
@@ -134,12 +134,12 @@ public class PMatrix extends PCanvas implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvas c) {
+        public void event(PCanvasM c) {
             mWidth = c.width;
             mHeight = c.height;
 
             c.clear();
-            c.mode(true);
+            c.cornerMode(true);
 
             /* background
             c.fill(0, 225, 0);

@@ -36,7 +36,7 @@ import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.views.CanvasUtils;
 
-public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterface {
+public class PKnob extends PCustomView implements PViewMethodsInterface, PTextInterface {
 
     private static final String TAG = PKnob.class.getSimpleName();
 
@@ -110,12 +110,12 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvas c) {
+        public void event(PCanvasM c) {
             mWidth = c.width;
             mHeight = c.height;
 
             c.clear();
-            c.mode(false);
+            c.cornerMode(false);
 
             int diameter = 0;
             if (c.width >= c.height) diameter = c.height;
@@ -158,15 +158,15 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
             float r = diameter / 5;
             p2.addCircle(halfdiameter, halfdiameter, r, Path.Direction.CCW);
 
-            c.mCanvas.save();
-            c.mCanvas.clipPath(p2, Region.Op.DIFFERENCE);
+            c.mCanvasBuffer.save();
+            c.mCanvasBuffer.clipPath(p2, Region.Op.DIFFERENCE);
             c.drawPath(p1);
-            c.mCanvas.restore();
+            c.mCanvasBuffer.restore();
             */
 
             c.fill(styler.textColor);
             c.noStroke();
-            mPaintFill.setTypeface(Typeface.MONOSPACE);
+            c.setTypeface("monospace");
 
             if (autoTextSize) c.textSize((diameter / 5));
             else c.textSize(AndroidUtils.spToPixels(getContext(), (int) styler.textSize));
@@ -221,6 +221,11 @@ public class PKnob extends PCanvas implements PViewMethodsInterface, PTextInterf
         this.textFont = font;
 
         return this;
+    }
+
+    @Override
+    public View textSize(int size) {
+        return null;
     }
 
     @Override

@@ -204,7 +204,7 @@ public class PPlotView_ extends View {
             // draw border
             // mPaint.setColor(0xFF000000);
             // mPaint.setStyle(Styler.STROKE);
-            // mCanvas.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 0, 0,
+            // mCanvasBuffer.drawRoundRect(new RectF(0, 0, mWidth, mHeight), 0, 0,
             // mPaint);
 
         }
