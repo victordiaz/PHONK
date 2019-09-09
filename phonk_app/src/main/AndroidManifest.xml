@@ -16,7 +16,7 @@
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ GNU General Public License for more details.
   ~
-  ~ You should have received a copy of the GNU General Public License
+  ~ Yo  u should have received a copy of the GNU General Public License
   ~ along with Phonk. If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
@@ -38,6 +38,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup"
         android:resizeableActivity="true"
+        android:requestLegacyExternalStorage="true"
         >
 
         <activity

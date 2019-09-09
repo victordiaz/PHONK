@@ -20,7 +20,7 @@ android {
         targetSdkVersion 29
 
         versionCode 37
-        versionName "1.0.0"
+        versionName "1.1.0"
         multiDexEnabled true
         setProperty("archivesBaseName", "phonk-$versionName")
 

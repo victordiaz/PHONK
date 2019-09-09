@@ -22,19 +22,22 @@
 
 package io.phonk.runner.api.boards;
 
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 
-import com.hoho.android.usbserial.driver.UsbSerialDriver;
-import com.hoho.android.usbserial.driver.UsbSerialPort;
-import com.hoho.android.usbserial.driver.UsbSerialProber;
-import com.hoho.android.usbserial.util.SerialInputOutputManager;
+import com.felhr.usbserial.CDCSerialDevice;
+import com.felhr.usbserial.UsbSerialDevice;
+import com.felhr.usbserial.UsbSerialInterface;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.phonk.runner.api.ProtoBase;
 import io.phonk.runner.api.common.ReturnInterface;
@@ -45,225 +48,306 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
 public class PSerial extends ProtoBase {
+    private final String TAG = "qww"; // PSerial.class.getSimpleName();
 
-    private final int mBauds;
-    private String receivedData;
-    private final String TAG = "PSerial";
+    private static final String ACTION_USB_PERMISSION = "ACTION_USB_PERMISSION";
 
-    private UsbSerialPort sPort = null;
-
-    boolean isStarted = false;
-    private UsbSerialDriver driver;
-    private SerialInputOutputManager.Listener mListener;
-    private SerialInputOutputManager mSerialIoManager;
-    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
-    String msg = "";
     private ReturnInterface mCallbackData;
-    private ReturnInterface mCallbackConnected;
+    private ReturnInterface mCallbackSerialStatus;
 
-    public PSerial(AppRunner appRunner, int bauds) {
+    private UsbDevice mDevice;
+    private UsbManager mUsbManager;
+    private UsbDeviceConnection mConnection;
+    private UsbSerialDevice mSerialPort;
+
+    private boolean mSerialPortConnected = false;
+    private int mBaudsRate = 9600;
+    private boolean isReturningFullLine = true;
+
+    public PSerial(AppRunner appRunner) {
         super(appRunner);
-        mBauds = bauds;
-    }
-
-    public void onConnected(ReturnInterface callbackConnected) {
-        mCallbackConnected = callbackConnected;
     }
 
     @ProtoMethod(description = "starts serial", example = "")
     public void start() {
         getAppRunner().whatIsRunning.add(this);
-        if (!isStarted) {
+        mUsbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
 
-            //UsbSerialProber devices = UsbSerialProber.getDefaultProber();
-
-            // Find all available drivers from attached devices.
-            UsbManager manager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
-
-            //ProbeTable customTable = new ProbeTable();
-
-            //customTable.addProduct(0x2012, 0x1f00, CdcAcmSerialDriver.class);
-            //customTable.addProduct(0x2012, 0x1f00, UsbSerialDriver.class);
-            //customTable.addProduct(0x1234, 0x0002, CdcAcmSerialDriver.class);
-
-            //UsbSerialProber prober = new UsbSerialProber(customTable);
-            //List<UsbSerialDriver> availableDrivers = prober.findAllDrivers(manager);
-
-            List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
-            if (availableDrivers.isEmpty()) {
-                MLog.d(TAG, "no drivers found");
-                return;
-            }
-
-            // Open a connection with the first available driver.
-            UsbSerialDriver driver = availableDrivers.get(0);
-
-            UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
-            if (connection == null) {
-                // You probably need to call UsbManager.requestPermission(driver.getDevice(), ..)
-                MLog.d(TAG, "no connection");
-
-                return;
-            }
-
-            // Read some data! Most have just one port (port 0).
-            List<UsbSerialPort> portList = driver.getPorts();
-
-            sPort = portList.get(0);
-
-            try {
-
-                sPort.open(connection);
-                sPort.setParameters(mBauds, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
-                if (mCallbackConnected != null) {
-                    ReturnObject o = new ReturnObject();
-                    o.put("status", true);
-                    mCallbackConnected.event(o);
-                }
-
-                mListener = new SerialInputOutputManager.Listener() {
-
-                    @Override
-                    public void onRunError(Exception e) {
-                        MLog.d(TAG, "Runner stopped.");
-                    }
-
-                    @Override
-                    public void onNewData(final byte[] data) {
-                        final String readMsg = new String(data, 0, data.length);
-
-                        //mHandler.post(new Runnable() {
-                        //    @Override
-                        //    public void run() {
-                        //antes pasaba finalMsgReturn
-                        //        callbackfn.event(readMsg);
-                        //    }
-                        //});
-
-                        msg = msg + readMsg;
-                        int newLineIndex = msg.indexOf('\n');
-                        MLog.d(TAG, "index " + newLineIndex);
-                        String msgReturn = "";
-                        if (newLineIndex != -1) {
-                            msgReturn = msg.substring(0, newLineIndex);
-                            msg = msg.substring(newLineIndex + 1);
-
-                        }
-
-                        MLog.d(TAG, msg);
-                        if (msgReturn.trim().equals("") == false) {
-
-                            final String finalMsgReturn = msgReturn;
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ReturnObject o = new ReturnObject();
-                                    o.put("data", finalMsgReturn);
-                                    if (mCallbackData != null) mCallbackData.event(o);
-                                }
-                            });
-                        }
-
-
-                    }
-                };
-
-                startIoManager();
-
-                isStarted = true;
-
-            } catch (IOException e) {
-                MLog.e(TAG, "Error setting up device: " + e.getMessage() + e);
-                if (mCallbackConnected != null) {
-                    ReturnObject o = new ReturnObject();
-                    o.put("status", false);
-                    mCallbackConnected.event(o);
-                }
-                //mTitleTextView.setText("Error opening device: " + e.getMessage());
-                try {
-                    sPort.close();
-                } catch (IOException e2) {
-                    // Ignore.
-                }
-                sPort = null;
-                return;
-            }
-            onDeviceStateChange();
-
-        }
-
-    }
-
-    public PSerial onNewData(ReturnInterface cb) {
-        mCallbackData = cb;
-
-        return this;
-    }
-
-    private void stopIoManager() {
-        if (mSerialIoManager != null) {
-            MLog.i(TAG, "Stopping io manager ..");
-            mSerialIoManager.stop();
-            mSerialIoManager = null;
-        }
-    }
-
-    private void startIoManager() {
-
-        if (sPort != null) {
-            MLog.i(TAG, "Starting io manager ..");
-            mSerialIoManager = new SerialInputOutputManager(sPort, mListener);
-            mExecutor.submit(mSerialIoManager);
-        }
-    }
-
-    private void onDeviceStateChange() {
-        stopIoManager();
-        startIoManager();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_USB_PERMISSION);
+        // filter.addAction(ACTION_USB_DETACHED);
+        // filter.addAction(ACTION_USB_ATTACHED);
+        getContext().registerReceiver(usbReceiver, filter);
+        findSerialPortDevice();
     }
 
     @ProtoMethod(description = "stop serial", example = "")
     @ProtoMethodParam(params = {})
     public void stop() {
-        if (isStarted) {
-            isStarted = false;
-
-            stopIoManager();
-            if (sPort != null) {
-                try {
-                    sPort.close();
-                } catch (IOException e) {
-                    // Ignore.
-                }
-                sPort = null;
-            }
-        }
-        ReturnObject o = new ReturnObject();
-        o.put("status", false);
-        mCallbackConnected.event(o);
+        if (mSerialPortConnected) {
+            mSerialPort.close();
+        };
+        getContext().unregisterReceiver(usbReceiver);
     }
 
     @ProtoMethod(description = "sends commands to the serial")
     @ProtoMethodParam(params = {"data"})
     public void write(String data) {
-        if (isStarted) {
-            try {
-                sPort.write(data.getBytes(), 1000);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!mSerialPortConnected) return;
+        mSerialPort.write(data.getBytes());
+    }
+
+    public void onSerialStatus(ReturnInterface cb) {
+        mCallbackSerialStatus = cb;
+    }
+
+    public PSerial onNewData(ReturnInterface cb) {
+        mCallbackData = cb;
+        return this;
+    }
+
+
+    private void findSerialPortDevice() {
+        // This snippet will try to open the first encountered usb mDevice connected, excluding usb root hubs
+        HashMap<String, UsbDevice> usbDevices = mUsbManager.getDeviceList();
+        if (!usbDevices.isEmpty()) {
+
+            // first, dump the hashmap for diagnostic purposes
+            for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
+                mDevice = entry.getValue();
+                MLog.d(TAG, String.format("USBDevice.HashMap (vid:pid) (%X:%X)-%b class:%X:%X name:%s",
+                        mDevice.getVendorId(), mDevice.getProductId(),
+                        UsbSerialDevice.isSupported(mDevice),
+                        mDevice.getDeviceClass(), mDevice.getDeviceSubclass(),
+                        mDevice.getDeviceName()));
+            }
+
+            for (Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
+                mDevice = entry.getValue();
+                int deviceVID = mDevice.getVendorId();
+                int devicePID = mDevice.getProductId();
+
+//                if (deviceVID != 0x1d6b && (devicePID != 0x0001 && devicePID != 0x0002 && devicePID != 0x0003) && deviceVID != 0x5c6 && devicePID != 0x904c) {
+                if (UsbSerialDevice.isSupported(mDevice)) {
+                    // There is a supported mDevice connected - request permission to access it.
+                    MLog.d(TAG, "requesting");
+                    requestUserPermission();
+                    break;
+                } else {
+                    mConnection = null;
+                    mDevice = null;
+                }
+            }
+            if (mDevice == null) {
+                // There are no USB devices connected (but usb host were listed). Send an intent to MainActivity.
+                error("No USB connected");
+            }
+        } else {
+            MLog.d(TAG, "findSerialPortDevice() usbManager returned empty mDevice list." );
+            // There is no USB devices connected. Send an intent to MainActivity
+            error("No USB connected");
+        }
+    }
+
+    private void error(String msg) {
+        MLog.d(TAG, "error " + msg);
+    }
+
+
+    /*
+     * Request user permission. The response will be received in the BroadcastReceiver
+     */
+    private void requestUserPermission() {
+        MLog.d(TAG, String.format("requestUserPermission(%X:%X)", mDevice.getVendorId(), mDevice.getProductId() ) );
+        PendingIntent mPendingIntent = PendingIntent.getBroadcast(getContext(), 0, new Intent(ACTION_USB_PERMISSION), 0);
+        mUsbManager.requestPermission(mDevice, mPendingIntent);
+    }
+
+    /*
+     * Different notifications from OS will be received here (USB attached, detached, permission responses...)
+     * About BroadcastReceiver: http://developer.android.com/reference/android/content/BroadcastReceiver.html
+     */
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "onReceive " + intent.getAction().toString());
+            if (intent.getAction().equals(ACTION_USB_PERMISSION)) {
+                final boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ReturnObject o = new ReturnObject();
+                        o.put("usbPermission", granted);
+                        if (mCallbackData != null) mCallbackData.event(o);
+                    }
+                });
+
+                // User accepted our USB connection. Try to open the mDevice as a serial port
+                if (granted) {
+                    MLog.d(TAG, "onReceive granted " + granted);
+                    // Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
+                    // context.sendBroadcast(intent);
+                    mConnection = mUsbManager.openDevice(mDevice);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ReturnObject o = new ReturnObject();
+                            o.put("usbPermission", granted);
+                            if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
+                        }
+                    });
+                    new ConnectionThread().start();
+                // User not accepted our USB connection. Send an Intent to the Main Activity
+                } else {
+                    // Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
+                    // context.sendBroadcast(intent);
+                }
+            }
+            /*
+            else if (intent.getAction().equals(ACTION_USB_ATTACHED)) {
+                if (!mSerialPortConnected) {
+                    findSerialPortDevice(); // A USB mDevice has been attached. Try to open it as a Serial port
+                }
+            } else if (intent.getAction().equals(ACTION_USB_DETACHED)) {
+                // Usb mDevice was disconnected. send an intent to the Main Activity
+                Intent intent = new Intent(ACTION_USB_DISCONNECTED);
+                context.sendBroadcast(intent);
+                if (mSerialPortConnected) {
+                    mSerialPort.close();
+                }
+                mSerialPortConnected = false;
+            }
+            */
+        }
+    };
+
+    /*
+     * A simple thread to open a serial port.
+     * Although it should be a fast operation. moving usb operations away from UI thread is a good thing.
+     */
+    private class ConnectionThread extends Thread {
+        @Override
+        public void run() {
+            mSerialPort = UsbSerialDevice.createUsbSerialDevice(mDevice, mConnection);
+            if (mSerialPort != null) {
+                if (mSerialPort.open()) {
+                    mSerialPortConnected = true;
+                    mSerialPort.setBaudRate(mBaudsRate);
+                    mSerialPort.setDataBits(UsbSerialInterface.DATA_BITS_8);
+                    mSerialPort.setStopBits(UsbSerialInterface.STOP_BITS_1);
+                    mSerialPort.setParity(UsbSerialInterface.PARITY_NONE);
+                    /**
+                     * Current flow control Options:
+                     * UsbSerialInterface.FLOW_CONTROL_OFF
+                     * UsbSerialInterface.FLOW_CONTROL_RTS_CTS only for CP2102 and FT232
+                     * UsbSerialInterface.FLOW_CONTROL_DSR_DTR only for CP2102 and FT232
+                     */
+                    mSerialPort.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF);
+                    mSerialPort.read(mUSBReadCallback);
+                    mSerialPort.getCTS(mCTSCallback);
+                    mSerialPort.getDSR(mDSRCallback);
+
+                    //
+                    // Some Arduinos would need some sleep because firmware wait some time to know whether a new sketch is going
+                    // to be uploaded or not
+                    try {
+                        Thread.sleep(1000); // sleep some. YMMV with different chips.
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    MLog.d(TAG, "serial connected");
+                } else {
+                    // no connection
+                    mSerialPortConnected = false;
+                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ReturnObject o = new ReturnObject();
+                        o.put("connected", mSerialPortConnected);
+                        if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
+                    }
+                });
+
+            } else {
+                // No driver for given device, even generic CDC driver could not be loaded
+                // Intent intent = new Intent(ACTION_USB_NOT_SUPPORTED);
+                // getContext().sendBroadcast(intent);
             }
         }
     }
 
-    //@ProtoMethod(description = "resumes serial")
-    public void resume() {
+    /*
+     *  Data received from serial port will be received here. Just populate onReceivedData with your code
+     *  In this particular example. byte stream is converted to String and send to UI thread to
+     *  be treated there.
+     */
+    private UsbSerialInterface.UsbReadCallback mUSBReadCallback = new UsbSerialInterface.UsbReadCallback() {
+        private String returnLine;
 
-    }
+        @Override
+        public void onReceivedData(byte[] arg0) {
+            try {
+                String data = new String(arg0, "UTF-8");
+                MLog.d(TAG, "--> " + data);
 
-    //@ProtoMethod(description = "pause serial")
-    public void pause() {
+                if (isReturningFullLine) {
+                    returnLine = returnLine + data;
+                    int newLineIndex = returnLine.indexOf('\n');
+                    MLog.d(TAG, "index " + newLineIndex);
+                    String msgReturn = "";
+                    if (newLineIndex != -1) {
+                        msgReturn = returnLine.substring(0, newLineIndex);
+                        returnLine = returnLine.substring(newLineIndex + 1);
+                    }
+                    // MLog.d(TAG, msg);
+                    if (msgReturn.trim().equals("") == false) {
+                        final String finalMsgReturn = msgReturn;
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ReturnObject o = new ReturnObject();
+                                o.put("data", finalMsgReturn);
+                                if (mCallbackData != null) mCallbackData.event(o);
+                            }
+                        });
+                    }
+                } else {
+                    // returnData = returnLine;
+                }
 
-    }
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /*
+     * State changes in the CTS line will be received here
+     */
+    private UsbSerialInterface.UsbCTSCallback mCTSCallback = new UsbSerialInterface.UsbCTSCallback() {
+        @Override
+        public void onCTSChanged(boolean state) {
+            if(mHandler != null) {
+                // mHandler.obtainMessage(CTS_CHANGE).sendToTarget();
+            }
+        }
+    };
+
+    /*
+     * State changes in the DSR line will be received here
+     */
+    private UsbSerialInterface.UsbDSRCallback mDSRCallback = new UsbSerialInterface.UsbDSRCallback() {
+        @Override
+        public void onDSRChanged(boolean state) {
+            if(mHandler != null) {
+                // mHandler.obtainMessage(DSR_CHANGE).sendToTarget();
+            }
+        }
+    };
+
 
     @Override
     public void __stop() {

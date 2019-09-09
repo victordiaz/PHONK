@@ -16,7 +16,7 @@ android {
         targetSdkVersion 29
 
         versionCode 37
-        versionName "1.0.0"
+        versionName "1.1.0"
     }
 
     compileOptions {
@@ -127,12 +127,9 @@ dependencies {
     api files('libs/ioiolibaccessory.jar')
     api files('libs/ioiolibandroid.jar')
     api files('libs/ioiolibbt.jar')
-    // api 'com.hoho.android:usb-serial-for-android:0.2.0-SNAPSHOT'
-    api files('libs/usb-serial-for-android.jar')
+    implementation 'com.github.felHR85:UsbSerial:6.1.0'
 
     api 'jp.kshoji:midi-driver:0.1.4:@aar'
-    //api files('libs/physicaloidlibrary.jar')
-    api files('libs/physicaloidhoney.jar')
 
     //other libs
     api 'net.lingala.zip4j:zip4j:1.3.2'                     //

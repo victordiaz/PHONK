@@ -53,7 +53,6 @@ public class PCameraOld extends CameraNew implements PCameraInterface {
 
             @Override
             public void onVideoRecorded() {
-
             }
 
             @Override
@@ -122,8 +121,20 @@ public class PCameraOld extends CameraNew implements PCameraInterface {
 
     @ProtoMethod(description = "Records a video in fileName", example = "")
     @ProtoMethodParam(params = {"fileName"})
-    public void recordVideo(String file) {
+    public void recordVideo(String file, final ReturnInterface callbackfn) {
         recordVideo(mAppRunner.getProject().getFullPathForFile(file));
+        addListener(new CameraListener() {
+
+            @Override
+            public void onVideoRecorded() {
+                callbackfn.event(null);
+                cam.removeListener(this);
+            }
+
+            @Override
+            public void onPicTaken() {
+            }
+        });
     }
 
     @ProtoMethod(description = "Stops recording the video", example = "")
@@ -144,13 +155,13 @@ public class PCameraOld extends CameraNew implements PCameraInterface {
         super.turnOnFlash(b);
     }
 
-    @ProtoMethod(description = "Turn the autofocus on/off", example = "")
+    @ProtoMethod(description = "Turn on the autofocus", example = "")
     @ProtoMethodParam(params = {""})
     public void focus() {
         super.focus(null);
     }
 
-    @ProtoMethod(description = "Turn the autofocus on/off", example = "")
+    @ProtoMethod(description = "Turn the autofocus", example = "")
     @ProtoMethodParam(params = {""})
     public void focus(ReturnInterface callback) {
         super.focus(callback);

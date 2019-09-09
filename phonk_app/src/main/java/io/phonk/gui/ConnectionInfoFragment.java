@@ -46,7 +46,6 @@ import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class ConnectionInfoFragment extends Fragment {
 
@@ -62,6 +61,8 @@ public class ConnectionInfoFragment extends Fragment {
     private ImageView mComputerimage;
     boolean stateBlinkCursor = true;
     private TextView mComputerText;
+    private String mRealIp = "";
+    private String mMaskedIp = "XXX.XXX.XXX.XXX";
 
     public ConnectionInfoFragment() {
     }
@@ -83,6 +84,20 @@ public class ConnectionInfoFragment extends Fragment {
 
         mTxtConnectionMessage = rootView.findViewById(R.id.connection_message);
         mTxtConnectionIp = rootView.findViewById(R.id.connection_ip);
+
+
+        if ((boolean) UserPreferences.getInstance().get("servers_mask_ip")) {
+            mTxtConnectionIp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mTxtConnectionIp.getText().toString().contains("XXX")) {
+                        mTxtConnectionIp.setText("http://" + mRealIp);
+                    } else {
+                        mTxtConnectionIp.setText("http://" + mMaskedIp);
+                    }
+                }
+            });
+        }
 
         mConnectionButtons = rootView.findViewById(R.id.connection_buttons);
 
@@ -158,8 +173,12 @@ public class ConnectionInfoFragment extends Fragment {
     public void onEventMainThread(Events.Connection e) {
         String type = e.getType();
         String address = e.getAddress();
+        mRealIp = address;
 
-        MLog.d("qq", type);
+        boolean isMaskingIp = (boolean) UserPreferences.getInstance().get("servers_mask_ip");
+        if (isMaskingIp) {
+            address = mMaskedIp;
+        }
 
         if (type == "wifi") {
             mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_wifi));
@@ -182,7 +201,7 @@ public class ConnectionInfoFragment extends Fragment {
     public void onEventMainThread(Events.AppUiEvent e) {
         String action = e.getAction();
         Object value = e.getValue();
-        MLog.d("qq", "got AppUiEvent 2"  + action);
+        MLog.d(TAG, "got AppUiEvent 2"  + action);
 
         switch (action) {
             case "stopServers":

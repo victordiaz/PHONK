@@ -22,7 +22,6 @@
 
 package io.phonk.runner.api;
 
-import io.phonk.runner.api.boards.PArduino;
 import io.phonk.runner.api.boards.PIOIO;
 import io.phonk.runner.api.boards.PSerial;
 import io.phonk.runner.apidoc.annotation.ProtoMethod;
@@ -54,57 +53,8 @@ public class PBoards extends ProtoBase {
     @ProtoMethod(description = "initializes serial communication", example = "")
     @ProtoMethodParam(params = {"bauds", "function()"})
     public PSerial createSerial(int bauds) {
-        PSerial serial = new PSerial(getAppRunner(), bauds);
-
+        PSerial serial = new PSerial(getAppRunner());
         return serial;
-    }
-
-    @ProtoMethod(description = "initializes arduino board without callback", example = "")
-    @ProtoMethodParam(params = {""})
-    public PArduino connectArduino() {
-        PArduino arduino = new PArduino(getAppRunner());
-        arduino.start();
-
-        return arduino;
-    }
-
-
-    @ProtoMethod(description = "initializes arduino board with callback", example = "")
-    @ProtoMethodParam(params = {"bauds", "function()"})
-    public PArduino connectArduino(int bauds, String endline, PArduino.onReadCB callbackfn) {
-        PArduino arduino = new PArduino(getAppRunner());
-        arduino.start(bauds, endline, callbackfn);
-
-        return arduino;
-    }
-
-
-    @ProtoMethod(description = "initializes adk boards with callback", example = "")
-    @ProtoMethodParam(params = {"bauds", "function()"})
-    public AdkPort startADK(PArduino.onReadCB callbackfn) {
-        final AdkPort adk = new AdkPort(getContext());
-
-
-        Thread thread = new Thread(adk);
-        thread.start();
-
-        String[] list = adk.getList(getContext());
-        for (int i = 0; i < list.length; i++) {
-            // writeToConsole(list[i] + "\n\r");
-        }
-
-        adk.attachOnNew(new AdkPort.MessageNotifier() {
-            @Override
-            public void onNew() {
-                int av = adk.available();
-                byte[] buf = adk.readB();
-
-                String toAdd = new String(buf, 0, av);
-                MLog.d(TAG, "Received:" + toAdd);
-            }
-        });
-
-        return adk;
     }
 
     @Override
