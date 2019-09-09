@@ -58,6 +58,7 @@ import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.models.Project;
@@ -135,7 +136,6 @@ public class PhonkServerService extends Service {
         }
     };
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -173,10 +173,12 @@ public class PhonkServerService extends Service {
         PendingIntent pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        String ip = NetworkUtils.getLocalIpAddress(PhonkServerService.this).get("ip") + ":" + PhonkSettings.HTTP_PORT;
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon_phonk_service)
                 .setContentTitle(this.getString(R.string.app_name))
-                .setContentText(this.getString(R.string.notification_description))
+                .setContentText(this.getString(R.string.notification_description) + " http://" + ip)
                 .setOngoing(false)
                 .setColor(this.getResources().getColor(R.color.phonk_accentColor_primary))
                 // .setContentIntent(pendingIntent)
