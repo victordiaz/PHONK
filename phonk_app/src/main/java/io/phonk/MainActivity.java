@@ -34,6 +34,15 @@ import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -84,7 +93,7 @@ public class MainActivity extends BaseActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private RelativeLayout mHeader;
-    private RelativeLayout mHeader2;
+    private RelativeLayout mLaunchScreenLogo;
 
     private ImageButton mToggleConnectionInfo;
     private RelativeLayout mConnectionInfo;
@@ -136,7 +145,7 @@ public class MainActivity extends BaseActivity {
             PhonkAppHelper.launchScript(this, p);
         }
 
-        mDelay = mAppRunner.pUtil.delay(2000, new PDelay.DelayCB() {
+        mDelay = mAppRunner.pUtil.delay(3000, new PDelay.DelayCB() {
             @Override
             public void event() {
                 mViewPager.setCurrentItem(1);
@@ -214,7 +223,37 @@ public class MainActivity extends BaseActivity {
         }
 
         mHeader = findViewById(R.id.header);
-        mHeader2 = findViewById(R.id.textgroup2);
+        mLaunchScreenLogo = findViewById(R.id.textgroup2);
+
+        /*
+        float x = mLaunchScreenLogo.getX();
+        mLaunchScreenLogo.setX(x - 100);
+        mLaunchScreenLogo.setAlpha(0.0f);
+        mLaunchScreenLogo
+                .animate()
+                .x(x)
+                .alpha(1.0f)
+                .setDuration(2000)
+                .setStartDelay(0)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+        */
+
+        AnimationSet set = new AnimationSet(true);
+
+        Animation anim = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        Animation animT = new TranslateAnimation(0, 0, 100, 0);
+        Animation animO = new AlphaAnimation(0, 1);
+
+        set.addAnimation(anim);
+        set.addAnimation(animT);
+        set.addAnimation(animO);
+        set.setInterpolator(new AnticipateOvershootInterpolator());
+        set.setDuration(800);
+        set.setStartOffset(100);
+        // set.setFillAfter(true);
+
+        mLaunchScreenLogo.startAnimation(set);
 
         mConnectionInfo = findViewById(R.id.ip_container);
 
@@ -238,11 +277,11 @@ public class MainActivity extends BaseActivity {
 
                 if (position == 0) {
                     MLog.d(TAG, position + " " + positionOffset + " " + positionOffsetPixels);
-                    mHeader2.setAlpha(1 - positionOffset);
+                    mLaunchScreenLogo.setAlpha(1 - positionOffset);
 
                     float scale = positionOffset / 5.0f;
-                    mHeader2.setScaleX(1 - scale);
-                    mHeader2.setScaleY(1 - scale);
+                    mLaunchScreenLogo.setScaleX(1 - scale);
+                    mLaunchScreenLogo.setScaleY(1 - scale);
 
                     mHeader.setAlpha(positionOffset);
                 }
@@ -352,7 +391,7 @@ public class MainActivity extends BaseActivity {
 
 
     /*
-     * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
+     * This broadcast will receive JS commands if is in debug cornerMode, useful to debug the app through adb
      */
     BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
         @Override
