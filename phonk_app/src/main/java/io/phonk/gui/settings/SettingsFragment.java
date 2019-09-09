@@ -127,6 +127,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         prefStartServers.setChecked((Boolean) mUserPreferences.get("servers_enabled_on_start"));
 
+        // Start servers on launch
+        final TwoStatePreference prefMaskIp = (TwoStatePreference) findPreference("servers_mask_ip");
+        prefMaskIp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("servers_mask_ip", isChecked).save();
+                return true;
+            }
+        });
+        prefMaskIp.setChecked((Boolean) mUserPreferences.get("servers_mask_ip"));
 
         // Notify new version
         final TwoStatePreference prefNewVersionCheck = (TwoStatePreference) findPreference("notify_new_version");
