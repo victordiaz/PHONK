@@ -78,7 +78,7 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
 
     @ProtoMethod(description = "Connects to a bluetooth device using a popup with the available devices", example = "")
     @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
-    public void connectSerial() {
+    public void connectSerialUsingMenu() {
         final NativeArray nativeArray = mPBluetooth.getBondedDevices();
         String[] arrayStrings = new String[nativeArray.size()];
         for (int i = 0; i < nativeArray.size(); i++) {

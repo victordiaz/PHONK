@@ -153,7 +153,7 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
                     o.put("name", name);
                     o.put("mac", device.getAddress());
-                    o.put("strength", rssi);
+                    o.put("rssi", rssi);
                     callbackfn.event(o);
                 }
             }

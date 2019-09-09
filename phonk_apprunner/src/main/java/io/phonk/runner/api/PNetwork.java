@@ -72,7 +72,7 @@ import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.network.PBluetooth;
-import io.phonk.runner.api.network.PBluetoothLe;
+import io.phonk.runner.api.network.PBluetoothLE;
 import io.phonk.runner.api.network.PFtpClient;
 import io.phonk.runner.api.network.PFtpServer;
 import io.phonk.runner.api.network.PMqtt;
@@ -104,6 +104,7 @@ public class PNetwork extends ProtoBase {
     private final String TAG = PNetwork.class.getSimpleName();
 
     public PBluetooth bluetooth = null;
+    public PBluetoothLE bluetoothLE;
     public ServiceDiscovery mDNS = null;
     private PWebSocketServer PWebsockerServer;
 
@@ -111,6 +112,8 @@ public class PNetwork extends ProtoBase {
         super(appRunner);
 
         bluetooth = new PBluetooth(appRunner);
+        bluetoothLE = new PBluetoothLE(appRunner);
+
         mDNS = new ServiceDiscovery(appRunner);
     }
 
@@ -861,18 +864,6 @@ public class PNetwork extends ProtoBase {
         PFtpClient ftpClient = new PFtpClient(getAppRunner());
 
         return ftpClient;
-    }
-
-    @ProtoMethod(description = "Initialize Bluetooth Low Energy System")
-    @ProtoMethodParam(params = {})
-    public PBluetoothLe startBLE() {
-        //PNetwork p=null;
-        //p.startBLE();
-
-        Log.i("PROTOBLE","STARTING BLE");
-        PBluetoothLe pBluetoothLe = new PBluetoothLe(getAppRunner());
-
-        return pBluetoothLe;
     }
 
     @ProtoMethod(description = "Connect to a MQTT service", example = "")
