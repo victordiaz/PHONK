@@ -32,9 +32,6 @@ import java.util.Map;
 
 import io.phonk.runner.base.utils.FileIO;
 
-/**
- * Created by biquillo on 12/09/16.
- */
 public class UserPreferences {
 
     Map<String, Object> pref = null;
@@ -62,6 +59,7 @@ public class UserPreferences {
         resetIfEmpty("device_id", "12345");
         resetIfEmpty("screen_always_on", false);
         resetIfEmpty("servers_enabled_on_start", true);
+        resetIfEmpty("servers_mask_ip", false);
         resetIfEmpty("notify_new_version", true);
         resetIfEmpty("send_usage_log", true);
         resetIfEmpty("webide_mode", false);
