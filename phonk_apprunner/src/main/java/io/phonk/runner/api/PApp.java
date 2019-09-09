@@ -22,6 +22,7 @@
 
 package io.phonk.runner.api;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -34,6 +35,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
@@ -231,8 +233,8 @@ public class PApp extends ProtoBase {
             stackBuilder.addNextIntent(resultIntent);
             PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            this.mBuilder = new NotificationCompat.Builder(getContext())
-                    .setSmallIcon(R.drawable.app_icon)
+            this.mBuilder = new NotificationCompat.Builder(getContext(), getAppRunner().getProject().name)
+                    .setSmallIcon(R.drawable.bubble)
                     .setContentTitle((CharSequence) map.get("title"))
                     .setContentText((CharSequence) map.get("description"))
                     .setLights(Color.parseColor((String) map.get("color")), 1000, 1000)
@@ -243,6 +245,15 @@ public class PApp extends ProtoBase {
                     .setDeleteIntent(deletePendingIntent)
                     .setContentIntent(resultPendingIntent);
 
+            // damm annoying android pofkjpodsjf0ewiah
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_LOW;
+                NotificationChannel mChannel = new NotificationChannel(getAppRunner().getProject().name, getAppRunner().getProject().name, importance);
+                // mChannel.setDescription("lalalla");
+                mChannel.enableLights(false);
+                mNotificationManager.createNotificationChannel(mChannel);
+            } else {
+            }
 
             return this;
         }
