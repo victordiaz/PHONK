@@ -204,9 +204,6 @@
         </provider>
         -->
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="e695b3cb70f0d5818228eba14be7c84ecff849cf" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
