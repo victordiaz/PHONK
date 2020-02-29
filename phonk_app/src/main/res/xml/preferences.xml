@@ -45,6 +45,13 @@
             android:title="@string/setting_enable_servers_on_start_title" />
 
         <CheckBoxPreference
+            android:icon="@drawable/ic_public_black_24dp"
+            android:checked="false"
+            android:key="advertise_mdns"
+            android:summary="@string/setting_enable_advertise_mdns_description"
+            android:title="@string/setting_enable_advertise_mdns_title" />
+
+        <CheckBoxPreference
             android:icon="@drawable/ic_visibility_off_black_24dp"
             android:checked="false"
             android:key="servers_mask_ip"

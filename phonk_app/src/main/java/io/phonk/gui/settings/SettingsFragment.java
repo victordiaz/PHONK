@@ -93,61 +93,55 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.preferences);
 
         final EditTextPreference prefDeviceId = (EditTextPreference) findPreference("device_id");
-        prefDeviceId.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                prefDeviceId.setText((String) newValue);
-                mUserPreferences.set("device_id", newValue).save();
-                return false;
-            }
+        prefDeviceId.setOnPreferenceChangeListener((preference, newValue) -> {
+            prefDeviceId.setText((String) newValue);
+            mUserPreferences.set("device_id", newValue).save();
+            return false;
         });
         prefDeviceId.setText((String) UserPreferences.getInstance().get("device_id"));
 
         // Screen always on mode
         final TwoStatePreference prefScreenOn = (TwoStatePreference) findPreference("screen_always_on");
-        prefScreenOn.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean isChecked = (Boolean) o;
-                mUserPreferences.set("screen_always_on", isChecked).save();
-                return true;
-            }
+        prefScreenOn.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("screen_always_on", isChecked).save();
+            return true;
         });
         prefScreenOn.setChecked((Boolean) mUserPreferences.get("screen_always_on"));
 
         // Start servers on launch
         final TwoStatePreference prefStartServers = (TwoStatePreference) findPreference("servers_enabled_on_start");
-        prefStartServers.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean isChecked = (Boolean) o;
-                mUserPreferences.set("servers_enabled_on_start", isChecked).save();
-                return true;
-            }
+        prefStartServers.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("servers_enabled_on_start", isChecked).save();
+            return true;
         });
         prefStartServers.setChecked((Boolean) mUserPreferences.get("servers_enabled_on_start"));
 
         // Start servers on launch
         final TwoStatePreference prefMaskIp = (TwoStatePreference) findPreference("servers_mask_ip");
-        prefMaskIp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean isChecked = (Boolean) o;
-                mUserPreferences.set("servers_mask_ip", isChecked).save();
-                return true;
-            }
+        prefMaskIp.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("servers_mask_ip", isChecked).save();
+            return true;
         });
         prefMaskIp.setChecked((Boolean) mUserPreferences.get("servers_mask_ip"));
 
+        // Advertise mDNS
+        final TwoStatePreference prefMDNS = (TwoStatePreference) findPreference("advertise_mdns");
+        prefMDNS.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("advertise_mdns", isChecked).save();
+            return true;
+        });
+        prefMDNS.setChecked((Boolean) mUserPreferences.get("advertise_mdns"));
+
         // Notify new version
         final TwoStatePreference prefNewVersionCheck = (TwoStatePreference) findPreference("notify_new_version");
-        prefNewVersionCheck.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean isChecked = (Boolean) o;
-                mUserPreferences.set("notify_new_version", isChecked).save();
-                return true;
-            }
+        prefNewVersionCheck.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("notify_new_version", isChecked).save();
+            return true;
         });
         prefNewVersionCheck.setChecked((Boolean) mUserPreferences.get("notify_new_version"));
 
@@ -168,40 +162,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // WebIDE mode
         final TwoStatePreference prefWebIdeMode = (TwoStatePreference) findPreference("webide_mode");
-        prefWebIdeMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean isChecked = (Boolean) o;
-                mUserPreferences.set("webide_mode", isChecked).save();
+        prefWebIdeMode.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("webide_mode", isChecked).save();
 
-                PhonkSettingsHelper.showRestartMessage(mContext, mParentView);
-                return true;
-            }
+            PhonkSettingsHelper.showRestartMessage(mContext, mParentView);
+            return true;
         });
         prefWebIdeMode.setChecked((Boolean) mUserPreferences.get("webide_mode"));
 
 
         // Launch on device boot mode
         final TwoStatePreference prefLaunchOnBoot = (TwoStatePreference) findPreference("launch_on_device_boot");
-        prefLaunchOnBoot.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean isChecked = (Boolean) o;
-                mUserPreferences.set("launch_on_device_boot", isChecked).save();
-                return true;
-            }
+        prefLaunchOnBoot.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("launch_on_device_boot", isChecked).save();
+            return true;
         });
         prefLaunchOnBoot.setChecked((Boolean) mUserPreferences.get("launch_on_device_boot"));
 
 
         final EditTextPreference prefLaunchScript = (EditTextPreference) findPreference("launch_script_on_app_launch");
-        prefLaunchScript.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                prefLaunchScript.setText((String) newValue);
-                mUserPreferences.set("launch_on_device_boot", newValue).save();
-                return false;
-            }
+        prefLaunchScript.setOnPreferenceChangeListener((preference, newValue) -> {
+            prefLaunchScript.setText((String) newValue);
+            mUserPreferences.set("launch_on_device_boot", newValue).save();
+            return false;
         });
         prefLaunchScript.setText((String) UserPreferences.getInstance().get("launch_script_on_app_launch"));
 
@@ -237,12 +222,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         */
 
         Preference btnShowLicenses = findPreference("licenses_detail");
-        btnShowLicenses.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                startActivity(new Intent(getActivity(), LicenseActivity.class));
-                return true;
-            }
+        btnShowLicenses.setOnPreferenceClickListener(arg0 -> {
+            startActivity(new Intent(getActivity(), LicenseActivity.class));
+            return true;
         });
 
         /*
@@ -257,19 +239,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         */
 
         Preference btnReinstall = findPreference("reinstall_examples");
-        btnReinstall.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                final ProgressDialog progress = new ProgressDialog(getActivity());
-                progress.setTitle("Reinstalling examples");
-                progress.setMessage("Your examples are getting restored, wait a sec!");
-                progress.setCancelable(false);
-                progress.setCanceledOnTouchOutside(false);
+        btnReinstall.setOnPreferenceClickListener(arg0 -> {
+            final ProgressDialog progress = new ProgressDialog(getActivity());
+            progress.setTitle("Reinstalling examples");
+            progress.setMessage("Your examples are getting restored, wait a sec!");
+            progress.setCancelable(false);
+            progress.setCanceledOnTouchOutside(false);
 
-                new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
-                        .setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
+                    .setCancelable(false).setPositiveButton("Yes", (dialog, which) -> {
                         progress.show();
 
                         PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
@@ -281,16 +259,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                                     }
                                 });
                         dialog.cancel();
-                    }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                }).show();
+                    }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
 
-                return true;
-            }
+            return true;
         });
 
 

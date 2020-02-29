@@ -56,7 +56,7 @@ public class ServiceDiscovery {
         return new Discover(mAppRunner.getAppContext(), serviceType);
     }
 
-    private class Create {
+    public class Create {
         private final NsdManager mNsdManager;
         private final NsdServiceInfo serviceInfo;
         private NsdManager.RegistrationListener mRegistrationListener;
@@ -74,9 +74,9 @@ public class ServiceDiscovery {
             serviceInfo.setPort(port);
 
             String ip = (String) mAppRunner.pNetwork.networkInfo().get("ip");
-            MLog.d(TAG, "ip: " + ip);
             try {
-                serviceInfo.setHost(InetAddress.getByName(ip));
+              InetAddress p = InetAddress.getByName(ip);
+              serviceInfo.setHost(p);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
@@ -149,7 +149,7 @@ public class ServiceDiscovery {
     }
 
 
-    private class Discover {
+    public class Discover {
         final NsdManager mNsdManager;
         private final String mServiceType;
         NsdManager.DiscoveryListener mDiscoveryListener;

@@ -69,7 +69,7 @@ import io.phonk.runner.models.Project;
 public class PApp extends ProtoBase {
 
     @ProtoField
-    public final Notification notification;
+    public Notification notification;
 
     @ProtoField
     public Map<String, Object> settings;
@@ -187,7 +187,7 @@ public class PApp extends ProtoBase {
         return intentData;
     }
 
-    class Notification {
+    public class Notification {
         private NotificationManager mNotificationManager;
         int id;
         NotificationCompat.Builder mBuilder;
