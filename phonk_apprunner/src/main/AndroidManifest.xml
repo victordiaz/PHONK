@@ -88,7 +88,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <action android:name="io.phonk.runner.AppRunnerActivity" />
-
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--how tool
                 <action android:name="android.intent.action.VIEW" />

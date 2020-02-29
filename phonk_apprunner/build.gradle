@@ -16,13 +16,22 @@ android {
         targetSdkVersion 29
 
         versionCode 37
-        versionName "1.1.0"
+        versionName "1.1.9"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled = true
+    }
+
+    aaptOptions {
+        noCompress "tflite"
+    }
+
     buildTypes {
         release {
  			minifyEnabled false
@@ -69,17 +78,12 @@ dependencies {
     //api fileTree(dir: 'libs', include: ['*.jar'])
 
     //android support
-    api "androidx.appcompat:appcompat:1.0.0"           //
-    api 'androidx.recyclerview:recyclerview:1.0.0'        //
-    api 'androidx.cardview:cardview:1.0.0'            //
-    api 'androidx.palette:palette:1.0.0'             //
-    api 'com.google.android.material:material:1.0.0'  //
-    api 'androidx.browser:browser:1.0.0'    //
-
-    def camerax_version = "1.0.0-alpha01"
-    implementation "androidx.camera:camera-core:$camerax_version"
-    implementation "androidx.camera:camera-camera2:$camerax_version"
-
+    api "androidx.appcompat:appcompat:1.0.2"
+    api "androidx.recyclerview:recyclerview:1.0.0"
+    api "androidx.cardview:cardview:1.0.0"
+    api "androidx.palette:palette:1.0.0"
+    api "com.google.android.material:material:1.0.0"
+    api "androidx.browser:browser:1.0.0"
 
     // some of the apache libs collide with the ones in Android, better to include them as jars
     // api files('libs/commons-lang3-3.1.jar')
@@ -146,5 +150,42 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:3.9.0' //
     api 'com.squareup.picasso:picasso:2.5.2' //
 
+    implementation project(path: ':transfer_api')
+    implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
+
+    // https://developer.android.com/jetpack/androidx/releases/lifecycle
+    def lifecycle_version = '2.1.0-rc01'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+    def camerax_version = "1.0.0-alpha04"
+    implementation "androidx.camera:camera-core:$camerax_version"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
 }
+
+
+// The code below downloads a transfer learning model used in the example app automatically.
+// Remove it if you are using your own model!
+
+def modelUrl = 'https://storage.googleapis.com/download.tensorflow.org/models/tflite/transfer_learning_mobilenet_v2_100_224x224_quant_softmax_4_sgd.zip'
+def modelArchivePath = "${buildDir}/model.zip"
+def modelTargetLocation = 'src/main/assets/model'
+
+task downloadModel(type: DefaultTask) {
+  doFirst {
+    println "Downloading and unpacking the model..."
+    mkdir project.buildDir
+  }
+
+  doLast {
+    ant.mkdir(dir: modelTargetLocation)
+    // If you want to use your own models rather than pre-built models,
+    // comment out the following three lines.
+    ant.get(src: modelUrl, dest: modelArchivePath)
+    ant.unzip(src: modelArchivePath, dest: modelTargetLocation)
+    ant.delete(file: modelArchivePath)
+  }
+}
+
+preBuild.dependsOn downloadModel
 

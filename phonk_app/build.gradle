@@ -25,8 +25,12 @@ android {
         setProperty("archivesBaseName", "phonk-$versionName")
 
         compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_7
-            targetCompatibility JavaVersion.VERSION_1_7
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        aaptOptions {
+          noCompress "tflite"
         }
     }
 
@@ -122,4 +126,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'androidx.preference:preference:1.0.0'
     // implementation 'jp.kshoji:midi-driver:0.1.4:@aar'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }
