@@ -23,12 +23,20 @@
 package io.phonk.helpers;
 
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.widget.Toast;
+
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -49,6 +57,7 @@ import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
@@ -409,26 +418,45 @@ public class PhonkScriptHelper {
         Intent.ShortcutIconResource icon;
         icon = Intent.ShortcutIconResource.fromContext(c, R.drawable.app_icon);
 
-        try {
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(c)) {
             Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             shortcutIntent.putExtra(Project.NAME, p.getName());
             shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
+            shortcutIntent.setAction(Intent.ACTION_MAIN);
 
-            Map<String, Object> map = AppRunnerHelper.readProjectProperties(c, p);
-
-            final Intent putShortCutIntent = new Intent();
-            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
-            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-            putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-            c.sendBroadcast(putShortCutIntent);
-        } catch (Exception e) {
-            // TODO
+            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(c, folder + "/" + name)
+                    .setIntent(shortcutIntent) // !!! intent's action must be set on oreo
+                    .setShortLabel(name)
+                    .setIcon(IconCompat.createWithResource(c, R.drawable.app_icon))
+                    .build();
+            ShortcutManagerCompat.requestPinShortcut(c, shortcutInfo, null);
         }
-        // Show toast
-        Toast.makeText(c, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
+
+        /*
+            try {
+                Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
+                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                shortcutIntent.putExtra(Project.NAME, p.getName());
+                shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
+
+                Map<String, Object> map = AppRunnerHelper.readProjectProperties(c, p);
+
+                final Intent putShortCutIntent = new Intent();
+                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
+                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
+                putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+                c.sendBroadcast(putShortCutIntent);
+            } catch (Exception e) {
+                // TODO
+            }
+            // Show toast
+            Toast.makeText(c, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
+        }
+         */
 
     }
 
