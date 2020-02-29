@@ -311,17 +311,16 @@ public class ProjectListFragment extends BaseFragment {
                 Project p = evt.getProject();
                 projectRefresh(p.getName());
                 MLog.d(TAG, "> Event (Run project feedback)" + p.getName());
-
                 break;
-
             case Events.PROJECT_NEW:
                 MLog.d(TAG, "notify data set changed");
                 mProjectAdapter.add(evt.getProject());
-
                 break;
-
             case Events.PROJECT_DELETE:
                 mProjectAdapter.remove(evt.getProject());
+                break;
+            case Events.PROJECT_REFRESH_LIST:
+                loadFolder(mProjectFolder);
                 break;
         }
 

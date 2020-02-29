@@ -32,6 +32,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:visibility="visible"
+    android:paddingLeft="4dp"
+    android:paddingTop="2dp"
     tools:showIn="@layout/projectlist_list">
 
     <ImageButton

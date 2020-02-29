@@ -27,7 +27,6 @@
     android:orientation="horizontal"
     android:background="?attr/selectableItemBackground"
     android:layout_marginTop="6dp"
-
     android:paddingLeft="12dp"
     android:paddingRight="0dp"
     android:paddingBottom="0dp">
@@ -68,7 +67,7 @@
         android:textAlignment="center"
         android:textColor="@color/phonk_textColor_secondary"
         android:fontFamily="sans-serif-light"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_toRightOf="@+id/txtProjectIcon"
         android:layout_toEndOf="@+id/txtProjectIcon" />
 
