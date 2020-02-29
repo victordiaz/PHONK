@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import io.phonk.runner.api.PDevice;
 import io.phonk.runner.base.utils.MLog;
 
 public class PhonkWebsocketServer extends WebSocketServer {
@@ -50,6 +51,9 @@ public class PhonkWebsocketServer extends WebSocketServer {
     private int mNumConnections = 0;
     private final List<WebSocket> connections = new ArrayList<WebSocket>();
     private HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();
+    private ConnectionCallback mConnectionCallback;
+
+    PDevice pDevice;
 
     public interface WebSocketListener {
         void onUpdated(JSONObject jsonObject);
@@ -81,21 +85,24 @@ public class PhonkWebsocketServer extends WebSocketServer {
     }
 
     @Override
-    public void onOpen(WebSocket aConn, ClientHandshake handshake) {
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {
         mNumConnections++;
         MLog.d(TAG, "New websocket connection " + mNumConnections);
-        connections.add(aConn);
+        connections.add(conn);
+        mConnectionCallback.connect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         MLog.d(TAG, "closed");
         connections.remove(conn);
+        mConnectionCallback.disconnect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
         MLog.d(TAG, "Error:");
+        mConnectionCallback.disconnect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
         ex.printStackTrace();
     }
 
@@ -146,5 +153,15 @@ public class PhonkWebsocketServer extends WebSocketServer {
 
     public void removeAllListeners() {
         listeners.clear();
+    }
+
+
+    public void addConnectionCallback(ConnectionCallback connectionCallback) {
+        mConnectionCallback = connectionCallback;
+    }
+
+    public interface ConnectionCallback {
+        void connect(String ip);
+        void disconnect(String ip);
     }
 }

@@ -71,6 +71,7 @@ public class PhonkHttpServer extends NanoHTTPD {
     private static String WEBAPP_DIR = "webide/";
     Gson gson;
     private String views;
+    private ConnectionCallback mConnectionCallback;
 
     public PhonkHttpServer(Context context, int port) { //} throws IOException {
         super(port);
@@ -90,6 +91,8 @@ public class PhonkHttpServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
+        if (mConnectionCallback != null) mConnectionCallback.event(session.getHeaders().get("remote-addr"));
+
         Response res = null;
 
         // this 2 lines add utf-8 support
@@ -613,4 +616,11 @@ public class PhonkHttpServer extends NanoHTTPD {
         this.views = views;
     }
 
+    public void connectionCallback(ConnectionCallback connectionCallback) {
+        mConnectionCallback = connectionCallback;
+    }
+
+    public interface ConnectionCallback {
+        void event(String ip);
+    }
 }

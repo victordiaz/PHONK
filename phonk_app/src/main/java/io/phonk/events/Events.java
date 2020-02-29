@@ -23,6 +23,7 @@
 package io.phonk.events;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import io.phonk.runner.models.Project;
 import io.phonk.server.model.ProtoFile;
@@ -38,6 +39,7 @@ public class Events {
     public static final String PROJECT_EDIT         = "edit";
     public static final String PROJECT_DELETE       = "delete";
     public static final String PROJECT_EXECUTE_CODE = "execute_code";
+    public static final String PROJECT_REFRESH_LIST = "refresh_list";
 
     public static final String EDITOR_FILE_INTENT_LOAD = "editor_file_intent_load";
     public static final String EDITOR_FILE_LOAD     = "editor_file_load";
@@ -49,6 +51,10 @@ public class Events {
     public static final String CLOSE_APP = "close_app";
     public static final String PROJECTLIST_SHOW_BOTTOM_BAR = "projectlist_show_bottom_bar";
     public static final String PROJECTLIST_HIDE_BOTTOM_BAR = "projectlist_hide_bottom_bar";
+
+    public static final String USER_CONNECTION_ENTER = "user_conection_enter";
+    public static final String USER_CONNECTION_LEAVE = "user_conection_leave";
+
 
     public static class ProjectEvent {
         private Project project;
@@ -223,4 +229,26 @@ public class Events {
             return value;
         }
     }
+
+
+    public static class UserConnectionEvent {
+        private final boolean connected;
+        private final String ip;
+        private ArrayList<String> users;
+
+        public UserConnectionEvent(boolean connected, String ip, ArrayList<String> users) {
+            this.connected = connected;
+            this.ip = ip;
+            this.users = users;
+        }
+
+        public boolean getConnected() {
+            return connected;
+        }
+        public String getIp() {
+            return ip;
+        }
+        public ArrayList<String> getUserrs() { return users; }
+    }
+
 }
