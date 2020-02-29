@@ -60,7 +60,7 @@ public class PSensors extends ProtoBase {
     @ProtoField
     public final PLightIntensity light;
     @ProtoField
-    public final PMagneticField magnetic;
+    public final PMagneticField magneticField;
     @ProtoField
     public final POrientation orientation;
     @ProtoField
@@ -84,13 +84,14 @@ public class PSensors extends ProtoBase {
         rotationVector = new PRotationVector(appRunner);
         location = new PLocation(appRunner);
         light = new PLightIntensity(appRunner);
-        magnetic = new PMagneticField(appRunner);
+        magneticField = new PMagneticField(appRunner);
         orientation = new POrientation(appRunner);
         barometer = new PBarometer(appRunner);
         proximity = new PProximity(appRunner);
         stepDetector = new PStep(appRunner);
         ambientTemperature = new PAmbientTemperature(appRunner);
         humidity = new PHumidity(appRunner);
+        accelerometer.sensorSpeed("normal");
     }
 
     public ReturnObject listAvailable() {
@@ -102,7 +103,7 @@ public class PSensors extends ProtoBase {
         r.put("gyroscope", gyroscope.isAvailable());
         r.put("location", location.isAvailable());
         r.put("light", light.isAvailable());
-        r.put("magnetic", magnetic.isAvailable());
+        r.put("magneticField", magneticField.isAvailable());
         r.put("orientation", orientation.isAvailable());
         r.put("barometer", barometer.isAvailable());
         r.put("proximity", proximity.isAvailable());

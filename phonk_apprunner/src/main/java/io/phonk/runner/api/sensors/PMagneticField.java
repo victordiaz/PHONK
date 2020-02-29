@@ -46,7 +46,7 @@ public class PMagneticField extends CustomSensorManager implements WhatIsRunning
         type = Sensor.TYPE_MAGNETIC_FIELD;
     }
 
-    @ProtoMethod(description = "Start the magnetic sensor", example = "")
+    @ProtoMethod(description = "Start the magneticField sensor", example = "")
     @ProtoMethodParam(params = {"function(value)"})
     public void start() {
         super.start();
@@ -87,7 +87,7 @@ public class PMagneticField extends CustomSensorManager implements WhatIsRunning
     }
 
 
-    @ProtoMethod(description = "Start the magnetic sensor. Returns x, y, z", example = "")
+    @ProtoMethod(description = "Start the magneticField sensor. Returns x, y, z", example = "")
     @ProtoMethodParam(params = {"function(x, y, z)"})
     public PMagneticField onChange(final ReturnInterface callbackfn) {
         mCallbackMagneticChange = callbackfn;

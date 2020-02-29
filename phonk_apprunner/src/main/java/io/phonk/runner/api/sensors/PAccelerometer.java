@@ -88,7 +88,6 @@ public class PAccelerometer extends CustomSensorManager {
     @ProtoMethod
     public PAccelerometer onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
-
         return this;
     }
 
