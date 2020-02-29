@@ -257,7 +257,11 @@ store.project_save = function (files) {
       store.execute_code(store.state.current_project.conf.execute_on_save)
     }
   }, function (response) {
-    // console.log('project_save(status) NOP > ' + response.status)
+    console.log('project_save(status) NOP > ' + response.status)
+    if (!response.status) {
+      console.log('qq')
+      store.emit('show_info', { icon: 'error', text: 'Cannot save! Check the connection' })
+    }
   })
 }
 
@@ -490,7 +494,7 @@ store.websockets_init = function () {
   }
 
   ws.onmessage = function (e) {
-    // console.log('ws message', e)
+    console.log('ws message', e)
     var data = JSON.parse(e.data)
     // console.log(e.data)
 

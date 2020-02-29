@@ -4,8 +4,8 @@
   	<div id = "editor_container" :class = "{'project_loaded': project_loaded}">
       <div id = "nav_tabs" v-if = "sharedState.preferences['editor']['show tab bar']">
         <!-- <div id = "project_name" v-on:click = "store.emit('toggle_section', 'load_project')"> -->
-          <button id = "project_run" v-on:click="run" v-bind:class = "{ 'torun' : isConnected, 'shortcut': runShortcut }"> 
-            <i class = "material-icons" v-if = "button_run_state">play_arrow</i> 
+          <button id = "project_run" v-on:click="run" v-bind:class = "{ 'torun' : isConnected, 'shortcut': runShortcut, 'device_disabled': !sharedState.device_properties.connected }">
+            <i class = "material-icons" v-if = "button_run_state">play_arrow</i>
             <i class = "material-icons" v-else>stop</i>
           </button>
         <!-- </div> -->
@@ -455,7 +455,7 @@ export default {
       font-size: 1em;
 
       &:active {
-         background: darken(@mainColor, 2%) !important;
+        background: darken(@mainColor, 2%) !important;
       }
 
       &:hover {
@@ -469,6 +469,16 @@ export default {
 
       &.tostop {
 
+      }
+
+      &.device_disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+
+        &:hover, &:active {
+          background: none !important;
+          color: white;
+        }
       }
 
     }

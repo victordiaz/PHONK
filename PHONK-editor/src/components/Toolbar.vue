@@ -33,9 +33,9 @@
 
     <div class = "right_side">
       <transition name = "upanim" mode = "out-in">
-        <div v-if = "isShowingInfo" class = "app_info_msg">
-          <span class = "icon_left material-icons">{{infoIcon}}</span>
-          <span>{{infoMsg}}</span>
+        <div v-if = "infoMsg.isShowing" class = "app_info_msg">
+          <span class = "icon_left material-icons">{{infoMsg.icon}}</span>
+          <span>{{infoMsg.text}}</span>
         </div>
       </transition>
       <button class = "material-icons transparent" v-show = "false" v-on:click = "toggle_dashboard">dashboard</button>
@@ -79,10 +79,9 @@ export default {
       saveShortcut: false,
       saveAsShortcut: false,
       sharedState: Store.state,
-      isShowingInfo: false,
-      infoMsg: 'message...',
-      infoIcon: null,
-      isProjectRunning: false
+      infoMsg: { text: 'message...', icon: null, isShowing: false },
+      isProjectRunning: false,
+      device_properties: {}
     }
   },
   methods: {
@@ -96,23 +95,33 @@ export default {
       // console.log('toggling dashboard')
     },
     project_saved: function () {
-      this.showInfo('save', 'Saved')
+      this.show_info({ icon: 'save', text: 'Saved' })
     },
     project_action: function (state) {
       if (state === '/run') {
-        this.showInfo('play_arrow', 'Running...')
+        this.show_info({ icon: 'play_arrow', text: 'Running...' })
       } else {
-        this.showInfo('stop', 'Stopping...')
+        this.show_info({ icon: 'stop', text: 'Stopping...' })
       }
     },
-    showInfo (icon, msg) {
-      this.infoMsg = msg
-      this.isShowingInfo = true
-      this.infoIcon = icon
+    show_info (msg) {
+      console.log('qq', msg)
+      this.infoMsg = {
+        icon: msg.icon,
+        text: msg.text,
+        isShowing: true
+      }
 
       setTimeout(() => {
-        this.isShowingInfo = false
+        this.infoMsg.isShowing = false
       }, 2000)
+    },
+    device_update: function (data) {
+      if (typeof data.info !== 'undefined') {
+        this.device_properties = data
+      } else {
+        this.device_properties.connected = false
+      }
     }
   },
   computed: {
@@ -127,10 +136,14 @@ export default {
   created () {
     Store.on('project_saved', this.project_saved)
     Store.on('project_action', this.project_action)
+    Store.on('device', this.device_update)
+    Store.on('show_info', this.show_info)
   },
   destroyed () {
     Store.remove_listener('project_saved', this.project_saved)
     Store.remove_listener('project_action', this.project_action)
+    Store.remove_listener('device', this.device_update)
+    Store.remove_listener('show_info', this.showInfo)
   }
 }
 </script>
