@@ -76,8 +76,8 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
     }
 
 
-    @ProtoMethod(description = "Set the speed of the sensor 'slow', 'fast', 'normal'", example = "")
-    @ProtoMethodParam(params = {"speed=['slow', 'fast', 'normal']"})
+    @ProtoMethod(description = "Set the speed of the sensor 'slow', 'normal', 'fast'", example = "")
+    @ProtoMethodParam(params = {"speed=['slow', 'normal', 'fast']"})
     public void sensorSpeed(String speed) {
         if (speed.equals("slow")) {
             this.speed = SensorManager.SENSOR_DELAY_UI;

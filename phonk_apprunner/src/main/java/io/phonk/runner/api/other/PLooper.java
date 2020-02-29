@@ -38,7 +38,6 @@ public class PLooper implements WhatIsRunningInterface {
     ArrayList<Runnable> rl = new ArrayList<Runnable>();
 
     public int speed;
-    boolean paused = false;
     boolean isLooping = false;
 
     // --------- Looper ---------//
@@ -57,13 +56,13 @@ public class PLooper implements WhatIsRunningInterface {
 
             @Override
             public void run() {
+                if (!isLooping) return;
+
                 if (mCallbackfn != null) {
                     mCallbackfn.event();
                 }
 
-                if (!paused) {
-                    handler.postDelayed(this, speed);
-                }
+                handler.postDelayed(this, speed);
             }
         };
 
@@ -90,17 +89,19 @@ public class PLooper implements WhatIsRunningInterface {
         return this;
     }
 
+    /*
     @ProtoMethod(description = "Pause the looper", example = "")
     @ProtoMethodParam(params = {"boolean"})
-    public PLooper pause(boolean b) {
-        this.paused = b;
-        this.isLooping = false;
-        if (b == false) {
+    public PLooper pause(boolean paused) {
+        if (paused) {
+          this.isLooping = false;
+        } else {
+            this.isLooping = true;
             handler.postDelayed(task, speed);
         }
-
         return this;
     }
+     */
 
     @ProtoMethod(description = "Stop the looper", example = "")
     public PLooper stop() {
@@ -112,8 +113,10 @@ public class PLooper implements WhatIsRunningInterface {
 
     @ProtoMethod(description = "Start the looper", example = "")
     public PLooper start() {
-        this.isLooping = true;
-        handler.post(task);
+        if (!this.isLooping) {
+          this.isLooping = true;
+          handler.post(task);
+        }
 
         return this;
     }

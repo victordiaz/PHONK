@@ -109,7 +109,6 @@ public class MainActivity extends BaseActivity {
 
     private boolean mUiInit = false;
     private boolean isWebIdeMode = false;
-    private boolean isServersEnabledOnStart;
     private boolean mShowProjectsInFolder = false;
     private PDelay mDelay;
 
@@ -122,7 +121,6 @@ public class MainActivity extends BaseActivity {
 
         UserPreferences.getInstance().load();
         isWebIdeMode = (boolean) UserPreferences.getInstance().get("webide_mode");
-        isServersEnabledOnStart = (boolean) UserPreferences.getInstance().get("servers_enabled_on_start");
 
         mAppRunner = new AppRunnerCustom(this);
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
@@ -134,7 +132,7 @@ public class MainActivity extends BaseActivity {
         MLog.d(TAG, "isWebIdeMode " + isWebIdeMode);
         if (isWebIdeMode) startServers();
 
-        loadUI();
+        loadUI(0);
 
         setScreenAlwaysOn((boolean) UserPreferences.getInstance().get("screen_always_on"));
 
@@ -144,6 +142,8 @@ public class MainActivity extends BaseActivity {
             Project p = new Project(script);
             PhonkAppHelper.launchScript(this, p);
         }
+
+        // PhonkAppHelper.launchScript(this, new Project("playground/User Projects/cameraX"));
 
         mDelay = mAppRunner.pUtil.delay(3000, new PDelay.DelayCB() {
             @Override
@@ -191,10 +191,10 @@ public class MainActivity extends BaseActivity {
         RelativeLayout mainContent = findViewById(R.id.main_content);
         mainContent.removeAllViews();
         super.onConfigurationChanged(newConfig);
-        loadUI();
+        loadUI(1);
     }
 
-    private void loadUI() {
+    private void loadUI(int toPage) {
         // load UI
         setContentView(R.layout.activity_main);
 
@@ -205,14 +205,12 @@ public class MainActivity extends BaseActivity {
 
             mFolderListFragment = FolderListFragment.newInstance(PhonkSettings.EXAMPLES_FOLDER, true);
             mProjectListFragment = ProjectListFragment.newInstance("", true);
-            mConnectionInfoFragment = ConnectionInfoFragment.newInstance(mAppRunner);
+            mConnectionInfoFragment = ConnectionInfoFragment.newInstance();
 
             if (mIsTablet) {
                 mCombinedFolderAndProjectFragment = CombinedFolderAndProjectFragment.newInstance(mFolderListFragment, mProjectListFragment);
             }
         }
-
-
         addFragment(mConnectionInfoFragment, R.id.infoLayout, false);
 
         boolean isLandscapeBig = getResources().getBoolean(R.bool.isLandscapeBig);
@@ -273,7 +271,9 @@ public class MainActivity extends BaseActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                mDelay.cancel();
+                if (positionOffset > 0.1) {
+                    mDelay.stop();
+                }
 
                 if (position == 0) {
                     MLog.d(TAG, position + " " + positionOffset + " " + positionOffsetPixels);
@@ -297,6 +297,7 @@ public class MainActivity extends BaseActivity {
                 MLog.d("selected", "state " + state + " " + mCurrentPagerPosition);
             }
         });
+        mViewPager.setCurrentItem(toPage);
 
         final ImageButton moreOptionsButton = findViewById(R.id.more_options);
         moreOptionsButton.setOnClickListener(new View.OnClickListener() {
@@ -431,7 +432,7 @@ public class MainActivity extends BaseActivity {
     @Subscribe
     public void onEventMainThread(Events.ExecuteCodeEvent e) {
         String code = e.getCode();
-        MLog.d(TAG, "event -> " + code);
+        MLog.d(TAG, "connect -> " + code);
 
         if (PhonkSettings.DEBUG) {
             mAppRunner.interp.eval(code);
@@ -543,7 +544,6 @@ public class MainActivity extends BaseActivity {
             }
             mCurTransaction.detach((Fragment) mFragments.get(position));
             // mFragments.remove(position);
-            MLog.d("fff", "destroying item" + mProjectListFragment);
         }
 
         @Override
@@ -565,19 +565,10 @@ public class MainActivity extends BaseActivity {
             // MLog.d("fff", "getCount " + mFragments.size());
             return mFragments.size();
         }
+    }
 
-
-        /*
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0: return "Intro";
-                case 1: return "Folder";
-                case 2: return "Projects";
-            }
-            return null;
-        }
-        */
+    public AppRunnerCustom getAppRunner() {
+        return mAppRunner;
     }
 
     @Override

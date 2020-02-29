@@ -31,9 +31,6 @@ import java.util.ArrayList;
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.base.utils.MLog;
 
-/**
- * Created by biquillo on 5/09/16.
- */
 public class MyLifecycleHandler implements Application.ActivityLifecycleCallbacks {
 
     private String TAG = MyLifecycleHandler.class.getSimpleName();

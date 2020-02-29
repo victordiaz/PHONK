@@ -33,6 +33,7 @@ public class PDelay implements WhatIsRunningInterface {
     private DelayCB mCallbackfn;
     Runnable task;
     private final Handler handler;
+    boolean mCancelJob = false;
 
     public interface DelayCB {
         void event();
@@ -48,7 +49,8 @@ public class PDelay implements WhatIsRunningInterface {
         Runnable task = new Runnable() {
             @Override
             public void run() {
-                // handler.postDelayed(this, duration);
+                if (mCancelJob) return;
+
                 callbackkfn.event();
                 handler.removeCallbacks(this);
             }
@@ -60,14 +62,15 @@ public class PDelay implements WhatIsRunningInterface {
     }
 
     @ProtoMethod(description = "Stop the timer", example = "")
-    public PDelay cancel() {
+    public PDelay stop() {
         handler.removeCallbacks(task);
+        mCancelJob = true;
 
         return this;
     }
 
     public void __stop() {
-        cancel();
+        stop();
     }
 
 }

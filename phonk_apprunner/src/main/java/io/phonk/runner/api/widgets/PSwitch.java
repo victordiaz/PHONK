@@ -24,17 +24,40 @@ package io.phonk.runner.api.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.widget.TextViewCompat;
+
+import java.util.Map;
+
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnObject;
+import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.StyleProperties;
 
 @SuppressLint("NewApi")
-public class PSwitch extends Switch {
+public class PSwitch extends Switch implements PViewMethodsInterface {
 
-    public PSwitch(Context context) {
-        super(context);
+    public StyleProperties props = new StyleProperties();
+    public Styler styler;
+    private Typeface currentFont;
+
+    public PSwitch(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        styler = new Styler(appRunner, this, props);
+        styler.apply();
+        setGravity(Gravity.CENTER);
     }
 
     public PSwitch onChange(final ReturnInterface callbackfn) {
@@ -43,7 +66,7 @@ public class PSwitch extends Switch {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ReturnObject r = new ReturnObject(PSwitch.this);
-                r.put("changed", true);
+                r.put("changed", isChecked);
                 callbackfn.event(r);
             }
         });
@@ -52,4 +75,49 @@ public class PSwitch extends Switch {
     }
 
 
+    @ProtoMethod(description = "Sets the text color", example = "")
+    @ProtoMethodParam(params = {"colorHex"})
+    public PSwitch color(String c) {
+        this.setTextColor(Color.parseColor(c));
+
+        return this;
+    }
+
+    @ProtoMethod(description = "Sets the background color", example = "")
+    @ProtoMethodParam(params = {"colorHex"})
+    public PSwitch background(String c) {
+        this.setBackgroundColor(Color.parseColor(c));
+        return this;
+    }
+
+    @ProtoMethod(description = "Changes the text to the given text", example = "")
+    @ProtoMethodParam(params = {"text"})
+    public PSwitch text(String text) {
+        this.setText(text);
+        return this;
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public void setStyle(Map style) {
+        styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
+    }
+
+    /*
+    public PSwitchView center(String how) {
+        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_START);
+        this.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
+        this.setTextAlignment(TEXT_ALIGNMENT);
+    }
+    */
 }
