@@ -188,7 +188,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 prefLaunchScript.setText((String) newValue);
-                mUserPreferences.set("launch_on_device_boot", newValue).save();
+                mUserPreferences.set("launch_script_on_app_launch", newValue).save();
                 return false;
             }
         });
