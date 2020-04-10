@@ -13,7 +13,7 @@
         <transition name = "upanim" mode = "out-in">
           <div v-show = "isShowingActions" class = "actionable">
             <!-- <button>rename</button>-->
-            
+
             <div v-if = "!isShowingConfirmation">
               <button v-on:click = "deleteAction">delete</button>
               <button v-on:click = "cancelActions">cancel</button>
@@ -31,11 +31,14 @@
             <div class = "project_list" v-for="(p, pindex) in projectsOrdered">
               <h1> {{pindex}} </h1>
               <ul>
-                <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name"> {{f.name}} </li>
+                <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name">
+                  <span class = "icon"><i class = "material-icons transparent">folder</i></span>
+                 {{ f.name }}
+                </li>
               </ul>
             </div>
           </div>
-          <div class="right">        
+          <div class="right">
             <div class = "project_info">
               <p>Double click to open</p>
               <div class="img-cover"></div>
@@ -266,12 +269,12 @@ export default {
       display: flex;
       line-height: 1.2em;
       align-items: center;
-      
+
       .icon {
         max-width: 30px;
         min-width: 30px;
         height: 30px;
-        border: 1px solid @accentColor;
+        border: 1px solid fade(@accentColor, 30%);
         color: @accentColor;
         font-weight: 800;
         display: flex;
@@ -292,7 +295,7 @@ export default {
         border-radius: 1px;
         position: relative;
 
-        
+
         .icon {
           color: white;
           border-color: white;
