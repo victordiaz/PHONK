@@ -10,7 +10,10 @@
           </button>
         <!-- </div> -->
         <ul id = "tabs">
-          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click.prevent.self="select_tab(index)" v-for="(t, index) in tabs">{{t.name}}<i class = "close material-icons" v-on:click = "close_tab(index)">close</i></li>
+          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click.prevent.self="select_tab(index)" v-for="(t, index) in tabs">
+            {{t.name}}
+            <i class = "close material-icons" :class = "{ 'hideClose': tabs.length === 1 || t.name === 'main.js' }" v-on:click = "close_tab(index)">close</i>
+          </li>
         </ul>
         <button id = "project_save" v-on:click = "save"><i class = "material-icons">save</i></button>
       </div>
@@ -546,6 +549,10 @@ export default {
           &:hover {
             color: black;
           }
+        }
+
+        .hideClose {
+          display: none !important;
         }
       }
     }
