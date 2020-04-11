@@ -91,7 +91,8 @@ export default {
   },
   computed: {
     folder_chosen: function () {
-      return _.orderBy(this.store.state.projects[this.pselected][this.selected].files, 'name')
+      let files = this.store.state.projects[this.pselected][this.selected].files
+      return _.orderBy(files, [files => files.name.toLowerCase()], ['asc'])
     },
     projectsOrdered: function () {
       // return _.sortKeysBy(this.store.state.projects)

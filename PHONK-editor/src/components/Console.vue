@@ -2,7 +2,7 @@
   <div id = "console" class = "proto_panel">
     <div class = "wrapper">
       <div class = "actionbar">
-        <h1 v-on:dblclick = "hideshow">console</h1>
+        <h1 v-on:dblclick = "hideshow">console {{slicedLogs.length}} / {{logs.length}}</h1>
         <ul>
           <li title = "Show time" class = "material-icons" v-on:click="showTime()" v-bind:class="{'enabled':showingTime}">access_time</li>
           <li title = "Lock scrolling" class = "material-icons" v-on:click="toggleLock()" v-bind:class="{'enabled':lock}">lock</li>
@@ -11,7 +11,11 @@
       </div>
       <div class = "content" v-show = "showing">
         <ul ref = "log">
-          <li v-for="log in slicedLogs" v-bind:class="log.action"><span class = "time" v-bind:class = "{'off': !showingTime}">{{log.time}}</span><span v-html = "log.text"></span></li>
+          <li v-for="(log, i) in slicedLogs" v-bind:class="log.action">
+            <span class = "time" v-bind:class = "{'off': !showingTime}">{{log.time}}</span>
+            {{i}}
+            <span v-html = "log.text"></span>
+          </li>
         </ul>
       </div>
     </div>
@@ -22,6 +26,7 @@
 import Store from '../Store'
 
 export default {
+  logsq: [],
   name: 'Console',
   data () {
     return {
@@ -30,31 +35,41 @@ export default {
       /* {action: 'error', text: 'potato'}
       */],
       count: 0,
+      consoleIsStarted: false,
       lock: false,
-      limitNum: 100,
+      limitNum: 200,
       limitOffset: 0,
       showingTime: false,
-      showing: true
+      showing: true,
+      slicedLogs: []
     }
   },
   computed: {
-    slicedLogs: function () {
-      return this.logs.slice(this.limitOffset, this.limitOffset + this.limitNum)
-    }
+    // slicedLogs: function () {
+    //   return this.logs.slice(this.limitOffset, this.limitOffset + this.limitNum)
+    // }
   },
   methods: {
     console: function (data) {
-      // console.log(data)
-      this.logs.push({action: data.action, time: data.time, text: data.data})
+      if (!this.consoleIsStarted && this.consoleCanStart) {
+        this.consoleIsStarted = true
+        this.updateInterval = setInterval(() => {
+          this.slicedLogs = this.$options.logsq.slice(this.limitOffset, this.limitOffset + this.limitNum)
+        }, 100)
+      }
 
-      if (this.logs.length > this.limitNum) {
-        this.limitOffset = this.logs.length - this.limitNum
+
+      // console.log(data)
+      this.$options.logsq.push({action: data.action, time: data.time, text: data.data})
+
+      if (this.$options.logsq.length > this.limitNum) {
+        this.limitOffset = this.$options.logsq.length - this.limitNum
       }
 
       if (this.lock) return
 
       var ul = this.$refs.log
-      // wait until vue rerenders
+      // wait until vue rerenders and scroll down console log
       this.$nextTick(function () {
         ul.scrollTop = ul.scrollHeight
       })
@@ -62,6 +77,7 @@ export default {
     clear: function () {
       // console.log('clear')
       this.logs = []
+      this.limitOffset = 0
     },
     toggleLock () {
       this.lock = !this.lock
@@ -70,7 +86,15 @@ export default {
       this.showingTime = !this.showingTime
     },
     project_action (action) {
-      if (action === '/run') this.clear()
+      console.log('action', action)
+      if (action === '/run') {
+        this.consoleCanStart = true
+        this.clear()
+      } else if (action === '/stop') {
+        this.consoleCanStart = false
+        clearInterval(this.updateInterval)
+        this.consoleIsStarted = false
+      }
     },
     hideshow: function () {
       // this.showing = !this.showing
@@ -83,6 +107,7 @@ export default {
   created () {
     Store.on('console', this.console)
     Store.on('project_action', this.project_action)
+    console.log('qq', this.$options.logsq)
 
     /*
     var that = this

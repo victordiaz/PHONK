@@ -484,7 +484,7 @@ store.websockets_init = function () {
   ws = new WebSocket(getUrlWs())
 
   ws.onopen = function () {
-    console.log('ws connected')
+    // console.log('ws connected')
     wsIsConnected = true
     clearInterval(reconnectionInterval) // _s the reconnection
     store.emit('device', { connected: true })
@@ -494,7 +494,7 @@ store.websockets_init = function () {
   }
 
   ws.onmessage = function (e) {
-    console.log('ws message', e)
+    // console.log('ws message', e)
     var data = JSON.parse(e.data)
     // console.log(e.data)
 
@@ -528,7 +528,7 @@ store.websockets_init = function () {
   }
 
   ws.onclose = function () {
-    console.log('ws disconnected')
+    // console.log('ws disconnected')
     // this.protoEvent.send('ui_appConnected', false)
     wsIsConnected = false
     store.emit('device', { connected: false })

@@ -219,7 +219,7 @@ export default {
     },
     run: function () {
       var that = this
-      console.log('run/stop project')
+      // console.log('run/stop project')
       // console.log(this.run_button_state + ' project')
 
       // run the project

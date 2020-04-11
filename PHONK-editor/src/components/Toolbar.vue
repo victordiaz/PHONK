@@ -105,7 +105,6 @@ export default {
       }
     },
     show_info (msg) {
-      console.log('qq', msg)
       this.infoMsg = {
         icon: msg.icon,
         text: msg.text,
