@@ -24,7 +24,7 @@ package io.phonk.runner.api.media;
 
 
 import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.base.gui.CameraNew;
+import io.phonk.runner.base.gui.CameraTexture;
 
 public interface PCameraInterface {
 
@@ -37,7 +37,8 @@ public interface PCameraInterface {
     boolean isFlashAvailable();
     void turnOnFlash(boolean b);
     void setColorEffect(String effect);
-    void onNewBitmap(final CameraNew.CallbackBmp callbackfn);
-    void onNewStreamFrame(CameraNew.CallbackStream callbackfn);
+    void onNewFrame(final CameraTexture.CallbackData callbackfn);
+    void onNewFrameBitmap(final CameraTexture.CallbackBmp callbackfn);
+    void onNewFrameBase64(CameraTexture.CallbackStream callbackfn);
 
 }

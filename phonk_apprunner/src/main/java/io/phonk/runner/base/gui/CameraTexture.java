@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.YuvImage;
@@ -44,6 +45,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -56,28 +58,30 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Vector;
 
 import io.phonk.runner.api.common.ReturnInterface;
+import io.phonk.runner.api.media.AutoFitTextureView;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")
-public class CameraNew extends TextureView implements TextureView.SurfaceTextureListener {
+public class CameraTexture extends AutoFitTextureView implements TextureView.SurfaceTextureListener {
 
     public static final int MODE_CAMERA_FRONT = 0;
     public static final int MODE_CAMERA_BACK = 1;
     public static final int MODE_COLOR_BW = 2;
     public static final int MODE_COLOR_COLOR = 3;
-    private static int cameraRotation = 0;
+    private static int mCameraRotation = 0;
 
     int modeColor;
     int modeCamera;
     private int cameraId;
 
-    protected String TAG = CameraNew.class.getSimpleName();
+    protected String TAG = CameraTexture.class.getSimpleName();
 
     AppRunner mAppRunner;
 
@@ -97,13 +101,14 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     private CallbackStream callbackStream;
     private boolean frameProcessing = false;
     protected Parameters mParameters;
+    private OnReadyCallback mOnReadyCallback;
 
     public interface CameraListener {
         void onPicTaken();
         void onVideoRecorded();
     }
 
-    public CameraNew(AppRunner appRunner, int camera, int colorMode) {
+    public CameraTexture(AppRunner appRunner, int camera, int colorMode) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
         this.modeColor = colorMode;
@@ -114,7 +119,6 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-
         stopCamera();
     }
 
@@ -122,20 +126,16 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
     }
-
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
     }
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         //set shadow
         //AndroidUtils.setViewGenericShadow(this, width, height);
-
     }
 
     @Override
@@ -147,7 +147,6 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-
         if (modeCamera == MODE_CAMERA_FRONT) {
             cameraId = getCameraId(CameraInfo.CAMERA_FACING_FRONT);
             MLog.d(TAG, "" + cameraId);
@@ -159,22 +158,23 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
             cameraId = 0;
             mCamera = Camera.open();
         }
-
         mParameters = mCamera.getParameters();
 
+        // SizePair siz = generateValidPreviewSize(camera, 480, 640);
+        // width = siz.mPicture.getWidth();
+        // height = siz.mPicture.getHeight();
+        mParameters.setPreviewSize(640, 480);
 
         try {
             applyParameters();
             mCamera.setPreviewTexture(surface);
-
         } catch (IOException exception) {
             mCamera.release();
         }
 
-
         setCameraDisplayOrientation(cameraId, mCamera);
         mCamera.startPreview();
-
+        mOnReadyCallback.event();
     }
 
 
@@ -215,7 +215,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
     public void setPictureSize(int w, int h) {
-        mParameters.setPictureSize(320, 240);
+        mParameters.setPictureSize(w, h);
         applyParameters();
     }
 
@@ -224,9 +224,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
         applyParameters();
     }
 
-
     public void getProperties() {
-
         Log.i(TAG, "Supported Exposure Modes:" + mParameters.get("exposure-mode-values"));
         Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
         Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
@@ -245,35 +243,58 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
 
                 @Override
                 public void onPreviewFrame(byte[] data, Camera camera) {
-                    MLog.d(TAG, "onNewFrame");
-
+                    // MLog.d(TAG, "onNewFrame");
 
                     if (callbackData != null) {
-                        callbackData.event(data, camera);
+                      callbackData.event(data, camera);
                     }
                     if (callbackBmp != null) {
                         Camera.Parameters parameters = camera.getParameters();
+
+                        List<Camera.Size> sizes = camera.getParameters().getSupportedPreviewSizes();
+                        for (Camera.Size size : sizes) {
+                            MLog.d("wewe", "sizes " + size.width + " " + size.height);
+                        }
+
+                        List<Integer> formats = camera.getParameters().getSupportedPreviewFormats();
+                        for (Integer integer : formats) {
+                            MLog.d("wewe", "formats " + integer);
+                        }
+
                         int width = parameters.getPreviewSize().width;
                         int height = parameters.getPreviewSize().height;
+                        MLog.d("wewe", "-> " + width + " " + height);
 
                         // get support preview format
                         YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+                        if (yuv == null) return;
+
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-                        // maybe pass the out to the callbacks and do each compression there?
-                        yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+                        // maybe pass the output to the callbacks and do each compression there?
+                        yuv.compressToJpeg(new Rect(0, 0, width, height), 100, out);
+
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(90);
+                        matrix.postScale((float)0.5, (float) 0.5);
                         byte[] bytes = out.toByteArray();
 
                         BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
                         bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-
                         final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
-                        callbackBmp.event(bitmap);
+                        Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0 , 0, 300, 300, matrix, true);
+
+                        MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
+                        MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
+                        callbackBmp.event(fbitmap);
                     }
                     if (callbackStream != null) {
                         Camera.Parameters parameters = camera.getParameters();
                         int width = parameters.getPreviewSize().width;
                         int height = parameters.getPreviewSize().height;
+
+                        CameraTexture.this.setAspectRatio(height, width);
+
 
                         // get support preview format
                         YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
@@ -288,20 +309,16 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
     public void addFaceDetector() {
-
     }
 
     protected void stopCamera() {
-
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.setPreviewCallback(null);
             mCamera.release();
             mCamera = null;
         }
-
     }
-
 
     File dir = null;
     File file = null;
@@ -546,8 +563,7 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
     }
 
     public void setCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info =
-                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
         android.hardware.Camera.getCameraInfo(cameraId, info);
 
         WindowManager windowManager = (WindowManager) mAppRunner.getAppContext().getSystemService(Context.WINDOW_SERVICE);
@@ -577,50 +593,75 @@ public class CameraNew extends TextureView implements TextureView.SurfaceTexture
             result = (info.orientation - degrees + 360) % 360;
         }
 
-        cameraRotation = result;
-        camera.setDisplayOrientation(result);
+        mCameraRotation = result;
+        MLog.d("wewe", "" + mCameraRotation);
+        camera.setDisplayOrientation(mCameraRotation);
     }
 
 
-    static public void decodeYUV420SP(int[] rgb, byte[] yuv420sp, int width, int height) {
-        final int frameSize = width * height;
+    public void addOnReadyCallback(OnReadyCallback callback) {
+        mOnReadyCallback = callback;
+    }
 
-        for (int j = 0, yp = 0; j < height; j++) {
-            int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
-            for (int i = 0; i < width; i++, yp++) {
-                int y = (0xff & (yuv420sp[yp])) - 16;
-                if (y < 0) {
-                    y = 0;
-                }
-                if ((i & 1) == 0) {
-                    v = (0xff & yuv420sp[uvp++]) - 128;
-                    u = (0xff & yuv420sp[uvp++]) - 128;
-                }
+    public interface OnReadyCallback {
+        void event();
+    }
 
-                int y1192 = 1192 * y;
-                int r = (y1192 + 1634 * v);
-                int g = (y1192 - 833 * v - 400 * u);
-                int b = (y1192 + 2066 * u);
 
-                if (r < 0) {
-                    r = 0;
-                } else if (r > 262143) {
-                    r = 262143;
-                }
-                if (g < 0) {
-                    g = 0;
-                } else if (g > 262143) {
-                    g = 262143;
-                }
-                if (b < 0) {
-                    b = 0;
-                } else if (b > 262143) {
-                    b = 262143;
-                }
+    private static final double MAX_ASPECT_DISTORTION = 0.15;
+    private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
 
-                rgb[yp] = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) & 0xff00) | ((b >> 10) & 0xff);
+    //desiredWidth and desiredHeight can be the screen size of mobile device
+    private static SizePair generateValidPreviewSize(Camera camera, int desiredWidth,
+                                                     int desiredHeight) {
+        Camera.Parameters parameters = camera.getParameters();
+        double screenAspectRatio = desiredWidth / (double) desiredHeight;
+        List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
+        List<Camera.Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
+        SizePair bestPair = null;
+        double currentMinDistortion = MAX_ASPECT_DISTORTION;
+        for (Camera.Size previewSize : supportedPreviewSizes) {
+            float previewAspectRatio = (float) previewSize.width / (float) previewSize.height;
+            for (Camera.Size pictureSize : supportedPictureSizes) {
+                float pictureAspectRatio = (float) pictureSize.width / (float) pictureSize.height;
+                if (Math.abs(previewAspectRatio - pictureAspectRatio) < ASPECT_RATIO_TOLERANCE) {
+                    SizePair sizePair = new SizePair(previewSize, pictureSize);
+
+                    boolean isCandidatePortrait = previewSize.width < previewSize.height;
+                    int maybeFlippedWidth = isCandidatePortrait ? previewSize.width : previewSize.height;
+                    int maybeFlippedHeight = isCandidatePortrait ? previewSize.height : previewSize.width;
+                    double aspectRatio = maybeFlippedWidth / (double) maybeFlippedHeight;
+                    double distortion = Math.abs(aspectRatio - screenAspectRatio);
+                    if (distortion < currentMinDistortion) {
+                        currentMinDistortion = distortion;
+                        bestPair = sizePair;
+                    }
+                    break;
+                }
             }
         }
+
+        return bestPair;
     }
 
+
+    private static class SizePair {
+        private Size mPreview;
+        private Size mPicture;
+
+        public SizePair(Camera.Size previewSize, Camera.Size pictureSize) {
+            mPreview = new Size(previewSize.width, previewSize.height);
+            if (pictureSize != null) {
+                mPicture = new Size(pictureSize.width, pictureSize.height);
+            }
+        }
+
+        public Size previewSize() {
+            return mPreview;
+        }
+
+        @SuppressWarnings("unused") public Size pictureSize() {
+            return mPicture;
+        }
+    }
 }

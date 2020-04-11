@@ -60,9 +60,9 @@ import io.phonk.runner.base.utils.MLog;
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")
 @SuppressWarnings("MissingPermission")
-public class CameraNew2 extends TextureView implements TextureView.SurfaceTextureListener {
+public class CameraTexture2 extends TextureView implements TextureView.SurfaceTextureListener {
 
-    protected static String TAG = CameraNew2.class.getSimpleName();
+    protected static String TAG = CameraTexture2.class.getSimpleName();
 
     private AppRunner mAppRunner;
     private Context mContext;
@@ -86,7 +86,7 @@ public class CameraNew2 extends TextureView implements TextureView.SurfaceTextur
     private static final int STATE_PICTURE_TAKEN = 4; // picture was taken
 
 
-    public CameraNew2(AppRunner appRunner) {
+    public CameraTexture2(AppRunner appRunner) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
         mContext = appRunner.getAppContext();
@@ -102,13 +102,6 @@ public class CameraNew2 extends TextureView implements TextureView.SurfaceTextur
 
     private void openCamera(int width, int height) throws CameraAccessException {
         MLog.d(TAG, "opening camera");
-        /*
-        if (ContextCompat.checkSelfPermission(mAppRunner.getAppContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestCameraPermission();
-            return;
-        }
-        */
         mCameraManager = (CameraManager) mAppRunner.getAppContext().getSystemService(Context.CAMERA_SERVICE);
         setUpCameraOutputs(width, height);
 

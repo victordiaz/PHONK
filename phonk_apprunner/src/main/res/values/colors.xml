@@ -25,6 +25,7 @@
 
 
     <color name="phonk_accentColor_primary">#FF356B</color>
+    <color name="phonk_accentColor_primary_opacity_30">#33FF356B</color>
     <color name="phonk_accentColor_secondary">#35ffd0</color>
     <color name="phonk_accentColor_terciary">#FFD735</color>
 

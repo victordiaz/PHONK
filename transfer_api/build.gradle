@@ -1,0 +1,83 @@
+/*
+ * Part of Phonk http://www.phonk.io
+ * A prototyping platform for Android devices
+ *
+ * Copyright (C) 2013 - 2017 Victor Diaz Barrales @victordiaz (Protocoder)
+ * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
+ *
+ * Phonk is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Phonk is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    aaptOptions {
+        noCompress "tflite"
+    }
+}
+
+
+
+repositories {
+
+    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'http://maven.google.com'}
+
+    mavenCentral()
+    jcenter()
+
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+
+    // This dependency is compileOnly so that the user of this library can select between
+    // different TFLite distributions (e.g. with or without Flex).
+    compileOnly 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
+
+    // Model used for tests does not require Flex.
+    androidTestImplementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
+}

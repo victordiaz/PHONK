@@ -39,7 +39,6 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
 
     public PStep(AppRunner appRunner) {
         super(appRunner);
-
         type = Sensor.TYPE_STEP_DETECTOR;
     }
 
@@ -50,7 +49,6 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
         super.start();
 
         mListener = new SensorEventListener() {
-
             @Override
             public void onSensorChanged(SensorEvent event) {
                 mCallback.event(null);

@@ -429,7 +429,7 @@ public class PDevice extends ProtoBase {
      * Sets the screen timeout
      *
      * @param time in milliseconds
-     * @status TOREVIE
+     * @status TOREVIEW
      */
     @ProtoMethod
     public void screenTimeout(int time) {

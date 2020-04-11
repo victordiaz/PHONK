@@ -24,10 +24,10 @@ package io.phonk.runner.api.media;
 
 import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.gui.CameraNew;
-import io.phonk.runner.base.gui.CameraNew2;
+import io.phonk.runner.base.gui.CameraTexture;
+import io.phonk.runner.base.gui.CameraTexture2;
 
-public class PCamera2 extends CameraNew2 implements PCameraInterface {
+public class PCamera2 extends CameraTexture2 implements PCameraInterface {
 
     private final PCamera2 cam;
     protected AppRunner mAppRunner;
@@ -86,12 +86,18 @@ public class PCamera2 extends CameraNew2 implements PCameraInterface {
     }
 
     @Override
-    public void onNewBitmap(CameraNew.CallbackBmp callbackfn) {
+    public void onNewFrame(CameraTexture.CallbackData callbackfn) {
 
     }
 
     @Override
-    public void onNewStreamFrame(CameraNew.CallbackStream callbackfn) {
+    public void onNewFrameBitmap(CameraTexture.CallbackBmp callbackfn) {
+
+    }
+
+    @Override
+    public void onNewFrameBase64(CameraTexture.CallbackStream callbackfn) {
+
     }
 
     public void __close() {

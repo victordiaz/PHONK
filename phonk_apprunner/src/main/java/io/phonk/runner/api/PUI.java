@@ -60,7 +60,9 @@ import io.phonk.runner.api.common.ReturnInterface;
 import io.phonk.runner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.api.media.PCamera2;
-import io.phonk.runner.api.media.PCameraOld;
+import io.phonk.runner.api.media.PCamera;
+import io.phonk.runner.api.media.PCameraX;
+import io.phonk.runner.api.media.PCameraXOne;
 import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.api.other.PProcessing;
 import io.phonk.runner.api.other.PhonkNativeArray;
@@ -102,7 +104,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.FeatureNotAvailableException;
 import io.phonk.runner.apprunner.PermissionNotGrantedException;
 import io.phonk.runner.apprunner.StyleProperties;
-import io.phonk.runner.base.gui.CameraNew;
+import io.phonk.runner.base.gui.CameraTexture;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
@@ -538,6 +540,21 @@ public class PUI extends ProtoBase {
     }
 
     /**
+     * Changes the background color using RGB
+     *
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     *
+     * @status TODO_EXAMPLE
+     */
+    @ProtoMethod
+    public void background(int red, int green, int blue, int alpha) {
+        uiHolderLayout.setBackgroundColor(Color.argb(alpha, red, green, blue));
+    }
+
+    /**
      * Changes the background color using Hexadecimal color
      *
      * @param c
@@ -892,8 +909,10 @@ public class PUI extends ProtoBase {
      */
     @ProtoMethod
     public PSwitch newSwitch(String text) {
-        PSwitch s = new PSwitch(getContext());
+        PSwitch s = new PSwitch(mAppRunner);
         s.setText(text);
+        s.color("#FFFFFF");
+        s.background("#00000000");
         return s;
     }
 
@@ -1243,10 +1262,10 @@ public class PUI extends ProtoBase {
         int camNum = -1;
         switch (type) {
             case "front":
-                camNum = CameraNew.MODE_CAMERA_FRONT;
+                camNum = CameraTexture.MODE_CAMERA_FRONT;
                 break;
             case "back":
-                camNum = CameraNew.MODE_CAMERA_BACK;
+                camNum = CameraTexture.MODE_CAMERA_BACK;
                 break;
         }
 
@@ -1255,7 +1274,7 @@ public class PUI extends ProtoBase {
             pCamera = new PCamera2(getAppRunner());
         } else {
             if (check("camera", PackageManager.FEATURE_CAMERA, Manifest.permission.CAMERA)) {
-                pCamera = new PCameraOld(getAppRunner(), camNum);
+                pCamera = new PCamera(getAppRunner(), camNum);
             }
         }
 
@@ -1292,6 +1311,29 @@ public class PUI extends ProtoBase {
         Object pCamera = newCameraView(type);
         addViewAbsolute((View) pCamera, x, y, w, h);
         return pCamera;
+    }
+
+    public Object addCam(Object x, Object y, Object w, Object h) {
+        PCameraXOne cameraX = new PCameraXOne(getAppRunner());
+        // cameraX.start();
+        // addViewAbsolute((View) cameraX, x, y, w, h);
+        // return cameraX;
+
+      FrameLayout fl = new FrameLayout(getContext());
+      fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+      fl.setId(200 + (int) (200 * Math.random()));
+
+      // Add the view
+      addViewAbsolute(fl, x, y, w, h);
+
+      // PCameraX p = new PCameraX();
+
+      FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+      ft.add(fl.getId(), cameraX, String.valueOf(fl.getId()));
+      ft.commit();
+
+      // return p;
+      return null;
     }
 
     /**
@@ -1777,7 +1819,6 @@ public class PUI extends ProtoBase {
      * Shows a little popup with a given text during t time
      *
      * @param text
-     * @param duration
      */
     @ProtoMethod
     public void toast(String text) {
@@ -1785,7 +1826,11 @@ public class PUI extends ProtoBase {
     }
 
     @ProtoMethod
-    public void toast(String text, int duration) {
+    public void toast(String text, boolean length) {
+        int duration = Toast.LENGTH_SHORT;
+        if (length) {
+            duration = Toast.LENGTH_LONG;
+        }
         Toast.makeText(getContext(), text, duration).show();
     }
 

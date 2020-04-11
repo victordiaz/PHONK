@@ -91,7 +91,6 @@ public class PSensors extends ProtoBase {
         stepDetector = new PStep(appRunner);
         ambientTemperature = new PAmbientTemperature(appRunner);
         humidity = new PHumidity(appRunner);
-        accelerometer.sensorSpeed("normal");
     }
 
     public ReturnObject listAvailable() {

@@ -22,12 +22,20 @@
 
 package io.phonk.runner.api.media;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
+import io.phonk.runner.base.utils.MLog;
+
 /** Utility class for manipulating images.
  *
  * Copy-pasted from TFLite object detection example.
  */
 public class ImageUtils {
-  // TODO(b/137790961) reduce code duplication between different TFLite examples.
+  private static final String TAG = ImageUtils.class.getSimpleName();
 
   // This value is 2 ^ 18 - 1, and is used to clamp the RGB values before their ranges
   // are normalized to eight bits.
@@ -96,6 +104,31 @@ public class ImageUtils {
 
         out[yp++] = yuv2Rgb(0xff & yData[pY + i], 0xff & uData[uvOffset], 0xff & vData[uvOffset]);
       }
+    }
+  }
+
+  public static void saveBitmap(final Bitmap bitmap, final String filename) {
+    final String root =
+            Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tensorflow";
+    MLog.d(TAG, "Saving " + bitmap.getWidth() + " " + bitmap.getHeight() + " in " + root);
+    final File myDir = new File(root);
+
+    if (!myDir.mkdirs()) {
+      MLog.d(TAG, "Make dir failed");
+    }
+
+    final String fname = filename;
+    final File file = new File(myDir, fname);
+    if (file.exists()) {
+      file.delete();
+    }
+    try {
+      final FileOutputStream out = new FileOutputStream(file);
+      bitmap.compress(Bitmap.CompressFormat.PNG, 99, out);
+      out.flush();
+      out.close();
+    } catch (final Exception e) {
+      MLog.e(TAG, e.toString());
     }
   }
 }
