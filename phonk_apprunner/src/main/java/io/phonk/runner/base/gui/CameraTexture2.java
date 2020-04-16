@@ -147,11 +147,8 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
     };
 
 
-    private final ImageReader.OnImageAvailableListener mOnImageAvailableListener = new ImageReader.OnImageAvailableListener() {
-        @Override
-        public void onImageAvailable(ImageReader reader) {
-            // mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
-        }
+    private final ImageReader.OnImageAvailableListener mOnImageAvailableListener = reader -> {
+        // mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
     };
 
 

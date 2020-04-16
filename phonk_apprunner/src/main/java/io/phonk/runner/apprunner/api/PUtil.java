@@ -46,14 +46,14 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.api.other.PDelay;
-import io.phonk.runner.apprunner.api.other.PLooper;
-import io.phonk.runner.apprunner.api.other.SignalUtils;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.other.PDelay;
+import io.phonk.runner.apprunner.api.other.PLooper;
+import io.phonk.runner.apprunner.api.other.SignalUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
@@ -212,12 +212,10 @@ public class PUtil extends ProtoBase {
         va.setDuration(time);
         va.setInterpolator(interpolator);
 
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Float value = (Float) animation.getAnimatedValue();
-                callback.event(value);
-                MLog.d(TAG, "val " + value + " " + animation.getAnimatedValue());
-            }
+        va.addUpdateListener(animation -> {
+            Float value = (Float) animation.getAnimatedValue();
+            callback.event(value);
+            MLog.d(TAG, "val " + value + " " + animation.getAnimatedValue());
         });
 
         return va;

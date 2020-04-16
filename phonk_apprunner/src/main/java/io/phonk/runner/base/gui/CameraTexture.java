@@ -35,8 +35,6 @@ import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
-import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.PreviewCallback;
 import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
@@ -61,9 +59,9 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Vector;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.media.AutoFitTextureView;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
 
@@ -239,70 +237,66 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
             Camera.Parameters parameters = mCamera.getParameters();
             int format = parameters.getPreviewFormat();
 
-            mCamera.setPreviewCallback(new PreviewCallback() {
+            mCamera.setPreviewCallback((data, camera) -> {
+                // MLog.d(TAG, "onNewFrame");
 
-                @Override
-                public void onPreviewFrame(byte[] data, Camera camera) {
-                    // MLog.d(TAG, "onNewFrame");
+                if (callbackData != null) {
+                  callbackData.event(data, camera);
+                }
+                if (callbackBmp != null) {
+                    Parameters parameters1 = camera.getParameters();
 
-                    if (callbackData != null) {
-                      callbackData.event(data, camera);
+                    List<Camera.Size> sizes = camera.getParameters().getSupportedPreviewSizes();
+                    for (Camera.Size size : sizes) {
+                        MLog.d("wewe", "sizes " + size.width + " " + size.height);
                     }
-                    if (callbackBmp != null) {
-                        Camera.Parameters parameters = camera.getParameters();
 
-                        List<Camera.Size> sizes = camera.getParameters().getSupportedPreviewSizes();
-                        for (Camera.Size size : sizes) {
-                            MLog.d("wewe", "sizes " + size.width + " " + size.height);
-                        }
-
-                        List<Integer> formats = camera.getParameters().getSupportedPreviewFormats();
-                        for (Integer integer : formats) {
-                            MLog.d("wewe", "formats " + integer);
-                        }
-
-                        int width = parameters.getPreviewSize().width;
-                        int height = parameters.getPreviewSize().height;
-                        MLog.d("wewe", "-> " + width + " " + height);
-
-                        // get support preview format
-                        YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
-                        if (yuv == null) return;
-
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-                        // maybe pass the output to the callbacks and do each compression there?
-                        yuv.compressToJpeg(new Rect(0, 0, width, height), 100, out);
-
-                        Matrix matrix = new Matrix();
-                        matrix.postRotate(90);
-                        matrix.postScale((float)0.5, (float) 0.5);
-                        byte[] bytes = out.toByteArray();
-
-                        BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
-                        bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-                        final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
-                        Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0 , 0, 300, 300, matrix, true);
-
-                        MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
-                        MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
-                        callbackBmp.event(fbitmap);
+                    List<Integer> formats = camera.getParameters().getSupportedPreviewFormats();
+                    for (Integer integer : formats) {
+                        MLog.d("wewe", "formats " + integer);
                     }
-                    if (callbackStream != null) {
-                        Camera.Parameters parameters = camera.getParameters();
-                        int width = parameters.getPreviewSize().width;
-                        int height = parameters.getPreviewSize().height;
 
-                        CameraTexture.this.setAspectRatio(height, width);
+                    int width = parameters1.getPreviewSize().width;
+                    int height = parameters1.getPreviewSize().height;
+                    MLog.d("wewe", "-> " + width + " " + height);
+
+                    // get support preview format
+                    YuvImage yuv = new YuvImage(data, parameters1.getPreviewFormat(), width, height, null);
+                    if (yuv == null) return;
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+                    // maybe pass the output to the callbacks and do each compression there?
+                    yuv.compressToJpeg(new Rect(0, 0, width, height), 100, out);
+
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90);
+                    matrix.postScale((float)0.5, (float) 0.5);
+                    byte[] bytes = out.toByteArray();
+
+                    BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
+                    bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
+                    final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
+                    Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0 , 0, 300, 300, matrix, true);
+
+                    MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
+                    MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
+                    callbackBmp.event(fbitmap);
+                }
+                if (callbackStream != null) {
+                    Parameters parameters1 = camera.getParameters();
+                    int width = parameters1.getPreviewSize().width;
+                    int height = parameters1.getPreviewSize().height;
+
+                    CameraTexture.this.setAspectRatio(height, width);
 
 
-                        // get support preview format
-                        YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    // get support preview format
+                    YuvImage yuv = new YuvImage(data, parameters1.getPreviewFormat(), width, height, null);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-                        String encodedImage = Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
-                        callbackStream.event(encodedImage);
-                    }
+                    String encodedImage = Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
+                    callbackStream.event(encodedImage);
                 }
             });
         }
@@ -333,44 +327,40 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
         // final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
-        mCamera.takePicture(null, null, new PictureCallback() {
+        mCamera.takePicture(null, null, (data, camera) -> {
 
-            @Override
-            public void onPictureTaken(byte[] data, Camera camera) {
-
-                Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
+            Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
 
-                // soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
+            // soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
 
-                FileOutputStream outStream = null;
-                try {
+            FileOutputStream outStream = null;
+            try {
 
-                    file = new File(path);
+                file = new File(path);
 
-                    outStream = new FileOutputStream(file);
-                    outStream.write(data);
-                    outStream.flush();
-                    outStream.close();
-                    MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
+                outStream = new FileOutputStream(file);
+                outStream.write(data);
+                outStream.flush();
+                outStream.close();
+                MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
 
-                    for (CameraListener l : listeners) {
-                        l.onPicTaken();
-                    }
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
+                for (CameraListener l : listeners) {
+                    l.onPicTaken();
                 }
 
-                MLog.d(TAG, "onPictureTaken - jpeg");
-
-                camera.startPreview();
-                // latch.countDown();
-
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
             }
+
+            MLog.d(TAG, "onPictureTaken - jpeg");
+
+            camera.startPreview();
+            // latch.countDown();
+
         });
 
 		/*
@@ -542,11 +532,8 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     public void focus(final ReturnInterface callbackfn) {
         if (hasAutofocus()) {
             if (true) {
-                mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                    @Override
-                    public void onAutoFocus(boolean success, Camera camera) {
-                        if (callbackfn != null) callbackfn.event(null);
-                    }
+                mCamera.autoFocus((success, camera) -> {
+                    if (callbackfn != null) callbackfn.event(null);
                 });
             } else {
                 mCamera.cancelAutoFocus();

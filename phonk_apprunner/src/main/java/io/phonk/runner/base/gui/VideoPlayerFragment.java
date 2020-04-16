@@ -25,7 +25,6 @@ package io.phonk.runner.base.gui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -67,12 +66,8 @@ public class VideoPlayerFragment extends VideoView {
         super(context);
         this.c = context;
 
-        this.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
-            }
+        this.setOnClickListener(v -> {
+            // fl.animate().scaleX(0.5f).scaleY(0.5f).setDuration(5000);
         });
         MLog.d("mm", "onCreateView");
 
@@ -127,13 +122,7 @@ public class VideoPlayerFragment extends VideoView {
 
         mVideoView.start();
 
-        mVideoView.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                close();
-            }
-        });
+        mVideoView.setOnClickListener(v -> close());
 
         mVideoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
@@ -166,17 +155,13 @@ public class VideoPlayerFragment extends VideoView {
 
         // mp_.setO
 
-        mVideoView.setOnCompletionListener(new OnCompletionListener() {
+        mVideoView.setOnCompletionListener(mp -> {
 
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-
-                // finish();
-                for (VideoListener l : listeners) {
-                    l.onFinish(true);
-                }
-
+            // finish();
+            for (VideoListener l : listeners) {
+                l.onFinish(true);
             }
+
         });
 
     }

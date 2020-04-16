@@ -56,19 +56,16 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         this.setBackgroundColor(0x00000000);
 
         this.requestFocus(View.FOCUS_DOWN);
-        this.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_UP:
-                        if (!v.hasFocus()) {
-                            v.requestFocus();
-                        }
-                        break;
-                }
-                return false;
+        this.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_UP:
+                    if (!v.hasFocus()) {
+                        v.requestFocus();
+                    }
+                    break;
             }
+            return false;
         });
 
         WebViewClient webViewClient = new CustomWebViewClient();

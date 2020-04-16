@@ -56,6 +56,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.media.PAudioPlayer;
@@ -66,10 +70,6 @@ import io.phonk.runner.apprunner.api.media.PTextToSpeech;
 import io.phonk.runner.apprunner.api.media.PVideo;
 import io.phonk.runner.apprunner.api.media.PWave;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
-import io.phonk.runner.apidoc.annotation.PhonkObject;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
@@ -171,21 +171,16 @@ public class PMedia extends ProtoBase {
         if (withUI) {
             if (getActivity() == null) return;
 
-            (getActivity()).addVoiceRecognitionListener(new onVoiceRecognitionListener() {
+            (getActivity()).addVoiceRecognitionListener(matches -> {
+                PhonkNativeArray retMatches = new PhonkNativeArray(matches.size());
 
-                @Override
-                public void onNewResult(ArrayList<String> matches) {
-                    PhonkNativeArray retMatches = new PhonkNativeArray(matches.size());
-
-                    for (int i = 0; i < matches.size(); i++) {
-                        retMatches.addPE(i, matches.get(i));
-                    }
-
-                    o.put("action", "recognized");
-                    o.put("results", retMatches);
-                    callbackfn.event(o);
+                for (int i = 0; i < matches.size(); i++) {
+                    retMatches.addPE(i, matches.get(i));
                 }
 
+                o.put("action", "recognized");
+                o.put("results", retMatches);
+                callbackfn.event(o);
             });
 
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

@@ -22,12 +22,12 @@
 
 package io.phonk.runner.apprunner.api;
 
-import io.phonk.runner.apprunner.api.boards.PIOIO;
-import io.phonk.runner.apprunner.api.boards.PSerial;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.boards.PIOIO;
+import io.phonk.runner.apprunner.api.boards.PSerial;
 
 @PhonkObject
 public class PBoards extends ProtoBase {

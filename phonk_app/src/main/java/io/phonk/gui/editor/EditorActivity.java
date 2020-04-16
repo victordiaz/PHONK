@@ -47,9 +47,9 @@ import io.phonk.gui.filepreviewer.FilePreviewerFragment;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class EditorActivity extends BaseActivity {

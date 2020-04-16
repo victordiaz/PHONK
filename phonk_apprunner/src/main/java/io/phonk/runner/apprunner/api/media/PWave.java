@@ -26,8 +26,8 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
 
 public class PWave extends ProtoBase {
 

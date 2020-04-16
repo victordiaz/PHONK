@@ -26,9 +26,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
 
-import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.base.utils.MLog;
 
 

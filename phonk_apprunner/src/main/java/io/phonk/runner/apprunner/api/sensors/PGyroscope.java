@@ -27,11 +27,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 public class PGyroscope extends CustomSensorManager {
 

@@ -28,12 +28,12 @@ import android.media.PlaybackParams;
 
 import java.io.IOException;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 public class PAudioPlayer extends ProtoBase {
@@ -52,36 +52,20 @@ public class PAudioPlayer extends ProtoBase {
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setLooping(false);
-        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mMediaPlayer.setOnPreparedListener(mp -> {
+            MLog.d(TAG, "prepared");
 
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                MLog.d(TAG, "prepared");
-
-                if (callbackfn != null) {
-                    ReturnObject r = new ReturnObject();
-                    callbackfn.event(r);
-                }
-                //mMediaPlayer.start();
-
+            if (callbackfn != null) {
+                ReturnObject r = new ReturnObject();
+                callbackfn.event(r);
             }
+            //mMediaPlayer.start();
+
         });
 
-        mMediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+        mMediaPlayer.setOnBufferingUpdateListener((mp, percent) -> MLog.d(TAG, "buffering: " + percent));
 
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                MLog.d(TAG, "buffering: " + percent);
-            }
-        });
-
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                MLog.d(TAG, "completed");
-            }
-        });
+        mMediaPlayer.setOnCompletionListener(mp -> MLog.d(TAG, "completed"));
 
     }
 

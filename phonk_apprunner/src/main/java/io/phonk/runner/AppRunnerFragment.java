@@ -46,11 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
@@ -131,12 +131,7 @@ public class AppRunnerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // catch errors and send them to the WebIDE or the app console
-        AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
-            @Override
-            public void onError(int resultType, Object message) {
-                mAppRunner.pConsole.p_error(resultType, message);
-            }
-        };
+        AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
         // TODO REENABLE
         // mAppRunner.interp.addListener(appRunnerCb);
 

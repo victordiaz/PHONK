@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Bitmap;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 

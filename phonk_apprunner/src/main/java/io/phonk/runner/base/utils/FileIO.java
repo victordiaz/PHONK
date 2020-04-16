@@ -44,7 +44,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -572,13 +571,7 @@ public class FileIO {
     public static File[] listFiles(String path, final String extension) {
         File f = new File(path);
 
-        return f.listFiles(new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String fileName) {
-                return fileName.endsWith(extension);
-            }
-        });
+        return f.listFiles((dir, fileName) -> fileName.endsWith(extension));
 
     }
 

@@ -80,31 +80,25 @@ public class PLiveCodingFeedback {
         fontCode = Typeface.createFromAsset(a.getAssets(), "Inconsolata.otf");
 
         h = new Handler();
-        r = new Runnable() {
+        r = () -> liveRLayout.animate().alpha(0.0f).setListener(new AnimatorListener() {
 
             @Override
-            public void run() {
-                liveRLayout.animate().alpha(0.0f).setListener(new AnimatorListener() {
-
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        // liveRLayout.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                    }
-                });
+            public void onAnimationStart(Animator animation) {
             }
-        };
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // liveRLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+        });
 
     }
 

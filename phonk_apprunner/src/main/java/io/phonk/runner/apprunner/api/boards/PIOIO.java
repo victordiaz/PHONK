@@ -22,10 +22,10 @@
 
 package io.phonk.runner.apprunner.api.boards;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.base.hardware.IOIOBoard;
 import io.phonk.runner.base.utils.MLog;
 import ioio.lib.api.AnalogInput;
@@ -143,11 +143,7 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
         }
 
         mIoioStarted = true;
-        mHandler.post(new Runnable() {
-
-            @Override
-            public void run() {
-            }
+        mHandler.post(() -> {
         });
     }
 

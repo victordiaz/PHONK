@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow.lite.examples.transfer.api;
 
 import android.content.Context;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

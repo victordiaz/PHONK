@@ -28,7 +28,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,8 +45,8 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 public class ProjectAdapterViewItem extends LinearLayout {
 
@@ -79,21 +78,13 @@ public class ProjectAdapterViewItem extends LinearLayout {
         textViewName = mItemView.findViewById(R.id.customViewText);
         customIcon = mItemView.findViewById(R.id.iconImg);
 
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // showMenu(v);
+        this.setOnClickListener(v -> {
+            // showMenu(v);
 
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        PhonkAppHelper.launchScript(getContext(), mProject);
-                    }
-                };
+            Runnable r = () -> PhonkAppHelper.launchScript(getContext(), mProject);
 
-                Handler handler = new Handler();
-                handler.postDelayed(r, 0);
-            }
+            Handler handler = new Handler();
+            handler.postDelayed(r, 0);
         });
 
     }
@@ -117,82 +108,68 @@ public class ProjectAdapterViewItem extends LinearLayout {
         // show / hide right menu
         if (!isPlayOnPress) mMenuButton.setVisibility(View.GONE);
 
-        mItemView.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showMenu(mMenuButton);
+        mItemView.setOnLongClickListener(v -> {
+            showMenu(mMenuButton);
 
-                return true;
-            }
+            return true;
         });
 
-        mMenuButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMenu(mMenuButton);
-            }
-        });
+        mMenuButton.setOnClickListener(v -> showMenu(mMenuButton));
     }
 
     private void showMenu(View fromView) {
         PopupMenu myPopup = new PopupMenu(c, fromView);
         myPopup.inflate(R.menu.project_actions);
-        myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem menuItem) {
+        myPopup.setOnMenuItemClickListener(menuItem -> {
 
-                int itemId = menuItem.getItemId();
+            int itemId = menuItem.getItemId();
 
-                switch (itemId) {
-                    case R.id.menu_project_list_run:
-                        PhonkAppHelper.launchScript(getContext(), mProject);
-                        return true;
+            switch (itemId) {
+                case R.id.menu_project_list_run:
+                    PhonkAppHelper.launchScript(getContext(), mProject);
+                    return true;
 
-                    case R.id.menu_project_list_edit:
-                        PhonkAppHelper.launchEditor(getContext(), mProject);
-                        return true;
+                case R.id.menu_project_list_edit:
+                    PhonkAppHelper.launchEditor(getContext(), mProject);
+                    return true;
 
-                    case R.id.menu_project_webeditor:
-                        PhonkAppHelper.openInWebEditor(getContext(), mProject);
-                        return true;
+                case R.id.menu_project_webeditor:
+                    PhonkAppHelper.openInWebEditor(getContext(), mProject);
+                    return true;
 
-                    case R.id.menu_project_list_delete:
-                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case DialogInterface.BUTTON_POSITIVE:
-                                        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
-                                        MLog.d(TAG, "deleting " + mProject.getFullPath());
-                                        Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
-                                        PhonkScriptHelper.deleteFileOrFolder(mProject.getFullPath());
+                case R.id.menu_project_list_delete:
+                    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
+                                MLog.d(TAG, "deleting " + mProject.getFullPath());
+                                Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
+                                PhonkScriptHelper.deleteFileOrFolder(mProject.getFullPath());
 
-                                        break;
+                                break;
 
-                                    case DialogInterface.BUTTON_NEGATIVE:
-                                        break;
-                                }
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-                        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                                .setNegativeButton("No", dialogClickListener).show();
-                        return true;
-                    case R.id.menu_project_list_add_shortcut:
-                        PhonkScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
-                        return true;
-                    case R.id.menu_project_list_share_with:
-                        PhonkScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
-                        return true;
-                    case R.id.menu_project_list_share_proto_file:
-                        PhonkScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
-                        return true;
-                    case R.id.menu_project_list_show_info:
-                        PhonkAppHelper.launchScriptInfoActivity(c, mProject);
-                        return true;
-                    default:
-                        return true;
-                }
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                    return true;
+                case R.id.menu_project_list_add_shortcut:
+                    PhonkScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
+                    return true;
+                case R.id.menu_project_list_share_with:
+                    PhonkScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
+                    return true;
+                case R.id.menu_project_list_share_proto_file:
+                    PhonkScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
+                    return true;
+                case R.id.menu_project_list_show_info:
+                    PhonkAppHelper.launchScriptInfoActivity(c, mProject);
+                    return true;
+                default:
+                    return true;
             }
         });
         myPopup.show();

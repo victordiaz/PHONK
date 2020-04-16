@@ -26,10 +26,10 @@ import android.hardware.usb.UsbDevice;
 
 import androidx.annotation.NonNull;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 import jp.kshoji.driver.midi.device.MidiInputDevice;
 import jp.kshoji.driver.midi.device.MidiOutputDevice;
@@ -44,30 +44,24 @@ public class PMidi extends ProtoBase {
     private void callbackData(final String deviceAddress, final int cable, final int channel, final int function, final int value) {
 
         MLog.d(TAG, "new val + " + cable + " " + channel + " " + function + " " + value);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                ReturnObject o = new ReturnObject();
-                o.put("midiAddress", deviceAddress);
-                o.put("cable", cable);
-                o.put("channel", channel);
-                o.put("function", function);
-                o.put("value", value);
-                if (mMidiEvent != null) mMidiEvent.event(o);
-            }
+        mHandler.post(() -> {
+            ReturnObject o = new ReturnObject();
+            o.put("midiAddress", deviceAddress);
+            o.put("cable", cable);
+            o.put("channel", channel);
+            o.put("function", function);
+            o.put("value", value);
+            if (mMidiEvent != null) mMidiEvent.event(o);
         });
     }
 
     private void callbackConnection(final String type, final String attached, final Object midiDevice) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                ReturnObject o = new ReturnObject();
-                o.put("type", type);
-                o.put("status", attached);
-                o.put("device", midiDevice);
-                if (mConnectionCallback != null) mConnectionCallback.event(o);
-            }
+        mHandler.post(() -> {
+            ReturnObject o = new ReturnObject();
+            o.put("type", type);
+            o.put("status", attached);
+            o.put("device", midiDevice);
+            if (mConnectionCallback != null) mConnectionCallback.event(o);
         });
     }
 

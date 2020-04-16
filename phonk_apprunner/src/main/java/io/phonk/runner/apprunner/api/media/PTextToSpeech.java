@@ -44,14 +44,11 @@ public class PTextToSpeech {
 
     public PTextToSpeech(AppRunner appRunner) throws InterruptedException {
 
-        mTts = new TextToSpeech(appRunner.getAppContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    mTts.setLanguage(Locale.getDefault());
-                } else {
-                    MLog.d(TAG, "Could not initialize TextToSpeech.");
-                }
+        mTts = new TextToSpeech(appRunner.getAppContext(), status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                mTts.setLanguage(Locale.getDefault());
+            } else {
+                MLog.d(TAG, "Could not initialize TextToSpeech.");
             }
         });
     }

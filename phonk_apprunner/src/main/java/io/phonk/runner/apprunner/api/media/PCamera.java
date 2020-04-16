@@ -22,15 +22,14 @@
 
 package io.phonk.runner.apprunner.api.media;
 
-import android.graphics.Bitmap;
 import android.hardware.Camera;
 
 import java.util.List;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.base.gui.CameraTexture;
 
 public class PCamera extends CameraTexture implements PCameraInterface {
@@ -46,12 +45,9 @@ public class PCamera extends CameraTexture implements PCameraInterface {
         this.mAppRunner = appRunner;
         cam = this;
 
-        this.addOnReadyCallback(new OnReadyCallback() {
-            @Override
-            public void event() {
-                setFocusMode("auto");
-                // setAspectRatio(1, 1);
-            }
+        this.addOnReadyCallback(() -> {
+            setFocusMode("auto");
+            // setAspectRatio(1, 1);
         });
     }
 
@@ -108,12 +104,7 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     public void startLearning(LearnImages.Callback callback) {
       learnImages.start();
       learnImages.addCallback(callback);
-      cam.addCallbackData(new CallbackData() {
-          @Override
-          public void event(byte[] data, Camera camera) {
-            learnImages.addCameraFrame(data, camera);
-          }
-        });
+      cam.addCallbackData((data, camera) -> learnImages.addCameraFrame(data, camera));
 
         /*
         new CallbackBmp() {
@@ -127,12 +118,7 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     }
 
     public void startDetecting(DetectImage.Callback callback) {
-        cam.addCallbackBmp(new CallbackBmp() {
-            @Override
-            public void event(Bitmap bmp) {
-                detectImage.detect(bmp);
-            }
-        });
+        cam.addCallbackBmp(bmp -> detectImage.detect(bmp));
         detectImage.start();
     }
 

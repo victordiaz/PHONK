@@ -23,9 +23,7 @@
 package io.phonk.gui.folderchooser;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -98,14 +96,11 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
                 break;
             case FolderAdapterData.TYPE_FOLDER_NAME:
                 holder.textView.setText(name);
-                holder.mainView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MLog.d(TAG, "> Event (folderChosen) " + folder + "/" + name);
+                holder.mainView.setOnClickListener(v -> {
+                    MLog.d(TAG, "> Event (folderChosen) " + folder + "/" + name);
 
-                        Events.FolderChosen ev = new Events.FolderChosen(folder, name);
-                        EventBus.getDefault().post(ev);
-                    }
+                    Events.FolderChosen ev = new Events.FolderChosen(folder, name);
+                    EventBus.getDefault().post(ev);
                 });
                 break;
         }

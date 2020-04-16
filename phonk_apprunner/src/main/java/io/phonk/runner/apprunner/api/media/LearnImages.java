@@ -99,12 +99,9 @@ public class LearnImages {
     mTlModel = new TransferLearningModelWrapper(mAppRunner.getAppContext());
     mIsAnalyzerRunning = true;
 
-    Thread t1 = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (mIsAnalyzerRunning) {
-          inferenceAnalyzer();
-        }
+    Thread t1 = new Thread(() -> {
+      while (mIsAnalyzerRunning) {
+        inferenceAnalyzer();
       }
     });
     t1.start();
@@ -156,12 +153,7 @@ public class LearnImages {
       }
 
       String finalP = p;
-      mHandler.post(new Runnable() {
-        @Override
-        public void run() {
-          mCallback.event(finalP);
-        }
-      });
+      mHandler.post(() -> mCallback.event(finalP));
     }
 
     // mInferenceBenchmark.finish(imageId);
@@ -182,12 +174,7 @@ public class LearnImages {
     // dont enable training if not enought samples
     if ( mTlModel.getNumberSamples() < mTlModel.getTrainBatchSize()) return;
 
-    mTlModel.enableTraining(new TransferLearningModel.LossConsumer() {
-      @Override
-      public void onLoss(int epoch, float loss) {
-        MLog.d("qq", "" + epoch + " " + loss);
-      }
-    });
+    mTlModel.enableTraining((epoch, loss) -> MLog.d("qq", "" + epoch + " " + loss));
   }
 
   public void disableTraining() {

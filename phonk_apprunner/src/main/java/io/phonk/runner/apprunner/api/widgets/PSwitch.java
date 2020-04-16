@@ -26,16 +26,15 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 @SuppressLint("NewApi")
 public class PSwitch extends Switch implements PViewMethodsInterface {
@@ -53,13 +52,10 @@ public class PSwitch extends Switch implements PViewMethodsInterface {
 
     public PSwitch onChange(final ReturnInterface callbackfn) {
         // Add the click callback
-        this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ReturnObject r = new ReturnObject(PSwitch.this);
-                r.put("changed", isChecked);
-                callbackfn.event(r);
-            }
+        this.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ReturnObject r = new ReturnObject(PSwitch.this);
+            r.put("changed", isChecked);
+            callbackfn.event(r);
         });
 
         return this;

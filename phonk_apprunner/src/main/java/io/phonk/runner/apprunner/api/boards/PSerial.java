@@ -38,12 +38,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 public class PSerial extends ProtoBase {
@@ -173,13 +173,10 @@ public class PSerial extends ProtoBase {
             if (intent.getAction().equals(ACTION_USB_PERMISSION)) {
                 final boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReturnObject o = new ReturnObject();
-                        o.put("usbPermission", granted);
-                        if (mCallbackData != null) mCallbackData.event(o);
-                    }
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("usbPermission", granted);
+                    if (mCallbackData != null) mCallbackData.event(o);
                 });
 
                 // User accepted our USB connection. Try to open the mDevice as a serial port
@@ -188,13 +185,10 @@ public class PSerial extends ProtoBase {
                     // Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
                     // context.sendBroadcast(intent);
                     mConnection = mUsbManager.openDevice(mDevice);
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ReturnObject o = new ReturnObject();
-                            o.put("usbPermission", granted);
-                            if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
-                        }
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("usbPermission", granted);
+                        if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
                     });
                     new ConnectionThread().start();
                 // User not accepted our USB connection. Send an Intent to the Main Activity
@@ -260,13 +254,10 @@ public class PSerial extends ProtoBase {
                     // no connection
                     mSerialPortConnected = false;
                 }
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReturnObject o = new ReturnObject();
-                        o.put("connected", mSerialPortConnected);
-                        if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
-                    }
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("connected", mSerialPortConnected);
+                    if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
                 });
 
             } else {
@@ -303,13 +294,10 @@ public class PSerial extends ProtoBase {
                     // MLog.d(TAG, msg);
                     if (msgReturn.trim().equals("") == false) {
                         final String finalMsgReturn = msgReturn;
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ReturnObject o = new ReturnObject();
-                                o.put("data", finalMsgReturn);
-                                if (mCallbackData != null) mCallbackData.event(o);
-                            }
+                        mHandler.post(() -> {
+                            ReturnObject o = new ReturnObject();
+                            o.put("data", finalMsgReturn);
+                            if (mCallbackData != null) mCallbackData.event(o);
                         });
                     }
                 } else {
@@ -326,24 +314,18 @@ public class PSerial extends ProtoBase {
     /*
      * State changes in the CTS line will be received here
      */
-    private UsbSerialInterface.UsbCTSCallback mCTSCallback = new UsbSerialInterface.UsbCTSCallback() {
-        @Override
-        public void onCTSChanged(boolean state) {
-            if(mHandler != null) {
-                // mHandler.obtainMessage(CTS_CHANGE).sendToTarget();
-            }
+    private UsbSerialInterface.UsbCTSCallback mCTSCallback = state -> {
+        if(mHandler != null) {
+            // mHandler.obtainMessage(CTS_CHANGE).sendToTarget();
         }
     };
 
     /*
      * State changes in the DSR line will be received here
      */
-    private UsbSerialInterface.UsbDSRCallback mDSRCallback = new UsbSerialInterface.UsbDSRCallback() {
-        @Override
-        public void onDSRChanged(boolean state) {
-            if(mHandler != null) {
-                // mHandler.obtainMessage(DSR_CHANGE).sendToTarget();
-            }
+    private UsbSerialInterface.UsbDSRCallback mDSRCallback = state -> {
+        if(mHandler != null) {
+            // mHandler.obtainMessage(DSR_CHANGE).sendToTarget();
         }
     };
 

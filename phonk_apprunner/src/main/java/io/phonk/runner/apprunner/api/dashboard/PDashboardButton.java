@@ -22,14 +22,12 @@
 
 package io.phonk.runner.apprunner.api.dashboard;
 
-import org.json.JSONObject;
-
 import java.net.UnknownHostException;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.PDashboard;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.AppRunner;
 
 public class PDashboardButton extends PDashboardWidget {
 
@@ -40,12 +38,9 @@ public class PDashboardButton extends PDashboardWidget {
     public void onClick(final ReturnInterface callbackfn) throws UnknownHostException {
         mCallback = callbackfn;
 
-        mDashboardServer.addListener(mId, new PDashboard.ServerListenerCallback() {
-            @Override
-            public void onUpdated(JSONObject jsonObject) {
-                ReturnObject ret = new ReturnObject();
-                mCallback.event(null);
-            }
+        mDashboardServer.addListener(mId, jsonObject -> {
+            ReturnObject ret = new ReturnObject();
+            mCallback.event(null);
         });
     }
 

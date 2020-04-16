@@ -15,14 +15,16 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.transfer.api;
 
-import static org.junit.Assert.assertTrue;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import java.io.IOException;
-import java.nio.ByteBuffer;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import static org.junit.Assert.assertTrue;
 
 /** Smoke tests for {@link LiteBottleneckModel}. */
 @RunWith(AndroidJUnit4.class)

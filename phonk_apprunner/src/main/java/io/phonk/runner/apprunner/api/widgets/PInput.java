@@ -34,11 +34,11 @@ import android.widget.EditText;
 
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 public class PInput extends androidx.appcompat.widget.AppCompatEditText implements PViewMethodsInterface, PTextInterface {
 
@@ -104,13 +104,10 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     }
 
     public void onFocusLost(final ReturnInterface callbackfn) {
-        mInput.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                ReturnObject r = new ReturnObject(PInput.this);
-                r.put("focused", hasFocus);
-                callbackfn.event(r);
-            }
+        mInput.setOnFocusChangeListener((v, hasFocus) -> {
+            ReturnObject r = new ReturnObject(PInput.this);
+            r.put("focused", hasFocus);
+            callbackfn.event(r);
         });
     }
 

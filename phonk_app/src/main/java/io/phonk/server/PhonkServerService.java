@@ -59,12 +59,12 @@ import io.phonk.events.EventsProxy;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.models.Project;
 
 public class PhonkServerService extends Service {
 
@@ -208,15 +208,12 @@ public class PhonkServerService extends Service {
         phonkHttpServer = new PhonkHttpServer(this, PhonkSettings.HTTP_PORT);
 
         // when we get a first request from the editor we can say that the editor is connected
-        phonkHttpServer.connectionCallback(new PhonkHttpServer.ConnectionCallback() {
-            @Override
-            public void event(String ip) {
-                if (!mConnectedClients.contains(ip)) {
-                    mConnectedClients.add(ip);
-                    EventBus.getDefault().postSticky(new Events.UserConnectionEvent(true, ip, mConnectedClients));
-                    updateUserSizeNotification(mConnectedClients.size());
-                    vibrate();
-                }
+        phonkHttpServer.connectionCallback(ip1 -> {
+            if (!mConnectedClients.contains(ip1)) {
+                mConnectedClients.add(ip1);
+                EventBus.getDefault().postSticky(new Events.UserConnectionEvent(true, ip1, mConnectedClients));
+                updateUserSizeNotification(mConnectedClients.size());
+                vibrate();
             }
         });
 

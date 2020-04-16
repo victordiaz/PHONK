@@ -69,6 +69,10 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 import io.phonk.runner.AppRunnerFragment;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.network.PBluetooth;
@@ -81,10 +85,6 @@ import io.phonk.runner.apprunner.api.network.PSimpleHttpServer;
 import io.phonk.runner.apprunner.api.network.PSocketIOClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketServer;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
-import io.phonk.runner.apidoc.annotation.PhonkObject;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.network.OSC;
 import io.phonk.runner.base.network.ServiceDiscovery;
@@ -139,14 +139,10 @@ public class PNetwork extends ProtoBase {
     public void download(String url, String fileName, final ReturnInterface callbackfn) {
 
         NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getAppRunner().getAppContext(), url, getAppRunner().getProject().getFullPathForFile(fileName));
-        downloadTask.addListener(new NetworkUtils.DownloadTask.DownloadListener() {
-
-            @Override
-            public void onUpdate(int progress) {
-                ReturnObject ret = new ReturnObject();
-                ret.put("progress", progress);
-                if (callbackfn != null) callbackfn.event(ret);
-            }
+        downloadTask.addListener(progress -> {
+            ReturnObject ret = new ReturnObject();
+            ret.put("progress", progress);
+            if (callbackfn != null) callbackfn.event(ret);
         });
         downloadTask.execute(url);
 
@@ -194,24 +190,20 @@ public class PNetwork extends ProtoBase {
     // @APIParam( params = {"file", "function()"} )
     public void isReachable(final String host, final String callbackfn) {
 
-        Thread t = new Thread(new Runnable() {
+        Thread t = new Thread(() -> {
 
-            @Override
-            public void run() {
+            // doesnt work! isReachable
+            //
+            // try {
+            // InetAddress in = InetAddress.getByName(host);
+            // boolean isReacheable = in.isReachable(5000);
+            // callback(callbackfn, isReacheable);
+            // } catch (UnknownHostException e) {
+            // e.printStackTrace();
+            // } catch (IOException e) {
+            // e.printStackTrace();
+            // }
 
-                // doesnt work! isReachable
-                //
-                // try {
-                // InetAddress in = InetAddress.getByName(host);
-                // boolean isReacheable = in.isReachable(5000);
-                // callback(callbackfn, isReacheable);
-                // } catch (UnknownHostException e) {
-                // e.printStackTrace();
-                // } catch (IOException e) {
-                // e.printStackTrace();
-                // }
-
-            }
         });
         t.start();
 
@@ -397,26 +389,22 @@ public class PNetwork extends ProtoBase {
         message.setContent(multiPart);
         message.setText(text);
 
-        Thread t = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    //MLog.i("check", "transport");
-                    Transport transport = session.getTransport("smtp");
-                    //MLog.i("check", "connecting");
-                    transport.connect(emailSettings.get("host"), emailSettings.get("user"), emailSettings.get("password"));
-                    //MLog.i("check", "wana send");
-                    transport.sendMessage(message, message.getAllRecipients());
-                    transport.close();
-                    //MLog.i("check", "sent");
-                } catch (AddressException e) {
-                    e.printStackTrace();
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-
+        Thread t = new Thread(() -> {
+            try {
+                //MLog.i("check", "transport");
+                Transport transport = session.getTransport("smtp");
+                //MLog.i("check", "connecting");
+                transport.connect(emailSettings.get("host"), emailSettings.get("user"), emailSettings.get("password"));
+                //MLog.i("check", "wana send");
+                transport.sendMessage(message, message.getAllRecipients());
+                transport.close();
+                //MLog.i("check", "sent");
+            } catch (AddressException e) {
+                e.printStackTrace();
+            } catch (MessagingException e) {
+                e.printStackTrace();
             }
+
         });
         t.start();
 
@@ -429,25 +417,17 @@ public class PNetwork extends ProtoBase {
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder().url(url).build();
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final ReturnObject ret = new ReturnObject();
-                try {
-                    Response response = client.newCall(request).execute();
-                    ret.put("response", response.body().string());
-                    ret.put("status", response.code());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callbackfn.event(ret);
-                    }
-                });
+        Thread t = new Thread(() -> {
+            final ReturnObject ret = new ReturnObject();
+            try {
+                Response response = client.newCall(request).execute();
+                ret.put("response", response.body().string());
+                ret.put("status", response.code());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            mHandler.post(() -> callbackfn.event(ret));
         });
         t.start();
 
@@ -518,51 +498,43 @@ public class PNetwork extends ProtoBase {
     public void httpPost(final String url, final NativeArray parts, final ReturnInterface callbackfn) {
         final OkHttpClient client = new OkHttpClient();
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Thread t = new Thread(() -> {
 
-                MultipartBody.Builder formBody = new MultipartBody.Builder();
-                formBody.setType(MultipartBody.FORM);
+            MultipartBody.Builder formBody = new MultipartBody.Builder();
+            formBody.setType(MultipartBody.FORM);
 
-                for (int i = 0; i < parts.size(); i++) {
-                    NativeObject o = (NativeObject) parts.get(i);
+            for (int i = 0; i < parts.size(); i++) {
+                NativeObject o = (NativeObject) parts.get(i);
 
-                    // go through elements
-                    String name = o.get("name").toString();
-                    String content = o.get("content").toString();
-                    String type = o.get("type").toString();
+                // go through elements
+                String name = o.get("name").toString();
+                String content = o.get("content").toString();
+                String type = o.get("type").toString();
 
-                    if (type.equals("file")) {
-                        String mediaType = (String) o.get("mediaType");
-                        File f = new File(getAppRunner().getProject().getFullPathForFile(content));
-                        MLog.d("nn1", f.getAbsolutePath() + " " + content + " " + name + " " + mediaType);
-                        formBody.addFormDataPart(name, content, RequestBody.create(MediaType.parse(mediaType), f));
-                    } else {
-                        formBody.addFormDataPart(name, content);
-                    }
+                if (type.equals("file")) {
+                    String mediaType = (String) o.get("mediaType");
+                    File f = new File(getAppRunner().getProject().getFullPathForFile(content));
+                    MLog.d("nn1", f.getAbsolutePath() + " " + content + " " + name + " " + mediaType);
+                    formBody.addFormDataPart(name, content, RequestBody.create(MediaType.parse(mediaType), f));
+                } else {
+                    formBody.addFormDataPart(name, content);
                 }
-                MultipartBody body = formBody.build();
-
-                Request request = new Request.Builder().url(url).post(body).build();
-                Response response = null;
-                final ReturnObject ret = new ReturnObject();
-                try {
-                    response = client.newCall(request).execute();
-                    ret.put("response", response.body().string());
-                    ret.put("status", response.code());
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callbackfn.event(ret);
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
             }
+            MultipartBody body = formBody.build();
+
+            Request request = new Request.Builder().url(url).post(body).build();
+            Response response = null;
+            final ReturnObject ret = new ReturnObject();
+            try {
+                response = client.newCall(request).execute();
+                ret.put("response", response.body().string());
+                ret.put("status", response.code());
+                mHandler.post(() -> callbackfn.event(ret));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         });
         t.start();
 
@@ -647,49 +619,46 @@ public class PNetwork extends ProtoBase {
         MLog.d(TAG, "trying to connect");
 
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                com.jcraft.jsch.Session session = null;
-                try {
-                    JSch jsch = new JSch();
-                    String result = "";
+        new Thread(() -> {
+            com.jcraft.jsch.Session session = null;
+            try {
+                JSch jsch = new JSch();
+                String result = "";
 
-                    session = jsch.getSession(username, serverAddress, port);
-                    session.setPassword(password);
+                session = jsch.getSession(username, serverAddress, port);
+                session.setPassword(password);
 
-                    // Avoid asking for key confirmation
-                    Properties prop = new Properties();
-                    prop.put("StrictHostKeyChecking", "no");
-                    session.setConfig(prop);
-                    session.connect();
+                // Avoid asking for key confirmation
+                Properties prop = new Properties();
+                prop.put("StrictHostKeyChecking", "no");
+                session.setConfig(prop);
+                session.connect();
 
-                    // SSH Channel
-                    ChannelExec channel = (ChannelExec) session.openChannel("exec");
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    channel.setOutputStream(stream);
+                // SSH Channel
+                ChannelExec channel = (ChannelExec) session.openChannel("exec");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                channel.setOutputStream(stream);
 
-                    // Execute command
-                    channel.setCommand("ls -ltr");
-                    channel.connect(1000);
-                    java.lang.Thread.sleep(500);   // this kludge seemed to be required.
-                    channel.disconnect();
+                // Execute command
+                channel.setCommand("ls -ltr");
+                channel.connect(1000);
+                Thread.sleep(500);   // this kludge seemed to be required.
+                channel.disconnect();
 
-                    result = stream.toString();
-                    MLog.d(TAG, "result: " + result);
+                result = stream.toString();
+                MLog.d(TAG, "result: " + result);
 
-                } catch (JSchException ex) {
-                    String s = ex.toString();
-                    System.out.println(s);
-                } catch (InterruptedException ex) {
-                    String s = ex.toString();
-                    System.out.println(s);
-                } finally {
-                    MLog.d(TAG, "disconnected");
-                    if (session != null) session.disconnect();
-                }
-
+            } catch (JSchException ex) {
+                String s = ex.toString();
+                System.out.println(s);
+            } catch (InterruptedException ex) {
+                String s = ex.toString();
+                System.out.println(s);
+            } finally {
+                MLog.d(TAG, "disconnected");
+                if (session != null) session.disconnect();
             }
+
         }).start();
 
 
@@ -820,30 +789,24 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Ping mContext Ip address", example = "")
     @PhonkMethodParam(params = {"ip", "function(time)"})
     public void ping(final String where, final int num, final ReturnInterface callbackfn) {
-       mHandler.post(new Runnable() {
-           @Override
-           public void run() {
-               final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
-               final Matcher[] m = {null};
+       mHandler.post(() -> {
+           final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
+           final Matcher[] m = {null};
 
-               new ExecuteCmd("/system/bin/ping -c " + num + " " + where, new ReturnInterface() {
-                   @Override
-                   public void event(ReturnObject r) {
-                       //MLog.d(TAG, pattern.toString() + "" + buffer);
+           new ExecuteCmd("/system/bin/ping -c " + num + " " + where, r -> {
+               //MLog.d(TAG, pattern.toString() + "" + buffer);
 
-                       ReturnObject ret = new ReturnObject();
-                       m[0] = pattern.matcher((CharSequence) r.get("value"));
-                       if (m[0].find()) {
-                           ret.put("time", Float.parseFloat(m[0].group(1)));
-                       } else {
-                           ret.put("time", -1);
-                       }
-                       callbackfn.event(ret);
+               ReturnObject ret = new ReturnObject();
+               m[0] = pattern.matcher((CharSequence) r.get("value"));
+               if (m[0].find()) {
+                   ret.put("time", Float.parseFloat(m[0].group(1)));
+               } else {
+                   ret.put("time", -1);
+               }
+               callbackfn.event(ret);
 
 
-                   }
-               }).start();
-           }
+           }).start();
        });
     }
 

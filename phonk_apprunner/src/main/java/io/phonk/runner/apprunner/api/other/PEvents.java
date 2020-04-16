@@ -26,8 +26,8 @@ import org.mozilla.javascript.NativeObject;
 
 import java.util.ArrayList;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.base.utils.StrUtils;
 
 public class PEvents extends ProtoBase {

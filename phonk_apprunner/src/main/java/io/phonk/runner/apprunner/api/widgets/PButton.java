@@ -29,11 +29,11 @@ import android.view.View;
 
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
@@ -59,15 +59,12 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     @PhonkMethodParam(params = {"function"})
     public PButton onClick(final ReturnInterface callbackfn) {
         // Set on click behavior
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callbackfn != null) {
+        this.setOnClickListener(v -> {
+            if (callbackfn != null) {
 
-                    ReturnObject r = new ReturnObject(PButton.this);
-                    r.put("action", "clicked");
-                    callbackfn.event(r);
-                }
+                ReturnObject r = new ReturnObject(PButton.this);
+                r.put("action", "clicked");
+                callbackfn.event(r);
             }
         });
 

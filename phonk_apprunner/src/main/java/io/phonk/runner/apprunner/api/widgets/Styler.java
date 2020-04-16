@@ -129,26 +129,23 @@ public class Styler {
         resetStyle();
 
         // when property changes then reapply them
-        props.onChange(new StyleProperties.OnChangeListener() {
-            @Override
-            public void event(String name, Object value) {
-                switch (name) {
-                    case "x":
-                        setX(value);
-                        break;
-                    case "y":
-                        setY(value);
-                        break;
-                    case "width":
-                        setWidth(value);
-                        break;
-                    case "height":
-                        setHeight(value);
-                        break;
-                }
-
-                apply();
+        props.onChange((name, value) -> {
+            switch (name) {
+                case "x":
+                    setX(value);
+                    break;
+                case "y":
+                    setY(value);
+                    break;
+                case "width":
+                    setWidth(value);
+                    break;
+                case "height":
+                    setHeight(value);
+                    break;
             }
+
+            apply();
         });
     }
 

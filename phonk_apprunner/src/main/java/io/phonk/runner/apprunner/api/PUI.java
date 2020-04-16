@@ -56,19 +56,23 @@ import java.util.Map;
 
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.R;
+import io.phonk.runner.apidoc.annotation.PhonkField;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.api.media.PCamera2;
 import io.phonk.runner.apprunner.api.media.PCamera;
+import io.phonk.runner.apprunner.api.media.PCamera2;
 import io.phonk.runner.apprunner.api.media.PCameraXOne;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.api.other.PProcessing;
-import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.apprunner.api.widgets.PAbsoluteLayout;
 import io.phonk.runner.apprunner.api.widgets.PButton;
-import io.phonk.runner.apprunner.api.widgets.PCustomView;
 import io.phonk.runner.apprunner.api.widgets.PCheckBox;
+import io.phonk.runner.apprunner.api.widgets.PCustomView;
 import io.phonk.runner.apprunner.api.widgets.PImage;
 import io.phonk.runner.apprunner.api.widgets.PImageButton;
 import io.phonk.runner.apprunner.api.widgets.PInput;
@@ -94,15 +98,11 @@ import io.phonk.runner.apprunner.api.widgets.PTouchPad;
 import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
+import io.phonk.runner.apprunner.api.widgets.StyleProperties;
 import io.phonk.runner.apprunner.api.widgets.WidgetHelper;
-import io.phonk.runner.apidoc.annotation.PhonkField;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
-import io.phonk.runner.apidoc.annotation.PhonkObject;
-import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
 import io.phonk.runner.apprunner.permissions.PermissionNotGrantedException;
-import io.phonk.runner.apprunner.api.widgets.StyleProperties;
 import io.phonk.runner.base.gui.CameraTexture;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -362,40 +362,37 @@ public class PUI extends ProtoBase {
     }
 
     public void startEditor() {
-        PLooper loop = mAppRunner.pUtil.loop(1000, new PLooper.LooperCB() {
-            @Override
-            public void event() {
-                ArrayList<HashMap> arrayList = new ArrayList<HashMap>();
-                for (int i = 0; i < viewArray.size(); i++) {
-                    PViewMethodsInterface view = (PViewMethodsInterface) viewArray.get(i);
-                    Map style = view.getStyle();
-                    HashMap<String, Object> o = new HashMap<String, Object>();
-                    o.put("name", view.getClass().getSimpleName());
-                    o.put("type", view.getClass().getSimpleName());
-                    // MLog.d(TAG, "-->" + view);
-                    Bitmap bmpView = takeViewScreenshot((View) view);
-                    String base64ImgString = mAppRunner.pUtil.bitmapToBase64String(bmpView);
-                    // MLog.d(TAG, base64ImgString);
-                    o.put("image", "data:image/png;base64," + base64ImgString);
-                    o.put("osc", "/osc");
-                    o.put("x", ((View) view).getX());
-                    o.put("y", ((View) view).getY() + 27); // adding status bar
-                    o.put("width", ((View) view).getWidth());
-                    o.put("height", ((View) view).getHeight());
-                    // o.put("properties", getStyles.props);
-                    arrayList.add(o);
-                }
-                Gson gson = new GsonBuilder().create();
-                String json = gson.toJson(arrayList);
-                // MLog.d(TAG, json.toString());
-
-                // send event
-                MLog.d("views", "sending event");
-                Intent i = new Intent("io.phonk.intent.VIEWS_UPDATE");
-                i.putExtra("views", json);
-                mAppRunner.getAppContext().sendBroadcast(i);
-
+        PLooper loop = mAppRunner.pUtil.loop(1000, () -> {
+            ArrayList<HashMap> arrayList = new ArrayList<HashMap>();
+            for (int i = 0; i < viewArray.size(); i++) {
+                PViewMethodsInterface view = (PViewMethodsInterface) viewArray.get(i);
+                Map style = view.getStyle();
+                HashMap<String, Object> o = new HashMap<String, Object>();
+                o.put("name", view.getClass().getSimpleName());
+                o.put("type", view.getClass().getSimpleName());
+                // MLog.d(TAG, "-->" + view);
+                Bitmap bmpView = takeViewScreenshot((View) view);
+                String base64ImgString = mAppRunner.pUtil.bitmapToBase64String(bmpView);
+                // MLog.d(TAG, base64ImgString);
+                o.put("image", "data:image/png;base64," + base64ImgString);
+                o.put("osc", "/osc");
+                o.put("x", ((View) view).getX());
+                o.put("y", ((View) view).getY() + 27); // adding status bar
+                o.put("width", ((View) view).getWidth());
+                o.put("height", ((View) view).getHeight());
+                // o.put("properties", getStyles.props);
+                arrayList.add(o);
             }
+            Gson gson = new GsonBuilder().create();
+            String json = gson.toJson(arrayList);
+            // MLog.d(TAG, json.toString());
+
+            // send event
+            MLog.d("views", "sending event");
+            Intent i = new Intent("io.phonk.intent.VIEWS_UPDATE");
+            i.putExtra("views", json);
+            mAppRunner.getAppContext().sendBroadcast(i);
+
         });
         loop.start();
     }
@@ -1603,27 +1600,21 @@ public class PUI extends ProtoBase {
         }
 
         private void init() {
-            mCreateCallback = new ReturnInterfaceWithReturn() {
-                @Override
-                public Object event(ReturnObject r) {
-                    PText t = newText("");
-                    if (mTextColor != -1) t.textColor(mTextColor); //.props.put("textColor", t.props, mTextColor);
-                    if (mTextSize != -1) t.textSize(mTextSize); // t.props.put("textSize", t.props, mTextSize);
+            mCreateCallback = r -> {
+                PText t = newText("");
+                if (mTextColor != -1) t.textColor(mTextColor); //.props.put("textColor", t.props, mTextColor);
+                if (mTextSize != -1) t.textSize(mTextSize); // t.props.put("textSize", t.props, mTextSize);
 
-                    styler.apply();
-                    return t;
-                }
+                styler.apply();
+                return t;
             };
 
-            mUpdateCallback = new ReturnInterfaceWithReturn() {
-                @Override
-                public Object event(ReturnObject r) {
-                    PText t = (PText) r.get("view");
-                    int position = (int) r.get("position");
+            mUpdateCallback = r -> {
+                PText t = (PText) r.get("view");
+                int position = (int) r.get("position");
 
-                    t.text((String) data.get(position));
-                    return null;
-                }
+                t.text((String) data.get(position));
+                return null;
             };
         }
 
@@ -1877,25 +1868,19 @@ public class PUI extends ProtoBase {
             // v.setLayoutParams(v.getLayoutParams());
 
             ValueAnimator animH = ValueAnimator.ofInt(initHeight, h);
-            animH.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    int val = (Integer) valueAnimator.getAnimatedValue();
-                    v.getLayoutParams().height = val;
-                    v.setLayoutParams(v.getLayoutParams());
-                }
+            animH.addUpdateListener(valueAnimator -> {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                v.getLayoutParams().height = val;
+                v.setLayoutParams(v.getLayoutParams());
             });
             animH.setDuration(200);
             animH.start();
 
             ValueAnimator animW = ValueAnimator.ofInt(initWidth, w);
-            animW.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    int val = (Integer) valueAnimator.getAnimatedValue();
-                    v.getLayoutParams().width = val;
-                    v.setLayoutParams(v.getLayoutParams());
-                }
+            animW.addUpdateListener(valueAnimator -> {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                v.getLayoutParams().width = val;
+                v.setLayoutParams(v.getLayoutParams());
             });
             animW.setDuration(200);
             animW.start();
@@ -1937,12 +1922,7 @@ public class PUI extends ProtoBase {
     */
 
     public void onClick(View view, final ReturnInterface callback) {
-      view.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              callback.event(null);
-          }
-      });
+      view.setOnClickListener(view1 -> callback.event(null));
     }
 
     class Touch {
@@ -1967,92 +1947,89 @@ public class PUI extends ProtoBase {
         final PhonkNativeArray ar = new PhonkNativeArray(20);
         final HashMap<Integer, Touch> touches = new HashMap<Integer, Touch>();
 
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+        view.setOnTouchListener((view1, motionEvent) -> {
 
-                int pointerIndex = MotionEventCompat.getActionIndex(motionEvent);
-                int pointerId = motionEvent.getPointerId(pointerIndex);
+            int pointerIndex = MotionEventCompat.getActionIndex(motionEvent);
+            int pointerId = motionEvent.getPointerId(pointerIndex);
 
-                boolean ret = false;
+            boolean ret = false;
 
-                switch (MotionEventCompat.getActionMasked(motionEvent)) {
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                    case MotionEvent.ACTION_DOWN: {
-                        MLog.d(TAG, "down: " + pointerId);
+            switch (MotionEventCompat.getActionMasked(motionEvent)) {
+                case MotionEvent.ACTION_POINTER_DOWN:
+                case MotionEvent.ACTION_DOWN: {
+                    MLog.d(TAG, "down: " + pointerId);
 
-                        Touch touch = touches.get(pointerId);
-                        if (touch == null) {
-                            Touch t = new Touch();
-                            t.id = pointerId;
-                            t.x = motionEvent.getX();
-                            t.y = motionEvent.getY();
-                            t.action = "down";
-                            touches.put(pointerId, t);
-                        }
-                        ret = true;
-                        break;
+                    Touch touch = touches.get(pointerId);
+                    if (touch == null) {
+                        Touch t = new Touch();
+                        t.id = pointerId;
+                        t.x = motionEvent.getX();
+                        t.y = motionEvent.getY();
+                        t.action = "down";
+                        touches.put(pointerId, t);
                     }
-                    case MotionEvent.ACTION_MOVE: {
-                        for (int i = 0; i < motionEvent.getPointerCount(); i++) {
-                            int id = motionEvent.getPointerId(i);
-                            MLog.d(TAG, "move: " + id);
+                    ret = true;
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: {
+                    for (int i = 0; i < motionEvent.getPointerCount(); i++) {
+                        int id = motionEvent.getPointerId(i);
+                        MLog.d(TAG, "move: " + id);
 
-                            Touch t = touches.get(id);
-                            t.x = motionEvent.getX(i);
-                            t.y = motionEvent.getY(i);
-                            t.action = "move";
-                        }
-                        break;
+                        Touch t = touches.get(id);
+                        t.x = motionEvent.getX(i);
+                        t.y = motionEvent.getY(i);
+                        t.action = "move";
                     }
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_POINTER_UP:
-                        MLog.d(TAG, "up: " + pointerId);
-                        Touch t = touches.get(pointerId);
-                        t.action = "up";
-                        break;
+                    break;
                 }
-
-
-                PhonkNativeArray ar = new PhonkNativeArray(touches.size());
-                int toRemove = -1;
-                int i = 0;
-
-                MLog.d(TAG, ">>>>>>>>>>>>>>>>>>>>> ");
-
-                for (Integer key : touches.keySet()) {
-                    Touch touch = touches.get(key);
-
-                    if (touch.action.equals("up")) {
-                        MLog.d(TAG, "to remove");
-                        toRemove = key;
-                    }
-
-                    ReturnObject t = new ReturnObject();
-                    t.put("x", touch.x);
-                    t.put("y", touch.y);
-                    t.put("id", touch.id);
-                    t.put("action", touch.action);
-                    MLog.d(TAG, "" + i + " " + touch.id + " action " + touch.action);
-
-                    ar.addPE(i, t);
-                    i++;
-                }
-
-                if (toRemove != -1) {
-                    MLog.d(TAG, "removing " + toRemove + " of " + touches.size());
-                    touches.remove(toRemove);
-                }
-
-                ReturnObject returnObject = new ReturnObject();
-                returnObject.put("touches", ar);
-                returnObject.put("count", motionEvent.getPointerCount());
-
-                callback.event(returnObject);
-
-                return ret;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_POINTER_UP:
+                    MLog.d(TAG, "up: " + pointerId);
+                    Touch t = touches.get(pointerId);
+                    t.action = "up";
+                    break;
             }
+
+
+            PhonkNativeArray ar1 = new PhonkNativeArray(touches.size());
+            int toRemove = -1;
+            int i = 0;
+
+            MLog.d(TAG, ">>>>>>>>>>>>>>>>>>>>> ");
+
+            for (Integer key : touches.keySet()) {
+                Touch touch = touches.get(key);
+
+                if (touch.action.equals("up")) {
+                    MLog.d(TAG, "to remove");
+                    toRemove = key;
+                }
+
+                ReturnObject t = new ReturnObject();
+                t.put("x", touch.x);
+                t.put("y", touch.y);
+                t.put("id", touch.id);
+                t.put("action", touch.action);
+                MLog.d(TAG, "" + i + " " + touch.id + " action " + touch.action);
+
+                ar1.addPE(i, t);
+                i++;
+            }
+
+            if (toRemove != -1) {
+                MLog.d(TAG, "removing " + toRemove + " of " + touches.size());
+                touches.remove(toRemove);
+            }
+
+            ReturnObject returnObject = new ReturnObject();
+            returnObject.put("touches", ar1);
+            returnObject.put("count", motionEvent.getPointerCount());
+
+            callback.event(returnObject);
+
+            return ret;
         });
     }
 

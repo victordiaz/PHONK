@@ -15,12 +15,16 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.transfer.api;
 
-import static org.junit.Assert.assertTrue;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.tensorflow.lite.examples.transfer.api.TransferLearningModel.Prediction;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,9 +34,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.tensorflow.lite.examples.transfer.api.TransferLearningModel.Prediction;
+
+import static org.junit.Assert.assertTrue;
 
 /** End-to-end model correctness test. */
 @RunWith(AndroidJUnit4.class)

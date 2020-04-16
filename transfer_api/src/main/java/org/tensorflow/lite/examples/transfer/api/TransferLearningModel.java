@@ -15,8 +15,6 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.transfer.api;
 
-import android.util.Log;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;

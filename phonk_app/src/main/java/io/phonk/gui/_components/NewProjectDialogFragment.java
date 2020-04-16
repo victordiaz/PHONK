@@ -24,7 +24,6 @@ package io.phonk.gui._components;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,17 +55,7 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        doOK();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
+                .setPositiveButton("Create", (dialog, whichButton) -> doOK()).setNegativeButton("Cancel", (dialog, whichButton) -> dialog.dismiss());
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.newproject_dialog, null);
         mEditText = view.findViewById(R.id.dialog_new_project_name_input);

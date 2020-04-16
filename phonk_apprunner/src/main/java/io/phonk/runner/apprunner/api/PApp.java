@@ -51,19 +51,18 @@ import java.util.Map;
 
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.R;
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.api.other.PEvents;
-import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.SchedulerManager;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.other.PEvents;
+import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.ExecuteCmd;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.SchedulerManager;
 
 @PhonkObject
 public class PApp extends ProtoBase {
@@ -141,11 +140,8 @@ public class PApp extends ProtoBase {
     @android.webkit.JavascriptInterface
     @PhonkMethod
     public void eval(final String code) {
-        runOnUiThread(new ReturnInterface() {
-            @Override
-            public void event(ReturnObject r) {
-                // getAppRunner().interp.eval(code);
-            }
+        runOnUiThread(r -> {
+            // getAppRunner().interp.eval(code);
         });
     }
 
@@ -351,12 +347,7 @@ public class PApp extends ProtoBase {
      */
     @PhonkMethod
     public void runOnUiThread(final ReturnInterface callback) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                callback.event(null);
-            }
-        });
+        getActivity().runOnUiThread(() -> callback.event(null));
     }
 
     /**

@@ -34,8 +34,8 @@ import java.util.Map;
 import io.phonk.R;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.BaseActivity;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 public class InfoScriptActivity extends BaseActivity {
 

@@ -38,23 +38,21 @@ import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import io.phonk.App;
 import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.base.models.Folder;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
-import io.phonk.runner.base.models.Folder;
-import io.phonk.runner.base.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class PhonkScriptHelper {
@@ -199,21 +197,18 @@ public class PhonkScriptHelper {
             protoFiles.add(protoFile);
         }
 
-        Collections.sort(protoFiles, new Comparator<ProtoFile>(){
-            @Override
-            public int compare(ProtoFile l, ProtoFile r) {
+        Collections.sort(protoFiles, (l, r) -> {
 
-                // order by folder first and alphabetically
+            // order by folder first and alphabetically
 
-                if (l.isDir && !r.isDir){
-                    return -1;
-                } else if (!l.isDir && r.isDir){
-                    return 1;
-                } else {
-                    return l.name.compareToIgnoreCase(r.name);
-                }
-
+            if (l.isDir && !r.isDir){
+                return -1;
+            } else if (!l.isDir && r.isDir){
+                return 1;
+            } else {
+                return l.name.compareToIgnoreCase(r.name);
             }
+
         });
 
         return protoFiles;
@@ -251,13 +246,10 @@ public class PhonkScriptHelper {
     }
 
     private static void fileWalker(ArrayList<ProtoFile> tree, File dir, int levels, final String extensionFilter) {
-        File[] all_projects = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (extensionFilter == "*") return true;
+        File[] all_projects = dir.listFiles(pathname -> {
+            if (extensionFilter == "*") return true;
 
-                return pathname.getName().endsWith(extensionFilter);
-            }
+            return pathname.getName().endsWith(extensionFilter);
         });
 
         for (File f : all_projects) {

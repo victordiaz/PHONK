@@ -45,10 +45,10 @@ import android.view.ViewGroup;
 import androidx.annotation.RequiresApi;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageAnalysisConfig;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
-import androidx.camera.core.ImageAnalysisConfig;
 import androidx.fragment.app.Fragment;
 
 import java.nio.ByteBuffer;

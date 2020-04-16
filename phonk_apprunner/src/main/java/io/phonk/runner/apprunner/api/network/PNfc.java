@@ -35,12 +35,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 public class PNfc extends ProtoBase {
 
@@ -56,14 +56,11 @@ public class PNfc extends ProtoBase {
     @PhonkMethodParam(params = {"function(id, data)"})
     public void onNewData(final ReturnInterface callback) {
 
-        getActivity().addNFCReadListener(new onNFCListener() {
-            @Override
-            public void onNewTag(String id, String data) {
-                ReturnObject o = new ReturnObject();
-                o.put("id", id);
-                o.put("data", data);
-                callback.event(o);
-            }
+        getActivity().addNFCReadListener((id, data) -> {
+            ReturnObject o = new ReturnObject();
+            o.put("id", id);
+            o.put("data", data);
+            callback.event(o);
         });
 
         getActivity().initializeNFC();
@@ -80,12 +77,7 @@ public class PNfc extends ProtoBase {
         PNfc.nfcMsg = data;
         getActivity().initializeNFC();
         
-        getActivity().addNFCWrittenListener(new onNFCWrittenListener() {
-            @Override
-            public void onNewTag() {
-                fn.event(true);
-            }
-        });
+        getActivity().addNFCWrittenListener(() -> fn.event(true));
 
         // Construct the data to write to the tag
         // Should be of the form [relay/group]-[rid/gid]-[cmd]

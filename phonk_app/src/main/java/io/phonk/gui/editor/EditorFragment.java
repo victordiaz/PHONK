@@ -30,9 +30,7 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -191,30 +189,23 @@ public class EditorFragment extends BaseFragment {
 
         mExtraKeyBar = v.findViewById(R.id.extraKeyBar);
 
-        mEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MLog.d(TAG, "line touched at " + getCurrentCursorLine(mEdit.getEditableText()));
-                if (listener != null) {
-                    listener.onLineTouched();
-                }
+        mEdit.setOnClickListener(v -> {
+            MLog.d(TAG, "line touched at " + getCurrentCursorLine(mEdit.getEditableText()));
+            if (listener != null) {
+                listener.onLineTouched();
             }
-
         });
 
         // detect if key board is open or close
         final RelativeLayout rootView = v.findViewById(R.id.rootEditor);
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-                // MLog.d(TAG, "" + heightDiff);
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+            // MLog.d(TAG, "" + heightDiff);
 
-                if (heightDiff > 300) {
-                    // mExtraKeyBar.setVisibility(View.VISIBLE);
-                } else {
-                    // mExtraKeyBar.setVisibility(View.GONE);
-                }
+            if (heightDiff > 300) {
+                // mExtraKeyBar.setVisibility(View.VISIBLE);
+            } else {
+                // mExtraKeyBar.setVisibility(View.GONE);
             }
         });
 
@@ -224,12 +215,9 @@ public class EditorFragment extends BaseFragment {
         for (int i = 0; i < extraKeyBarLl.getChildCount(); i++) {
             final Button b = (Button) extraKeyBarLl.getChildAt(i);
 
-            b.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String t = b.getText().toString();
-                    mEdit.getText().insert(mEdit.getSelectionStart(), t);
-                }
+            b.setOnClickListener(v -> {
+                String t = b.getText().toString();
+                mEdit.getText().insert(mEdit.getSelectionStart(), t);
             });
 
         }

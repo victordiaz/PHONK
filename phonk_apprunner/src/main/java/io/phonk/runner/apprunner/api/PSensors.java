@@ -22,9 +22,13 @@
 
 package io.phonk.runner.apprunner.api;
 
+import io.phonk.runner.apidoc.annotation.PhonkField;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.sensors.PAccelerometer;
 import io.phonk.runner.apprunner.api.sensors.PAmbientTemperature;
+import io.phonk.runner.apprunner.api.sensors.PBarometer;
 import io.phonk.runner.apprunner.api.sensors.PGravity;
 import io.phonk.runner.apprunner.api.sensors.PGyroscope;
 import io.phonk.runner.apprunner.api.sensors.PHumidity;
@@ -33,13 +37,9 @@ import io.phonk.runner.apprunner.api.sensors.PLinearAcceleration;
 import io.phonk.runner.apprunner.api.sensors.PLocation;
 import io.phonk.runner.apprunner.api.sensors.PMagneticField;
 import io.phonk.runner.apprunner.api.sensors.POrientation;
-import io.phonk.runner.apprunner.api.sensors.PBarometer;
 import io.phonk.runner.apprunner.api.sensors.PProximity;
 import io.phonk.runner.apprunner.api.sensors.PRotationVector;
 import io.phonk.runner.apprunner.api.sensors.PStep;
-import io.phonk.runner.apidoc.annotation.PhonkField;
-import io.phonk.runner.apidoc.annotation.PhonkObject;
-import io.phonk.runner.apprunner.AppRunner;
 
 
 @PhonkObject

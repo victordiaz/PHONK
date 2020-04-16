@@ -31,10 +31,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.base.utils.MLog;
 
 //current source :http://androiddev.orkitra.com/?p=28
@@ -61,27 +61,24 @@ public class PFtpClient extends ProtoBase {
     public void connect(final String host, final int port, final String username, final String password, final FtpConnectedCb callback) {
         mFTPClient = new FTPClient();
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mFTPClient.connect(host, port);
+        Thread t = new Thread(() -> {
+            try {
+                mFTPClient.connect(host, port);
 
-                    MLog.d(TAG, "1");
+                MLog.d(TAG, "1");
 
-                    if (FTPReply.isPositiveCompletion(mFTPClient.getReplyCode())) {
-                        boolean logged = mFTPClient.login(username, password);
-                        mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
-                        mFTPClient.enterLocalPassiveMode();
-                        isConnected = logged;
+                if (FTPReply.isPositiveCompletion(mFTPClient.getReplyCode())) {
+                    boolean logged = mFTPClient.login(username, password);
+                    mFTPClient.setFileType(FTP.BINARY_FILE_TYPE);
+                    mFTPClient.enterLocalPassiveMode();
+                    isConnected = logged;
 
-                        callback.event(logged);
-                    }
-                    MLog.d(TAG, "" + isConnected);
-
-                } catch (Exception e) {
-                    MLog.d(TAG, "connection failed error:" + e);
+                    callback.event(logged);
                 }
+                MLog.d(TAG, "" + isConnected);
+
+            } catch (Exception e) {
+                MLog.d(TAG, "connection failed error:" + e);
             }
         });
         t.start();
@@ -96,18 +93,15 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethodParam(params = {""})
     public void getCurrentDir(final GetCurrentDirCb callback) {
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MLog.d(TAG, "" + mFTPClient);
-                    String workingDir = mFTPClient.printWorkingDirectory();
-                    callback.event(workingDir);
-                } catch (Exception e) {
-                    MLog.d(TAG, "Error: could not get current working directory. " + e);
-                }
-
+        Thread t = new Thread(() -> {
+            try {
+                MLog.d(TAG, "" + mFTPClient);
+                String workingDir = mFTPClient.printWorkingDirectory();
+                callback.event(workingDir);
+            } catch (Exception e) {
+                MLog.d(TAG, "Error: could not get current working directory. " + e);
             }
+
         });
         t.start();
 
@@ -121,14 +115,11 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethod(description = "Change the directory", example = "")
     @PhonkMethodParam(params = {"dirname"})
     public void changeDir(final String directory_path, final ChangeDirectoryCb callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    callback.event(mFTPClient.changeWorkingDirectory(directory_path));
-                } catch (Exception e) {
-                    MLog.d(TAG, "Error:" + e);
-                }
+        Thread t = new Thread(() -> {
+            try {
+                callback.event(mFTPClient.changeWorkingDirectory(directory_path));
+            } catch (Exception e) {
+                MLog.d(TAG, "Error:" + e);
             }
         });
         t.start();
@@ -148,32 +139,29 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethod(description = "Get list of files in the given dir", example = "")
     @PhonkMethodParam(params = {"dirname"})
     public void getFileList(final String dir_path, final GetFileListCb callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<ListDir> list = new ArrayList<ListDir>();
-                try {
-                    FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
-                    int length = ftpFiles.length;
+        Thread t = new Thread(() -> {
+            ArrayList<ListDir> list = new ArrayList<ListDir>();
+            try {
+                FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
+                int length = ftpFiles.length;
 
-                    for (int i = 0; i < length; i++) {
-                        String name = ftpFiles[i].getName();
-                        boolean isFile = ftpFiles[i].isFile();
+                for (int i = 0; i < length; i++) {
+                    String name = ftpFiles[i].getName();
+                    boolean isFile = ftpFiles[i].isFile();
 
-                        ListDir listDir = new ListDir();
-                        if (isFile) {
-                            listDir.type = "file";
-                        } else {
-                            listDir.type = "dir";
-                        }
-                        listDir.name = name;
-                        list.add(listDir);
+                    ListDir listDir = new ListDir();
+                    if (isFile) {
+                        listDir.type = "file";
+                    } else {
+                        listDir.type = "dir";
                     }
-                    callback.event(list);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    listDir.name = name;
+                    list.add(listDir);
                 }
+                callback.event(list);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         t.start();
@@ -187,23 +175,20 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethod(description = "Download the file", example = "")
     @PhonkMethodParam(params = {"sourceFilePath", "destinyFilePath"})
     public void download(final String srcFilePath, final String destiny, final DownloadFiletCb callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean status = false;
-                //TODO reenable this
-                String desFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + destiny;
+        Thread t = new Thread(() -> {
+            boolean status = false;
+            //TODO reenable this
+            String desFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + destiny;
 
-                try {
-                    FileOutputStream desFileStream = new FileOutputStream(desFilePath);
+            try {
+                FileOutputStream desFileStream = new FileOutputStream(desFilePath);
 
-                    status = mFTPClient.retrieveFile(srcFilePath, desFileStream);
-                    callback.event(status);
+                status = mFTPClient.retrieveFile(srcFilePath, desFileStream);
+                callback.event(status);
 
-                    desFileStream.close();
-                } catch (Exception e) {
-                    MLog.d(TAG, "download failed error:" + e);
-                }
+                desFileStream.close();
+            } catch (Exception e) {
+                MLog.d(TAG, "download failed error:" + e);
             }
         });
         t.start();
@@ -222,26 +207,23 @@ public class PFtpClient extends ProtoBase {
         //TODO reenable this
         final String srcFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + source;
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!isConnected) {
-                    try {
-                        MLog.d(TAG, "waiting for connection");
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
+        Thread t = new Thread(() -> {
+            while (!isConnected) {
                 try {
-                    FileInputStream srcFileStream = new FileInputStream(srcFilePath);
-                    boolean status = mFTPClient.storeFile(desFileName, srcFileStream);
-                    srcFileStream.close();
-                    callback.event(status);
-                } catch (Exception e) {
-                    MLog.d(TAG, "upload failed" + e);
+                    MLog.d(TAG, "waiting for connection");
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
+
+            try {
+                FileInputStream srcFileStream = new FileInputStream(srcFilePath);
+                boolean status1 = mFTPClient.storeFile(desFileName, srcFileStream);
+                srcFileStream.close();
+                callback.event(status1);
+            } catch (Exception e) {
+                MLog.d(TAG, "upload failed" + e);
             }
         });
         t.start();
@@ -256,17 +238,14 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethod(description = "Delete a file", example = "")
     @PhonkMethodParam(params = {"filename", "function(boolean)"})
     public void deleteFile(final String filename, final DeleteFileCb callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (isConnected) {
-                    try {
-                        boolean deleted = mFTPClient.deleteFile(filename);
-                        callback.event(deleted);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        callback.event(false);
-                    }
+        Thread t = new Thread(() -> {
+            if (isConnected) {
+                try {
+                    boolean deleted = mFTPClient.deleteFile(filename);
+                    callback.event(deleted);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    callback.event(false);
                 }
             }
         });
@@ -281,22 +260,19 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethod(description = "Disconnect from server", example = "")
     @PhonkMethodParam(params = {""})
     public void disconnect(final DisconnectCb callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                MLog.d(TAG, "" + isConnected);
-                if (isConnected) {
-                    try {
-                        mFTPClient.logout();
-                        mFTPClient.disconnect();
-                    } catch (Exception e) {
+        Thread t = new Thread(() -> {
+            MLog.d(TAG, "" + isConnected);
+            if (isConnected) {
+                try {
+                    mFTPClient.logout();
+                    mFTPClient.disconnect();
+                } catch (Exception e) {
 
-                    }
-                    isConnected = false;
-
-                    if (callback != null)
-                        callback.event(isConnected);
                 }
+                isConnected = false;
+
+                if (callback != null)
+                    callback.event(isConnected);
             }
         });
         t.start();

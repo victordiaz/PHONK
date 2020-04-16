@@ -33,15 +33,15 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.api.other.PSqLite;
-import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
-import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.other.PSqLite;
+import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.Image;
 
@@ -81,14 +81,11 @@ public class PFileIO extends ProtoBase {
     }
 
     public void deleteAsync(final String name, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                delete(name);
-                ReturnObject ret = new ReturnObject();
-                ret.put("file", name);
-                returnValues(ret, callback);
-            }
+        Thread t = new Thread(() -> {
+            delete(name);
+            ReturnObject ret = new ReturnObject();
+            ret.put("file", name);
+            returnValues(ret, callback);
         });
         t.start();
     }
@@ -122,14 +119,11 @@ public class PFileIO extends ProtoBase {
     }
 
     public void moveAsync(final String name, final String to, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                move(name, to);
-                ReturnObject ret = new ReturnObject();
-                ret.put("file", name);
-                returnValues(ret, callback);
-            }
+        Thread t = new Thread(() -> {
+            move(name, to);
+            ReturnObject ret = new ReturnObject();
+            ret.put("file", name);
+            returnValues(ret, callback);
         });
         t.start();
     }
@@ -203,14 +197,11 @@ public class PFileIO extends ProtoBase {
     }
 
     public void saveTextToFileAsync(final String lines, final String fileName, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                saveTextToFile(lines, fileName);
-                ReturnObject ret = new ReturnObject();
-                ret.put("file", fileName);
-                returnValues(ret, callback);
-            }
+        Thread t = new Thread(() -> {
+            saveTextToFile(lines, fileName);
+            ReturnObject ret = new ReturnObject();
+            ret.put("file", fileName);
+            returnValues(ret, callback);
         });
         t.start();
     }
@@ -225,12 +216,9 @@ public class PFileIO extends ProtoBase {
     @PhonkMethod(description = "Append an array of text into a file", example = "")
     @PhonkMethodParam(params = {"fileName", "lines[]"})
     public void appendTextToFileAsync(final String line, final String fileName, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                appendTextToFile(line, fileName);
-                returnValues(null, callback);
-            }
+        Thread t = new Thread(() -> {
+            appendTextToFile(line, fileName);
+            returnValues(null, callback);
         });
     }
 
@@ -243,15 +231,12 @@ public class PFileIO extends ProtoBase {
     }
 
     public void loadTextFromFileAsync(final String fileName, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String content = loadTextFromFile(fileName);
-                final ReturnObject ret = new ReturnObject();
-                ret.put("file", fileName);
-                ret.put("content", content);
-                returnValues(ret, callback);
-            }
+        Thread t = new Thread(() -> {
+            String content = loadTextFromFile(fileName);
+            final ReturnObject ret = new ReturnObject();
+            ret.put("file", fileName);
+            ret.put("content", content);
+            returnValues(ret, callback);
         });
         t.start();
     }
@@ -268,12 +253,9 @@ public class PFileIO extends ProtoBase {
     }
 
     public void loadBitmapAsync(final String path, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadBitmap(path);
-                returnValues(null, callback);
-            }
+        Thread t = new Thread(() -> {
+            loadBitmap(path);
+            returnValues(null, callback);
         });
         t.start();
     }
@@ -312,17 +294,14 @@ public class PFileIO extends ProtoBase {
     @PhonkMethod(description = "Zip a file/folder into a zip", example = "")
     @PhonkMethodParam(params = {"folder", "filename"})
     public void zip(final String fOrigin, final String fDestiny, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    FileIO.zipFolder(getAppRunner().getProject().getFullPathForFile(fOrigin), getAppRunner().getProject().getFullPathForFile(fDestiny));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                returnValues(null, callback);
+        Thread t = new Thread(() -> {
+            try {
+                FileIO.zipFolder(getAppRunner().getProject().getFullPathForFile(fOrigin), getAppRunner().getProject().getFullPathForFile(fDestiny));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            returnValues(null, callback);
         });
         t.start();
 
@@ -331,15 +310,12 @@ public class PFileIO extends ProtoBase {
     @PhonkMethod(description = "Unzip a file into a folder", example = "")
     @PhonkMethodParam(params = {"zipFile", "folder"})
     public void unzip(final String src, final String dst, final ReturnInterface callback) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    FileIO.unZipFile(getAppRunner().getProject().getFullPathForFile(src), getAppRunner().getProject().getFullPathForFile(dst));
-                    returnValues(null, callback);
-                } catch (ZipException e) {
-                    e.printStackTrace();
-                }
+        Thread t = new Thread(() -> {
+            try {
+                FileIO.unZipFile(getAppRunner().getProject().getFullPathForFile(src), getAppRunner().getProject().getFullPathForFile(dst));
+                returnValues(null, callback);
+            } catch (ZipException e) {
+                e.printStackTrace();
             }
         });
         t.start();
@@ -403,12 +379,7 @@ public class PFileIO extends ProtoBase {
     }
 
     private void returnValues(final ReturnObject ret, final ReturnInterface callback) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                callback.event(ret);
-            }
-        });
+        mHandler.post(() -> callback.event(ret));
     }
 
     @Override

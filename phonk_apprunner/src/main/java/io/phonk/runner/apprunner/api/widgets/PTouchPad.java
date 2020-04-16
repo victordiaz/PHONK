@@ -24,11 +24,11 @@ package io.phonk.runner.apprunner.api.widgets;
 
 import java.util.Map;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
@@ -54,55 +54,52 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         styler = new Styler(appRunner, this, props);
         styler.apply();
 
-        appRunner.pUi.onTouches(this, new ReturnInterface() {
-            @Override
-            public void event(ReturnObject r) {
-            // remap values
-            touches = (PhonkNativeArray) r.get("touches");
-            PhonkNativeArray remmapedTouches = new PhonkNativeArray(touches.size());
-            if (touches != null) {
+        appRunner.pUi.onTouches(this, r -> {
+        // remap values
+        touches = (PhonkNativeArray) r.get("touches");
+        PhonkNativeArray remmapedTouches = new PhonkNativeArray(touches.size());
+        if (touches != null) {
 
-                for (int i = 0; i < touches.size(); i++) {
-                    ReturnObject t = (ReturnObject) touches.get(i);
-                    float unmappedXVal = (float) t.get("x");
-                    float unmappedYVal = (float) t.get("y");
-                    float mappedXVal = CanvasUtils.map(unmappedXVal, 0, mWidth, rangeXFrom, rangeXTo);
-                    float mappedYVal = CanvasUtils.map(unmappedYVal, 0, mHeight, rangeYFrom, rangeYTo);
+            for (int i = 0; i < touches.size(); i++) {
+                ReturnObject t = (ReturnObject) touches.get(i);
+                float unmappedXVal = (float) t.get("x");
+                float unmappedYVal = (float) t.get("y");
+                float mappedXVal = CanvasUtils.map(unmappedXVal, 0, mWidth, rangeXFrom, rangeXTo);
+                float mappedYVal = CanvasUtils.map(unmappedYVal, 0, mHeight, rangeYFrom, rangeYTo);
 
-                    if (mappedXVal < rangeXFrom) mappedXVal = rangeXFrom;
-                    if (mappedXVal > rangeXTo) mappedXVal = rangeXTo;
+                if (mappedXVal < rangeXFrom) mappedXVal = rangeXFrom;
+                if (mappedXVal > rangeXTo) mappedXVal = rangeXTo;
 
-                    if (mappedYVal < rangeYFrom) mappedYVal = rangeYFrom;
-                    if (mappedYVal > rangeXTo) mappedYVal = rangeYTo;
+                if (mappedYVal < rangeYFrom) mappedYVal = rangeYFrom;
+                if (mappedYVal > rangeXTo) mappedYVal = rangeYTo;
 
-                    ReturnObject tRemapped = new ReturnObject();
-                    tRemapped.put("x", mappedXVal);
-                    tRemapped.put("y", mappedYVal);
-                    tRemapped.put("action", t.get("action"));
-                    remmapedTouches.addPE(i, tRemapped);
-                }
+                ReturnObject tRemapped = new ReturnObject();
+                tRemapped.put("x", mappedXVal);
+                tRemapped.put("y", mappedYVal);
+                tRemapped.put("action", t.get("action"));
+                remmapedTouches.addPE(i, tRemapped);
             }
-            ReturnObject ro = new ReturnObject();
-            ro.put("touches", remmapedTouches);
-            ro.put("count", touches.size());
-            onTouchCallback.event(ro);
+        }
+        ReturnObject ro = new ReturnObject();
+        ro.put("touches", remmapedTouches);
+        ro.put("count", touches.size());
+        onTouchCallback.event(ro);
 
-            // trigger animation
-            if (touches.size() > 0 && !looper.isLooping()) {
-                MLog.d(TAG, "start touch");
-                looper.start();
-            // if the last pointer is up then stop animation
-            } else if (touches.size() == 1) {
-                ReturnObject t = ((ReturnObject) touches.get(0));
-                if (t.get("action") == "up") {
-                    MLog.d(TAG, "stop touch");
-                    touches = null;
-                    invalidate();
-                    looper.stop();
-                }
+        // trigger animation
+        if (touches.size() > 0 && !looper.isLooping()) {
+            MLog.d(TAG, "start touch");
+            looper.start();
+        // if the last pointer is up then stop animation
+        } else if (touches.size() == 1) {
+            ReturnObject t = ((ReturnObject) touches.get(0));
+            if (t.get("action") == "up") {
+                MLog.d(TAG, "stop touch");
+                touches = null;
+                invalidate();
+                looper.stop();
             }
-            // invalidate();
-            }
+        }
+        // invalidate();
         });
     }
 
@@ -112,12 +109,9 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    PLooper looper = new PLooper(mAppRunner, 5, new PLooper.LooperCB() {
-        @Override
-        public void event() {
-            invalidate();
-            // MLog.d("touches", "size " + touches.size());
-        }
+    PLooper looper = new PLooper(mAppRunner, 5, () -> {
+        invalidate();
+        // MLog.d("touches", "size " + touches.size());
     });
 
     private void executeCallback() {

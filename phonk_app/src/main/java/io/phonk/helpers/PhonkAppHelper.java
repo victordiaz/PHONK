@@ -45,8 +45,8 @@ import io.phonk.gui.settings.SettingsActivity;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.runner.AppRunnerLauncherService;
 import io.phonk.runner.apprunner.AppRunnerSettings;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 public class PhonkAppHelper {
 
@@ -145,14 +145,11 @@ public class PhonkAppHelper {
             MLog.d(TAG, "template " + template);
         }
 
-        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
-            @Override
-            public void onFinishEditDialog(String inputText) {
-                String template = "default";
-                Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = PhonkScriptHelper.createNewProject(c, template, AppRunnerSettings.USER_PROJECTS_FOLDER + "/User Projects/", inputText);
-                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
-            }
+        newProjectDialog.setListener(inputText -> {
+            String template = "default";
+            Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
+            Project p = PhonkScriptHelper.createNewProject(c, template, AppRunnerSettings.USER_PROJECTS_FOLDER + "/User Projects/", inputText);
+            EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
         });
     }
 

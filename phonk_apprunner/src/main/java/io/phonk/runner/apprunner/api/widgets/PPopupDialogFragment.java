@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.InputType;
@@ -100,51 +99,37 @@ public class PPopupDialogFragment extends DialogFragment {
         if (mChoice != null) {
             MLog.d(TAG, "choice");
 
-            builder.setItems(mChoice, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    MLog.d(TAG, "choice " + mChoice[which]);
-                    r.put("answer", mChoice[which]);
-                    r.put("answerId", which);
-                    mCallback.event(r);
-                    dismiss();
-                }
+            builder.setItems(mChoice, (dialog, which) -> {
+                MLog.d(TAG, "choice " + mChoice[which]);
+                r.put("answer", mChoice[which]);
+                r.put("answerId", which);
+                mCallback.event(r);
+                dismiss();
             });
         }
 
         if (mMultichoice != null) {
             MLog.d(TAG, "multichoice");
 
-            builder.setMultiChoiceItems(mMultichoice, mMultichoiceState, new DialogInterface.OnMultiChoiceClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                            mMultichoiceState[which] = isChecked;
-                        }
-                    }
+            builder.setMultiChoiceItems(mMultichoice, mMultichoiceState, (dialog, which, isChecked) -> mMultichoiceState[which] = isChecked
             );
         }
 
         // only show ok if we dont have a selectable list
-        builder.setPositiveButton(mOk, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            if (mCallback != null) {
-                r.put("accept", true);
-                if (mMultichoiceState != null) r.put("choices", mMultichoiceState);
-                if (mInput != null) r.put("answer", mInput.getText().toString());
-                mCallback.event(r);
-            }
-            }
+        builder.setPositiveButton(mOk, (dialog, which) -> {
+        if (mCallback != null) {
+            r.put("accept", true);
+            if (mMultichoiceState != null) r.put("choices", mMultichoiceState);
+            if (mInput != null) r.put("answer", mInput.getText().toString());
+            mCallback.event(r);
+        }
         });
 
 
-        builder.setNegativeButton(mCancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                r.put("accept", false);
-                if (mCallback != null) mCallback.event(r);
-                dismiss();
-            }
+        builder.setNegativeButton(mCancel, (dialog, which) -> {
+            r.put("accept", false);
+            if (mCallback != null) mCallback.event(r);
+            dismiss();
         });
 
         return builder.create();

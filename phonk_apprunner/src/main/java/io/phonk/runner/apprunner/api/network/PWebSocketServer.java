@@ -36,10 +36,10 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Collections;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.AppRunner;
 
 public class PWebSocketServer extends ProtoBase {
 
@@ -59,14 +59,11 @@ public class PWebSocketServer extends ProtoBase {
             public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
                 if (mCallbackfn == null) return;
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReturnObject o = new ReturnObject();
-                        o.put("status", "close");
-                        o.put("socket", null);
-                        mCallbackfn.event(o);
-                    }
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "close");
+                    o.put("socket", null);
+                    mCallbackfn.event(o);
                 });
                 //MLog.d(TAG, "onClose");
             }
@@ -75,14 +72,11 @@ public class PWebSocketServer extends ProtoBase {
             public void onError(final WebSocket arg0, Exception arg1) {
                 if (mCallbackfn == null) return;
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReturnObject o = new ReturnObject();
-                        o.put("status", "error");
-                        o.put("socket", arg0);
-                        mCallbackfn.event(o);
-                    }
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "error");
+                    o.put("socket", arg0);
+                    mCallbackfn.event(o);
                 });
                 //MLog.d(TAG, "onError");
             }
@@ -91,16 +85,13 @@ public class PWebSocketServer extends ProtoBase {
             public void onMessage(final WebSocket arg0, final String arg1) {
                 if (mCallbackfn == null) return;
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReturnObject o = new ReturnObject();
-                        o.put("status", "message");
-                        o.put("socket", arg0);
-                        o.put("data", arg1);
-                        mCallbackfn.event(o);
-                  }
-                });
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "message");
+                    o.put("socket", arg0);
+                    o.put("data", arg1);
+                    mCallbackfn.event(o);
+              });
                 //MLog.d(TAG, "onMessage server");
 
             }
@@ -109,14 +100,11 @@ public class PWebSocketServer extends ProtoBase {
             public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
                 if (mCallbackfn == null) return;
 
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReturnObject o = new ReturnObject();
-                        o.put("status", "open");
-                        o.put("socket", arg0);
-                        mCallbackfn.event(o);
-                    }
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "open");
+                    o.put("socket", arg0);
+                    mCallbackfn.event(o);
                 });
                 //MLog.d(TAG, "onOpen");
             }

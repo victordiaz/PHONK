@@ -34,10 +34,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
 public class PBluetoothServer extends ProtoBase {
@@ -149,15 +149,12 @@ public class PBluetoothServer extends ProtoBase {
 
         // callback
         if (mCallbackOnNewConnection != null) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("device", connectedDevice);
-                    ret.put("name", btSocketClient.getRemoteDevice().getName());
-                    ret.put("mac", btSocketClient.getRemoteDevice().getAddress());
-                    mCallbackOnNewConnection.event(ret);
-                }
+            mHandler.post(() -> {
+                ReturnObject ret = new ReturnObject();
+                ret.put("device", connectedDevice);
+                ret.put("name", btSocketClient.getRemoteDevice().getName());
+                ret.put("mac", btSocketClient.getRemoteDevice().getAddress());
+                mCallbackOnNewConnection.event(ret);
             });
 
         }
@@ -281,12 +278,7 @@ public class PBluetoothServer extends ProtoBase {
                             ret.put("device", mmConectedDevice);
                             ret.put("data", line);
 
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mCallbackOnNewData.event(ret);
-                                }
-                            });
+                            mHandler.post(() -> mCallbackOnNewData.event(ret));
                         }
                     }
                 } catch (IOException ex) {

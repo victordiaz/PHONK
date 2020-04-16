@@ -50,9 +50,9 @@ import io.phonk.events.Events;
 import io.phonk.events.Events.ProjectEvent;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
-import io.phonk.runner.base.models.Project;
 
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
@@ -127,14 +127,11 @@ public class ProjectListFragment extends BaseFragment {
         mFolderPath = v.findViewById(R.id.folderPath);
         mSelectFolder = v.findViewById(R.id.select_folder);
 
-        mBackToFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EventBus.getDefault().post(new Events.AppUiEvent("page", 1));
-                // show folderlist
-                // if (isShown)
-                // else
-            }
+        mBackToFolderButton.setOnClickListener(view -> {
+            EventBus.getDefault().post(new Events.AppUiEvent("page", 1));
+            // show folderlist
+            // if (isShown)
+            // else
         });
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);

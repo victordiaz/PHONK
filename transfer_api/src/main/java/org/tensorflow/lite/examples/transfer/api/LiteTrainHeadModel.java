@@ -15,13 +15,14 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.transfer.api;
 
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.Tensor;
+
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.TreeMap;
-import org.tensorflow.lite.Interpreter;
-import org.tensorflow.lite.Tensor;
 
 /**
  * A wrapper for TFLite model that calculates the gradients of trainable layers.

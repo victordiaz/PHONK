@@ -37,13 +37,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
 public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterface {
@@ -87,16 +87,13 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
             MLog.d(TAG, "bt " + arrayStrings[i]);
         }
 
-        getAppRunner().pUi.popup().title("Connect to device").choice(arrayStrings).onAction(new ReturnInterface() {
-            @Override
-            public void event(ReturnObject r) {
-                int id = (int) r.get("answerId");
-                ReturnObject o = (ReturnObject) nativeArray.get(id);
-                String mac = (String) o.get("mac");
-                MLog.d(TAG, "bt address " + " " + id + " " + mac);
+        getAppRunner().pUi.popup().title("Connect to device").choice(arrayStrings).onAction(r -> {
+            int id = (int) r.get("answerId");
+            ReturnObject o = (ReturnObject) nativeArray.get(id);
+            String mac = (String) o.get("mac");
+            MLog.d(TAG, "bt address " + " " + id + " " + mac);
 
-                connectSerial(mac);
-            }
+            connectSerial(mac);
         }).show();
     }
 
@@ -369,14 +366,11 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
                         MLog.d(TAG, line);
 
                         if (mCallbackData != null) {
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //MLog.d(TAG, "Got data: " + data);
-                                    ReturnObject o = new ReturnObject();
-                                    o.put("data", line);
-                                    mCallbackData.event(o);
-                                }
+                            mHandler.post(() -> {
+                                //MLog.d(TAG, "Got data: " + data);
+                                ReturnObject o = new ReturnObject();
+                                o.put("data", line);
+                                mCallbackData.event(o);
                             });
                         }
 
@@ -438,12 +432,7 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
                 o.put("name", device.getName());
             }
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mCallbackConnected.event(o);
-                }
-            });
+            mHandler.post(() -> mCallbackConnected.event(o));
         }
     }
 

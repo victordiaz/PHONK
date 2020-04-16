@@ -25,16 +25,14 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import java.util.Map;
 
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox implements PViewMethodsInterface, PTextInterface {
 
@@ -49,13 +47,10 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     public PCheckBox onChange(final ReturnInterface callbackfn) {
 
         // Add the click callback
-        this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ReturnObject r = new ReturnObject(PCheckBox.this);
-                r.put("checked", isChecked);
-                callbackfn.event(r);
-            }
+        this.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ReturnObject r = new ReturnObject(PCheckBox.this);
+            r.put("checked", isChecked);
+            callbackfn.event(r);
         });
 
         return this;

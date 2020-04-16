@@ -26,7 +26,6 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -251,13 +250,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         progress.show();
 
                         PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
-                                new PhonkSettingsHelper.InstallListener() {
-
-                                    @Override
-                                    public void onReady() {
-                                        progress.dismiss();
-                                    }
-                                });
+                                () -> progress.dismiss());
                         dialog.cancel();
                     }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
 

@@ -61,14 +61,11 @@ public class PRadioButtonGroup extends RadioGroup {
     }
 
     public void onSelected(final ReturnInterface cb) {
-        this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                ReturnObject r = new ReturnObject(PRadioButtonGroup.this);
-                PRadioButton rb = findViewById(checkedId);
-                r.put("selected", rb.getText());
-                cb.event(r);
-            }
+        this.setOnCheckedChangeListener((group, checkedId) -> {
+            ReturnObject r = new ReturnObject(PRadioButtonGroup.this);
+            PRadioButton rb = findViewById(checkedId);
+            r.put("selected", rb.getText());
+            cb.event(r);
         });
     }
 }

@@ -26,12 +26,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.eclipsesource.v8.V8Value;
-
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.AppRunnerService;
-import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
 
 public abstract class ProtoBase {

@@ -29,10 +29,10 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
 
 public class PAudioRecorder extends ProtoBase {
 
@@ -74,20 +74,12 @@ public class PAudioRecorder extends ProtoBase {
             mProgressDialog.setTitle("Record!");
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mProgressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Stop recording",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, final int whichButton) {
-                            mProgressDialog.dismiss();
-                            stop();
-                        }
+                    (dialog, whichButton) -> {
+                        mProgressDialog.dismiss();
+                        stop();
                     });
 
-            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface p1) {
-                    stop();
-                }
-            });
+            mProgressDialog.setOnCancelListener(p1 -> stop());
             mProgressDialog.show();
         }
 

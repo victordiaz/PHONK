@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.sensors;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -44,12 +43,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
 import io.phonk.runner.base.utils.MLog;
 
@@ -252,21 +251,13 @@ public class PLocation extends ProtoBase {
         alertDialog.setMessage("GPS is not enabled. Do you want to go to the settings menu?");
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                getContext().startActivity(intent);
-            }
+        alertDialog.setPositiveButton("Settings", (dialog, which) -> {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            getContext().startActivity(intent);
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         // Showing Alert Message
         alertDialog.show();

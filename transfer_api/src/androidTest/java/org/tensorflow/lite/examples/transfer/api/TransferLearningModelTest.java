@@ -17,15 +17,17 @@ package org.tensorflow.lite.examples.transfer.api;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /** Unit tests for {@link TransferLearningModel}. */
 @RunWith(AndroidJUnit4.class)

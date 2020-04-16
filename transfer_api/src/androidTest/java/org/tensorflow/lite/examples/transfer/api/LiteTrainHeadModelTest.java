@@ -15,16 +15,18 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.transfer.api;
 
-import static org.junit.Assert.assertTrue;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Random;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertTrue;
 
 /** Gradient calculation test for {@link LiteTrainHeadModel}. */
 @RunWith(AndroidJUnit4.class)

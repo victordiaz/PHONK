@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,15 +39,14 @@ import androidx.fragment.app.Fragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import io.phonk.MainActivity;
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 public class ConnectionInfoFragment extends Fragment {
 
@@ -92,14 +90,11 @@ public class ConnectionInfoFragment extends Fragment {
         mTxtConnectionIp = rootView.findViewById(R.id.connection_ip);
 
         if ((boolean) UserPreferences.getInstance().get("servers_mask_ip")) {
-            mTxtConnectionIp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mTxtConnectionIp.getText().toString().contains("XXX")) {
-                        mTxtConnectionIp.setText("http://" + mRealIp);
-                    } else {
-                        mTxtConnectionIp.setText("http://" + mMaskedIp);
-                    }
+            mTxtConnectionIp.setOnClickListener(view -> {
+                if (mTxtConnectionIp.getText().toString().contains("XXX")) {
+                    mTxtConnectionIp.setText("http://" + mRealIp);
+                } else {
+                    mTxtConnectionIp.setText("http://" + mMaskedIp);
                 }
             });
         }
@@ -111,26 +106,13 @@ public class ConnectionInfoFragment extends Fragment {
         Button startHotspot = rootView.findViewById(R.id.start_hotspot);
         // Button webide_connection_help = (Button) findViewById(R.id.webide_connection_help);
 
-        connectWifi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhonkAppHelper.launchWifiSettings(getActivity());
-            }
-        });
+        connectWifi.setOnClickListener(view -> PhonkAppHelper.launchWifiSettings(getActivity()));
 
-        startHotspot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhonkAppHelper.launchHotspotSettings(getActivity());
-            }
-        });
+        startHotspot.setOnClickListener(view -> PhonkAppHelper.launchHotspotSettings(getActivity()));
 
-        mToggleServers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               if (b) EventBus.getDefault().postSticky(new Events.AppUiEvent("startServers", ""));
-               else EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
-            }
+        mToggleServers.setOnCheckedChangeListener((compoundButton, b) -> {
+           if (b) EventBus.getDefault().postSticky(new Events.AppUiEvent("startServers", ""));
+           else EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
         });
 
         if ((boolean) UserPreferences.getInstance().get("servers_enabled_on_start")) {
@@ -251,12 +233,7 @@ public class ConnectionInfoFragment extends Fragment {
 
     public void addTextToConsole(String text) {
         Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                mComputerText.append(text + "\n> ");
-            }
-        });
+        handler.post(() -> mComputerText.append(text + "\n> "));
     }
 
 

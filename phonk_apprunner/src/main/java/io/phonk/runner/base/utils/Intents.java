@@ -23,9 +23,7 @@
 package io.phonk.runner.base.utils;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -75,22 +73,14 @@ public class Intents {
 
         adb.setTitle(string_title_res_id);
 
-        adb.setPositiveButton(android.R.string.yes, new Dialog.OnClickListener() {
-            // Go to Market for Install or Update
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent market_intent = new Intent(Intent.ACTION_VIEW, google_play_uri);
-                c.startActivity(market_intent);
-            }
+        // Go to Market for Install or Update
+        adb.setPositiveButton(android.R.string.yes, (dialog, which) -> {
+            Intent market_intent = new Intent(Intent.ACTION_VIEW, google_play_uri);
+            c.startActivity(market_intent);
         });
 
-        adb.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-            // Nothing
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        // Nothing
+        adb.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel());
 
         AlertDialog ad = adb.create();
 

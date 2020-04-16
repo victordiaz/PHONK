@@ -169,13 +169,10 @@ public class BaseActivity extends AppCompatActivity {
         rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
         rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
 
-        rootView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                MLog.d(TAG, "" + visibility);
-                rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
-                rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
-            }
+        rootView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            MLog.d(TAG, "" + visibility);
+            rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
+            rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
         });
     }
 

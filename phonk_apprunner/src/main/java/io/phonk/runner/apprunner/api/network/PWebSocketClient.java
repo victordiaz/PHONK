@@ -34,10 +34,10 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.AppRunner;
 
 public class PWebSocketClient extends ProtoBase {
 
@@ -60,13 +60,10 @@ public class PWebSocketClient extends ProtoBase {
                     mIsConnected = true;
                     if (mCallbackfn == null) return;
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ReturnObject o = new ReturnObject();
-                            o.put("status", "open");
-                            mCallbackfn.event(o);
-                        }
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "open");
+                        mCallbackfn.event(o);
                     });
                     //Log.d(TAG, "onOpen");
                 }
@@ -75,14 +72,11 @@ public class PWebSocketClient extends ProtoBase {
                 public void onMessage(final String arg0) {
                     if (mCallbackfn == null) return;
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ReturnObject o = new ReturnObject();
-                            o.put("status", "message");
-                            o.put("data", arg0);
-                            mCallbackfn.event(o);
-                        }
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "message");
+                        o.put("data", arg0);
+                        mCallbackfn.event(o);
                     });
 
                     //Log.d(TAG, "onMessage client");
@@ -93,13 +87,10 @@ public class PWebSocketClient extends ProtoBase {
                 public void onError(Exception arg0) {
                     if (mCallbackfn == null) return;
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ReturnObject o = new ReturnObject();
-                            o.put("status", "error");
-                            mCallbackfn.event(o);
-                        }
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "error");
+                        mCallbackfn.event(o);
                     });
 
                     //Log.d(TAG, "onError");
@@ -109,13 +100,10 @@ public class PWebSocketClient extends ProtoBase {
                 public void onClose(int arg0, String arg1, boolean arg2) {
                     if (mCallbackfn == null) return;
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ReturnObject o = new ReturnObject();
-                            o.put("status", "close");
-                            mCallbackfn.event(o);
-                        }
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "close");
+                        mCallbackfn.event(o);
                     });
 
                     //Log.d(TAG, "onClose");

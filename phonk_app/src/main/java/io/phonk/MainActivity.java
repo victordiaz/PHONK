@@ -69,13 +69,13 @@ import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.base.BaseActivity;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.base.models.Project;
 import io.phonk.server.PhonkServerService;
 
 public class MainActivity extends BaseActivity {

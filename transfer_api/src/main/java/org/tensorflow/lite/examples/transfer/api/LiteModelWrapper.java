@@ -15,11 +15,12 @@ limitations under the License.
 
 package org.tensorflow.lite.examples.transfer.api;
 
+import org.tensorflow.lite.Interpreter;
+
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
-import org.tensorflow.lite.Interpreter;
 
 /**
  * Superclass for TFLite model wrappers that handles model resource management.

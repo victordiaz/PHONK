@@ -33,14 +33,14 @@ import org.json.JSONObject;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
-import io.phonk.runner.apprunner.api.dashboard.PDashboardButton;
-import io.phonk.runner.apprunner.api.dashboard.PDashboardMainObject;
-import io.phonk.runner.apprunner.api.dashboard.PDashboardText;
-import io.phonk.runner.apprunner.api.dashboard.PDashboardWebview;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.dashboard.PDashboardButton;
+import io.phonk.runner.apprunner.api.dashboard.PDashboardMainObject;
+import io.phonk.runner.apprunner.api.dashboard.PDashboardText;
+import io.phonk.runner.apprunner.api.dashboard.PDashboardWebview;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject
@@ -89,11 +89,8 @@ public class PDashboard extends ProtoBase {
 
             final ServerListenerCallback callback = mCallbacks.get(id);
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (callback != null) callback.onUpdated(o);
-                }
+            mHandler.post(() -> {
+                if (callback != null) callback.onUpdated(o);
             });
         }
 

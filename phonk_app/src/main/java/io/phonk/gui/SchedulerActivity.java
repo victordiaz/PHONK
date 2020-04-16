@@ -36,8 +36,8 @@ import java.util.ArrayList;
 
 import io.phonk.R;
 import io.phonk.runner.base.BaseActivity;
-import io.phonk.runner.base.utils.SchedulerManager;
 import io.phonk.runner.base.utils.MLog;
+import io.phonk.runner.base.utils.SchedulerManager;
 
 public class SchedulerActivity extends BaseActivity {
 

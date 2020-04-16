@@ -58,18 +58,18 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.apprunner.api.PDevice;
 import io.phonk.runner.apprunner.api.PMedia;
 import io.phonk.runner.apprunner.api.network.PBluetooth;
 import io.phonk.runner.apprunner.api.network.PNfc;
-import io.phonk.runner.apprunner.AppRunnerHelper;
-import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.BaseActivity;
+import io.phonk.runner.base.events.Events;
 import io.phonk.runner.base.gui.DebugFragment;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.StrUtils;
-import io.phonk.runner.base.events.Events;
-import io.phonk.runner.base.models.Project;
 
 public class AppRunnerActivity extends BaseActivity {
 

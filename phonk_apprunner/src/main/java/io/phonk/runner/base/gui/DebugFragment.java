@@ -28,7 +28,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -44,8 +43,8 @@ import java.util.ArrayList;
 
 import io.phonk.runner.R;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.events.Events;
+import io.phonk.runner.base.utils.MLog;
 
 public class DebugFragment extends Fragment {
 
@@ -76,28 +75,13 @@ public class DebugFragment extends Fragment {
         mArrayAdapter = new MyAdapter();
         mListView.setAdapter(mArrayAdapter);
         mListView.setItemAnimator(null);
-        mListView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
+        mListView.setOnTouchListener((v, event) -> false);
 
         ToggleButton toggleLock = v.findViewById(R.id.toogleLockList);
-        toggleLock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isLockPosition = isChecked;
-            }
-        });
+        toggleLock.setOnCheckedChangeListener((buttonView, isChecked) -> isLockPosition = isChecked);
 
         Button close = v.findViewById(R.id.close);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(DebugFragment.this).commit();
-            }
-        });
+        close.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().remove(DebugFragment.this).commit());
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setStackFromEnd(true);
@@ -200,10 +184,7 @@ public class DebugFragment extends Fragment {
             holder.consoleText.setText(txt);
 
             if (holder.viewType == AppRunnerInterpreter.RESULT_PERMISSION_ERROR) {
-                holder.btnGrantPermissions.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
+                holder.btnGrantPermissions.setOnClickListener(v -> {
                 });
             }
         }

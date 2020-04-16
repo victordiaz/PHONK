@@ -35,13 +35,10 @@ public class PNumberPicker extends NumberPicker {
     }
 
     public PNumberPicker onSelected(final ReturnInterface callback) {
-        this.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                ReturnObject r = new ReturnObject(PNumberPicker.this);
-                r.put("selected", newVal);
-                callback.event(r);
-            }
+        this.setOnValueChangedListener((picker, oldVal, newVal) -> {
+            ReturnObject r = new ReturnObject(PNumberPicker.this);
+            r.put("selected", newVal);
+            callback.event(r);
         });
 
         return this;
