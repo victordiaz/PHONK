@@ -1,21 +1,23 @@
 <template>
-  <div id = "dashboard" class = "proto_panel panel_above">
-    <div class = "actionbar">
+  <div id="dashboard" class="proto_panel panel_above">
+    <div class="actionbar">
       <h1>Dashboard</h1>
-      <div class = "adding_buttons">
-        <button v-on:click = "addModule">Add</button>
-        <button v-on:click = "removeModule">Del</button>
-        <button v-on:click = "removeAllModules">Clear</button>
+      <div class="adding_buttons">
+        <button v-on:click="addModule">Add</button>
+        <button v-on:click="removeModule">Del</button>
+        <button v-on:click="removeAllModules">Clear</button>
       </div>
     </div>
-    <div class = "content">
-
-      <div id = "dashboard_empty">
+    <div class="content">
+      <div id="dashboard_empty">
         <h1>No widgets</h1>
-        <h2>Apps can be controlled remotely using the Dashboard. Explore the Examples!</h2>
+        <h2>
+          Apps can be controlled remotely using the Dashboard. Explore the
+          Examples!
+        </h2>
       </div>
 
-      <module v-for = "m in addedModules" :info = "m" key = m.id></module>
+      <module v-for="m in addedModules" :info="m" key="m.id"></module>
 
       <!--
       <div class = "card">
@@ -24,7 +26,6 @@
       </div>
 
       -->
-
     </div>
   </div>
 </template>
@@ -95,16 +96,14 @@ export default {
   created () {
     Store.on('dashboard', this.handleEvent)
   },
-  mounted () {
-
-  },
+  mounted () {},
   destroyed () {
     Store.remove_listener('dashboard', this.handleEvent)
   }
 }
 </script>
-<style lang = "less">
-@import (reference) "../assets/css/variables.less";
+<style lang="less">
+@import (reference) '../assets/css/variables.less';
 
 #dashboard .actionbar {
   background: rgba(0, 0, 0, 0.28);
@@ -146,10 +145,10 @@ export default {
 
   #dashboard_empty {
     max-width: 600px;
-    font-size: 2em;
+    font-size: 1em;
     line-height: 1.3em;
     text-align: center;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 1);
     margin: auto auto;
 
     * {
@@ -161,12 +160,7 @@ export default {
     }
   }
 
-
-
-
   img {
   }
-
-
 }
 </style>

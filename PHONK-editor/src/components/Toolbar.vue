@@ -1,56 +1,86 @@
 <template>
-
-  <div id = "toolbar" class = "main_shadow">
-    <div class = "">
+  <div id="toolbar" class="main_shadow">
+    <div class="left_side">
       <logo></logo>
-      <div class = "project_actions">
-
-        <transition name = "upanim" mode = "out-in">
-          <button class = "transparent" key = "show" v-if = "!sharedState.show_load_project" v-on:click = "toggle_load_project">
-            <p v-if = "not_loaded"><span class = "folder">/{{sharedState.current_project.project.folder}}/</span><span class = "name">{{sharedState.current_project.project.name}}</span></p>
-            <p v-else class = "bold">load project</p>
-            <i class = "material-icons closer">arrow_drop_down</i>
-          </button>
-
-          <button class = "transparent" key = "hide" v-else v-on:click = "toggle_load_project">
-            <p class = "bold">back to editor</p>
-            <i class = "material-icons closer">arrow_drop_up</i>
-          </button>
-        </transition>
-
-      </div>
     </div>
 
-    <!--
-    <div class = "central_side">
+    <div class="central_side">
+      <div class="project_actions">
+        <transition name="upanim" mode="out-in">
+          <button
+            class="transparent"
+            key="show"
+            v-if="!sharedState.show_load_project"
+            v-on:click="toggle_load_project"
+          >
+            <p v-if="not_loaded">
+              <span class="folder">/{{ sharedState.current_project.project.folder }}/</span>
+              <span class="name">
+                {{
+                sharedState.current_project.project.name
+                }}
+              </span>
+            </p>
+            <p v-else class="bold">
+              <!--
+              <span title="Open project" class="material-icons">folder</span>
+              -->
+              <span>load project</span>
+            </p>
+            <i class="material-icons closer">arrow_drop_down</i>
+          </button>
+
+          <button class="transparent" key="hide" v-else v-on:click="toggle_load_project">
+            <p class="bold">back to editor</p>
+            <i class="material-icons closer">arrow_drop_up</i>
+          </button>
+        </transition>
+      </div>
+
+      <!--
       <transition name = "banneranim" mode = "out-in">
         <div class = "dashboard" v-if = "sharedState.show_dashboard" key = "dashboard">
           <h1>Dashboard</h1>
         </div>
       </transition>
+      -->
     </div>
-    -->
 
-    <div class = "right_side">
-      <transition name = "upanim" mode = "out-in">
-        <div v-if = "infoMsg.isShowing" class = "app_info_msg">
-          <span class = "icon_left material-icons">{{infoMsg.icon}}</span>
-          <span>{{infoMsg.text}}</span>
+    <div class="right_side">
+      <transition name="upanim" mode="out-in">
+        <div v-if="infoMsg.isShowing" class="app_info_msg">
+          <span class="icon_left material-icons">{{ infoMsg.icon }}</span>
+          <span>{{ infoMsg.text }}</span>
         </div>
       </transition>
-      <button class = "material-icons transparent" v-show = "false" v-on:click = "toggle_dashboard">dashboard</button>
-      <button class = "material-icons transparent" v-bind:class = "{ 'rotate' : is_rotated, 'enabled': sharedState.show_device_info, 'device_disabled': !sharedState.device_properties.connected}"  v-on:click = "sharedState.show_device_info = !sharedState.show_device_info">phone_android</button>
-      <button class = "material-icons transparent" v-on:click = "sharedState.show_preferences = !sharedState.show_preferences" v-bind:class = "{ 'enabled': sharedState.show_preferences }">settings</button>
+      <button class="material-icons icon" v-show="true" v-on:click="toggle_dashboard">dashboard</button>
+      <button
+        class="material-icons icon"
+        v-bind:class="{
+          rotate: is_rotated,
+          enabled: sharedState.show_device_info,
+          device_disabled: !sharedState.device_properties.connected,
+        }"
+        v-on:click="
+          sharedState.show_device_info = !sharedState.show_device_info
+        "
+      >phone_android</button>
+      <button
+        class="material-icons icon"
+        v-on:click="
+          sharedState.show_preferences = !sharedState.show_preferences
+        "
+        v-bind:class="{ enabled: sharedState.show_preferences }"
+      >settings</button>
     </div>
 
-    <transition name = "upanim">
-      <device v-show = "sharedState.show_device_info"></device>
+    <transition name="upanim">
+      <device v-show="sharedState.show_device_info"></device>
     </transition>
 
-    <transition name = "upanim">
-      <preferences v-show = "sharedState.show_preferences"></preferences>
+    <transition name="upanim">
+      <preferences v-show="sharedState.show_preferences"></preferences>
     </transition>
-
   </div>
 </template>
 
@@ -125,7 +155,10 @@ export default {
   },
   computed: {
     is_rotated: function () {
-      return this.sharedState.device_properties.info.screen.orientation === 'landscape'
+      return (
+        this.sharedState.device_properties.info.screen.orientation ===
+        'landscape'
+      )
     },
     not_loaded: function () {
       if (!this.sharedState.current_project.project.folder) return false
@@ -147,8 +180,8 @@ export default {
 }
 </script>
 
-<style lang='less'>
-@import (reference) "../assets/css/variables.less";
+<style lang="less">
+@import (reference) '../assets/css/variables.less';
 
 #toolbar {
   display: flex;
@@ -158,10 +191,10 @@ export default {
   justify-content: space-between;
   color: @primaryTextColor;
   user-select: non;
-  background: @backgroundColor;
   z-index: 2;
   height: 52px;
   font-size: 1.2em;
+  border-bottom: 1px solid @secondaryColor;
 
   /*
   background: url('/static/phonk_icon_big_no_text.png') no-repeat @backgroundColor;
@@ -179,9 +212,13 @@ export default {
   }
 
   .name {
-    color: white;
+    color: @accentColor;
     margin-left: 3px;
     margin-right: 3px;
+  }
+
+  .bold {
+    color: @accentColor;
   }
 
   // statuses
@@ -200,7 +237,8 @@ export default {
     display: flex;
     align-items: center;
 
-    .icon_left, .icon_right {
+    .icon_left,
+    .icon_right {
       padding-right: 10px;
     }
     .icon_left {
@@ -209,7 +247,6 @@ export default {
     .icon_right {
       color: green;
     }
-
   }
 
   .transparent {
@@ -225,20 +262,21 @@ export default {
   }
 
   .left_side {
-    flex: 2;
+    flex: 1;
   }
 
   .central_side {
-    flex: 1;
+    flex: 2;
     justify-content: center;
   }
 
   .right_side {
+    flex: 1;
     justify-content: flex-end;
 
     button {
       padding: 8px 8px;
-      transition: all 0.3s ease-in-out;
+      // transition: all 0.3s ease-in-out;
 
       &.rotate {
         transform: rotate3d(0, 0, 1, 90deg);
@@ -272,7 +310,6 @@ export default {
   }
 
   .project_actions {
-    display: inline-flex;
     margin: 5px;
 
     button {
@@ -280,6 +317,7 @@ export default {
       align-items: center;
       font-family: @editorFont;
       color: #ffffffa8;
+      min-width: 300px;
     }
 
     p {
@@ -296,9 +334,6 @@ export default {
     .closer {
       margin-left: -5px;
     }
-
   }
-
 }
-
 </style>

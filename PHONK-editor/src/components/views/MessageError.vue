@@ -32,7 +32,7 @@ export default {
 @import (reference) "../../assets/css/variables.less";
 
 .msg_error {
-  font-size: 1.1em;
+  font-size: 1rem;
   z-index: 5;
   text-align: center;
   // width: 402px;
@@ -42,35 +42,35 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  background: #ff356b61;
+  background: @mainColor;
   width: 100%;
   height: 100%;
 
   p {
     padding: 8px 18px;
-    margin: 10px;
-    color: @accentColor;
-    border-radius: 58px;
-    background: @primaryTextColor;
+    margin: 20px;
+    color: @primaryTextColor;
+    line-height: 1.5em;;
+    // border-radius: 58px;
+    border: 1px solid @secondaryColor;
   }
 
   button {
-    text-decoration: underline;
+    // text-decoration: underline;
     padding-left: 12px;
     margin-left: 12px;
     color: white;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.9em;
     background: none;
     color: @accentColor;
 
     &:hover {
-      color: lighten(@accentColor, 10%);
+      color: lighten(@accentColor, 30%);
     }
 
     &:active {
-      color: darken(@accentColor, 10%);
+      color: darken(@accentColor, 30%);
     }
   }
 }

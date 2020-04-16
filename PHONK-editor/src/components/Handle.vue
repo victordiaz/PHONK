@@ -85,21 +85,21 @@ export default {
 
   &.vertical, &.horizontal  {
     &.dark {
-      background: #181818;
+      background: transparent;
     }
 
     &:hover {
       cursor: col-resize;
-      background: @accentColor;
+      background: @accentColor_1;
     }
 
     &:active {
-      background: lighten(@accentColor, 10%);
+      background: @accentColor;
     }
   }
 
   &.vertical {
-    width: 6px;
+    width: 8px;
     height: calc(~"100%");
     right: 0px;
     top: 0px;
@@ -114,7 +114,7 @@ export default {
 
   &.horizontal {
     width: 100%;
-    height: 6px;
+    height: 8px;
     width: calc(~"100%");
     margin-top: -2px;
 

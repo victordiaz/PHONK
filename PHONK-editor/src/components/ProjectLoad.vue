@@ -1,66 +1,87 @@
 <template>
-  <div id = "project-load-container" class = "editor_panel panel_above">
-    <div class = "container">
-      <span class = "debug" v-if = "false">{{store.state.projects['playground']}}</span>
+  <div id="project-load-container" class="editor_panel panel_above">
+    <div class="container">
+      <span class="debug" v-if="false">
+        {{
+        store.state.projects["playground"]
+        }}
+      </span>
 
       <div>
         <h3>Create a project</h3>
         <project-new></project-new>
       </div>
 
-      <div class = "section">
+      <div class="section">
         <h3>Load a project</h3>
-        <transition name = "upanim" mode = "out-in">
-          <div v-show = "isShowingActions" class = "actionable">
+        <transition name="upanim" mode="out-in">
+          <div v-show="isShowingActions" class="actionable">
             <!-- <button>rename</button>-->
 
-            <div v-if = "!isShowingConfirmation">
-              <button v-on:click = "deleteAction">delete</button>
-              <button v-on:click = "cancelActions">cancel</button>
+            <div v-if="!isShowingConfirmation">
+              <button v-on:click="deleteAction">delete</button>
+              <button v-on:click="cancelActions">cancel</button>
             </div>
-            <div v-else class = "confirmation">
+            <div v-else class="confirmation">
               <p>Are you sure?</p>
-              <button v-on:click = "deleteActionSubmit">ok</button>
-              <button v-on:click = "cancelActions">cancel</button>
+              <button v-on:click="deleteActionSubmit">ok</button>
+              <button v-on:click="cancelActions">cancel</button>
             </div>
           </div>
         </transition>
 
-        <div v-if = "store.state.projects" id = "project-load">
+        <div v-if="store.state.projects" id="project-load">
           <div class="left">
-            <div class = "project_list" v-for="(p, pindex) in projectsOrdered">
-              <h1> {{pindex}} </h1>
+            <div class="project_list" v-for="(p, pindex) in projectsOrdered">
+              <h1>{{ pindex }}</h1>
               <ul>
-                <li v-for = "(f, index) in p" v-bind:class="{'selected':selected == index && pselected == pindex}" v-on:click = "choose_folder(pindex, index, $event)" v-bind:id = "f.name">
-                  <span class = "icon"><i class = "material-icons transparent">folder</i></span>
-                 {{ f.name }}
+                <li
+                  v-for="(f, index) in p"
+                  v-bind:class="{
+                    selected: selected == index && pselected == pindex,
+                  }"
+                  v-on:click="choose_folder(pindex, index, $event)"
+                  v-bind:id="f.name"
+                >
+                  <span class="icon">
+                    <i class="material-icons transparent">folder</i>
+                  </span>
+                  {{ f.name }}
                 </li>
               </ul>
             </div>
           </div>
           <div class="right">
-            <div class = "project_info">
+            <div class="project_info">
               <p>Double click to open</p>
               <div class="img-cover"></div>
-              <div class = "actions">
+              <div class="actions">
                 <div class="action-element"></div>
                 <div class="action-element"></div>
                 <div class="action-element"></div>
               </div>
             </div>
-            <ul v-if = "pselected !== -1">
-              <li v-bind:class="{'selected':actionOnProject === f}" v-for = "f in folder_chosen" v-on:click = "load_project(f)" class = "project_item">
-                <span class = "icon">{{f.name.substr(0, 2)}}</span><span>{{f.name}}</span><i v-on:click.stop.prevent = "openActions(f)" class = "action material-icons">more_vert</i>
+            <ul v-if="pselected !== -1">
+              <li
+                v-bind:class="{ selected: actionOnProject === f }"
+                v-for="f in folder_chosen"
+                v-on:click="load_project(f)"
+                class="project_item"
+              >
+                <span class="icon">{{ f.name.substr(0, 2) }}</span>
+                <span>{{ f.name }}</span>
+                <i v-on:click.stop.prevent="openActions(f)" class="action material-icons">more_vert</i>
               </li>
             </ul>
           </div>
         </div>
-        <div v-else class = "no-projects">
+        <div v-else class="no-projects">
           <p>There is a problem loading your projects</p>
         </div>
       </div>
-   </div> <!-- container -->
- </div>
+    </div>
+    <!-- container -->
+  </div>
 </template>
 
 <script>
@@ -91,8 +112,9 @@ export default {
   },
   computed: {
     folder_chosen: function () {
-      let files = this.store.state.projects[this.pselected][this.selected].files
-      return _.orderBy(files, [files => files.name.toLowerCase()], ['asc'])
+      let files = this.store.state.projects[this.pselected][this.selected]
+        .files
+      return _.orderBy(files, [(files) => files.name.toLowerCase()], ['asc'])
     },
     projectsOrdered: function () {
       // return _.sortKeysBy(this.store.state.projects)
@@ -131,13 +153,23 @@ export default {
       // console.log(this.uri.fullpath, this.uri.type, this.uri.folder, project.name)
 
       this.close()
-      var to = {name: 'editor.load', params: { type: this.uri.type, folder: this.uri.folder, project: project.name }}
+      var to = {
+        name: 'editor.load',
+        params: {
+          type: this.uri.type,
+          folder: this.uri.folder,
+          project: project.name
+        }
+      }
       this.$router.push(to)
     },
     // load from app
     load_project_from_app: function (data) {
       console.log('loading... ' + data.type)
-      var to = {name: 'editor.load', params: { type: data.type, folder: data.folder, project: data.name }}
+      var to = {
+        name: 'editor.load',
+        params: { type: data.type, folder: data.folder, project: data.name }
+      }
       this.$router.push(to)
     },
     close: function () {
@@ -145,7 +177,7 @@ export default {
       Store.emit('toggle', 'load_project')
     },
     openActions: function (f) {
-      console.log('openActions', f)
+      // console.log('openActions', f)
       this.isShowingActions = true
       this.actionOnProject = f
     },
@@ -177,16 +209,16 @@ export default {
 }
 </script>
 
-<style lang='less'>
-@import (reference) "../assets/css/variables.less";
+<style lang="less">
+@import (reference) '../assets/css/variables.less';
+@import (reference) '../assets/css/hacks.less';
 
 #project-load-container {
   display: flex;
   flex-direction: column;
-  background: @backgroundColorTerciary;
   margin-bottom: 12px;
   padding: 0px;
-  font-size: 1em;
+  font-size: 1rem;
   color: #222;
   overflow: auto;
   z-index: 5;
@@ -197,17 +229,19 @@ export default {
     width: 100%;
   }
 
-  h3, #editor_panel_new, #project-load {
+  h3,
+  #editor_panel_new,
+  #project-load {
     margin: 8px 12%;
   }
 
   h3 {
     // text-transform: uppercase;
-    font-weight: 700;
-    font-size: 0.9em;
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: @primaryTextColor;
     margin-top: 50px;
     margin-bottom: 15px;
-    color: #5f5659;
   }
 
   .debug {
@@ -217,7 +251,7 @@ export default {
   .section {
     position: relative;
 
-     .actionable {
+    .actionable {
       position: absolute;
       top: -10px;
       right: 120px;
@@ -238,8 +272,8 @@ export default {
 
 #project-load {
   display: flex;
-  background: @backgroundColorSecondary;
   flex-direction: row;
+  border: 1px solid @secondaryColor;
   font-size: 1em;
   font-weight: 100;
   // max-height: 100%;
@@ -249,7 +283,6 @@ export default {
     p {
       font-size: 1.5em;
       line-height: 1.3em;
-      color: #cecece;
       font-weight: 600;
       padding: 2em;
       text-align: center;
@@ -265,8 +298,9 @@ export default {
     user-select: none;
 
     li {
+      color: @primaryTextColor;
       padding: 5px 10px;
-      font-weight: 300;
+      font-weight: 400;
       display: flex;
       line-height: 1.2em;
       align-items: center;
@@ -275,7 +309,7 @@ export default {
         max-width: 30px;
         min-width: 30px;
         height: 30px;
-        border: 1px solid fade(@accentColor, 30%);
+        border: 1px solid @secondaryColor;
         color: @accentColor;
         font-weight: 800;
         display: flex;
@@ -290,16 +324,15 @@ export default {
         flex: 2;
       }
 
-      &:hover, &.selected {
-        background-color: @accentColor;
-        color: @primaryTextColor;
+      &:hover,
+      &.selected {
+        color: @accentColor;
         border-radius: 1px;
         position: relative;
 
-
         .icon {
-          color: white;
-          border-color: white;
+          // color: white;
+          // border-color: white;
         }
 
         .action {
@@ -312,20 +345,24 @@ export default {
         }
       }
 
-      &:active {
+      &.selected {
+        color: @secondaryTextColor;
         background: darken(@accentColor, 10%);
       }
     }
   }
 
   .left {
+    .scrollbar;
+
     h1 {
       color: @accentColor;
       font-weight: 600;
       text-transform: uppercase;
       font-size: 0.7em;
-      padding: 5px 10px;
+      padding: 18px 18px;
       margin-bottom: 0px;
+
       // border-bottom: 0px solid @accentColor;
     }
 
@@ -334,11 +371,11 @@ export default {
     }
   }
   .right {
-    color: black;
-  	text-align: center;
-    border-left: 3px solid white;
+    text-align: center;
+    border-left: 1px solid @secondaryColor;
     position: relative;
     overflow-y: auto;
+    .scrollbar;
 
     .action {
       display: none;
@@ -364,14 +401,14 @@ export default {
     }
 
     .actions {
-    	margin-top: 10px;
+      margin-top: 10px;
 
-    	.action-element {
-    		width: 20px;
-  		  height: 20px;
-  		  background-color: green;
-  		  display: inline-block;
-    	}
+      .action-element {
+        width: 20px;
+        height: 20px;
+        background-color: green;
+        display: inline-block;
+      }
     }
 
     ul {
@@ -403,5 +440,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -1,81 +1,82 @@
- <template>
-  <div id = "app">
-  <div id = "top_container" class = "container">
-    <toolbar></toolbar>
-  </div>
+<template>
+  <div id="app">
+    <div id="top_container" class="container">
+      <toolbar></toolbar>
+    </div>
 
-  <div id="main_container">
-    <div v-show = "backdrop" id = "backdrop" v-on:click = "toggle_top_container"></div>
+    <div id="main_container">
+      <div v-show="backdrop" id="backdrop" v-on:click="toggle_top_container"></div>
 
-    <div id = "central_container" class = "container">
-      <project-checker v-show = "false"></project-checker>
+      <div id="central_container" class="container">
+        <project-checker v-show="false"></project-checker>
 
-      <transition name = "banneranim">
-        <tutorial-loader v-show = "false" transition="banner-anim"></tutorial-loader>
-      </transition>
+        <transition name="banneranim">
+          <tutorial-loader v-show="false" transition="banner-anim"></tutorial-loader>
+        </transition>
 
-      <!--
+        <!--
       <interface-editor v-show = "false"></interface-editor>
-      -->
+        -->
 
-    <!--  <calender></calender> -->
+        <!--  <calender></calender> -->
 
-  <!--
+        <!--
 
       <webview url = "http://127.0.0.1" :showcontrols = "true"></webview>
       <webview url = "http://www.slashdot.com" :showcontrols = "false"></webview>
-      -->
+        -->
 
-      <!-- <p5></p5> -->
+        <!-- <p5></p5> -->
 
-      <!--
+        <!--
       <gcanvas></gcanvas>
-      -->
+        -->
 
-      <router-view
-        class=""
-        @route-data-loaded = "changeTitle"
-        keep-alive
-        transition="banner-anim"
-        transition-mode="out-in">
-      </router-view>
+        <router-view
+          class
+          @route-data-loaded="changeTitle"
+          keep-alive
+          transition="banner-anim"
+          transition-mode="out-in"
+        ></router-view>
 
-      <!-- <editor></editor> -->
+        <!-- <editor></editor> -->
 
-      <!--
+        <!--
       <banner v-if="$route.name === 'editor' " transition="banner-anim">qq<a href="https://www.google.es"> google.es </a></banner>
-      -->
-    </div>
-    <handle orientation = "vertical" container = "right_container"></handle>
+        -->
+      </div>
+      <handle orientation="vertical" container="right_container"></handle>
 
-    <div id = "right_container" class = "container"  v-show = "sharedState.preferences['other']['show sidebar']">
+      <div
+        id="right_container"
+        class="container"
+        v-show="sharedState.preferences['other']['show sidebar']"
+      >
+        <div id="panels">
+          <div id="editor_panels">
+            <documentation></documentation>
+            <handle orientation="horizontal" container="documentation"></handle>
 
-      <div id = "panels">
-        <div id ="editor_panels">
-          <documentation></documentation>
-          <handle orientation = "horizontal" container = "documentation"></handle>
+            <file-manager></file-manager>
+            <handle orientation="horizontal" color="dark" container="file_manager"></handle>
 
-          <file-manager></file-manager>
-          <handle orientation = "horizontal" color = "dark" container = "file_manager"></handle>
-
-          <console></console>
-
+            <console></console>
+          </div>
         </div>
       </div>
+
+      <debug-panel v-show="false"></debug-panel>
+
+      <transition-group name="banneranim">
+        <project-load v-if="sharedState.show_load_project" key="l_project"></project-load>
+        <dashboard v-show="sharedState.show_dashboard" key="dashboard"></dashboard>
+      </transition-group>
     </div>
 
-    <debug-panel v-show = "false"></debug-panel>
-
-    <transition-group name = "banneranim">
-      <project-load v-if = "sharedState.show_load_project" key = "l_project"></project-load>
-      <dashboard v-show = "sharedState.show_dashboard" key = "dashboard"></dashboard>
-    </transition-group>
-
-  </div>
-
-  <!--
+    <!--
   <canvas id="myCanvas" width = "800px" height = "800px"></canvas>
-  -->
+    -->
   </div>
 </template>
 
@@ -134,7 +135,6 @@ export default {
     Calender,
     ProjectChecker,
     InterfaceEditor
-
   },
   data () {
     return {
@@ -164,7 +164,11 @@ export default {
       // if (created) this.panel_visibility.new_project = false
     },
     resize: function () {
-      this.isMobile = window.getComputedStyle(document.querySelector('body'), ':before').getPropertyValue('content').replace(/"/g, '') === 'mobile'
+      this.isMobile =
+        window
+          .getComputedStyle(document.querySelector('body'), ':before')
+          .getPropertyValue('content')
+          .replace(/"/g, '') === 'mobile'
       // console.log(this.isMobile)
       this.top_container = !this.isMobile
     }
@@ -184,15 +188,16 @@ export default {
     // show popup when trying to exit app
     window.onbeforeunload = function (e) {
       e = e || window.event
-      var msg = 'Are you sure you want to exit? Remember to save your project before :)'
+      var msg =
+        'Are you sure you want to exit? Remember to save your project before :)'
       if (e) e.returnValue = msg // For IE and Firefox prior to version 4
       return msg // For Safari
     }
 
     Store.state.browser = {
-      'editor_width': '300px',
-      'files_height': '200px',
-      'console_height': '100px'
+      editor_width: '300px',
+      files_height: '200px',
+      console_height: '100px'
     }
     Store.save_browser_config()
     Store.state.browser = {}
@@ -200,16 +205,64 @@ export default {
     // console.log(Store.state.browser.editor_width)
 
     var keyShortcuts = [
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyL', execute: ['toggle', 'load_project'] },
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyR', execute: ['project_run', ''] },
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyS', execute: ['project_editor_save', ''] },
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyL',
+        execute: ['toggle', 'load_project']
+      },
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyR',
+        execute: ['project_run', '']
+      },
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyS',
+        execute: ['project_editor_save', '']
+      },
       //
       //
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyD', execute: ['toggle', 'load_documentation'] },
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyH', execute: 'qq21' },
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyF', execute: 'qq21' },
-      { ctrl: true, shift: false, alt: false, meta: false, key: 'KeyI', execute: ['toggle_device_info', ''] }
-
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyD',
+        execute: ['toggle', 'load_documentation']
+      },
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyH',
+        execute: 'qq21'
+      },
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyF',
+        execute: 'qq21'
+      },
+      {
+        ctrl: true,
+        shift: false,
+        alt: false,
+        meta: false,
+        key: 'KeyI',
+        execute: ['toggle_device_info', '']
+      }
     ]
     // load            ctrl + shift + l
     // run / stop      ctrl + r // cmd + r
@@ -223,11 +276,13 @@ export default {
       // console.log('key pressed', e)
 
       for (var i in keyShortcuts) {
-        if (keyShortcuts[i].ctrl === e.ctrlKey &&
-            keyShortcuts[i].shift === e.shiftKey &&
-            keyShortcuts[i].alt === e.altKey &&
-            keyShortcuts[i].meta === e.metaKey &&
-            keyShortcuts[i].key === e.code) {
+        if (
+          keyShortcuts[i].ctrl === e.ctrlKey &&
+          keyShortcuts[i].shift === e.shiftKey &&
+          keyShortcuts[i].alt === e.altKey &&
+          keyShortcuts[i].meta === e.metaKey &&
+          keyShortcuts[i].key === e.code
+        ) {
           Store.emit(keyShortcuts[i].execute[0], keyShortcuts[i].execute[1])
           // console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
           e.preventDefault()
@@ -296,7 +351,7 @@ export default {
     Store.remove_listener('project_created', this.project_created)
   },
   events: {
-    'run': function (msg) {
+    run: function (msg) {
       // console.log('event parent run ' + msg)
       return true
     }
@@ -307,31 +362,30 @@ export default {
 <style src="./assets/css/reset.css"></style>
 
 <style lang="less">
-
-@import "assets/css/variables.less";
-@import "assets/css/hacks.less";
+@import 'assets/css/variables.less';
+@import 'assets/css/hacks.less';
 
 ::-webkit-scrollbar {
-    width:2px;  /* remove scrollbar space */
-    height: 2px;
-    background: transparent;  /* optional: just make scrollbar invisible */
+  width: 2px; /* remove scrollbar space */
+  height: 2px;
+  background: transparent; /* optional: just make scrollbar invisible */
 }
 /* optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-    background: #555;
-    border: 0;
+  background: #555;
+  border: 0;
 }
 
 #myCanvas {
   position: absolute;
   top: 0;
-  z-index: -1
+  z-index: -1;
 }
 
 body {
   /* background: linear-gradient(180deg, @backgroundColor, @backgroundColor_second); */
   background: @mainColor;
-  font-family: Roboto, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto Mono', monospace, sans-serif;
   color: @primaryTextColor;
   font-size: @defaultFontSize;
   overflow: hidden;
@@ -347,35 +401,31 @@ body {
 https://www.lullabot.com/articles/importing-css-breakpoints-into-javascript
 */
 body:before {
-  content: "desktop";
+  content: 'desktop';
   display: none;
 }
 
 @keyframes initAnim {
-    0% {
-        transform: translateY(-40px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+  0% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
-
 
 @keyframes initAnimSide {
-    0% {
-        transform: translateX(+40px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
+  0% {
+    transform: translateX(+40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
-
-
-
 
 #app {
   height: 100%;
@@ -416,7 +466,7 @@ body:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   z-index: 3;
 }
@@ -496,7 +546,6 @@ body:before {
   animation: 0.3s ease-out 0.4s 1 normal initAnimSide;
   animation-fill-mode: backwards;
   min-width: 135px;
-  background: whitesmoke;
 
   /*
   flex: 1;
@@ -508,27 +557,47 @@ body:before {
 /********* global thingies **/
 button {
   position: relative;
-	border-radius: 0px;
-	cursor: pointer;
+  border-radius: 0px;
+  cursor: pointer;
   padding: 12px 18px;
   margin: 0;
   border-radius: 1px;
   border: 0px;
-  font-family: 'Open Sans';
   color: @primaryTextColor;
   text-transform: uppercase;
   font-weight: 700;
   font-size: 0.7em;
-  background-color: @accentColor;
+  background: transparent;
+
+  &.icon {
+    color: @iconColor;
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+      color: white;
+    }
+  }
+
+  &.boxed {
+    border: 1px solid @accentColor;
+    color: @accentColor;
+
+    &:hover {
+      background: @accentColor;
+      color: @backgroundColor;
+    }
+  }
 
   &:hover {
     background-color: lighten(@accentColor, 10%);
+    @secondaryTextColor: @accentColor;
   }
 
   &:active {
     background-color: darken(@accentColor, 10%);
+    @secondaryTextColor: @accentColor;
   }
-
 }
 
 .btn-primary {
@@ -547,20 +616,20 @@ button {
   border-radius: 1px;
   overflow: hidden;
 
- 	.left, .right {
+  .left,
+  .right {
     overflow-y: auto;
     padding: 5px;
     box-sizing: border-box;
- 	}
-
-  .left {
-    flex: 0.40;
   }
 
-	.right {
-    flex: 0.60;
-	}
+  .left {
+    flex: 0.4;
+  }
 
+  .right {
+    flex: 0.6;
+  }
 }
 
 #panels {
@@ -575,20 +644,21 @@ button {
     display: flex;
     flex-direction: column;
     height: 100%;
+    border-left: 1px solid @secondaryColor;
 
     .proto_panel {
       box-sizing: border-box;
-    	position: relative;
+      position: relative;
       width: 100%;
       border-radius: 0px;
       margin-bottom: 0px;
-      font-family: 'Open Sans';
       color: white;
-      border: 0px solid rgba(0, 0, 0, 0);
+      border-bottom: 1px solid @secondaryColor;
       min-height: 45px;
       // overflow: hidden;
-      border-bottom: 1px solid rgba(88, 88, 88, 0.28);
+      // border-bottom: 1px solid rgba(88, 88, 88, 0.28);
       /* transition: height 0.3 ease-in-out; */
+      // padding: 8px;
 
       &.expanded {
         height: 200px;
@@ -614,7 +684,7 @@ button {
       &:hover > ul {
       }
 
-    	.actionbar {
+      .actionbar {
         color: #828282;
         display: flex;
         font-weight: 700;
@@ -623,7 +693,7 @@ button {
         border-bottom: 0px solid rgba(255, 255, 255, 0.1);
         width: 100%;
         min-height: 45px;
-        text-transform: uppercase;;
+        text-transform: uppercase;
         font-weight: 700;
         font-size: 0.9em;
         box-sizing: border-box;
@@ -634,8 +704,8 @@ button {
           box-sizing: border-box;
         }
 
-    	  h1 {
-    	    text-align: left;
+        h1 {
+          text-align: left;
           flex: 1;
           cursor: pointer;
           font-weight: 700;
@@ -646,41 +716,41 @@ button {
             color: darken(@accentColor, 10%);
           }
 
-    			.filename {
-    				text-decoration: underline;
-    			}
-    	  }
+          .filename {
+            text-decoration: underline;
+          }
+        }
 
         input {
           min-width: 25px;
+          color: @primaryTextColor;
+          font-size: 0.8rem;
         }
 
-    		ul {
-          display: block;;
+        ul {
+          display: block;
 
-    			li {
-    				display: inline-block;
-    				padding: 0px 5px;
+          li {
+            display: inline-block;
+            padding: 0px 5px;
             cursor: pointer;
             font-size: 1em;
 
-    				&:hover {
-              color: @mainColor;
-    				}
+            &:hover {
+              color: @accentColor;
+            }
 
             &.enabled {
               color: @accentColor;
             }
-
-    			}
-
-    		}
-    	}
+          }
+        }
+      }
 
       .content {
         color: black;
         // overflow-y: hidden;
-        overflow: auto;
+        overflow: hidden;
         height: 100%;
 
         & > * {
@@ -692,35 +762,38 @@ button {
 }
 
 /* always present */
-.banneranim-enter, .banneranim-leave-active {
+.banneranim-enter,
+.banneranim-leave-active {
   opacity: 0;
   transform: translate3d(0px, -20px, 0) scale3d(1, 1.1, 1);
 }
 
-.banneranim-enter-active, .banneranim-leave-active {
+.banneranim-enter-active,
+.banneranim-leave-active {
   transition: all 0.3s ease;
 }
 
-.upanim-enter, .upanim-leave-active {
+.upanim-enter,
+.upanim-leave-active {
   opacity: 0;
   transform: translate3d(0px, 5px, 0);
 }
 
-.upanim-enter-active, .upanim-leave-active {
+.upanim-enter-active,
+.upanim-leave-active {
   transition: all 0.2s ease-in-out;
 }
 
-.upanim2-enter, .upanim2-leave-active {
+.upanim2-enter,
+.upanim2-leave-active {
   opacity: 0;
   transform: translate3d(0px, 55px, 0);
 }
 
-.upanim2-enter-active, .upanim2-leave-active {
+.upanim2-enter-active,
+.upanim2-leave-active {
   transition: all 0.2s ease-in-out;
 }
-
-
-
 
 /*
 .banneranim-active, .banneranim-leave-active {
@@ -742,26 +815,28 @@ button {
   overflow: hidden;
 }
 
-.banner-anim2-enter, .banner-anim2-leave {
+.banner-anim2-enter,
+.banner-anim2-leave {
   transform: translate3d(0px, -20px, 0) scale3d(1, 1, 1);
   opacity: 0;
 }
 
-
 .actionable {
   button {
-    padding: 5px 8px;
+    padding: 8px 8px;
     margin-left: 3px;
     // background: rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      color: @backgroundColor;
+    }
   }
 }
 
-
 /* adjust to different sizes */
 @media screen and (max-width: 600px) {
-
   body:before {
-    content: "mobile";
+    content: 'mobile';
   }
 
   #right_container {
@@ -785,7 +860,6 @@ button {
       direction: rtl;
     }
   }
-
 }
 
 .panel_above {
@@ -798,9 +872,8 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 3;
+  z-index: 10;
 }
-
 
 .popup_content {
   font-size: 0.6em;
@@ -810,16 +883,15 @@ button {
     /* background: rgba(255, 255, 255, 0.1); */
   }
 
-  .title, h3 {
+  .title,
+  h3 {
     color: @accentColor;
     text-transform: uppercase;
     font-size: 0.9em;
     font-weight: 700;
     padding: 0px 5px;
   }
-
 }
-
 
 .bold {
   font-weight: 600 !important;
@@ -830,5 +902,4 @@ button {
   cursor: not-allowed;
   pointer-events: none;
 }
-
 </style>

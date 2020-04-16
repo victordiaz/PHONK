@@ -2,7 +2,7 @@
   <div id = "console" class = "proto_panel">
     <div class = "wrapper">
       <div class = "actionbar">
-        <h1 v-on:dblclick = "hideshow">console {{slicedLogs.length}} / {{logs.length}}</h1>
+        <h1 v-on:dblclick = "hideshow">console</h1>
         <ul>
           <li title = "Show time" class = "material-icons" v-on:click="showTime()" v-bind:class="{'enabled':showingTime}">access_time</li>
           <li title = "Lock scrolling" class = "material-icons" v-on:click="toggleLock()" v-bind:class="{'enabled':lock}">lock</li>
@@ -13,7 +13,6 @@
         <ul ref = "log">
           <li v-for="(log, i) in slicedLogs" v-bind:class="log.action">
             <span class = "time" v-bind:class = "{'off': !showingTime}">{{log.time}}</span>
-            {{i}}
             <span v-html = "log.text"></span>
           </li>
         </ul>
@@ -57,7 +56,6 @@ export default {
           this.slicedLogs = this.$options.logsq.slice(this.limitOffset, this.limitOffset + this.limitNum)
         }, 100)
       }
-
 
       // console.log(data)
       this.$options.logsq.push({action: data.action, time: data.time, text: data.data})
@@ -124,17 +122,14 @@ export default {
 
 <style lang='less'>
 @import (reference) "../assets/css/variables.less";
+@import (reference) "../assets/css/hacks.less";
 
 #console {
-  background: rgba(0, 0, 0, 0.9) !important;
   height: 100% !important;
   flex: 2;
 
   .actionbar {
-    ul li:hover, ul li.enabled {
-      color: white !important;
     }
-  }
 
   .content {
     color: white !important;
@@ -144,6 +139,7 @@ export default {
     height: calc(~"100%");
     width: 100%;
     overflow-y: auto;
+    .scrollbar;
     box-sizing: border-box;
 
     li {
@@ -152,6 +148,7 @@ export default {
       font-family: @editorFont;
       line-height: 1.8em;
       word-break: break-all;
+      font-size: 1rem;
       // .anim-fast;
 
       img {

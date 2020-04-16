@@ -11,7 +11,7 @@
       </ul>
       <div v-else class = "disconnected">
         <i class = "material-icons">wifi_off</i>
-        <p>Your device is disconnected, please double check the connection among both devices.</p>
+        <p>Your device is disconnected <br />Please double check the connection among both devices</p>
       </div>
     </div>
   </popup>
@@ -33,7 +33,7 @@ export default {
       // device_properties: store.state.device_properties,
       ready: false,
       posx: '45px',
-      posy: '48px',
+      posy: '58px',
       device_properties: {},
       sharedState: Store.state
     }
@@ -105,10 +105,10 @@ ul {
 
   p {
     margin-top: 22px;
-    font-size: 1.2em;
-    line-height: 1.3em;
-    color: lighten(@mainColor, 30%);
-    font-weight: 600;
+    font-size: 0.8rem;
+    line-height: 1.5em;
+    color: @primaryTextColor;
+    font-weight: 400;
   }
 }
 

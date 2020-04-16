@@ -1,7 +1,7 @@
 <template>
-  <div class = "" id="editor_panel_new">
-    <div class = "left">
-      <div class = "form">
+  <div class id="editor_panel_new">
+    <div class="left">
+      <div class="form">
         <!-- info input -->
         <!--
         <label for="choosefolder">choose a folder</label>
@@ -11,11 +11,26 @@
         </select>
         -->
 
-        <input id="projectname" ref = "newproject" name="projectname" type="text" placeholder="MyProject" class="form-control input-md" v-model = "projectName" required="" @keyup.enter = "create_project()">
+        <input
+          id="projectname"
+          ref="newproject"
+          name="projectname"
+          type="text"
+          placeholder="MyProject..."
+          class="form-control input-md"
+          v-model="projectName"
+          required
+          @keyup.enter="create_project()"
+        />
 
-        <div class = "submit">
-          <button id="create" name="create" class="btn btn-success" v-on:click = "create_project()">Create</button>
-          <message-error v-show = "!status">The project cannot be created</message-error>
+        <div class="submit">
+          <button
+            id="create"
+            name="create"
+            class="btn btn-success boxed"
+            v-on:click="create_project()"
+          >Create</button>
+          <message-error v-show="!status">The project cannot be created</message-error>
         </div>
       </div>
     </div>
@@ -27,7 +42,6 @@
     </div>
     -->
   </div>
-
 </template>
 
 <script>
@@ -74,8 +88,8 @@ export default {
 }
 </script>
 
-<style lang='less'>
-@import (reference) "../assets/css/variables.less";
+<style lang="less">
+@import (reference) '../assets/css/variables.less';
 
 #editor_panel_new {
   .left {
@@ -93,33 +107,39 @@ export default {
     text-align: center;
   }
 
-  /* do not group these rules */
-*::-webinput-placeholder {
-    color: #bbbbbb;
-}
-*::-moz-placeholder {
-    /* FF 19+ */
-    color: #bbbbbb;
-}
-*:-ms-input-placeholder {
-    /* IE 10+ */
-    color: #bbbbbb;
-}
+  .placeHolder {
+    color: @accentColor_1;
+    font-family: 'Roboto Mono';
+    font-size: 1rem;
+  }
 
-  select, input {
+  /* do not group these rules */
+  *::-webinput-placeholder {
+    .placeHolder;
+  }
+  *::-moz-placeholder {
+    /* FF 19+ */
+    .placeHolder;
+  }
+  *:-ms-input-placeholder {
+    /* IE 10+ */
+    .placeHolder;
+  }
+
+  select,
+  input {
     flex: 2;
     width: 100%;
     min-width: 20%;
     outline: none;
     border: none;
-    // border-bottom: 1px solid @accentColor;
     width: 100%;
     box-sizing: border-box;
     color: black;
-    font-size: 1em;
-    background: transparent;
+    font-size: 1rem;
+    background: white;
     padding: 10px;
-    background: @backgroundColorSecondary;
+    border: 1px solid @accentColor_1;
   }
 
   .login_bottom {
@@ -129,9 +149,7 @@ export default {
   .submit {
     display: flex;
     align-items: center;
-    margin-left: 12px
+    margin-left: 12px;
   }
-
 }
-
 </style>

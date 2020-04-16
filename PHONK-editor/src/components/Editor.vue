@@ -1,26 +1,50 @@
 <template>
-  <div id = "myeditor">
-
-  	<div id = "editor_container" :class = "{'project_loaded': project_loaded}">
-      <div id = "nav_tabs" v-if = "sharedState.preferences['editor']['show tab bar']">
+  <div id="myeditor">
+    <div id="editor_container" :class="{ project_loaded: project_loaded }">
+      <div id="nav_tabs" v-if="sharedState.preferences['editor']['show tab bar']">
         <!-- <div id = "project_name" v-on:click = "store.emit('toggle_section', 'load_project')"> -->
-          <button id = "project_run" v-on:click="run" v-bind:class = "{ 'torun' : isConnected, 'shortcut': runShortcut, 'device_disabled': !sharedState.device_properties.connected }">
-            <i class = "material-icons" v-if = "button_run_state">play_arrow</i>
-            <i class = "material-icons" v-else>stop</i>
-          </button>
+        <button
+          id="project_run"
+          v-on:click="run"
+          v-bind:class="{
+            torun: isConnected,
+            shortcut: runShortcut,
+            device_disabled: !sharedState.device_properties.connected,
+          }"
+        >
+          <i class="material-icons" v-if="button_run_state">play_arrow</i>
+          <i class="material-icons" v-else>stop</i>
+        </button>
+        <button id="project_save" class="icon" v-on:click="save">
+          <i class="material-icons">save</i>
+        </button>
         <!-- </div> -->
-        <ul id = "tabs">
-          <li v-bind:class="{'active': currentTab == index, 'isModified': t.modified }" v-on:click.prevent.self="select_tab(index)" v-for="(t, index) in tabs">
-            {{t.name}}
-            <i class = "close material-icons" :class = "{ 'hideClose': tabs.length === 1 || t.name === 'main.js' }" v-on:click = "close_tab(index)">close</i>
+        <ul id="tabs">
+          <li
+            v-bind:class="{
+              active: currentTab == index,
+              isModified: t.modified,
+            }"
+            v-on:click.prevent.self="select_tab(index)"
+            v-for="(t, index) in tabs"
+          >
+            {{ t.name }}
+            <i
+              class="close material-icons"
+              :class="{ hideClose: tabs.length === 1 || t.name === 'main.js' }"
+              v-on:click="close_tab(index)"
+            >close</i>
           </li>
         </ul>
-        <button id = "project_save" v-on:click = "save"><i class = "material-icons">save</i></button>
       </div>
-			<div id = "editor"></div>
-  	</div>
-    <message-error v-if = "isError" text="There is a problem opening the file 😅" action = "try again" :actionfn = "try_again"></message-error>
-
+      <div id="editor"></div>
+    </div>
+    <message-error
+      v-if="isError"
+      text="There is a problem opening the file 😅"
+      action="try again"
+      :actionfn="try_again"
+    ></message-error>
   </div>
 </template>
 
@@ -38,9 +62,7 @@ export default {
       sharedState: store.state,
       button_run_state: true,
       currentTab: 0,
-      tabs: [
-        { name: 'main.js', text: '', modified: '' }
-      ],
+      tabs: [{ name: 'main.js', text: '', modified: '' }],
       isConnected: false,
       runShortcut: false,
       isError: false,
@@ -52,7 +74,7 @@ export default {
     }
   },
   watch: {
-    '$route': 'fetchData'
+    $route: 'fetchData'
   },
   mounted () {
     this.$nextTick(() => {
@@ -84,14 +106,16 @@ export default {
     this.editor.remove()
   },
   events: {
-    'run': function (msg) {
+    run: function (msg) {
       // console.log('event run ' + msg)
     }
   },
   methods: {
     changeFontSize: function () {
       console.log('changing')
-      this.editor.setFontSize(this.sharedState.preferences['editor']['text size'])
+      this.editor.setFontSize(
+        this.sharedState.preferences['editor']['text size']
+      )
     },
     fetchData: function () {
       var type = this.$route.params.type
@@ -198,11 +222,21 @@ export default {
             var numLine = cursorPosition['row']
             liveExec.numLine = numLine
             liveExec.text = that.sessions[that.currentTab].getDocument().$lines[liveExec.numLine]
-            liveExec.range = new that.Range(liveExec.numLine, 0, liveExec.numLine, liveExec.text.length)
+            liveExec.range = new that.Range(
+              liveExec.numLine,
+              0,
+              liveExec.numLine,
+              liveExec.text.length
+            )
           }
 
           // highlight text
-          var marker = that.sessions[that.currentTab].addMarker(liveExec.range, 'execute_code_highlight', 'line', true)
+          var marker = that.sessions[that.currentTab].addMarker(
+            liveExec.range,
+            'execute_code_highlight',
+            'line',
+            true
+          )
           setTimeout(function () {
             that.sessions[that.currentTab].removeMarker(marker)
           }, 500)
@@ -214,7 +248,7 @@ export default {
       })
       // console.log('qq', that.editor.session)
       if (that.editor.session.$worker) {
-        that.editor.session.$worker.send('changeOptions', [{asi: true}])
+        that.editor.session.$worker.send('changeOptions', [{ asi: true }])
       }
     },
     run: function () {
@@ -226,7 +260,7 @@ export default {
       if (this.run_button_state === 'run') {
         store.emit('project_action', '/run')
         this.run_button_state = 'stop'
-      // stop the project
+        // stop the project
       } else {
         store.emit('project_action', '/stop')
         this.run_button_state = 'run'
@@ -266,7 +300,8 @@ export default {
         }
         this.isError = false
         this.project_loaded = true
-      } else { // project couldnt be loaded
+      } else {
+        // project couldnt be loaded
         this.isError = true
         console.log('error -----> ')
       }
@@ -314,7 +349,7 @@ export default {
       return -1
     },
     add_tab: function () {
-      this.tabs.push({name: 'qq', text: 'lala'})
+      this.tabs.push({ name: 'qq', text: 'lala' })
     },
     select_tab: function (index) {
       // console.log('selecting tab: ' + index)
@@ -352,7 +387,10 @@ export default {
     },
     project_created: function (status, data) {
       if (status) {
-        this.$router.push({name: 'editor.load', params: { type: data.type, folder: data.folder, project: data.name }})
+        this.$router.push({
+          name: 'editor.load',
+          params: { type: data.type, folder: data.folder, project: data.name }
+        })
       }
     },
     project_saved: function () {
@@ -383,15 +421,15 @@ export default {
     }
 
     /*
-    * Editor functions
-    */
-
+     * Editor functions
+     */
   }
 }
 </script>
 
-<style lang = "less">
-@import (reference) "../assets/css/variables.less";
+<style lang="less">
+@import (reference) '../assets/css/variables.less';
+@import (reference) '../assets/css/hacks.less';
 
 #myeditor {
   display: flex;
@@ -408,8 +446,12 @@ export default {
 }
 
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 #editor_container {
@@ -436,7 +478,7 @@ export default {
 
   #editor {
     position: relative;
-    height:calc(~"100%");
+    height: calc(~'100%');
   }
 
   #nav_tabs {
@@ -454,16 +496,17 @@ export default {
 
     button {
       background: transparent;
-      color: white;
+      color: @iconColor;
       font-size: 1em;
 
       &:active {
-        background: darken(@mainColor, 2%) !important;
+        // background: darken(@mainColor, 2%) !important;
+        color: @accentColor;
       }
 
       &:hover {
-        background: lighten(@mainColor, 2%);
-        color: @accentColor;
+        // background: lighten(@mainColor, 2%);
+        color: white;
       }
 
       &.torun {
@@ -471,19 +514,18 @@ export default {
       }
 
       &.tostop {
-
       }
 
       &.device_disabled {
         opacity: 0.3;
         cursor: not-allowed;
 
-        &:hover, &:active {
+        &:hover,
+        &:active {
           background: none !important;
           color: white;
         }
       }
-
     }
 
     #tabs {
@@ -513,8 +555,8 @@ export default {
         box-sizing: border-box;
 
         &.active {
-           // background-color: darken(@mainColor, 2%);
-           border-bottom: 2px solid white;
+          // background-color: darken(@mainColor, 2%);
+          border-bottom: 2px solid white;
         }
 
         &:hover {
@@ -590,7 +632,7 @@ export default {
     }
 
     .name::before {
-      content: "└";
+      content: '└';
       padding-right: 2px;
     }
 
@@ -625,14 +667,16 @@ export default {
 }
 
 .ace_editor {
-  line-height: 1.20em !important;
+  // font-family: 'Roboto Mono' !important;
+  // font-size: 1.1rem !important;
+  line-height: 1.3em !important;
 }
 
 .ace_dark .ace_gutter-cell.ace_info {
-    background-image: none !important;
+  background-image: none !important;
 }
 
-.ace-tm .ace_marker-layer .run_code{
+.ace-tm .ace_marker-layer .run_code {
   background-color: rgba(0, 255, 0, 0.38);
   position: absolute;
   width: 100% !important;
@@ -649,12 +693,16 @@ export default {
   background-color: @accentColor;
 }
 
+.ace_scrollbar {
+  .scrollbar;
+}
+
 .execute_code_highlight {
-    background: fade(@accentColor, 50%);
-    position: absolute;
-    width: calc(~"100% - 5px") !important;
-    border: 1px solid @accentColor;
-    left: 0 !important;
+  background: fade(@accentColor, 50%);
+  position: absolute;
+  width: calc(~'100% - 5px') !important;
+  border: 1px solid @accentColor;
+  left: 0 !important;
 }
 
 /* adjust to different sizes */
@@ -663,5 +711,4 @@ export default {
     padding: 0px;
   }
 }
-
 </style>

@@ -1,42 +1,63 @@
 <template>
-  <div id = "documentation" class = "proto_panel" v-bind:class = "{'expanded': expanded, 'collapsed': !expanded}">
+  <div
+    id="documentation"
+    class="proto_panel"
+    v-bind:class="{ expanded: expanded, collapsed: !expanded }"
+  >
     <!--   -->
-    <div class = "wrapper">
-    <div class = "actionbar">
-      <h1 class = "title" v-on:click = "expanded = !expanded">Docs</h1>
-      <input type = "text" v-model = "search" placeholder="type to filter..." />
-      <ul>
-        <li title = "Switch view" class = "material-icons" v-on:click = "switch_view">reorder</li>
-      </ul>
-    </div>
-
-    <div class = "content" v-bind:class = "[view_type]">
-      <div id = "browser" v-bind:class = "{hide_debug: !sharedState.preferences['other']['show TODO in documentation']}">
-        <!-- TODO orderBy -->
-        <div v-for = "object in queriedDocumentation" class = "object">
-          <h3>{{object.name}}</h3>
-          <ul>
-            <!-- TODO filter and orderBy name-->
-            <li v-for = "f in object.fields"><p>{{f.name}}</p></li>
-          </ul>
-          <ul>
-            <!-- TODO filter and orderBy name -->
-            <li v-if = "show_method(m)" v-for = "m in object.methods" v-bind:class = "{todo: m.status === 'TODO', todo_example: m.status === 'TODO_EXAMPLE', toreview: m.status === 'TOREVIEW', advanced: m.advanced === true, missing: m.status === 'missing'}">
-              <p v-on:click = "select_method(object, m)">{{m.name}}()</p>
-            </li>
-          </ul>
-        </div>
+    <div class="wrapper">
+      <div class="actionbar">
+        <h1 class="title" v-on:click="expanded = !expanded">Docs</h1>
+        <input type="text" v-model="search" placeholder="type to filter..." />
+        <ul>
+          <li title="Switch view" class="material-icons" v-on:click="switch_view">reorder</li>
+        </ul>
       </div>
-      <transition name = "upanim2" mode = "out-in">
-        <div id = "card" :class = "{ inset: view_type === 'vertical' }" v-if = "show_card">
-          <documentation-card :data = "selected"></documentation-card>
+
+      <div class="content" v-bind:class="[view_type]">
+        <div
+          id="browser"
+          class="scrollbar"
+          v-bind:class="{
+            hide_debug: !sharedState.preferences['other'][
+              'show TODO in documentation'
+            ],
+          }"
+        >
+          <!-- TODO orderBy -->
+          <div v-for="object in queriedDocumentation" class="object">
+            <h3>{{ object.name }}</h3>
+            <ul>
+              <!-- TODO filter and orderBy name-->
+              <li v-for="f in object.fields">
+                <p>{{ f.name }}</p>
+              </li>
+            </ul>
+            <ul>
+              <!-- TODO filter and orderBy name -->
+              <li
+                v-if="show_method(m)"
+                v-for="m in object.methods"
+                v-bind:class="{
+                  todo: m.status === 'TODO',
+                  todo_example: m.status === 'TODO_EXAMPLE',
+                  toreview: m.status === 'TOREVIEW',
+                  advanced: m.advanced === true,
+                  missing: m.status === 'missing',
+                }"
+              >
+                <p v-on:click="select_method(object, m)">{{ m.name }}()</p>
+              </li>
+            </ul>
+          </div>
         </div>
-      </transition>
-
+        <transition name="upanim2" mode="out-in">
+          <div id="card" :class="{ inset: view_type === 'vertical' }" v-if="show_card">
+            <documentation-card :data="selected"></documentation-card>
+          </div>
+        </transition>
+      </div>
     </div>
-  </div>
-
-
   </div>
 </template>
 
@@ -64,8 +85,7 @@ export default {
     }
   },
   computed: {
-    arrowposition: function () {
-    },
+    arrowposition: function () {},
     queriedDocumentation: function () {
       var that = this
       var doc = _.cloneDeep(this.documentation)
@@ -105,8 +125,14 @@ export default {
       // this.documentation = store.state.documentation
       this.documentation = _.sortBy(Store.state.documentation, 'name')
       for (var k in this.documentation) {
-        this.documentation[k].methods = _.sortBy(this.documentation[k].methods, 'name')
-        this.documentation[k].fields = _.sortBy(this.documentation[k].fields, 'name')
+        this.documentation[k].methods = _.sortBy(
+          this.documentation[k].methods,
+          'name'
+        )
+        this.documentation[k].fields = _.sortBy(
+          this.documentation[k].fields,
+          'name'
+        )
       }
       // console.log('loaded ', this.documentation)
     },
@@ -116,7 +142,7 @@ export default {
       setTimeout(function () {
         console.log(object.name, method.name)
         that.show_card = true
-        that.selected = { 'object': object, 'method': method }
+        that.selected = { object: object, method: method }
       }, 20)
     },
     close: function () {
@@ -155,8 +181,9 @@ export default {
 }
 </script>
 
-<style lang='less'>
-@import (reference) "../assets/css/variables.less";
+<style lang="less">
+@import (reference) '../assets/css/variables.less';
+@import (reference) '../assets/css/hacks.less';
 
 .todo {
   background: cyan;
@@ -189,7 +216,6 @@ export default {
 
 #documentation {
   height: 40%;
-  background: white;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -215,25 +241,30 @@ export default {
       box-sizing: border-box;
     }
 
-    *::-webkit-input-placeholder {
+    .placeHolder {
       color: @primaryTextColor;
+      font-family: 'Roboto Mono';
+      font-size: 0.8rem;
+    }
+
+    *::-webkit-input-placeholder {
+      .placeHolder;
     }
     *:-moz-placeholder {
-        /* FF 4-18 */
-        color: @primaryTextColor;
+      /* FF 4-18 */
+      .placeHolder;
     }
     *::-moz-placeholder {
-        /* FF 19+ */
-        color: @primaryTextColor;
+      /* FF 19+ */
+      .placeHolder;
     }
     *:-ms-input-placeholder {
-        /* IE 10+ */
-        color: @primaryTextColor;
+      /* IE 10+ */
+      .placeHolder;
     }
   }
 
   .content {
-    background: white; /* #FFF3E0; */
     display: flex;
     height: 100%;
     min-height: 1px;
@@ -242,13 +273,13 @@ export default {
     position: relative;
 
     .btn-close {
-        color: gray;
-        right: 5px;
-        top: -8px;
+      color: gray;
+      right: 5px;
+      top: -8px;
 
-        :hover {
-          color: black;
-        }
+      :hover {
+        color: black;
+      }
     }
 
     &.horizontal {
@@ -267,7 +298,6 @@ export default {
       flex-direction: column;
     }
 
-
     &.over #card {
       position: absolute;
       width: 100%;
@@ -276,7 +306,7 @@ export default {
     }
 
     #browser {
-      font-family: "Roboto Mono";
+      font-family: 'Roboto Mono';
       flex: 1;
       overflow-y: scroll;
       overflow-x: hidden;
@@ -307,12 +337,11 @@ export default {
         font-size: 0.8em;
         display: inherit;
         padding: 2px;
-        color: black;
+        color: @accentColor;
         margin-bottom: 6px;
         margin-left: 2px;
         border-radius: 0px;
       }
-
 
       .object {
         display: inline-block;
@@ -332,8 +361,10 @@ export default {
         }
 
         li {
-          color: #333;
+          color: #f7f7f7;
           font-weight: 400;
+          letter-spacing: 1px;
+          font-size: 0.9em;
 
           p {
             cursor: pointer;
@@ -342,8 +373,7 @@ export default {
           }
 
           p:hover {
-            background: @accentColor;
-            color: white;
+            color: @accentColor;
           }
         }
       }
@@ -351,12 +381,12 @@ export default {
   }
 
   #card {
-    background: #f9f9f9;
+    background: #32332d;
     flex: 1.5;
     overflow: hidden;
     overflow-y: auto;
+    .scrollbar;
+    color: white;
   }
-
 }
-
 </style>

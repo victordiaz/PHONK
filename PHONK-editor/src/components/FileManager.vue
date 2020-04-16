@@ -506,6 +506,7 @@ export default {
 
 <style lang='less'>
 @import (reference) "../assets/css/variables.less";
+@import (reference) "../assets/css/hacks.less";
 
 #file_manager {
   z-index: 1;
@@ -524,6 +525,7 @@ export default {
     padding: 10px;
     overflow-y: auto;
     overflow: auto;
+    .scrollbar;
   }
 
   .path {
@@ -606,7 +608,7 @@ export default {
     width: 100%;
     text-align: left;
     cursor: pointer;
-    color: #444;
+    color: @primaryTextColor;
 
     thead {
       display: none;
@@ -648,13 +650,12 @@ export default {
         }
 
         &:hover {
-          background: @accentColor;
-          color: white;
+          color: @accentColor;
 
           .material-icons {
-            color: white;
+            color: @accentColor;
           }
-          
+
           .file_size {
             color: #ffffff88;
           }
@@ -760,16 +761,15 @@ export default {
     align-content: normal;
     display: inherit;
     align-items: center;
-    background: @accentColor;
-    color : @primaryTextColor;
+    background: @accentColor_1;
+    color : @secondaryTextColor;
     padding: 0px;
     min-height: 40px;
     max-height: 40px;
 
     & > * {
-      font-family: 'Roboto';
       font-weight: 600;
-      font-size: 0.8em;
+      font-size: 0.8rem;
       height: 100%;
       box-sizing: border-box;
       font-weight: 500;
@@ -777,12 +777,10 @@ export default {
     }
 
     input {
-      background: darken(@accentColor, 20%);
-      font-family: 'Roboto Mono';
+      background: @accentColor_1;
       padding: 10px;
       flex: 1;
       border: 0px solid transparent;
-      border-bottom: 1px solid @accentColor;
       min-width: 20px;
 
       &::placeholder {
@@ -795,8 +793,14 @@ export default {
       background: transparent;
       border: 0px;
       padding: 10px;
-      min-width: 20px;
-      font-size: 0.7em;
+      min-width: 10px;
+      font-size: 0.7rem;
+      appearance: none;
+    	background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+	    linear-gradient(to bottom, transparent 0%, transparent 100%);
+	    background-repeat: no-repeat, repeat;
+	    background-position: right .7em top 50%, 0 0;
+	    background-size: .65em auto, 100%;
     }
 
     select option {
@@ -816,10 +820,16 @@ export default {
 
       button {
         min-width: 28px;
+        font-size: 0.8rem;
         margin: 0px;
         padding: 5px;
         border-radius: 0px;
         height: 100%;
+
+        i {
+          padding: 7px 3px;
+          font-size: 0.9rem;
+        }
       }
     }
 

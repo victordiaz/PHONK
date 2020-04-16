@@ -1,11 +1,10 @@
 <template>
   <div>
   <h1 class = "logo">
-    <img src = "/static/phonk_underlined.png" />
-    <!-- phonk -->
     <!--
-    <span class="accent">&gt;</span>Proto<span class="bolder">coder<span></span></span><span class="accent">_ </span>
+    <img src = "/static/phonk_underlined.png" />
     -->
+    phonk
   </h1>
   </div>
 </template>
@@ -40,6 +39,7 @@ h1.logo {
   color: @primaryTextColor;
   font-weight: 600;
   text-align: center;
+  text-transform: uppercase;
 
   .accent {
     color: @accentColor;

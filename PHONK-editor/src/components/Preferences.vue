@@ -14,7 +14,7 @@
         </ul>
       </div>
       <ul>
-      <li><p>Reset WebEditor</p><button v-on:click = "clearSettings">reset</button></li>
+      <li><button class = "boxed" v-on:click = "clearSettings">reset settings</button></li>
       </ul>
     </div>
   </popup>
@@ -34,7 +34,7 @@ export default {
   data () {
     return {
       posx: '4px',
-      posy: '48px',
+      posy: '58px',
       sharedState: store.state,
       preferences: store.state.preferences
     }
@@ -95,6 +95,7 @@ li {
   display: inline-flex;
   align-items: center;
   height: 32px;
+  text-transform: capitalize;
 
   p {
     flex: 5;
@@ -105,10 +106,11 @@ li {
   display: inline-flex;
 
   .size {
-    background: #ff356b;
+    // background: #ff356b;
+    border: 1px solid @accentColor;
 
     input {
-      color: white;
+      color: @accentColor;
       background: transparent;
       font-weight: bolder;
       border-left: 1px solid #fff5;
