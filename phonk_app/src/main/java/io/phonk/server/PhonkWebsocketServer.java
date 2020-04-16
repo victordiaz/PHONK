@@ -162,6 +162,7 @@ public class PhonkWebsocketServer extends WebSocketServer {
 
     public interface ConnectionCallback {
         void connect(String ip);
+
         void disconnect(String ip);
     }
 }

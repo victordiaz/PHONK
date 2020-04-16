@@ -24,7 +24,8 @@ package io.phonk.runner.apprunner.permissions;
 
 public class FeatureNotAvailableException extends RuntimeException {
 
-    public FeatureNotAvailableException() {}
+    public FeatureNotAvailableException() {
+    }
 
     //Constructor that accepts a message
     public FeatureNotAvailableException(String message) {

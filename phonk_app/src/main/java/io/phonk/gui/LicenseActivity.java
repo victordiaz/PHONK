@@ -70,7 +70,7 @@ public class LicenseActivity extends BaseActivity {
 
             // read mCurrentFileList
             try {
-                 mLicenseFiles = mAssetManager.list("licenses");
+                mLicenseFiles = mAssetManager.list("licenses");
                 for (int i = 0; i < mLicenseFiles.length; i++) {
                     mLicenseFileContent.add(new License(mLicenseFiles[i], readFile("licenses/" + mLicenseFiles[i])));
                     // MLog.d(TAG, filecontent);
@@ -154,8 +154,7 @@ public class LicenseActivity extends BaseActivity {
                 if (!license.showing) {
                     txtText.setEllipsize(null);
                     txtText.setMaxLines(Integer.MAX_VALUE);
-                }
-                else {
+                } else {
                     txtText.setEllipsize(TextUtils.TruncateAt.END);
                     txtText.setMaxLines(3);
                 }

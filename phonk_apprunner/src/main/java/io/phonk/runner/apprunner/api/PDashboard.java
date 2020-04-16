@@ -71,7 +71,7 @@ public class PDashboard extends ProtoBase {
 
         HashMap<String, ServerListenerCallback> mCallbacks = new HashMap<>();
 
-        DashboardServer () {
+        DashboardServer() {
             // start websockets server
         }
 
@@ -117,7 +117,6 @@ public class PDashboard extends ProtoBase {
     }
 
 
-
     @PhonkMethod(description = "add a text in the dashboard", example = "")
     @PhonkMethodParam(params = {"name", "x", "y", "size", "hexColor"})
     public PDashboardText addText(String name, int x, int y, int width, int height) throws UnknownHostException, JSONException {
@@ -138,8 +137,6 @@ public class PDashboard extends ProtoBase {
 
         return pWebAppHTML;
     }
-
-
 
 
     @PhonkMethod(description = "show/hide the dashboard", example = "")
@@ -281,7 +278,6 @@ public class PDashboard extends ProtoBase {
         initKeyEvents(callback);
     }
     */
-
 
 
     BroadcastReceiver dashboardBroadcastReceiver = new BroadcastReceiver() {

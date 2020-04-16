@@ -329,7 +329,7 @@ public class FileIO {
     public static String loadStringFromFile(String path) {
         String out = null;
         File f = new File(path);
-        
+
         try {
             InputStream in = new FileInputStream(f);
             ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -468,12 +468,12 @@ public class FileIO {
         File zipFile = new File(path);
 
         HashMap<String, List<String>> contents = new HashMap<>();
-        try  {
+        try {
             FileInputStream fin = new FileInputStream(zipFile);
             ZipInputStream zin = new ZipInputStream(fin);
             ZipEntry ze = null;
             while ((ze = zin.getNextEntry()) != null) {
-                if(ze.isDirectory()) {
+                if (ze.isDirectory()) {
                     String directory = ze.getName();
                     MLog.d(TAG, "directory " + directory);
                     if (!contents.containsKey(directory)) {
@@ -483,8 +483,8 @@ public class FileIO {
                     String file = ze.getName();
                     int pos = file.lastIndexOf("/");
                     if (pos != -1) {
-                        String directory = file.substring(0, pos+1);
-                        String fileName = file.substring(pos+1);
+                        String directory = file.substring(0, pos + 1);
+                        String fileName = file.substring(pos + 1);
                         if (!contents.containsKey(directory)) {
                             contents.put(directory, new ArrayList<String>());
                             List<String> fileNames = contents.get(directory);
@@ -504,7 +504,7 @@ public class FileIO {
                 zin.closeEntry();
             }
             zin.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return contents;
@@ -607,7 +607,7 @@ public class FileIO {
     public static String[] listFilesInAssets(Context c, String path) {
         String[] ret = null;
         try {
-            ret =  c.getAssets().list(path);
+            ret = c.getAssets().list(path);
         } catch (IOException e) {
             e.printStackTrace();
         }

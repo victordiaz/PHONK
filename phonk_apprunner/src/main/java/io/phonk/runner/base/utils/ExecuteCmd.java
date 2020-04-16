@@ -50,58 +50,58 @@ public class ExecuteCmd {
 
     private void initThread() {
         mThread = new Thread(() -> {
-        Looper.prepare();
+            Looper.prepare();
 
-        int count = 0;
-        String str = "";
-        try {
-            //execute the command
-            final Process process = Runtime.getRuntime().exec(cmd);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    process.getInputStream()));
+            int count = 0;
+            String str = "";
+            try {
+                //execute the command
+                final Process process = Runtime.getRuntime().exec(cmd);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        process.getInputStream()));
 
-            //handler that can stop the thread
-            mHandler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                process.destroy();
+                //handler that can stop the thread
+                mHandler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        process.destroy();
 
-                mThread.interrupt();
-                mThread = null;
+                        mThread.interrupt();
+                        mThread = null;
 
-                try {
-                    process.waitFor();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                        try {
+                            process.waitFor();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                //read the lines
+                int i;
+                final char[] buffer = new char[4096];
+                StringBuffer output = new StringBuffer();
+
+                while ((i = reader.read(buffer)) > 0) {
+                    output.append(buffer, 0, i);
+
+                    Handler h = new Handler(Looper.getMainLooper());
+                    final int finalI = i;
+                    h.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("value", finalI + " " + String.valueOf(buffer));
+                        callbackfn.event(o);
+                    });
+
                 }
-                }
-            };
+                reader.close();
 
-            //read the lines
-            int i;
-            final char[] buffer = new char[4096];
-            StringBuffer output = new StringBuffer();
-
-            while ((i = reader.read(buffer)) > 0) {
-                output.append(buffer, 0, i);
-
-                Handler h = new Handler(Looper.getMainLooper());
-                final int finalI = i;
-                h.post(() -> {
-                    ReturnObject o = new ReturnObject();
-                    o.put("value", finalI + " " + String.valueOf(buffer));
-                    callbackfn.event(o);
-                });
-
+                str = output.toString();
+            } catch (IOException e) {
+                // Log.d(TAG, "Error");
+                e.printStackTrace();
             }
-            reader.close();
-
-            str = output.toString();
-        } catch (IOException e) {
-            // Log.d(TAG, "Error");
-            e.printStackTrace();
-        }
-        Looper.loop();
+            Looper.loop();
         });
     }
 

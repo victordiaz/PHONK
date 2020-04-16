@@ -114,7 +114,7 @@ public class IOIOBoard {
         }
     }
 
-    public static interface HardwareCallback {
+    public interface HardwareCallback {
         void onConnect(Object obj);
 
         void setup();

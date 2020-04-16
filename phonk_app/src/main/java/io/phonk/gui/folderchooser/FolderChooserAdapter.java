@@ -77,7 +77,7 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
         RelativeLayout t = null;
         if (viewType == FolderAdapterData.TYPE_TITLE) {
             t = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_title_view, parent, false);
-        }  else if (viewType == FolderAdapterData.TYPE_FOLDER_NAME) {
+        } else if (viewType == FolderAdapterData.TYPE_FOLDER_NAME) {
             t = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_folder_view, parent, false);
         }
         return new ViewHolder(viewType, t);

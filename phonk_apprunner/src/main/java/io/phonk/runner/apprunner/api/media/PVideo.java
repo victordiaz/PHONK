@@ -47,26 +47,26 @@ public class PVideo extends PAudioPlayer {
 
         mTextureView = new CustomVideoTextureView(appRunner.getAppContext());
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-        @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            MLog.d(TAG, "surface available");
-            mMediaPlayer.setSurface(new Surface(surfaceTexture));
-        }
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+                MLog.d(TAG, "surface available");
+                mMediaPlayer.setSurface(new Surface(surfaceTexture));
+            }
 
-        @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
 
-        }
+            }
 
-        @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-            return false;
-        }
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+                return false;
+            }
 
-        @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
 
-        }
+            }
         });
 
         /*
@@ -103,9 +103,8 @@ public class PVideo extends PAudioPlayer {
     @PhonkMethod(description = "Gets the video aspect ratio", example = "")
     @PhonkMethodParam(params = {""})
     public float getClipAspectRatio() {
-        return (float) ((float) mMediaPlayer.getVideoWidth() / (float) mMediaPlayer.getVideoHeight());
+        return (float) mMediaPlayer.getVideoWidth() / (float) mMediaPlayer.getVideoHeight();
     }
-
 
 
 }

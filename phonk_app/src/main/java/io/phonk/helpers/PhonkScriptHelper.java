@@ -201,9 +201,9 @@ public class PhonkScriptHelper {
 
             // order by folder first and alphabetically
 
-            if (l.isDir && !r.isDir){
+            if (l.isDir && !r.isDir) {
                 return -1;
-            } else if (!l.isDir && r.isDir){
+            } else if (!l.isDir && r.isDir) {
                 return 1;
             } else {
                 return l.name.compareToIgnoreCase(r.name);
@@ -213,7 +213,6 @@ public class PhonkScriptHelper {
 
         return protoFiles;
     }
-
 
 
     // List folders in a tree structure
@@ -268,7 +267,8 @@ public class PhonkScriptHelper {
             protoFile.name = f.getName();
             protoFile.path = PhonkScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
 
-            if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1, extensionFilter);
+            if (f.isDirectory() && levels > 0)
+                fileWalker(protoFile.files, f, levels - 1, extensionFilter);
 
             tree.add(protoFile);
         }
@@ -370,8 +370,8 @@ public class PhonkScriptHelper {
                 context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
 
-        for(ActivityManager.RunningAppProcessInfo runningProInfo:procInfos) {
-            MLog.d("Running Processes", "()()"+runningProInfo.processName);
+        for (ActivityManager.RunningAppProcessInfo runningProInfo : procInfos) {
+            MLog.d("Running Processes", "()()" + runningProInfo.processName);
         }
     }
 

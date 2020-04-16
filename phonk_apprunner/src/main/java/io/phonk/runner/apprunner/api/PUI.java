@@ -109,6 +109,7 @@ import io.phonk.runner.base.utils.MLog;
 
 /**
  * Hola
+ *
  * @author Victor Diaz
  */
 @PhonkObject
@@ -403,8 +404,8 @@ public class PUI extends ProtoBase {
      * Sometimes we need a bit more control on how to create layouts so we can specify that the
      * views will lay out using pixel or dp (density independent pixels) units
      *
-     * @exampleLink /examples/User Interface/Absolute Positioning
      * @param type pixels/dp/normalized
+     * @exampleLink /examples/User Interface/Absolute Positioning
      * @advanced
      * @status OK
      */
@@ -460,7 +461,6 @@ public class PUI extends ProtoBase {
      * @param y
      * @param w
      * @param h
-     *
      * @status TODO_EXAMPLE
      * @advanced
      */
@@ -513,6 +513,7 @@ public class PUI extends ProtoBase {
 
     /**
      * Changes the background color using grayscale
+     *
      * @param gray
      * @status TODO_EXAMPLE
      */
@@ -527,7 +528,6 @@ public class PUI extends ProtoBase {
      * @param red
      * @param green
      * @param blue
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -542,7 +542,6 @@ public class PUI extends ProtoBase {
      * @param green
      * @param blue
      * @param alpha
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -554,7 +553,6 @@ public class PUI extends ProtoBase {
      * Changes the background color using Hexadecimal color
      *
      * @param c
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -606,7 +604,6 @@ public class PUI extends ProtoBase {
      *
      * @param label
      * @return
-     *
      * @advanced
      * @status OK
      */
@@ -621,12 +618,11 @@ public class PUI extends ProtoBase {
      * Adds a button to the main screen
      *
      * @param label Text that appears in the button
-     * @param x Horizontal position
-     * @param y Vertical position
-     * @param w Width
-     * @param h Height
+     * @param x     Horizontal position
+     * @param y     Vertical position
+     * @param w     Width
+     * @param h     Height
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
@@ -651,9 +647,9 @@ public class PUI extends ProtoBase {
 
     /**
      * Adds a button to the main screen
+     *
      * @param style
      * @return
-     *
      * @status TODO
      */
     public PButton addButtonWithProperties(Map style) {
@@ -669,7 +665,6 @@ public class PUI extends ProtoBase {
      *
      * @param imagePath
      * @return
-     *
      * @advanced
      * @status OK
      */
@@ -683,13 +678,13 @@ public class PUI extends ProtoBase {
 
     /**
      * Adds an imageButton
+     *
      * @param imagePath
      * @param x
      * @param y
      * @param w
      * @param h
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
@@ -701,12 +696,10 @@ public class PUI extends ProtoBase {
     }
 
     /**
-     *
      * @param imagePath
      * @param x
      * @param y
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
@@ -722,7 +715,6 @@ public class PUI extends ProtoBase {
      *
      * @param text
      * @return
-     *
      * @status OK
      * @advanced
      */
@@ -745,7 +737,6 @@ public class PUI extends ProtoBase {
      * @param x
      * @param y
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
@@ -783,7 +774,6 @@ public class PUI extends ProtoBase {
      *
      * @param label
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      * @advanced
@@ -803,7 +793,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
@@ -843,10 +832,8 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
-     *
      */
     @PhonkMethod
     public PCheckBox addCheckbox(String label, Object x, Object y, Object w, Object h) {
@@ -857,9 +844,9 @@ public class PUI extends ProtoBase {
 
     /**
      * New Toggle
+     *
      * @param label
      * @return
-     *
      * @status OK
      * @advanced
      */
@@ -880,7 +867,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
@@ -893,9 +879,9 @@ public class PUI extends ProtoBase {
 
     /**
      * New switch
+     *
      * @param text
      * @return
-     *
      * @status OK
      * @advanced
      */
@@ -910,13 +896,13 @@ public class PUI extends ProtoBase {
 
     /**
      * Add a switch
+     *
      * @param text
      * @param x
      * @param y
      * @param w
      * @param h
      * @return
-     *
      * @status TODO
      */
     @PhonkMethod
@@ -928,8 +914,8 @@ public class PUI extends ProtoBase {
 
     /**
      * Creates a pager that contain slidable views
-     * @return
      *
+     * @return
      * @status TODO
      * @advanced
      */
@@ -942,8 +928,8 @@ public class PUI extends ProtoBase {
 
     /**
      * Creates a new slider
-     * @return
      *
+     * @return
      * @advanced
      */
     @PhonkMethod
@@ -955,12 +941,12 @@ public class PUI extends ProtoBase {
 
     /**
      * Adds a slider. By default the range is [0, 1].
+     *
      * @param x
      * @param y
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -972,8 +958,8 @@ public class PUI extends ProtoBase {
 
     /**
      * New knob
-     * @return
      *
+     * @return
      * @advanced
      */
     @PhonkMethod
@@ -990,7 +976,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1006,7 +991,6 @@ public class PUI extends ProtoBase {
      * @param m
      * @param n
      * @return
-     *
      * @status OK
      * @advanced
      */
@@ -1026,7 +1010,6 @@ public class PUI extends ProtoBase {
      * @param m
      * @param n
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1040,7 +1023,6 @@ public class PUI extends ProtoBase {
      * Creates a progress bar of n units
      *
      * @return
-     *
      * @advanced
      * @status TOREVIEW
      */
@@ -1058,7 +1040,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1071,8 +1052,8 @@ public class PUI extends ProtoBase {
 
     /**
      * New RadioButtonGroup
-     * @return
      *
+     * @return
      * @advanced
      * @status TOREVIEW
      */
@@ -1087,7 +1068,6 @@ public class PUI extends ProtoBase {
      * @param x
      * @param y
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1109,7 +1089,6 @@ public class PUI extends ProtoBase {
      *
      * @param imagePath
      * @return
-     *
      * @advanced
      * @status TOREVIEW
      */
@@ -1164,7 +1143,6 @@ public class PUI extends ProtoBase {
      *
      * @param array
      * @return
-     *
      * @advanced
      * @status TOREVIEW
      */
@@ -1179,13 +1157,13 @@ public class PUI extends ProtoBase {
 
     /**
      * Add a choice box
+     *
      * @param array
      * @param x
      * @param y
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1197,10 +1175,10 @@ public class PUI extends ProtoBase {
 
     /**
      * New NumberPicker
+     *
      * @param from
      * @param to
      * @return
-     *
      * @status TOREVIEW
      * @advanced
      */
@@ -1223,7 +1201,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1238,9 +1215,9 @@ public class PUI extends ProtoBase {
 
     /**
      * Creates a new camera view
+     *
      * @param type "front" or "back"
      * @return
-     *
      * @advanced
      */
     @PhonkMethod
@@ -1274,7 +1251,8 @@ public class PUI extends ProtoBase {
 
         // check if available
         if (!pm.hasSystemFeature(feature)) throw new FeatureNotAvailableException(what);
-        if (!getActivity().checkPermission(permission)) throw new PermissionNotGrantedException(what);
+        if (!getActivity().checkPermission(permission))
+            throw new PermissionNotGrantedException(what);
         ret = true;
 
         return ret;
@@ -1289,7 +1267,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1305,21 +1282,21 @@ public class PUI extends ProtoBase {
         // addViewAbsolute((View) cameraX, x, y, w, h);
         // return cameraX;
 
-      FrameLayout fl = new FrameLayout(getContext());
-      fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-      fl.setId(200 + (int) (200 * Math.random()));
+        FrameLayout fl = new FrameLayout(getContext());
+        fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        fl.setId(200 + (int) (200 * Math.random()));
 
-      // Add the view
-      addViewAbsolute(fl, x, y, w, h);
+        // Add the view
+        addViewAbsolute(fl, x, y, w, h);
 
-      // PCameraX p = new PCameraX();
+        // PCameraX p = new PCameraX();
 
-      FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-      ft.add(fl.getId(), cameraX, String.valueOf(fl.getId()));
-      ft.commit();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), cameraX, String.valueOf(fl.getId()));
+        ft.commit();
 
-      // return p;
-      return null;
+        // return p;
+        return null;
     }
 
     /**
@@ -1331,7 +1308,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @advanced
      */
     @PhonkMethod
@@ -1344,7 +1320,6 @@ public class PUI extends ProtoBase {
      * Creates a new web view
      *
      * @return
-     *
      * @advanced
      */
     @PhonkMethod
@@ -1361,7 +1336,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1393,7 +1367,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1407,7 +1380,6 @@ public class PUI extends ProtoBase {
      * Creates a new touch pad
      *
      * @return
-     *
      * @status TOREVIEW
      * @advanced
      */
@@ -1420,12 +1392,12 @@ public class PUI extends ProtoBase {
 
     /**
      * Creates a new touch pad
+     *
      * @param x
      * @param y
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1458,12 +1430,12 @@ public class PUI extends ProtoBase {
 
     /**
      * Adds a canvas view
+     *
      * @param x
      * @param y
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -1476,8 +1448,8 @@ public class PUI extends ProtoBase {
 
     /**
      * New map
-     * @return
      *
+     * @return
      * @advanced
      * @status OK
      */
@@ -1495,7 +1467,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod(description = "", example = "")
@@ -1508,12 +1479,12 @@ public class PUI extends ProtoBase {
 
     /**
      * New List
+     *
      * @param numCols
      * @param data
      * @param creating
      * @param binding
      * @return
-     *
      * @status TOREVIEW
      * @advanced
      */
@@ -1527,7 +1498,6 @@ public class PUI extends ProtoBase {
 
 
     /**
-     *
      * @param x
      * @param y
      * @param w
@@ -1537,13 +1507,12 @@ public class PUI extends ProtoBase {
      * @param creating
      * @param binding
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
     public PList addGrid(Object x, Object y, Object w, Object h, int numCols, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
         PList list = newList(numCols, data, creating, binding);
-        addViewAbsolute(list, x, y, w ,h);
+        addViewAbsolute(list, x, y, w, h);
 
         return list;
     }
@@ -1559,13 +1528,12 @@ public class PUI extends ProtoBase {
      * @param creating
      * @param binding
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
     public PList addList(Object x, Object y, Object w, Object h, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
         PList list = newList(1, data, creating, binding);
-        addViewAbsolute(list, x, y, w ,h);
+        addViewAbsolute(list, x, y, w, h);
 
         return list;
     }
@@ -1602,8 +1570,10 @@ public class PUI extends ProtoBase {
         private void init() {
             mCreateCallback = r -> {
                 PText t = newText("");
-                if (mTextColor != -1) t.textColor(mTextColor); //.props.put("textColor", t.props, mTextColor);
-                if (mTextSize != -1) t.textSize(mTextSize); // t.props.put("textSize", t.props, mTextSize);
+                if (mTextColor != -1)
+                    t.textColor(mTextColor); //.props.put("textColor", t.props, mTextColor);
+                if (mTextSize != -1)
+                    t.textSize(mTextSize); // t.props.put("textSize", t.props, mTextSize);
 
                 styler.apply();
                 return t;
@@ -1688,7 +1658,7 @@ public class PUI extends ProtoBase {
      * Adds a processing view.
      * This Processing view acts quite similar to Processing.org for Android. In fact is the same, although
      * some things work a bit differently to play well with the rest of the framework.
-     *
+     * <p>
      * - All the Processing functions prepend the Processing (p) object.
      * p.fill(255); p.stroke(); p.rect();
      *
@@ -1697,7 +1667,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @return
-     *
      * @exampleLink /examples/Others/Processing
      */
     @PhonkMethod(description = "", example = "")
@@ -1724,7 +1693,6 @@ public class PUI extends ProtoBase {
      * Create a new linear layout
      *
      * @return
-     *
      * @advanced
      */
     @PhonkMethod
@@ -1737,6 +1705,7 @@ public class PUI extends ProtoBase {
 
     /**
      * Adds a linear layout
+     *
      * @param x
      * @param y
      * @return
@@ -1761,7 +1730,6 @@ public class PUI extends ProtoBase {
      * Creates a popup
      *
      * @return
-     *
      * @status TOREVIEW
      */
     public PPopupDialogFragment popup() {
@@ -1817,8 +1785,7 @@ public class PUI extends ProtoBase {
      *
      * @param v
      * @param type 0 for rect, 1 for round
-     * @param r roundness
-     *
+     * @param r    roundness
      * @status TOREVIEW
      * @advanced
      */
@@ -1848,7 +1815,6 @@ public class PUI extends ProtoBase {
      * @param w
      * @param h
      * @param animated
-     *
      * @advanced
      * @status TOREVIEW
      */
@@ -1893,7 +1859,6 @@ public class PUI extends ProtoBase {
      * @param viewHandler
      * @param viewContainer
      * @param callback
-     *
      * @status TOREVIEW
      * @advanced
      */
@@ -1906,7 +1871,6 @@ public class PUI extends ProtoBase {
      * Remove movable
      *
      * @param viewHandler
-     *
      * @status TOREVIEW
      * @advanced
      */
@@ -1922,7 +1886,7 @@ public class PUI extends ProtoBase {
     */
 
     public void onClick(View view, final ReturnInterface callback) {
-      view.setOnClickListener(view1 -> callback.event(null));
+        view.setOnClickListener(view1 -> callback.event(null));
     }
 
     class Touch {
@@ -1930,16 +1894,14 @@ public class PUI extends ProtoBase {
         Object x, y;
         String action;
 
-        Touch () {
+        Touch() {
 
         }
     }
 
     /**
-     *
      * @param view
      * @param callback
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -2038,7 +2000,6 @@ public class PUI extends ProtoBase {
      *
      * @param v View
      * @return
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod

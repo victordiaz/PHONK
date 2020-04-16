@@ -82,7 +82,7 @@ public class AppRunnerActivity extends BaseActivity {
      * Events
      */
     private PNfc.onNFCListener onNFCListener;
-    private PNfc.onNFCWrittenListener           onNFCWrittenListener;
+    private PNfc.onNFCWrittenListener onNFCWrittenListener;
     private PBluetooth.onBluetoothListener onBluetoothListener;
     private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
 
@@ -92,7 +92,7 @@ public class AppRunnerActivity extends BaseActivity {
     /*
      * Keyboard handling
      */
-    private PDevice.onKeyListener   onKeyListener;
+    private PDevice.onKeyListener onKeyListener;
     public boolean ignoreVolumeEnabled = false;
     public boolean ignoreBackEnabled = false;
 
@@ -136,9 +136,9 @@ public class AppRunnerActivity extends BaseActivity {
         // settings
         scriptSettings = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
 
-        boolean screenAlwaysOn   = false;
-        String orientation       = (String) scriptSettings.get("orientation");
-        String screenMode     = (String) scriptSettings.get("screen_mode");
+        boolean screenAlwaysOn = false;
+        String orientation = (String) scriptSettings.get("orientation");
+        String screenMode = (String) scriptSettings.get("screen_mode");
 
         /*
          * Set fullscreen
@@ -288,7 +288,7 @@ public class AppRunnerActivity extends BaseActivity {
 
     /**
      * NFC stuf
-	 */
+     */
     private NfcAdapter mAdapter;
     private PendingIntent mPendingIntent;
     private IntentFilter[] mFilters;
@@ -321,7 +321,7 @@ public class AppRunnerActivity extends BaseActivity {
             } catch (IntentFilter.MalformedMimeTypeException e) {
                 throw new RuntimeException("fail", e);
             }
-            mFilters = new IntentFilter[]{ ndef, };
+            mFilters = new IntentFilter[]{ndef,};
 
             // Setup a tech list for all NfcF tags
             mTechLists = new String[][]{new String[]{NfcF.class.getName()}};
@@ -351,7 +351,7 @@ public class AppRunnerActivity extends BaseActivity {
                 onNFCWrittenListener = null;
                 PNfc.nfcMsg = null;
 
-            // read the nfc tag info
+                // read the nfc tag info
             } else {
                 // get NDEF tag details
                 Ndef ndefTag = Ndef.get(tag);
@@ -485,15 +485,25 @@ public class AppRunnerActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void addOnKeyListener(PDevice.onKeyListener onKeyListener2) { onKeyListener = onKeyListener2; }
+    public void addOnKeyListener(PDevice.onKeyListener onKeyListener2) {
+        onKeyListener = onKeyListener2;
+    }
 
-    public void addNFCReadListener(PNfc.onNFCListener onNFCListener2) { onNFCListener = onNFCListener2; }
+    public void addNFCReadListener(PNfc.onNFCListener onNFCListener2) {
+        onNFCListener = onNFCListener2;
+    }
 
-    public void addNFCWrittenListener(PNfc.onNFCWrittenListener onNFCWrittenListener2) { onNFCWrittenListener = onNFCWrittenListener2; }
+    public void addNFCWrittenListener(PNfc.onNFCWrittenListener onNFCWrittenListener2) {
+        onNFCWrittenListener = onNFCWrittenListener2;
+    }
 
-    public void addBluetoothListener(PBluetooth.onBluetoothListener onBluetoothListener2) { onBluetoothListener = onBluetoothListener2; }
+    public void addBluetoothListener(PBluetooth.onBluetoothListener onBluetoothListener2) {
+        onBluetoothListener = onBluetoothListener2;
+    }
 
-    public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) { onVoiceRecognitionListener = onVoiceRecognitionListener2; }
+    public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
+        onVoiceRecognitionListener = onVoiceRecognitionListener2;
+    }
 
     public boolean checkBackKey(int keyCode) {
         return ignoreBackEnabled && keyCode == KeyEvent.KEYCODE_BACK;
@@ -528,7 +538,8 @@ public class AppRunnerActivity extends BaseActivity {
         sendBroadcast(i);
 
         MLog.d("action", action);
-        if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible) addDebugFragment();
+        if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible)
+            addDebugFragment();
         else if (action == "show") addDebugFragment();
         else if (action == "hide") removeDebugFragment();
     }

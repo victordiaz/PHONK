@@ -101,9 +101,8 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     public void __close() {
-    //    cam.closeCamera();
+        //    cam.closeCamera();
     }
-
 
 
 }

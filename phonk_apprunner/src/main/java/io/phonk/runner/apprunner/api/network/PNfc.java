@@ -33,6 +33,7 @@ import android.nfc.tech.NdefFormatable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
@@ -76,7 +77,7 @@ public class PNfc extends ProtoBase {
     public void write(String data, final writeNFCCB fn) {
         PNfc.nfcMsg = data;
         getActivity().initializeNFC();
-        
+
         getActivity().addNFCWrittenListener(() -> fn.event(true));
 
         // Construct the data to write to the tag
@@ -123,7 +124,7 @@ public class PNfc extends ProtoBase {
 
         // Record with actual data we care about
         NdefRecord relayRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, ("application/"
-                + context.getPackageName()).getBytes(Charset.forName("US-ASCII")), null, data.getBytes());
+                + context.getPackageName()).getBytes(StandardCharsets.US_ASCII), null, data.getBytes());
 
         // Complete NDEF message with both records
         NdefMessage message = new NdefMessage(new NdefRecord[]{relayRecord, appRecord});
@@ -189,8 +190,8 @@ public class PNfc extends ProtoBase {
     public void write(String textToWrite) {
 
         Locale locale = Locale.US;
-        final byte[] langBytes = locale.getLanguage().getBytes(Charset.forName("UTF-8"));
-        final byte[] textBytes = textToWrite.getBytes(Charset.forName("UTF-8"));
+        final byte[] langBytes = locale.getLanguage().getBytes(StandardCharsets.UTF_8);
+        final byte[] textBytes = textToWrite.getBytes(StandardCharsets.UTF_8);
 
         final int utfBit = 0;
         final char status = (char) (utfBit + langBytes.length);

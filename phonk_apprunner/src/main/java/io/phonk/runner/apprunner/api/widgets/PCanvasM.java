@@ -288,8 +288,10 @@ public class PCanvasM {
     @PhonkMethod(description = "Draws an arc", example = "")
     @PhonkMethodParam(params = {"x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center"})
     public PCanvasM arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
-        if (fillOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
-        if (strokeOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
+        if (fillOn)
+            mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
+        if (strokeOn)
+            mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
         refresh();
 
         return this;
@@ -322,6 +324,7 @@ public class PCanvasM {
 
     Path path;
     boolean firstPathPoint = false;
+
     public void beginPath() {
         path = new Path();
         firstPathPoint = true;
@@ -402,7 +405,7 @@ public class PCanvasM {
         return this;
     }
 
-    public void drawTextCentered(String text){
+    public void drawTextCentered(String text) {
         int cx = mCanvasBuffer.getWidth() / 2;
         int cy = mCanvasBuffer.getHeight() / 2;
 
@@ -416,7 +419,7 @@ public class PCanvasM {
     public void setTypeface(String type) {
         Typeface selectedType;
 
-        switch(type) {
+        switch (type) {
             case "monospace":
                 selectedType = Typeface.MONOSPACE;
                 break;
@@ -643,7 +646,6 @@ public class PCanvasM {
         }
     }
     */
-
     public void refresh() {
 
     }

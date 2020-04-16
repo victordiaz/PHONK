@@ -111,8 +111,8 @@ public class ConnectionInfoFragment extends Fragment {
         startHotspot.setOnClickListener(view -> PhonkAppHelper.launchHotspotSettings(getActivity()));
 
         mToggleServers.setOnCheckedChangeListener((compoundButton, b) -> {
-           if (b) EventBus.getDefault().postSticky(new Events.AppUiEvent("startServers", ""));
-           else EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
+            if (b) EventBus.getDefault().postSticky(new Events.AppUiEvent("startServers", ""));
+            else EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
         });
 
         if ((boolean) UserPreferences.getInstance().get("servers_enabled_on_start")) {
@@ -206,7 +206,7 @@ public class ConnectionInfoFragment extends Fragment {
     public void onEventMainThread(Events.AppUiEvent e) {
         String action = e.getAction();
         Object value = e.getValue();
-        MLog.d(TAG, "got AppUiEvent 2"  + action);
+        MLog.d(TAG, "got AppUiEvent 2" + action);
 
         switch (action) {
             case "stopServers":

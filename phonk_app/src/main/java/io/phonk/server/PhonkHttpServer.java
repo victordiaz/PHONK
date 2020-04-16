@@ -91,7 +91,8 @@ public class PhonkHttpServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        if (mConnectionCallback != null) mConnectionCallback.event(session.getHeaders().get("remote-addr"));
+        if (mConnectionCallback != null)
+            mConnectionCallback.event(session.getHeaders().get("remote-addr"));
 
         Response res = null;
 
@@ -108,7 +109,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         //adding CORS mode for WebIDE debugging from the computer
         if (PhonkSettings.DEBUG) {
             res.addHeader("Access-Control-Allow-Methods", "DELETE, GET, POST, PUT");
-            res.addHeader("Access-Control-Allow-Origin",  "*");
+            res.addHeader("Access-Control-Allow-Origin", "*");
             res.addHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Access-Control-Allow-Headers, Authorization");
         }
 
@@ -202,9 +203,9 @@ public class PhonkHttpServer extends NanoHTTPD {
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
                 res = newFixedLengthResponse("OK");
 
-            /*
-             * This is for the UI editor
-             */
+                /*
+                 * This is for the UI editor
+                 */
             } else if (uriSplitted[COMMAND].equals("views_list_types")) {
                 ArrayList<String> arrayList = new ArrayList();
                 arrayList.add("button");
@@ -223,11 +224,11 @@ public class PhonkHttpServer extends NanoHTTPD {
             }
 
 
-        /**
-         * Project dependent actions
-         *
-         * /api/project/[ff]/[sf]/[p]/action
-         */
+            /**
+             * Project dependent actions
+             *
+             * /api/project/[ff]/[sf]/[p]/action
+             */
 
         } else if (uriSplitted.length == 7) {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
@@ -529,10 +530,10 @@ public class PhonkHttpServer extends NanoHTTPD {
 
             */
 
-            // EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_files", p));
-            // res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), "" /* json.toString() */);
+        // EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_files", p));
+        // res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), "" /* json.toString() */);
 
-            // serve files
+        // serve files
 
         return res;
     }
@@ -546,7 +547,8 @@ public class PhonkHttpServer extends NanoHTTPD {
         uri = uri.trim().replace(File.separatorChar, '/');
         if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
         if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
-        if (uri.charAt(0) == '/') uri = uri.substring(1); // using assets, so we can't have leading '/'
+        if (uri.charAt(0) == '/')
+            uri = uri.substring(1); // using assets, so we can't have leading '/'
 
         String mime = getMimeType(uri); // Get MIME type
 
@@ -559,7 +561,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         } catch (IOException e) {
             e.printStackTrace();
             // MLog.d(TAG, e.getStackTrace().toString());
-            NanoHTTPD.newFixedLengthResponse( Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
+            NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
         }
 
         return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, fontSize);

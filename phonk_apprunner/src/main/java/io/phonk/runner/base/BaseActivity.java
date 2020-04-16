@@ -86,7 +86,7 @@ public class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id==android.R.id.home) {
+        if (id == android.R.id.home) {
             finish();
         }
 
@@ -94,7 +94,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     // Create the action bar programmatically
-    protected void setupActivity () {
+    protected void setupActivity() {
         if (!AndroidUtils.isWear(this)) {
             mToolbar = findViewById(R.id.toolbar2);
             setSupportActionBar(mToolbar);
@@ -131,7 +131,7 @@ public class BaseActivity extends AppCompatActivity {
         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
         int statusBarHeight = rectangle.top;
         int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
-        int titleBarHeight= contentViewTop - statusBarHeight;
+        int titleBarHeight = contentViewTop - statusBarHeight;
         return titleBarHeight;
     }
 

@@ -56,7 +56,7 @@ public class LauncherActivity extends Activity {
             intent = new Intent(this, WelcomeActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
-           // intent.putExtras();
+            // intent.putExtras();
         }
 
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

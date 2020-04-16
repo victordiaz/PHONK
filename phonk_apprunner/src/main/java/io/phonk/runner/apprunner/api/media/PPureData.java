@@ -136,8 +136,8 @@ public class PPureData extends ProtoBase {
         @Override
         public void receiveMessage(String source, String symbol, Object... args) {
             MLog.i(TAG, "receiveMessage symbol: " + symbol);
-            for (Object arg: args) {
-                MLog.i(TAG, "receiveMessage atom: " +  arg.toString());
+            for (Object arg : args) {
+                MLog.i(TAG, "receiveMessage atom: " + arg.toString());
             }
         }
 
@@ -145,21 +145,26 @@ public class PPureData extends ProtoBase {
            we're collecting the list from Pd and outputting each atom */
         @Override
         public void receiveList(String source, Object... args) {
-            for (Object arg: args) {
+            for (Object arg : args) {
                 MLog.i(TAG, "receiveList atom: " + arg.toString());
             }
         }
 
         /* When we receive a symbol from Pd */
-        @Override public void receiveSymbol(String source, String symbol) {
+        @Override
+        public void receiveSymbol(String source, String symbol) {
             MLog.i(TAG, "receiveSymbol " + symbol);
         }
+
         /* When we receive a float from Pd */
-        @Override public void receiveFloat(String source, float x) {
+        @Override
+        public void receiveFloat(String source, float x) {
             MLog.i(TAG, "receiveFloat " + x);
         }
+
         /* When we receive a bang from Pd */
-        @Override public void receiveBang(String source) {
+        @Override
+        public void receiveBang(String source) {
             MLog.i(TAG, "receiveBang " + "bang!");
         }
     };

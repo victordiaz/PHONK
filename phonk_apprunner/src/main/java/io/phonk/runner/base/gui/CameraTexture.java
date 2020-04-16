@@ -103,6 +103,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     public interface CameraListener {
         void onPicTaken();
+
         void onVideoRecorded();
     }
 
@@ -241,7 +242,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
                 // MLog.d(TAG, "onNewFrame");
 
                 if (callbackData != null) {
-                  callbackData.event(data, camera);
+                    callbackData.event(data, camera);
                 }
                 if (callbackBmp != null) {
                     Parameters parameters1 = camera.getParameters();
@@ -271,13 +272,13 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
                     Matrix matrix = new Matrix();
                     matrix.postRotate(90);
-                    matrix.postScale((float)0.5, (float) 0.5);
+                    matrix.postScale((float) 0.5, (float) 0.5);
                     byte[] bytes = out.toByteArray();
 
                     BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
                     bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
                     final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
-                    Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0 , 0, 300, 300, matrix, true);
+                    Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0, 0, 300, 300, matrix, true);
 
                     MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
                     MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
@@ -363,10 +364,10 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
         });
 
-		/*
+        /*
          * try { latch.await(); } catch (InterruptedException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); }
-		 */
+         * Auto-generated catch block e1.printStackTrace(); }
+         */
 
         return fileName;
 
@@ -647,7 +648,8 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
             return mPreview;
         }
 
-        @SuppressWarnings("unused") public Size pictureSize() {
+        @SuppressWarnings("unused")
+        public Size pictureSize() {
             return mPicture;
         }
     }

@@ -77,7 +77,7 @@ public class FolderListFragment extends BaseFragment {
         ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
         foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
         for (Folder folder : examples) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME,  PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
         }
 
         // Attach the adapter with the folders data

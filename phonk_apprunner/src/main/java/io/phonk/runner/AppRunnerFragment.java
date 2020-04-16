@@ -64,7 +64,7 @@ public class AppRunnerFragment extends Fragment {
     private FileObserver fileObserver;
 
     // Layout stuff
-    public  RelativeLayout mainLayout;
+    public RelativeLayout mainLayout;
     private RelativeLayout parentScriptedLayout;
     private RelativeLayout infoLayout;
 
@@ -144,7 +144,8 @@ public class AppRunnerFragment extends Fragment {
         startFileObserver();
 
         // Call the onCreate JavaScript function.
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onCreate"); // , savedInstanceState);
+        if (mAppRunner.interp != null)
+            mAppRunner.interp.callJsFunction("onCreate"); // , savedInstanceState);
     }
 
     public static AppRunnerFragment newInstance(Bundle bundle, Map<String, Object> scriptSettings) {

@@ -244,7 +244,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     @Override
     public View textStyle(int textStyle) {
-       // this.textStyle = textStyle;
+        // this.textStyle = textStyle;
         return this;
     }
 

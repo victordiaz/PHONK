@@ -122,7 +122,7 @@ public class PUtil extends ProtoBase {
         }
     }
 
-    public String getCharFromUnicode(int unicode){
+    public String getCharFromUnicode(int unicode) {
         return new String(Character.toChars(unicode));
     }
 
@@ -229,7 +229,6 @@ public class PUtil extends ProtoBase {
     }
 
 
-
     @PhonkMethod(description = "Detect faces in a bitmap", example = "")
     @PhonkMethodParam(params = {"Bitmap", "numFaces"})
     public int detectFaces(Bitmap bmp, int num_faces) {
@@ -243,7 +242,7 @@ public class PUtil extends ProtoBase {
     public String bitmapToBase64String(Bitmap bmp) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
 
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
@@ -266,7 +265,7 @@ public class PUtil extends ProtoBase {
         return bitmap;
     }
 
-    public float map (float val, float istart, float istop, float ostart, float ostop) {
+    public float map(float val, float istart, float istop, float ostart, float ostop) {
         return CanvasUtils.map(val, istart, istop, ostart, ostop);
     }
 

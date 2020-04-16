@@ -55,7 +55,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         mListMode = listMode;
     }
 
-    public void setArray( ArrayList<Project> projectList) {
+    public void setArray(ArrayList<Project> projectList) {
         this.mProjectList = projectList;
     }
 

@@ -179,7 +179,8 @@ public class MainActivity extends BaseActivity {
         removeFragment(mEmptyFragment);
         removeFragment(mProjectListFragment);
         removeFragment(mFolderListFragment);
-        if (mCombinedFolderAndProjectFragment != null) removeFragment(mCombinedFolderAndProjectFragment);
+        if (mCombinedFolderAndProjectFragment != null)
+            removeFragment(mCombinedFolderAndProjectFragment);
         RelativeLayout mainContent = findViewById(R.id.main_content);
         mainContent.removeAllViews();
         super.onConfigurationChanged(newConfig);
@@ -249,7 +250,8 @@ public class MainActivity extends BaseActivity {
 
         mToggleConnectionInfo = findViewById(R.id.toggleConnectionInfo);
         mToggleConnectionInfo.setOnClickListener(view -> {
-            if (mConnectionInfo.getVisibility() == View.GONE) mConnectionInfo.setVisibility(View.VISIBLE);
+            if (mConnectionInfo.getVisibility() == View.GONE)
+                mConnectionInfo.setVisibility(View.VISIBLE);
             else mConnectionInfo.setVisibility(View.GONE);
         });
 
@@ -305,7 +307,7 @@ public class MainActivity extends BaseActivity {
                 } else if (itemId == R.id.more_options_help) {
                     PhonkAppHelper.launchHelp(MainActivity.this);
                     return true;
-                }  else if (itemId == R.id.more_options_about) {
+                } else if (itemId == R.id.more_options_about) {
                     PhonkAppHelper.launchHelp(MainActivity.this);
                     return true;
                 }
@@ -368,7 +370,6 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     /*
@@ -437,7 +438,7 @@ public class MainActivity extends BaseActivity {
     public void onEventMainThread(Events.AppUiEvent e) {
         String action = e.getAction();
         Object value = e.getValue();
-        MLog.d(TAG, "got AppUiEvent "  + action);
+        MLog.d(TAG, "got AppUiEvent " + action);
 
         switch (action) {
             case "page":
@@ -461,8 +462,8 @@ public class MainActivity extends BaseActivity {
     }
 
     /*
-   * Network Connectivity listener
-   */
+     * Network Connectivity listener
+     */
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -513,7 +514,7 @@ public class MainActivity extends BaseActivity {
                 mCurTransaction = mFragmentManager.beginTransaction();
             }
 
-            mCurTransaction.add(container.getId(), fragment, "fragment:"+position);
+            mCurTransaction.add(container.getId(), fragment, "fragment:" + position);
             MLog.d("fff", "instantiate" + position + mProjectListFragment);
 
             return mFragments.get(position);

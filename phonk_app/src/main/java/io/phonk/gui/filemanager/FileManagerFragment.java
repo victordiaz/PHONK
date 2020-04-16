@@ -252,7 +252,7 @@ public class FileManagerFragment extends BaseFragment {
                 default:
                     return false;
 
-               }
+            }
         });
         myPopup.show();
     }

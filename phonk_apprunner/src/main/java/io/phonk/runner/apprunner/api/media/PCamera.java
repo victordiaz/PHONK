@@ -78,6 +78,7 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     public List<Camera.Size> getPreviewSizes() {
         return mParameters.getSupportedPreviewSizes();
     }
+
     public List<String> getSceneModes() {
         return mParameters.getSupportedSceneModes();
     }
@@ -102,9 +103,9 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     @PhonkMethodParam(params = {"function(data)"})
     @PhonkMethod(description = "Gets frames", example = "")
     public void startLearning(LearnImages.Callback callback) {
-      learnImages.start();
-      learnImages.addCallback(callback);
-      cam.addCallbackData((data, camera) -> learnImages.addCameraFrame(data, camera));
+        learnImages.start();
+        learnImages.addCallback(callback);
+        cam.addCallbackData((data, camera) -> learnImages.addCameraFrame(data, camera));
 
         /*
         new CallbackBmp() {
@@ -123,8 +124,8 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     }
 
     public LearnImages learnImages() {
-      learnImages = new LearnImages(mAppRunner);
-      return learnImages;
+        learnImages = new LearnImages(mAppRunner);
+        return learnImages;
     }
 
     public DetectImage detectImage() {
@@ -135,7 +136,7 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     @PhonkMethodParam(params = {"function(data)"})
     @PhonkMethod(description = "Gets data frames in yuv format (bytes)", example = "")
     public void onNewFrame(CallbackData callbackfn) {
-      cam.addCallbackData(callbackfn);
+        cam.addCallbackData(callbackfn);
     }
 
     @PhonkMethodParam(params = {"function(bitmap)"})

@@ -64,8 +64,13 @@ public class PAbsoluteLayout extends FixedLayout {
         int statusBar = getStatusBarHeight();
 
         if (appRunner.pApp.settings.get("orientation").equals("landscape")) {
-            if (w > h) { mWidth = w; mHeight = h; }
-            else { mWidth = h; mHeight = w; }
+            if (w > h) {
+                mWidth = w;
+                mHeight = h;
+            } else {
+                mWidth = h;
+                mHeight = w;
+            }
 
             if (appRunner.pApp.settings.get("screen_mode").equals("fullscreen")) {
                 int navigationBar = getNavigationBarSize(getContext()).x;
@@ -177,7 +182,7 @@ public class PAbsoluteLayout extends FixedLayout {
     @PhonkMethod(description = "Adds a view", example = "")
     @PhonkMethodParam(params = {"view", "x", "y", "w", "h"})
     public void addView(View v, Object x, Object y, Object w, Object h) {
-        MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " "  + h);
+        MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " " + h);
 
         int mx = sizeToPixels(x, mWidth);
         int my = sizeToPixels(y, mHeight);
@@ -187,7 +192,7 @@ public class PAbsoluteLayout extends FixedLayout {
         if (mw < 0) mw = LayoutParams.WRAP_CONTENT;
         if (mh < 0) mh = LayoutParams.WRAP_CONTENT;
 
-        MLog.d(TAG, "adding a view (denormalized) -> " +  v + " in " + mx + " " + my + " " + mw + " " + mh);
+        MLog.d(TAG, "adding a view (denormalized) -> " + v + " in " + mx + " " + my + " " + mw + " " + mh);
         addView(v, new LayoutParams(mw, mh, mx, my));
 
     }
@@ -234,8 +239,6 @@ public class PAbsoluteLayout extends FixedLayout {
 		v.setLayoutParams(params);
 	}
 	*/
-
-
     public static Point getNavigationBarSize(Context context) {
         Point appUsableSize = getAppUsableScreenSize(context);
         Point realScreenSize = getRealScreenSize(context);
@@ -273,7 +276,10 @@ public class PAbsoluteLayout extends FixedLayout {
             try {
                 size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
                 size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (IllegalAccessException e) {} catch (InvocationTargetException e) {} catch (NoSuchMethodException e) {}
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException e) {
+            }
         }
 
         return size;

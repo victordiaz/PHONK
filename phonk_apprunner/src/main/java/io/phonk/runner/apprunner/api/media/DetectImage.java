@@ -52,12 +52,12 @@ public class DetectImage {
 
         try {
             detector =
-                TFLiteObjectDetectionAPIModel.create(
-                    mAppRunner.getAppContext().getAssets(),
-                    TF_OD_API_MODEL_FILE,
-                    TF_OD_API_LABELS_FILE,
-                    TF_OD_API_INPUT_SIZE,
-                    TF_OD_API_IS_QUANTIZED);
+                    TFLiteObjectDetectionAPIModel.create(
+                            mAppRunner.getAppContext().getAssets(),
+                            TF_OD_API_MODEL_FILE,
+                            TF_OD_API_LABELS_FILE,
+                            TF_OD_API_INPUT_SIZE,
+                            TF_OD_API_IS_QUANTIZED);
         } catch (final IOException e) {
             e.printStackTrace();
             MLog.e(e.toString(), "Exception initializing classifier!");

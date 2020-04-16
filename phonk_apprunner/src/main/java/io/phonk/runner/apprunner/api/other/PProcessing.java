@@ -35,9 +35,17 @@ public class PProcessing extends PFragment {
     private static final java.lang.String TAG = PProcessing.class.getSimpleName();
     private final PSketch p;
 
-    public interface PInterfaceSettings { void settings(PApplet p); }
-    public interface PInterfaceSetup { void setup(PApplet p); }
-    public interface PInterfaceDraw { void draw(PApplet p); }
+    public interface PInterfaceSettings {
+        void settings(PApplet p);
+    }
+
+    public interface PInterfaceSetup {
+        void setup(PApplet p);
+    }
+
+    public interface PInterfaceDraw {
+        void draw(PApplet p);
+    }
 
     public PProcessing(AppRunner appRunner) {
         p = new PSketch();
@@ -66,7 +74,6 @@ public class PProcessing extends PFragment {
     }
 
 }
-
 
 
 class PSketch extends PApplet {

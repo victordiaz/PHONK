@@ -322,7 +322,7 @@ public class PNetwork extends ProtoBase {
 
     // http://stackoverflow.com/questions/3303805/are-there-any-good-short-code-examples-that-simply-read-a-new-gmail-message
     public void getEmail() throws MessagingException, IOException {
-        Session session = Session.getDefaultInstance(System.getProperties(),null);
+        Session session = Session.getDefaultInstance(System.getProperties(), null);
         Store store = null;
         store = session.getStore("imaps");
 
@@ -689,7 +689,7 @@ public class PNetwork extends ProtoBase {
         switch (tm.getNetworkType()) {
             case TelephonyManager.NETWORK_TYPE_HSPAP:
                 type = "4G";
-            break;
+                break;
             case TelephonyManager.NETWORK_TYPE_HSDPA:
                 type = "3G";
                 break;
@@ -789,25 +789,25 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Ping mContext Ip address", example = "")
     @PhonkMethodParam(params = {"ip", "function(time)"})
     public void ping(final String where, final int num, final ReturnInterface callbackfn) {
-       mHandler.post(() -> {
-           final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
-           final Matcher[] m = {null};
+        mHandler.post(() -> {
+            final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
+            final Matcher[] m = {null};
 
-           new ExecuteCmd("/system/bin/ping -c " + num + " " + where, r -> {
-               //MLog.d(TAG, pattern.toString() + "" + buffer);
+            new ExecuteCmd("/system/bin/ping -c " + num + " " + where, r -> {
+                //MLog.d(TAG, pattern.toString() + "" + buffer);
 
-               ReturnObject ret = new ReturnObject();
-               m[0] = pattern.matcher((CharSequence) r.get("value"));
-               if (m[0].find()) {
-                   ret.put("time", Float.parseFloat(m[0].group(1)));
-               } else {
-                   ret.put("time", -1);
-               }
-               callbackfn.event(ret);
+                ReturnObject ret = new ReturnObject();
+                m[0] = pattern.matcher((CharSequence) r.get("value"));
+                if (m[0].find()) {
+                    ret.put("time", Float.parseFloat(m[0].group(1)));
+                } else {
+                    ret.put("time", -1);
+                }
+                callbackfn.event(ret);
 
 
-           }).start();
-       });
+            }).start();
+        });
     }
 
 

@@ -32,8 +32,15 @@ public class PCanvas2 extends SurfaceView {
     private static final String TAG = PCanvas2.class.getSimpleName();
 
     protected final AppRunner mAppRunner;
-    public interface OnSetupCallback { void event (PCanvas2 c); }
-    public interface OnDrawCallback { void event (PCanvas2 c); }
+
+    public interface OnSetupCallback {
+        void event(PCanvas2 c);
+    }
+
+    public interface OnDrawCallback {
+        void event(PCanvas2 c);
+    }
+
     public OnSetupCallback setup;
     public OnDrawCallback draw;
 
@@ -45,7 +52,7 @@ public class PCanvas2 extends SurfaceView {
     public PCanvas2(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
-  }
+    }
 
 
 }

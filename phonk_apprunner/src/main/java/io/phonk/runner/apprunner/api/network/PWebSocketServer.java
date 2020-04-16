@@ -91,7 +91,7 @@ public class PWebSocketServer extends ProtoBase {
                     o.put("socket", arg0);
                     o.put("data", arg1);
                     mCallbackfn.event(o);
-              });
+                });
                 //MLog.d(TAG, "onMessage server");
 
             }

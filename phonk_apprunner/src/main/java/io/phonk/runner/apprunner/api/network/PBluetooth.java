@@ -101,7 +101,7 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
                             } else {
                                 Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
                             }
-                        break;
+                            break;
                     }
                 }
             });
@@ -202,9 +202,10 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         start();
         mAdapter.disable();
     }
-    
+
     @Override
-    public void __stop() { }
+    public void __stop() {
+    }
 
     protected BluetoothAdapter getAdapter() {
         return mAdapter;

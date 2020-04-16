@@ -144,7 +144,7 @@ public class AppRunnerInterpreter {
                 if (mInterpreterListener != null) mInterpreterListener.onError(resultType, message);
                 break;
             case RESULT_PERMISSION_ERROR:
-               if (mInterpreterListener != null) mInterpreterListener.onError(resultType, message);
+                if (mInterpreterListener != null) mInterpreterListener.onError(resultType, message);
 
                 break;
         }
@@ -162,8 +162,8 @@ public class AppRunnerInterpreter {
     }
 
     /*
-    *   Errors and misc
-    */
+     *   Errors and misc
+     */
     public interface InterpreterInfo {
         void onError(int resultType, Object message);
     }
@@ -233,7 +233,7 @@ public class AppRunnerInterpreter {
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, message);
                 // mAppRunnerInterpretter.stop();
                 return e;
-            } catch ( org.mozilla.javascript.EvaluatorException e) {
+            } catch (org.mozilla.javascript.EvaluatorException e) {
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, e.getMessage());
 
                 return e;
@@ -246,7 +246,6 @@ public class AppRunnerInterpreter {
             }
         }
     }
-
 
 
 }

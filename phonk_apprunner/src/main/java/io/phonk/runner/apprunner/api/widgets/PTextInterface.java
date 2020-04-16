@@ -29,10 +29,16 @@ public interface PTextInterface {
 
 
     View font(Typeface font);
+
     View textSize(int size);
+
     View textColor(String textColor);
+
     View textColor(int textColor);
+
     View textSize(float textSize);
+
     View textStyle(int textStyle);
+
     View textAlign(int alignment);
 }

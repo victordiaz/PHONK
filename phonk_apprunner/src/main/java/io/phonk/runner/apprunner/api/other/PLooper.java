@@ -113,8 +113,8 @@ public class PLooper implements WhatIsRunningInterface {
     @PhonkMethod(description = "Start the looper", example = "")
     public PLooper start() {
         if (!this.isLooping) {
-          this.isLooping = true;
-          handler.post(task);
+            this.isLooping = true;
+            handler.post(task);
         }
 
         return this;

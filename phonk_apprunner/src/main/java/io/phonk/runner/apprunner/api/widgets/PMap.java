@@ -183,6 +183,7 @@ public class PMap extends MapView {
 
     /**
      * Removes a path from the map
+     *
      * @param path
      * @return
      */
@@ -261,12 +262,13 @@ public class PMap extends MapView {
      * Add a marker to the map.
      * The params object accepts params as follows
      * {
-     *     lon: 21.1,
-     *     lat: 22.2,
-     *     icon: "myicon.png",
-     *     title: "hello",
-     *     description: "Bubble info"
+     * lon: 21.1,
+     * lat: 22.2,
+     * icon: "myicon.png",
+     * title: "hello",
+     * description: "Bubble info"
      * }
+     *
      * @param params
      * @return
      */
@@ -449,6 +451,7 @@ public class PMap extends MapView {
 
     /**
      * Enable / disable online map data
+     *
      * @param b
      */
     public void useOnlineData(boolean b) {

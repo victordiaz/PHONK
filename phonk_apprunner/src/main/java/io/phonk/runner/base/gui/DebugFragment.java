@@ -139,13 +139,14 @@ public class DebugFragment extends Fragment {
         return true;
     }
 
-    @Subscribe (sticky = true)
+    @Subscribe(sticky = true)
     public void onEventMainThread(Events.LogEvent e) {
         String logMsg = e.getData();
 
         int actionType = AppRunnerInterpreter.RESULT_OK;
         if (e.getAction() == "log_error") actionType = AppRunnerInterpreter.RESULT_ERROR;
-        else if (e.getAction() == "log_permission_error") actionType = AppRunnerInterpreter.RESULT_PERMISSION_ERROR;
+        else if (e.getAction() == "log_permission_error")
+            actionType = AppRunnerInterpreter.RESULT_PERMISSION_ERROR;
 
         addText(actionType, logMsg);
     }

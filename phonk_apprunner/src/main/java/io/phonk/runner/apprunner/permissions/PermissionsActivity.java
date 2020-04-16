@@ -112,7 +112,7 @@ public class PermissionsActivity extends BaseActivity {
                 Manifest.permission.INSTALL_SHORTCUT,
                 Manifest.permission.CAMERA,
 
-        // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
+                // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
 
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,

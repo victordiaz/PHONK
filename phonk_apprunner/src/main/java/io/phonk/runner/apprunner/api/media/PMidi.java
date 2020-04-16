@@ -219,7 +219,7 @@ public class PMidi extends ProtoBase {
             }
 
             @Override
-            public void onMidiOutputDeviceAttached( MidiOutputDevice midiOutputDevice) {
+            public void onMidiOutputDeviceAttached(MidiOutputDevice midiOutputDevice) {
                 // Toast.makeText(getContext(), "USB MIDI Output Device " + midiOutputDevice.getUsbDevice().getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
 
                 callbackConnection("output", "attached", midiOutputDevice);

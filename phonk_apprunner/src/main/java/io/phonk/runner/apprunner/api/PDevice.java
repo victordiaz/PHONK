@@ -87,7 +87,9 @@ public class PDevice extends ProtoBase {
      */
     public interface onKeyListener {
         void onKeyDown(KeyEvent event);
+
         void onKeyUp(KeyEvent event);
+
         void onKeyEvent(KeyEvent event);
     }
 
@@ -210,7 +212,6 @@ public class PDevice extends ProtoBase {
      * Tells which software / hardware / gamepad button is pressed
      *
      * @param fn
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -221,8 +222,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Tells which software / hardware / gamepad button is released
-     * @param fn
      *
+     * @param fn
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -233,8 +234,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Gives a key event when of a software / hardware / gamepad button
-     * @param fn
      *
+     * @param fn
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -248,7 +249,6 @@ public class PDevice extends ProtoBase {
      * Ignores the volume key functionally
      *
      * @param b
-     *
      * @status TODO
      */
     @PhonkMethod
@@ -260,7 +260,6 @@ public class PDevice extends ProtoBase {
      * Ignores the back key
      *
      * @param b
-     *
      * @status TODO
      */
     @PhonkMethod
@@ -272,7 +271,6 @@ public class PDevice extends ProtoBase {
      * Makes the device vibrate
      *
      * @param duration Duration in milliseconds
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -291,11 +289,10 @@ public class PDevice extends ProtoBase {
      * @param repeat Number of times that the pattern will repeat
      *
      * @status TODO_EXAMPLE
-    @PhonkMethod
-    public void vibrate(long[] pattern, int repeat) {
-        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(pattern, repeat);
-    }
+     @PhonkMethod public void vibrate(long[] pattern, int repeat) {
+     Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+     v.vibrate(pattern, repeat);
+     }
      */
 
 
@@ -304,8 +301,7 @@ public class PDevice extends ProtoBase {
      * Please, be careful, since this method might cost you MONEY depending on your phone plan!
      *
      * @param number Phone number
-     * @param msg Text message
-     *
+     * @param msg    Text message
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -380,7 +376,6 @@ public class PDevice extends ProtoBase {
      * Set the global brightness
      *
      * @param value from 0 to 255
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -412,6 +407,7 @@ public class PDevice extends ProtoBase {
 
     /**
      * Sets the screen off
+     *
      * @return
      * @status TODO
      */
@@ -449,8 +445,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Prevent the device suspend at any time. Good for long living operations
-     * @param b
      *
+     * @param b
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -462,7 +458,6 @@ public class PDevice extends ProtoBase {
      * Launch an intent
      *
      * @param intent
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -478,7 +473,6 @@ public class PDevice extends ProtoBase {
      * @param recipient
      * @param subject
      * @param msg
-     *
      * @status OK
      */
     @PhonkMethod
@@ -491,7 +485,6 @@ public class PDevice extends ProtoBase {
      *
      * @param longitude
      * @param latitude
-     *
      * @status OK
      */
     @PhonkMethod
@@ -513,7 +506,6 @@ public class PDevice extends ProtoBase {
      * Call a given phone number using the device's call manager
      *
      * @param number
-     *
      * @status OK
      */
     @PhonkMethod
@@ -525,7 +517,6 @@ public class PDevice extends ProtoBase {
      * Open the default web browser with a given Url
      *
      * @param url
-     *
      * @status OK
      */
     @PhonkMethod
@@ -535,8 +526,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Open the search app with the given text
-     * @param text
      *
+     * @param text
      * @status OK
      */
     @PhonkMethod
@@ -547,9 +538,9 @@ public class PDevice extends ProtoBase {
 
     /**
      * Opens a file with a given app provided as package name
+     *
      * @param src
      * @param packageName
-     *
      * @status TODO
      */
     public void runApp(final String src, String packageName) {
@@ -565,9 +556,9 @@ public class PDevice extends ProtoBase {
 
     /**
      * Copy a given text into the clipboard.
+     *
      * @param label
      * @param text
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -582,7 +573,6 @@ public class PDevice extends ProtoBase {
      * @param label
      * @param text
      * @return
-     *
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -593,8 +583,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Gets a callback each time there is a change in the battery status
-     * @param callback
      *
+     * @param callback
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -642,8 +632,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Get the current device battery level
-     * @return
      *
+     * @return
      * @status OK
      */
     @PhonkMethod
@@ -662,8 +652,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Gets the current device orientation"
-     * @return
      *
+     * @return
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -688,8 +678,8 @@ public class PDevice extends ProtoBase {
 
     /**
      * Get some device information
-     * @return
      *
+     * @return
      * @status TOREVIEW
      */
     @PhonkMethod
@@ -729,7 +719,7 @@ public class PDevice extends ProtoBase {
         ret.put("fingerPrint", Build.FINGERPRINT);
         ret.put("host", Build.HOST);
         ret.put("id", Build.ID);
-        ret.put("keyboardPresent",  getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
+        ret.put("keyboardPresent", getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
 
         ret.put("totalMem", Runtime.getRuntime().totalMemory());
         ret.put("usedMem", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
@@ -835,7 +825,7 @@ public class PDevice extends ProtoBase {
                 application.title = info.loadLabel(pm);
                 application.packageName = info.activityInfo.packageName;
                 application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
-                        info.activityInfo.name),
+                                info.activityInfo.name),
                         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 application.iconDrawable = info.activityInfo.loadIcon(pm);
                 application.permission = info.activityInfo.permission;
@@ -867,7 +857,7 @@ public class PDevice extends ProtoBase {
             }
         }
 
-        return  mApplications;
+        return mApplications;
     }
 
     @Override

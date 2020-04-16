@@ -25,12 +25,12 @@ package io.phonk.runner.base.events;
 import io.phonk.runner.base.models.Project;
 
 public class Events {
-    public static final String KEY                  = "key";
-    public static final String SMS                  = "sms";
-    public static final String NFC_READ             = "nfc_read";
-    public static final String NFC_WRITTEN          = "nfc_written";
-    public static final String BLUETOOTH            = "bluetooth";
-    public static final String VOICE_RECOGNITION    = "voice_recognition";
+    public static final String KEY = "key";
+    public static final String SMS = "sms";
+    public static final String NFC_READ = "nfc_read";
+    public static final String NFC_WRITTEN = "nfc_written";
+    public static final String BLUETOOTH = "bluetooth";
+    public static final String VOICE_RECOGNITION = "voice_recognition";
 
 
     public static class ProjectEvent {
@@ -71,13 +71,15 @@ public class Events {
         public String getAction() {
             return action;
         }
+
         public String getData() {
             return data;
         }
+
         public String getTime() {
             return time;
         }
-        
+
     }
 
 

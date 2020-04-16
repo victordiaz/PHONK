@@ -80,8 +80,11 @@ public class PApp extends ProtoBase {
 
     public interface onAppStatus {
         void onStart();
+
         void onPause();
+
         void onResume();
+
         void onStop();
     }
 
@@ -107,9 +110,9 @@ public class PApp extends ProtoBase {
 
     /**
      * Gets shared data?
+     *
      * @param type
      * @param data
-     *
      * @status TODO
      */
     @PhonkMethod
@@ -133,7 +136,6 @@ public class PApp extends ProtoBase {
      *
      * @param code
      * @status TODO_EXAMPLE
-     *
      * @exampleLink examples/User Interface/Webview
      * @advanced
      */
@@ -149,7 +151,6 @@ public class PApp extends ProtoBase {
      * Loads and external file containing code
      *
      * @param filename
-     *
      * @exampleLink /examples/Advanced/LoadJsFile
      * @status OK
      */
@@ -187,7 +188,7 @@ public class PApp extends ProtoBase {
         int id;
         NotificationCompat.Builder mBuilder;
 
-        Notification () {
+        Notification() {
             mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         }
 
@@ -195,7 +196,8 @@ public class PApp extends ProtoBase {
 
             Bitmap iconBmp = null;
             String iconName = (String) map.get("icon");
-            if (iconName != null) iconBmp = BitmapFactory.decodeFile(getAppRunner().getProject().getFullPathForFile(iconName));
+            if (iconName != null)
+                iconBmp = BitmapFactory.decodeFile(getAppRunner().getProject().getFullPathForFile(iconName));
 
             String launchOnClick = null;
             launchOnClick = (String) map.get("launchOnClick");
@@ -235,7 +237,7 @@ public class PApp extends ProtoBase {
                     .setLights(Color.parseColor((String) map.get("color")), 1000, 1000)
                     .setLargeIcon(iconBmp)
                     .setAutoCancel((Boolean) map.get("autocancel"))
-                    .setTicker((String)map.get("ticker"))
+                    .setTicker((String) map.get("ticker"))
                     .setSubText((CharSequence) map.get("subtext"))
                     .setDeleteIntent(deletePendingIntent)
                     .setContentIntent(resultPendingIntent);
@@ -278,8 +280,8 @@ public class PApp extends ProtoBase {
 
     /**
      * Share Image with an app installed in the system
-     * @param imagePath
      *
+     * @param imagePath
      * @status TODO
      */
     @PhonkMethod
@@ -301,7 +303,6 @@ public class PApp extends ProtoBase {
      * Share text with an app installed in the system
      *
      * @param text
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -316,7 +317,6 @@ public class PApp extends ProtoBase {
      * Get the current project path
      *
      * @return
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -341,7 +341,6 @@ public class PApp extends ProtoBase {
      * Runs a function in the UI thread. This is normally not needed but might be required when combined with Threads
      *
      * @param callback
-     *
      * @advanced
      * @status TODO_EXAMPLE
      */
@@ -356,7 +355,6 @@ public class PApp extends ProtoBase {
      * @param cmd
      * @param callbackfn
      * @return
-     *
      * @advanced
      * @status TODO_EXAMPLE
      */
@@ -370,7 +368,6 @@ public class PApp extends ProtoBase {
      * Shows a feedback overlay with the live-executed code
      *
      * @return PLiveCodingFeedback
-     *
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
@@ -386,12 +383,10 @@ public class PApp extends ProtoBase {
      *
      * @param name
      * @param obj
-     *
      * @exampleLink examples/Advanced/Events
+     * @status TODO_EXAMPLE
      * @see PApp#listenEvent
      * @see PApp#removeEvent
-     *
-     * @status TODO_EXAMPLE
      */
     @PhonkMethod
     public void sendEvent(String name, Object obj) {
@@ -404,11 +399,10 @@ public class PApp extends ProtoBase {
      * @param name
      * @param callback
      * @return
-     *
      * @exampleLink examples/Advanced/Events
+     * @status TODO_EXAMPLE
      * @see PApp#sendEvent
      * @see PApp#removeEvent
-     * @status TODO_EXAMPLE
      */
     @PhonkMethod
     public String listenEvent(String name, PEvents.EventCB callback) {
@@ -419,13 +413,10 @@ public class PApp extends ProtoBase {
      * Receives a named event with a json object
      *
      * @param id
-     *
-     *
      * @exampleLink examples/Advanced/Events
+     * @status TODO_EXAMPLE
      * @see PApp#sendEvent
      * @see PApp#listenEvent
-     *
-     * @status TODO_EXAMPLE
      */
     @PhonkMethod
     public void removeEvent(String id) {
@@ -434,8 +425,8 @@ public class PApp extends ProtoBase {
 
     /**
      * Try to open a file with an app installed in the system
-     * @param src
      *
+     * @param src
      * @status TODO
      */
     @PhonkMethod
@@ -456,7 +447,6 @@ public class PApp extends ProtoBase {
      *
      * @param params
      * @throws JSONException
-     *
      * @advanced
      * @status TODO
      */
@@ -471,7 +461,7 @@ public class PApp extends ProtoBase {
 
         JSONObject extras = (JSONObject) jsonParams.get("extras");
         Iterator<String> iterator = extras.keys();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             String key = iterator.next();
             String value = (String) extras.get(key);
             intent.putExtra(key, value);
@@ -498,79 +488,64 @@ public class PApp extends ProtoBase {
      * Callback called when script is loaded
      *
      * @param callback
-     *
      * @exampleLink /examples/Advanced/App Lifecycle.
-     *
+     * @status OK
+     * @advanced
      * @see PApp#onDestroy
      * @see PApp#onPause
      * @see PApp#onResume
-     *
-     * @status OK
-     * @advanced
      */
     @PhonkMethod
     public void onCreate(ReturnInterface callback) {
-      //  callback.event(null);
+        //  callback.event(null);
     }
 
     /**
      * Callback called when script is paused. For example when switching to a different task.
      *
      * @param callback
-     *
      * @exampleLink /examples/Advanced/App Lifecycle
-     *
+     * @status OK
+     * @advanced
      * @see PApp#onDestroy
      * @see PApp#onCreate
      * @see PApp#onResume
-     *
-     * @status OK
-     * @advanced
-     *
      */
     @PhonkMethod
     public void onPause(ReturnInterface callback) {
-      //  callback.event(null);
+        //  callback.event(null);
     }
 
     /**
      * Callback called when script is resumed. This can be called either when the app loads for the first time or switches back from a different app.
      *
      * @param callback
-     *
      * @exampleLink /examples/Advanced/App Lifecycle
-     *
+     * @status OK
+     * @advanced
      * @see PApp#onDestroy
      * @see PApp#onPause
      * @see PApp#onCreate
-     *
-     * @status OK
-     * @advanced
-     *
      */
     @PhonkMethod
     public void onResume(ReturnInterface callback) {
-      //  callback.event(null);
+        //  callback.event(null);
     }
 
     /**
      * Callback called when script is closed
      *
      * @param callback
-     *
      * @exampleLink /examples/Advanced/App Lifecycle
-     *
+     * @status OK
+     * @advanced
      * @see PApp#onCreate
      * @see PApp#onPause
      * @see PApp#onResume
-     *
-     * @status OK
-     * @advanced
-     *
      */
     @PhonkMethod
     public void onDestroy(ReturnInterface callback) {
-      //  callback.event(null);
+        //  callback.event(null);
     }
 
     public void breakPoint() {

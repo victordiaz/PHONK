@@ -73,7 +73,7 @@ public class PImageHelper {
                     MLog.e("Error", e.getMessage());
                     e.printStackTrace();
                 }
-            // read from file
+                // read from file
             } else {
                 File imgFile = new File(imagePath);
 

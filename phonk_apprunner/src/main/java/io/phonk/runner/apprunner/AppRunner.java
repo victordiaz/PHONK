@@ -199,6 +199,7 @@ public class AppRunner {
     }
 
     boolean finished = false;
+
     public void byebye() {
         if (!finished) {
             finished = true;

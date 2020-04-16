@@ -46,59 +46,59 @@ import io.phonk.runner.base.utils.MLog;
 
 public class PCameraXOne extends Fragment {
 
-  private static final String TAG = PCameraX.class.getSimpleName();
+    private static final String TAG = PCameraX.class.getSimpleName();
 
-  private AppRunner mAppRunner;
+    private AppRunner mAppRunner;
 
-  public PCameraXOne(AppRunner appRunner) {
-    //  super(appRunner.getAppContext());
-    this.mAppRunner = appRunner;
-    MLog.d(TAG, "constructor");
-    // this.setSurfaceTextureListener(this);
-  }
+    public PCameraXOne(AppRunner appRunner) {
+        //  super(appRunner.getAppContext());
+        this.mAppRunner = appRunner;
+        MLog.d(TAG, "constructor");
+        // this.setSurfaceTextureListener(this);
+    }
 
-  /**
-   * Bind the Camera to the lifecycle
-   */
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void bindCamera () {
-    MLog.d(TAG, "bindCamera");
-    MLog.d(TAG, "qq");
+    /**
+     * Bind the Camera to the lifecycle
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void bindCamera() {
+        MLog.d(TAG, "bindCamera");
+        MLog.d(TAG, "qq");
 
-    CameraX.unbindAll();
+        CameraX.unbindAll();
 
-    MLog.d(TAG, "qq1");
+        MLog.d(TAG, "qq1");
 
-    /* start preview */
-    int aspRatioW = 500;
-    int aspRatioH = 500;
-    Rational asp = new Rational (aspRatioW, aspRatioH); //aspect ratio
-    Size screen = new Size(aspRatioW, aspRatioH); //size of the screen
+        /* start preview */
+        int aspRatioW = 500;
+        int aspRatioH = 500;
+        Rational asp = new Rational(aspRatioW, aspRatioH); //aspect ratio
+        Size screen = new Size(aspRatioW, aspRatioH); //size of the screen
 
-    //config obj for preview/viewfinder thingy.
-    PreviewConfig pConfig = new PreviewConfig.Builder().setTargetAspectRatio(asp).setTargetResolution(screen).build();
+        //config obj for preview/viewfinder thingy.
+        PreviewConfig pConfig = new PreviewConfig.Builder().setTargetAspectRatio(asp).setTargetResolution(screen).build();
 
-    MLog.d(TAG, "qq11");
+        MLog.d(TAG, "qq11");
 
-    Preview preview = new Preview(pConfig);
+        Preview preview = new Preview(pConfig);
 
-    MLog.d(TAG, "qq12");
+        MLog.d(TAG, "qq12");
 
-    // Handles the output data of the camera
-    preview.setOnPreviewOutputUpdateListener(previewOutput -> {
-      // ViewGroup parent = (ViewGroup) viewFinder.getParent();
-      // parent.removeView(viewFinder);
-      // parent.addView(viewFinder, 0);
-      MLog.d(TAG, "qq2");
+        // Handles the output data of the camera
+        preview.setOnPreviewOutputUpdateListener(previewOutput -> {
+            // ViewGroup parent = (ViewGroup) viewFinder.getParent();
+            // parent.removeView(viewFinder);
+            // parent.addView(viewFinder, 0);
+            MLog.d(TAG, "qq2");
 
 
-      // this.setSurfaceTexture(previewOutput.getSurfaceTexture());
-      MLog.d(TAG, "qq3");
+            // this.setSurfaceTexture(previewOutput.getSurfaceTexture());
+            MLog.d(TAG, "qq3");
 
-      // Integer rotation = getDisplaySurfaceRotation(viewFinder.getDisplay());
-      // updateTransform(rotation, previewOutput.getTextureSize(), viewFinderDimens);
-    });
-    MLog.d(TAG, "qq4");
+            // Integer rotation = getDisplaySurfaceRotation(viewFinder.getDisplay());
+            // updateTransform(rotation, previewOutput.getTextureSize(), viewFinderDimens);
+        });
+        MLog.d(TAG, "qq4");
 
     /*
     viewFinder.addOnLayoutChangeListener((
@@ -109,31 +109,31 @@ public class PCameraXOne extends Fragment {
     });
      */
 
-    // Bind the camera to the lifecycle
-    CameraX.bindToLifecycle((LifecycleOwner) this, preview);
-  }
+        // Bind the camera to the lifecycle
+        CameraX.bindToLifecycle(this, preview);
+    }
 
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View root = inflater.inflate(R.layout.camera_fragment, container, false);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.camera_fragment, container, false);
 
-    return root;
-  }
+        return root;
+    }
 
 
-  @Override
-  public void onViewCreated(View view, Bundle bundle) {
-    super.onViewCreated(view, bundle);
+    @Override
+    public void onViewCreated(View view, Bundle bundle) {
+        super.onViewCreated(view, bundle);
 
-    TextureView viewFinder = getActivity().findViewById(R.id.view_finder);
-    viewFinder.post(this::bindCamera);
-    // view.post(this::startCamera);
-    MLog.d(TAG, "starting camera");
-  }
+        TextureView viewFinder = getActivity().findViewById(R.id.view_finder);
+        viewFinder.post(this::bindCamera);
+        // view.post(this::startCamera);
+        MLog.d(TAG, "starting camera");
+    }
 }

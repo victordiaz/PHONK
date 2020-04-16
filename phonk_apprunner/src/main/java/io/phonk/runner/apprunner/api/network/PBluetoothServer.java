@@ -102,7 +102,7 @@ public class PBluetoothServer extends ProtoBase {
         if (mServerListenNewConnectionsThread != null) {
             mServerListenNewConnectionsThread.cancel();
             mServerListenNewConnectionsThread = null;
-         }
+        }
 
         for (ConnectedDevice connectedDevice : mServerConnections) {
             connectedDevice.stop();
@@ -116,7 +116,8 @@ public class PBluetoothServer extends ProtoBase {
 
     private class ServerListenNewConnectionsThread extends Thread {
 
-        public ServerListenNewConnectionsThread() { }
+        public ServerListenNewConnectionsThread() {
+        }
 
         public void run() {
             MLog.d(TAG, "bbt run " + mServerStarted);

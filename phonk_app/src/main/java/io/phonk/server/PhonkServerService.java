@@ -190,7 +190,7 @@ public class PhonkServerService extends Service {
                 // .setContentIntent(pendingIntent)
                 // .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
-                // .setContentInfo("1 Connection");
+        // .setContentInfo("1 Connection");
         // mNotificationBuilder.build().flags = Notification.FLAG_ONGOING_EVENT;
 
         // damm annoying android pofkjpodsjf0ewiah
@@ -319,7 +319,7 @@ public class PhonkServerService extends Service {
         File file = new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER));
 
         try {
-            MLog.d(TAG, "--> " + file.getCanonicalPath().toString() + " " + file.exists());
+            MLog.d(TAG, "--> " + file.getCanonicalPath() + " " + file.exists());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -354,7 +354,7 @@ public class PhonkServerService extends Service {
     private void vibrate() {
         int vWait = 20;
         int vTime = 80;
-        long[] pattern = new long[]{ vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime };
+        long[] pattern = new long[]{vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime};
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(pattern, -1);
     }
@@ -379,7 +379,6 @@ public class PhonkServerService extends Service {
 
         EventBus.getDefault().unregister(this);
     }
-
 
 
     /*
@@ -478,7 +477,6 @@ public class PhonkServerService extends Service {
             phonkWebsockets.send(jsonObject);
         }
     };
-
 
 
     @Subscribe

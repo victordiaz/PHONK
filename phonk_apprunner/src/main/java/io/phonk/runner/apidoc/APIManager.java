@@ -35,11 +35,11 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.base.utils.MLog;
 
 /*
- * Usage 
+ * Usage
  * 		APIManager.getInstance().addClass(JAndroid.class);
  *		APIManager.getInstance().addClass(JUI.class);
  *		APIManager.getInstance().getDocumentation();
- *	
+ *
  */
 
 public class APIManager {

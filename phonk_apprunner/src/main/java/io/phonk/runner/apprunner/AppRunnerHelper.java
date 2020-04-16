@@ -63,7 +63,8 @@ public class AppRunnerHelper {
         String json = getCode(p, "app.conf");
         if (json != null) {
             Gson gson = new Gson();
-            Type stringStringMap = new TypeToken<Map<String, Object>>() {}.getType();
+            Type stringStringMap = new TypeToken<Map<String, Object>>() {
+            }.getType();
             map = gson.fromJson(json, stringStringMap);
         } else {
             map = new HashMap<String, Object>();

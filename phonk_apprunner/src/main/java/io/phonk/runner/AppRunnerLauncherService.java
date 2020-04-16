@@ -59,7 +59,8 @@ public class AppRunnerLauncherService extends Service {
         } else {
             newIntent = new Intent(this, AppRunnerActivity.class);
             newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (AndroidUtils.isVersionN() && multiWindowEnabled) intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+            if (AndroidUtils.isVersionN() && multiWindowEnabled)
+                intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
         }
 
         newIntent.putExtras(intent);

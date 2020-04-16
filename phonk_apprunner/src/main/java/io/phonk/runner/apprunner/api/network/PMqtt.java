@@ -78,7 +78,8 @@ public class PMqtt extends ProtoBase {
                     MLog.d(TAG, "mconnection onConnected");
                     ReturnObject ret = new ReturnObject();
                     ret.put("status", "connected");
-                    mCallback.event(ret);                }
+                    mCallback.event(ret);
+                }
 
                 @Override
                 public void onDisconnected() {

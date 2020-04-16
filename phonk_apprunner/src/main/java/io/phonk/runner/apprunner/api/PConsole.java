@@ -50,10 +50,10 @@ public class PConsole extends ProtoBase {
 
     /**
      * Shows any text in the WebIDE console
-     * @param outputs
      *
-     * @status TODO_EXAMPLE
+     * @param outputs
      * @return
+     * @status TODO_EXAMPLE
      */
     @PhonkMethod
     public PConsole log(Object... outputs) {
@@ -73,8 +73,8 @@ public class PConsole extends ProtoBase {
 
     /**
      * Shows any text in the WebIDE console
-     * @param outputs
      *
+     * @param outputs
      * @status TODO_EXAMPLE
      */
     @PhonkMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
@@ -116,8 +116,8 @@ public class PConsole extends ProtoBase {
 
     /**
      * Shows / hide the console
-     * @param b
      *
+     * @param b
      * @status TODO
      */
     @PhonkMethod(description = "show/hide the console", example = "")

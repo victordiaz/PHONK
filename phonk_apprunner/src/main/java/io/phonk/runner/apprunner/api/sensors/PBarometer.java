@@ -86,7 +86,7 @@ public class PBarometer extends CustomSensorManager implements WhatIsRunningInte
     @PhonkMethodParam(params = {"function(x, y, z)"})
     public PBarometer onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
-        
+
         return this;
     }
 

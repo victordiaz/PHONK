@@ -137,8 +137,6 @@ public class AndroidUtils {
     }
 
 
-
-
     /**
      * Show an event in the LogCat view, for debugging
      */
@@ -241,6 +239,7 @@ public class AndroidUtils {
     public static boolean isVersionLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
+
     public static boolean isVersionKitKat() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
@@ -431,13 +430,20 @@ public class AndroidUtils {
     public static String actionToString(int action) {
         switch (action) {
 
-            case MotionEvent.ACTION_DOWN: return "Down";
-            case MotionEvent.ACTION_MOVE: return "Move";
-            case MotionEvent.ACTION_POINTER_DOWN: return "Pointer Down";
-            case MotionEvent.ACTION_UP: return "Up";
-            case MotionEvent.ACTION_POINTER_UP: return "Pointer Up";
-            case MotionEvent.ACTION_OUTSIDE: return "Outside";
-            case MotionEvent.ACTION_CANCEL: return "Cancel";
+            case MotionEvent.ACTION_DOWN:
+                return "Down";
+            case MotionEvent.ACTION_MOVE:
+                return "Move";
+            case MotionEvent.ACTION_POINTER_DOWN:
+                return "Pointer Down";
+            case MotionEvent.ACTION_UP:
+                return "Up";
+            case MotionEvent.ACTION_POINTER_UP:
+                return "Pointer Up";
+            case MotionEvent.ACTION_OUTSIDE:
+                return "Outside";
+            case MotionEvent.ACTION_CANCEL:
+                return "Cancel";
         }
         return "";
     }
@@ -452,15 +458,15 @@ public class AndroidUtils {
 
     public static int darkenColor(int color, float factor) {
 
-        int a = Color.alpha( color );
-        int r = Color.red( color );
-        int g = Color.green( color );
-        int b = Color.blue( color );
+        int a = Color.alpha(color);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
 
-        return Color.argb( a,
-                Math.max( (int)(r * factor), 0 ),
-                Math.max( (int)(g * factor), 0 ),
-                Math.max( (int)(b * factor), 0 ) );
+        return Color.argb(a,
+                Math.max((int) (r * factor), 0),
+                Math.max((int) (g * factor), 0),
+                Math.max((int) (b * factor), 0));
     }
 
     public static int lighter(int color, float factor) {

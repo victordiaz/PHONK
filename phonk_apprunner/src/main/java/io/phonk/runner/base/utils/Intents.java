@@ -43,8 +43,8 @@ public class Intents {
      * found, this method returns false.
      *
      * @param context The application's environment.
-     * @param action The Intent action to check for availability. such as
-     * "com.google.zxing.client.android.SCAN"
+     * @param action  The Intent action to check for availability. such as
+     *                "com.google.zxing.client.android.SCAN"
      * @return True if an Intent with the specified action can be sent and
      * responded to, false otherwise.
      */

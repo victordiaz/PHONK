@@ -211,7 +211,7 @@ public class ProjectListFragment extends BaseFragment {
 
     public void clear() {
         if (mListProjects != null) mListProjects.clear();
-       // mGrid.removeAllViews();
+        // mGrid.removeAllViews();
         mProjectAdapter.notifyDataSetChanged();
     }
 

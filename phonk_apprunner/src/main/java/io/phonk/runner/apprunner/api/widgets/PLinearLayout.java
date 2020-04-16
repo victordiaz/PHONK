@@ -63,6 +63,7 @@ public class PLinearLayout extends LinearLayout {
         setOrientation(mode);
 
     }
+
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
     public void add(View v, String name) {

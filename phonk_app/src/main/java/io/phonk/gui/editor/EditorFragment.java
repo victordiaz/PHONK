@@ -62,8 +62,10 @@ public class EditorFragment extends BaseFragment {
 
     public interface EditorFragmentListener {
         void onLoad();
+
         void onLineTouched();
     }
+
     private EditText mEdit;
 
     private HorizontalScrollView mExtraKeyBar;

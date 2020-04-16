@@ -44,71 +44,74 @@ import io.phonk.runner.base.utils.MLog;
  * run-once API of {@link TransferLearningModel}.
  */
 public class TransferLearningModelWrapper implements Closeable {
-  public static final int IMAGE_SIZE = 224;
+    public static final int IMAGE_SIZE = 224;
 
-  private final TransferLearningModel model;
+    private final TransferLearningModel model;
 
-  private final ConditionVariable shouldTrain = new ConditionVariable();
-  private volatile LossConsumer lossConsumer;
+    private final ConditionVariable shouldTrain = new ConditionVariable();
+    private volatile LossConsumer lossConsumer;
 
-  TransferLearningModelWrapper(Context context) {
-    model =
-        new TransferLearningModel(
-            new AssetModelLoader(context, "model"), Arrays.asList("1", "2", "3", "4"));
+    TransferLearningModelWrapper(Context context) {
+        model =
+                new TransferLearningModel(
+                        new AssetModelLoader(context, "model"), Arrays.asList("1", "2", "3", "4"));
 
-    new Thread(() -> {
-      while (!Thread.interrupted()) {
-        shouldTrain.block();
-        try {
-          model.train(1, lossConsumer).get();
-        } catch (ExecutionException e) {
-          MLog.d("qq", "cannot train");
-          // throw new RuntimeException("Exception occurred during model training", e.getCause());
-        } catch (InterruptedException e) {
-          // no-op
-        }
-      }
-    }).start();
-  }
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                shouldTrain.block();
+                try {
+                    model.train(1, lossConsumer).get();
+                } catch (ExecutionException e) {
+                    MLog.d("qq", "cannot train");
+                    // throw new RuntimeException("Exception occurred during model training", e.getCause());
+                } catch (InterruptedException e) {
+                    // no-op
+                }
+            }
+        }).start();
+    }
 
-  // This method is thread-safe.
-  public Future<Void> addSample(float[] image, String className) {
-    return model.addSample(image, className);
-  }
+    // This method is thread-safe.
+    public Future<Void> addSample(float[] image, String className) {
+        return model.addSample(image, className);
+    }
 
-  // This method is thread-safe, but blocking.
-  public Prediction[] predict(float[] image) {
-    return model.predict(image);
-  }
+    // This method is thread-safe, but blocking.
+    public Prediction[] predict(float[] image) {
+        return model.predict(image);
+    }
 
-  public int getTrainBatchSize() {
-    return model.getTrainBatchSize();
-  }
+    public int getTrainBatchSize() {
+        return model.getTrainBatchSize();
+    }
 
-  public int getNumberSamples() {
-    return model.getNumberSamples();
-  }
-  /**
-   * Start training the model continuously until {@link #disableTraining() disableTraining} is
-   * called.
-   *
-   * @param lossConsumer callback that the loss values will be passed to.
-   */
-  public void enableTraining(LossConsumer lossConsumer) {
-    this.lossConsumer = lossConsumer;
-    shouldTrain.open();
-  }
+    public int getNumberSamples() {
+        return model.getNumberSamples();
+    }
 
-  /**
-   * Stops training the model.
-   */
-  public void disableTraining() {
-    shouldTrain.close();
-  }
+    /**
+     * Start training the model continuously until {@link #disableTraining() disableTraining} is
+     * called.
+     *
+     * @param lossConsumer callback that the loss values will be passed to.
+     */
+    public void enableTraining(LossConsumer lossConsumer) {
+        this.lossConsumer = lossConsumer;
+        shouldTrain.open();
+    }
 
-  /** Frees all model resources and shuts down all background threads. */
-  public void close() {
-    model.close();
-  }
+    /**
+     * Stops training the model.
+     */
+    public void disableTraining() {
+        shouldTrain.close();
+    }
+
+    /**
+     * Frees all model resources and shuts down all background threads.
+     */
+    public void close() {
+        model.close();
+    }
 
 }

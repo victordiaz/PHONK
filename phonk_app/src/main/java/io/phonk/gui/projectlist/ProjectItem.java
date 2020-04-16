@@ -182,14 +182,14 @@ public class ProjectItem extends LinearLayout {
 
             switch (itemId) {
                 case R.id.menu_project_list_run:
-                  // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
-                  PhonkAppHelper.launchScript(getContext(), mProject);
-                  return true;
+                    // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
+                    PhonkAppHelper.launchScript(getContext(), mProject);
+                    return true;
                 case R.id.menu_project_list_edit:
-                  PhonkAppHelper.launchEditor(getContext(), mProject);
+                    PhonkAppHelper.launchEditor(getContext(), mProject);
 
-                 // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
-                  return true;
+                    // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
+                    return true;
                 case R.id.menu_project_webeditor:
                     PhonkAppHelper.openInWebEditor(getContext(), mProject);
                     return true;

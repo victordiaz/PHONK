@@ -103,18 +103,18 @@ public class PWave extends ProtoBase {
                     for (int i = 0; i < buffsize; i++) {
                         //every half a period we change the sign
                         if (count++ % mHalfPeriod == 0) {
-                           // sign *= -1;
-                           // MLog.d(TAG, count + " " + mHalfPeriod);
+                            // sign *= -1;
+                            // MLog.d(TAG, count + " " + mHalfPeriod);
                         }
                         //samples[i] = (short) ( (mFreq * 2 * i / mSampleRate) % 2 < 0 ? -1 : 1 );
                         //samples[i] *= mAmp;
                         samples[i] = (short) (mAmp * sign);
                     }
 
-                        // if((i/NUM_CHANNELS % wavelength) < (wavelength*pulseWidth))
-                   //     audioBuffer[i] = 1;
-                   // else
-                   //     audioBuffer[i] = 0;
+                    // if((i/NUM_CHANNELS % wavelength) < (wavelength*pulseWidth))
+                    //     audioBuffer[i] = 1;
+                    // else
+                    //     audioBuffer[i] = 0;
 
                     //white noise
 //                    for (int i = 0; i < buffsize; i++) {

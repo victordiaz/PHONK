@@ -34,6 +34,7 @@ public abstract class BaseFragment extends Fragment {
 
     public interface FragmentListener {
         void onReady();
+
         void onFinish(boolean finished);
     }
 

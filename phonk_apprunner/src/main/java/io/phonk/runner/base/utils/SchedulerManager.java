@@ -70,11 +70,12 @@ public class SchedulerManager {
         PendingIntent sender = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set Alarm
-        if (repeating) mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval, sender);
+        if (repeating)
+            mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval, sender);
         else mAlarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 
         // add to a global alarm thingie
-        addTask(new Task(id, mProject, Task.TYPE_ALARM ,cal, interval, repeating, wakeUpScreen));
+        addTask(new Task(id, mProject, Task.TYPE_ALARM, cal, interval, repeating, wakeUpScreen));
     }
 
     public void removeAlarm(int id) {
@@ -106,7 +107,8 @@ public class SchedulerManager {
     public SchedulerManager loadTasks() {
         mPreferences = c.getSharedPreferences("io.phonk.scheduler", Context.MODE_PRIVATE);
         String tasksString = mPreferences.getString("tasks", "");
-        tasks = GSONUtil.getInstance().getGson().fromJson(tasksString, new TypeToken<ArrayList<Task>>(){}.getType());
+        tasks = GSONUtil.getInstance().getGson().fromJson(tasksString, new TypeToken<ArrayList<Task>>() {
+        }.getType());
 
         if (tasks == null) tasks = new ArrayList<>();
         MLog.d(TAG, "ww " + tasksString + " " + tasks);

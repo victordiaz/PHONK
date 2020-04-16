@@ -224,7 +224,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         arrayViz.clear();
 
         for (int i = 0; i < val.length; i++) {
-           arrayData.add(new PlotPoint(val[i][0], val[i][1]));
+            arrayData.add(new PlotPoint(val[i][0], val[i][1]));
         }
 
         invalidate();

@@ -44,8 +44,13 @@ public class PCustomView2 extends View {
     protected boolean mAutoDraw = false;
     private PLooper loop;
 
-    public interface OnSetupCallback { void event(PCustomView2 c); }
-    public interface OnDrawCallback { void event(PCanvasM c); }
+    public interface OnSetupCallback {
+        void event(PCustomView2 c);
+    }
+
+    public interface OnDrawCallback {
+        void event(PCanvasM c);
+    }
 
     public OnSetupCallback setup;
     public OnDrawCallback draw;

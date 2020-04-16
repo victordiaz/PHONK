@@ -41,8 +41,8 @@ public class ObservingDebugger implements Debugger {
 
     public void setDisconnected(boolean isDisconnected) {
         this.isDisconnected = isDisconnected;
-        if(debugFrame != null){
-            ((ObservingDebugFrame)debugFrame).setDisconnected(isDisconnected);
+        if (debugFrame != null) {
+            ((ObservingDebugFrame) debugFrame).setDisconnected(isDisconnected);
         }
     }
 
@@ -51,17 +51,19 @@ public class ObservingDebugger implements Debugger {
     }
 
     public DebugFrame getFrame(Context cx, DebuggableScript fnOrScript) {
-        if(debugFrame == null){
+        if (debugFrame == null) {
             debugFrame = new ObservingDebugFrame(isDisconnected);
         }
         return debugFrame;
     }
 
     @Override
-    public void handleCompilationDone(Context arg0, DebuggableScript arg1, String arg2) {   } }
+    public void handleCompilationDone(Context arg0, DebuggableScript arg1, String arg2) {
+    }
+}
+
 // internal ObservingDebugFrame class
-class ObservingDebugFrame implements DebugFrame
-{
+class ObservingDebugFrame implements DebugFrame {
     boolean isDisconnected = false;
 
     public boolean isDisconnected() {
@@ -77,21 +79,23 @@ class ObservingDebugFrame implements DebugFrame
     }
 
     public void onEnter(Context cx, Scriptable activation,
-                        Scriptable thisObj, Object[] args)
-    { }
+                        Scriptable thisObj, Object[] args) {
+    }
 
     public void onLineChange(Context cx, int lineNumber) {
-        if(isDisconnected){
+        if (isDisconnected) {
             throw new RuntimeException("The project just stopped executing due to some errors :/");
         }
     }
 
-    public void onExceptionThrown(Context cx, Throwable ex)
-    { }
+    public void onExceptionThrown(Context cx, Throwable ex) {
+    }
 
     public void onExit(Context cx, boolean byThrow,
-                       Object resultOrException)
-    { }
+                       Object resultOrException) {
+    }
 
     @Override
-    public void onDebuggerStatement(Context arg0) { } }
+    public void onDebuggerStatement(Context arg0) {
+    }
+}

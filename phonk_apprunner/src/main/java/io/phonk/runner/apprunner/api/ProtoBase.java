@@ -35,12 +35,12 @@ public abstract class ProtoBase {
 
     protected String TAG = getClass().getSimpleName();
 
-    private AppRunner           mAppRunner;
-    public  Handler             mHandler = new Handler(Looper.getMainLooper());
-    private Context             mContext;
-    private AppRunnerFragment   mFragment;
+    private AppRunner mAppRunner;
+    public Handler mHandler = new Handler(Looper.getMainLooper());
+    private Context mContext;
+    private AppRunnerFragment mFragment;
     private AppRunnerService mService;
-    private AppRunnerActivity   mActivity;
+    private AppRunnerActivity mActivity;
 
     public ProtoBase(AppRunner appRunner) {
         super();
@@ -50,7 +50,8 @@ public abstract class ProtoBase {
         appRunner.whatIsRunning.add(this);
     }
 
-    public void destroy() { }
+    public void destroy() {
+    }
 
     public void initForParentFragment(AppRunnerFragment fragment) {
         if (fragment != null) {

@@ -75,6 +75,7 @@ public class Runtime {
     public void addJavaObject(String name, Object javaObject) {
         this.addJavaObject(name, javaObject, null);
     }
+
     public void addJavaObject(String name, Object javaObject, V8Object v8Object) {
         Log.d(TAG, "adding Java Object " + name);
 
@@ -174,12 +175,13 @@ public class Runtime {
     }
 
     public V8Object getObject(String objectName) {
-        return (V8Object) v8runtime.getObject(objectName);
+        return v8runtime.getObject(objectName);
     }
 
     public V8Object createObject() {
         return new V8Object(v8runtime);
     }
+
     public V8Array createArray() {
         return new V8Array(v8runtime);
     }

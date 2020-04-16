@@ -169,7 +169,6 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
     private ConnectedThread mConnectedThread;
 
 
-
     // connection thread
     public synchronized void tryToConnect(BluetoothDevice device) {
         MLog.d(TAG, "connect to: " + device);
@@ -306,8 +305,6 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
     }
 
 
-
-
     /**
      * This thread runs during a connection with a remote device. It handles all
      * incoming and outgoing transmissions.
@@ -405,7 +402,7 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         }
     }
 
-    private void changeStatus (int status, BluetoothDevice device) {
+    private void changeStatus(int status, BluetoothDevice device) {
         if (mCallbackConnected != null) {
 
             String returnString = "";

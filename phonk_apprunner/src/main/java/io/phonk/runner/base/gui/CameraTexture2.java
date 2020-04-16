@@ -217,31 +217,31 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
 
             // Here, we create a CameraCaptureSession for camera preview.
             mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()), new CameraCaptureSession.StateCallback() {
-                    @Override
-                    public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                        // The camera is already closed
-                        if (null == mCameraDevice) return;
+                        @Override
+                        public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                            // The camera is already closed
+                            if (null == mCameraDevice) return;
 
-                        // When the session is ready, we start displaying the preview.
-                        mCaptureSession = cameraCaptureSession;
-                        try {
-                            // Auto focus should be continuous for camera preview.
-                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                            // Flash is automatically enabled when necessary.
-                            // setAutoFlash(mPreviewRequestBuilder);
+                            // When the session is ready, we start displaying the preview.
+                            mCaptureSession = cameraCaptureSession;
+                            try {
+                                // Auto focus should be continuous for camera preview.
+                                mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                                // Flash is automatically enabled when necessary.
+                                // setAutoFlash(mPreviewRequestBuilder);
 
-                            // Finally, we start displaying the camera preview.
-                            mPreviewRequest = mPreviewRequestBuilder.build();
-                            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, null);
-                        } catch (CameraAccessException e) {
-                            e.printStackTrace();
+                                // Finally, we start displaying the camera preview.
+                                mPreviewRequest = mPreviewRequestBuilder.build();
+                                mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, null);
+                            } catch (CameraAccessException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    }
-                }, null
+                        @Override
+                        public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        }
+                    }, null
             );
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -383,7 +383,7 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
             CameraCaptureSession.CaptureCallback CaptureCallback = new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-                    Log.d(TAG, "saved to: " ); // + mFile.toString());
+                    Log.d(TAG, "saved to: "); // + mFile.toString());
                     unlockFocus();
                 }
             };
@@ -434,7 +434,6 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
             e.printStackTrace();
         }
     }
-
 
 
     public void isFlashSupported() {

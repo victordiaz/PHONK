@@ -231,7 +231,7 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
             MLog.d(TAG, "charRead 1" + " " + status);
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                short lsb = (short)(characteristic.getValue()[0] & 0xff);
+                short lsb = (short) (characteristic.getValue()[0] & 0xff);
                 String val = String.valueOf(lsb);
                 MLog.d(TAG, "charRead2" + " " + val);
                 MLog.d(TAG, "charRead3 " + characteristic.getValue());

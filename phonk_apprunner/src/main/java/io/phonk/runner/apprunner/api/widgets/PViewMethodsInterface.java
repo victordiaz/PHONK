@@ -40,6 +40,8 @@ public interface PViewMethodsInterface {
     */
 
     void set(float x, float y, float w, float h);
+
     void setStyle(Map style);
+
     Map getStyle();
 }

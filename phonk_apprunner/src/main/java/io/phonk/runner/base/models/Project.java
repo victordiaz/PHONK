@@ -46,7 +46,7 @@ public class Project {
 
     /*
      * this will get serialized
-    */
+     */
     public String name;
     public String folder;
 

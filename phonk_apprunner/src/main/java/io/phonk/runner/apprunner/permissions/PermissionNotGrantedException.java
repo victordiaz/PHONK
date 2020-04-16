@@ -24,7 +24,8 @@ package io.phonk.runner.apprunner.permissions;
 
 public class PermissionNotGrantedException extends RuntimeException {
 
-    public PermissionNotGrantedException() {}
+    public PermissionNotGrantedException() {
+    }
 
     //Constructor that accepts a message
     public PermissionNotGrantedException(String message) {

@@ -120,11 +120,11 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     }
 
 
-    public void selectColumn (int m) {
+    public void selectColumn(int m) {
         for (int i = 0; i < M; i++) matrix[m][i] = true;
     }
 
-    public void selectRow (int n) {
+    public void selectRow(int n) {
         for (int i = 0; i < N; i++) matrix[i][n] = true;
     }
 

@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class StyleProperties implements Scriptable, Map<String,Object> {
+public class StyleProperties implements Scriptable, Map<String, Object> {
 
     private static final java.lang.String TAG = StyleProperties.class.getSimpleName();
     private HashMap<String, Object> values = new HashMap<>();
@@ -169,7 +169,7 @@ public class StyleProperties implements Scriptable, Map<String,Object> {
     public Object put(String key, Object value) {
         // MLog.d(TAG, "put 2: " + key + " " + values.get(key));
         values.put(key, value);
-        
+
         return value;
     }
 

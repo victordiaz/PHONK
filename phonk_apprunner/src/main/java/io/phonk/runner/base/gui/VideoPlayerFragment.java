@@ -108,9 +108,9 @@ public class VideoPlayerFragment extends VideoView {
 
     public void loadVideo(final String path) {
         /*
-		 * Alternatively,for streaming media you can use
-		 * mVideoView.setVideoURI(Uri.parse(URLstring));
-		 */
+         * Alternatively,for streaming media you can use
+         * mVideoView.setVideoURI(Uri.parse(URLstring));
+         */
 
         mVideoView.setVideoPath(path);
         MediaController mediaController = new MediaController(c);

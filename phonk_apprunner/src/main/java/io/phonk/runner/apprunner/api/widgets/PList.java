@@ -68,7 +68,7 @@ public class PList extends FitRecyclerView {
         setItemAnimator(null);
     }
 
-    public void stackFromEnd (boolean b) {
+    public void stackFromEnd(boolean b) {
         mGridLayoutManager.setStackFromEnd(b);
     }
 

@@ -117,12 +117,12 @@ public class PPopupDialogFragment extends DialogFragment {
 
         // only show ok if we dont have a selectable list
         builder.setPositiveButton(mOk, (dialog, which) -> {
-        if (mCallback != null) {
-            r.put("accept", true);
-            if (mMultichoiceState != null) r.put("choices", mMultichoiceState);
-            if (mInput != null) r.put("answer", mInput.getText().toString());
-            mCallback.event(r);
-        }
+            if (mCallback != null) {
+                r.put("accept", true);
+                if (mMultichoiceState != null) r.put("choices", mMultichoiceState);
+                if (mInput != null) r.put("answer", mInput.getText().toString());
+                mCallback.event(r);
+            }
         });
 
 

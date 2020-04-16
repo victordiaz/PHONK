@@ -35,6 +35,7 @@ import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -142,7 +143,7 @@ public class PSerial extends ProtoBase {
                 error("No USB connected");
             }
         } else {
-            MLog.d(TAG, "findSerialPortDevice() usbManager returned empty mDevice list." );
+            MLog.d(TAG, "findSerialPortDevice() usbManager returned empty mDevice list.");
             // There is no USB devices connected. Send an intent to MainActivity
             error("No USB connected");
         }
@@ -157,7 +158,7 @@ public class PSerial extends ProtoBase {
      * Request user permission. The response will be received in the BroadcastReceiver
      */
     private void requestUserPermission() {
-        MLog.d(TAG, String.format("requestUserPermission(%X:%X)", mDevice.getVendorId(), mDevice.getProductId() ) );
+        MLog.d(TAG, String.format("requestUserPermission(%X:%X)", mDevice.getVendorId(), mDevice.getProductId()));
         PendingIntent mPendingIntent = PendingIntent.getBroadcast(getContext(), 0, new Intent(ACTION_USB_PERMISSION), 0);
         mUsbManager.requestPermission(mDevice, mPendingIntent);
     }
@@ -169,7 +170,7 @@ public class PSerial extends ProtoBase {
     private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, "onReceive " + intent.getAction().toString());
+            MLog.d(TAG, "onReceive " + intent.getAction());
             if (intent.getAction().equals(ACTION_USB_PERMISSION)) {
                 final boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
 
@@ -191,7 +192,7 @@ public class PSerial extends ProtoBase {
                         if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
                     });
                     new ConnectionThread().start();
-                // User not accepted our USB connection. Send an Intent to the Main Activity
+                    // User not accepted our USB connection. Send an Intent to the Main Activity
                 } else {
                     // Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
                     // context.sendBroadcast(intent);
@@ -278,36 +279,32 @@ public class PSerial extends ProtoBase {
 
         @Override
         public void onReceivedData(byte[] arg0) {
-            try {
-                String data = new String(arg0, "UTF-8");
-                MLog.d(TAG, "--> " + data);
+            String data = new String(arg0, StandardCharsets.UTF_8);
+            MLog.d(TAG, "--> " + data);
 
-                if (isReturningFullLine) {
-                    returnLine = returnLine + data;
-                    int newLineIndex = returnLine.indexOf('\n');
-                    MLog.d(TAG, "index " + newLineIndex);
-                    String msgReturn = "";
-                    if (newLineIndex != -1) {
-                        msgReturn = returnLine.substring(0, newLineIndex);
-                        returnLine = returnLine.substring(newLineIndex + 1);
-                    }
-                    // MLog.d(TAG, msg);
-                    if (msgReturn.trim().equals("") == false) {
-                        final String finalMsgReturn = msgReturn;
-                        mHandler.post(() -> {
-                            ReturnObject o = new ReturnObject();
-                            o.put("data", finalMsgReturn);
-                            if (mCallbackData != null) mCallbackData.event(o);
-                        });
-                    }
-                } else {
-                    // returnData = returnLine;
+            if (isReturningFullLine) {
+                returnLine = returnLine + data;
+                int newLineIndex = returnLine.indexOf('\n');
+                MLog.d(TAG, "index " + newLineIndex);
+                String msgReturn = "";
+                if (newLineIndex != -1) {
+                    msgReturn = returnLine.substring(0, newLineIndex);
+                    returnLine = returnLine.substring(newLineIndex + 1);
                 }
-
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                // MLog.d(TAG, msg);
+                if (msgReturn.trim().equals("") == false) {
+                    final String finalMsgReturn = msgReturn;
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("data", finalMsgReturn);
+                        if (mCallbackData != null) mCallbackData.event(o);
+                    });
+                }
+            } else {
+                // returnData = returnLine;
             }
+
+
         }
     };
 
@@ -315,7 +312,7 @@ public class PSerial extends ProtoBase {
      * State changes in the CTS line will be received here
      */
     private UsbSerialInterface.UsbCTSCallback mCTSCallback = state -> {
-        if(mHandler != null) {
+        if (mHandler != null) {
             // mHandler.obtainMessage(CTS_CHANGE).sendToTarget();
         }
     };
@@ -324,7 +321,7 @@ public class PSerial extends ProtoBase {
      * State changes in the DSR line will be received here
      */
     private UsbSerialInterface.UsbDSRCallback mDSRCallback = state -> {
-        if(mHandler != null) {
+        if (mHandler != null) {
             // mHandler.obtainMessage(DSR_CHANGE).sendToTarget();
         }
     };

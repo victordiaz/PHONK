@@ -47,7 +47,8 @@ public class UserPreferences {
     public void load() {
         String json = FileIO.loadStringFromFile(PhonkSettings.getPrefUrl());
         if (json != null) {
-            Type stringStringMap = new TypeToken<Map<String, Object>>() {}.getType();
+            Type stringStringMap = new TypeToken<Map<String, Object>>() {
+            }.getType();
             pref = gson.fromJson(json, stringStringMap);
         } else {
             pref = new HashMap<String, Object>();

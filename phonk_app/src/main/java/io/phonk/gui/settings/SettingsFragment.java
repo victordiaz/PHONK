@@ -247,12 +247,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
                     .setCancelable(false).setPositiveButton("Yes", (dialog, which) -> {
-                        progress.show();
+                progress.show();
 
-                        PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
-                                () -> progress.dismiss());
-                        dialog.cancel();
-                    }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
+                PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
+                        () -> progress.dismiss());
+                dialog.cancel();
+            }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
 
             return true;
         });

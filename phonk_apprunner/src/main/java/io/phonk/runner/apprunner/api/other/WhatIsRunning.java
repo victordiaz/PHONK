@@ -57,7 +57,7 @@ public class WhatIsRunning {
 
             try {
                 //if (method !== null) {
-                    method.invoke(o);
+                method.invoke(o);
                 //}
             } catch (IllegalArgumentException e) {
             } catch (IllegalAccessException e) {
