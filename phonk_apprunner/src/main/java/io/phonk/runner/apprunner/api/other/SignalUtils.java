@@ -23,8 +23,8 @@
 package io.phonk.runner.apprunner.api.other;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.FFT;
 
@@ -48,8 +48,8 @@ public class SignalUtils extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"function()"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"function()"})
     public double[] fft(double[] re) {
         fft.fft(re, im.clone());
 

@@ -20,11 +20,11 @@
  *
  */
 
-package io.phonk.helpers;
+package io.phonk.runner.base.utils;
 
 import io.phonk.runner.base.utils.MLog;
 
-public class Timer2 {
+public class TimerUtils {
     private static long startTime;
 
     public static void start() {

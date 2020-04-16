@@ -32,12 +32,11 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.Map;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 
-public class PImage extends ImageView implements PViewMethodsInterface {
+public class PImage extends androidx.appcompat.widget.AppCompatImageView implements PViewMethodsInterface {
 
     private static final String TAG = PImage.class.getSimpleName();
     protected final AppRunner mAppRunner;
@@ -53,8 +52,8 @@ public class PImage extends ImageView implements PViewMethodsInterface {
         styler.apply();
     }
 
-    @ProtoMethod(description = "Sets an image", example = "")
-    @ProtoMethodParam(params = {"imageName"})
+    @PhonkMethod(description = "Sets an image", example = "")
+    @PhonkMethodParam(params = {"imageName"})
     public PImage load(String imagePath, int width, int height) {
         if (imagePath.startsWith("http://")) {
             Picasso.with(mAppRunner.getAppContext()).load(imagePath).resize(width, height).centerCrop().into(this);

@@ -81,9 +81,9 @@ import io.phonk.runner.apprunner.api.network.PSimpleHttpServer;
 import io.phonk.runner.apprunner.api.network.PSocketIOClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketServer;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.network.OSC;
@@ -98,7 +98,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-@ProtoObject
+@PhonkObject
 public class PNetwork extends ProtoBase {
 
     private final String TAG = PNetwork.class.getSimpleName();
@@ -134,8 +134,8 @@ public class PNetwork extends ProtoBase {
         return nfc;
     }
 
-    @ProtoMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
-    @ProtoMethodParam(params = {"url", "fileName", "function(progress)"})
+    @PhonkMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
+    @PhonkMethodParam(params = {"url", "fileName", "function(progress)"})
     public void download(String url, String fileName, final ReturnInterface callbackfn) {
 
         NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getAppRunner().getAppContext(), url, getAppRunner().getProject().getFullPathForFile(fileName));
@@ -152,12 +152,12 @@ public class PNetwork extends ProtoBase {
 
     }
 
-    @ProtoMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
+    @PhonkMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
     public void downloadWithSystemManager(String url) {
         downloadWithSystemManager(url, null);
     }
 
-    @ProtoMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
+    @PhonkMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
     public void downloadWithSystemManager(String url, final ReturnInterface callback) {
         final DownloadManager dm = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -217,8 +217,8 @@ public class PNetwork extends ProtoBase {
 
     }
 
-    @ProtoMethod(description = "Check if internet connection is available", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Check if internet connection is available", example = "")
+    @PhonkMethodParam(params = {""})
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -226,20 +226,20 @@ public class PNetwork extends ProtoBase {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    @ProtoMethod(description = "Returns the current device Ip address", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Returns the current device Ip address", example = "")
+    @PhonkMethodParam(params = {""})
     public ReturnObject networkInfo() {
         return NetworkUtils.getLocalIpAddress(getContext());
     }
 
-    @ProtoMethod(description = "Get the wifi ap information", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Get the wifi ap information", example = "")
+    @PhonkMethodParam(params = {""})
     public WifiInfo wifiInfo() {
         return NetworkUtils.getWifiInfo(getContext());
     }
 
-    @ProtoMethod(description = "Starts an OSC server", example = "")
-    @ProtoMethodParam(params = {"port", "function(jsonData)"})
+    @PhonkMethod(description = "Starts an OSC server", example = "")
+    @PhonkMethodParam(params = {"port", "function(jsonData)"})
     public OSC.Server createOSCServer(String port) {
         OSC osc = new OSC();
         OSC.Server server = osc.new Server();
@@ -250,8 +250,8 @@ public class PNetwork extends ProtoBase {
         return server;
     }
 
-    @ProtoMethod(description = "Connects to a OSC server. Returns an object that allow sending messages", example = "")
-    @ProtoMethodParam(params = {"address", "port"})
+    @PhonkMethod(description = "Connects to a OSC server. Returns an object that allow sending messages", example = "")
+    @PhonkMethodParam(params = {"address", "port"})
     public OSC.Client connectOSC(String address, int port) {
         OSC osc = new OSC();
         OSC.Client client = osc.new Client(address, port);
@@ -263,10 +263,10 @@ public class PNetwork extends ProtoBase {
 
     WifiManager.MulticastLock wifiLock;
 
-    @ProtoMethod(description = "Enable multicast networking", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Enable multicast networking", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public void multicast(boolean b) {
-        WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifi != null) {
             if (b) {
                 wifiLock = wifi.createMulticastLock("mylock");
@@ -281,7 +281,7 @@ public class PNetwork extends ProtoBase {
         WifiManager.MulticastLock wifiLock;
 
         MulticastEnabler(boolean b) {
-            WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             if (wifi != null) {
                 if (b) {
                     wifiLock = wifi.createMulticastLock("mylock");
@@ -303,24 +303,24 @@ public class PNetwork extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Start a websocket server", example = "")
-    @ProtoMethodParam(params = {"port", "function(status, socket, data)"})
+    @PhonkMethod(description = "Start a websocket server", example = "")
+    @PhonkMethodParam(params = {"port", "function(status, socket, data)"})
     public PWebSocketServer createWebsocketServer(int port) {
         PWebSocketServer pWebSocketServer = new PWebSocketServer(getAppRunner(), port);
 
         return pWebSocketServer;
     }
 
-    @ProtoMethod(description = "Connect to a websocket server", example = "")
-    @ProtoMethodParam(params = {"uri", "function(status, data)"})
+    @PhonkMethod(description = "Connect to a websocket server", example = "")
+    @PhonkMethodParam(params = {"uri", "function(status, data)"})
     public PWebSocketClient connectWebsocket(String uri) {
         PWebSocketClient pWebSocketClient = new PWebSocketClient(getAppRunner(), uri);
 
         return pWebSocketClient;
     }
 
-    @ProtoMethod(description = "Connect to a SocketIO server", example = "")
-    @ProtoMethodParam(params = {"uri", "function(status, message, data)"})
+    @PhonkMethod(description = "Connect to a SocketIO server", example = "")
+    @PhonkMethodParam(params = {"uri", "function(status, message, data)"})
     public PSocketIOClient connectSocketIO(String uri) {
         PSocketIOClient socketIOClient = new PSocketIOClient(getAppRunner(), uri);
 
@@ -355,8 +355,8 @@ public class PNetwork extends ProtoBase {
     }
 
     // http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
-    @ProtoMethod(description = "Send an E-mail. It requires passing a configuration object with (host, user, password, port, auth, ttl) parameters", example = "")
-    @ProtoMethodParam(params = {"url", "function(data)"})
+    @PhonkMethod(description = "Send an E-mail. It requires passing a configuration object with (host, user, password, port, auth, ttl) parameters", example = "")
+    @PhonkMethodParam(params = {"url", "function(data)"})
     public void sendEmail(String from, String to, String subject, String text, final HashMap<String, String> emailSettings)
             throws MessagingException {
 
@@ -423,8 +423,8 @@ public class PNetwork extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Simple http get. It returns the data using the callback", example = "")
-    @ProtoMethodParam(params = {"url", "function(eventType, responseString)"})
+    @PhonkMethod(description = "Simple http get. It returns the data using the callback", example = "")
+    @PhonkMethodParam(params = {"url", "function(eventType, responseString)"})
     public void httpGet(String url, final ReturnInterface callbackfn) {
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder().url(url).build();
@@ -513,8 +513,8 @@ public class PNetwork extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Simple http post request. It needs an object to be sent. If an element of the object contains the key file then it will try to upload the resource indicated in the value as Uri ", example = "")
-    @ProtoMethodParam(params = {"url", "params", "function(responseString)"})
+    @PhonkMethod(description = "Simple http post request. It needs an object to be sent. If an element of the object contains the key file then it will try to upload the resource indicated in the value as Uri ", example = "")
+    @PhonkMethodParam(params = {"url", "params", "function(responseString)"})
     public void httpPost(final String url, final NativeArray parts, final ReturnInterface callbackfn) {
         final OkHttpClient client = new OkHttpClient();
 
@@ -630,8 +630,8 @@ public class PNetwork extends ProtoBase {
     //}
 
 
-    @ProtoMethod(description = "Simple http server, serving the content of the project folder", example = "")
-    @ProtoMethodParam(params = {"port", "function(responseString)"})
+    @PhonkMethod(description = "Simple http server, serving the content of the project folder", example = "")
+    @PhonkMethodParam(params = {"port", "function(responseString)"})
     public PSimpleHttpServer createSimpleHttpServer(int port) {
         PSimpleHttpServer httpServer = null;
         try {
@@ -696,24 +696,24 @@ public class PNetwork extends ProtoBase {
         return "";
     }
 
-    @ProtoMethod(description = "Enable/Disable the Wifi adapter", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Enable/Disable the Wifi adapter", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public void enableWifi(boolean enabled) {
         WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(enabled);
     }
 
 
-    @ProtoMethod(description = "Check if the Wifi adapter is enabled", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Check if the Wifi adapter is enabled", example = "")
+    @PhonkMethodParam(params = {})
     public boolean isWifiEnabled() {
         WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         return wifiManager.isWifiEnabled();
     }
 
     // http://stackoverflow.com/questions/3213205/how-to-detect-system-information-like-os-or-device-type
-    @ProtoMethod(description = "Get the network type", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Get the network type", example = "")
+    @PhonkMethodParam(params = {})
     public String getNetworkType() {
         String type = "none";
         TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -737,8 +737,8 @@ public class PNetwork extends ProtoBase {
 
     // http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
 
-    @ProtoMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
-    @ProtoMethodParam(params = {"ssidName", "type", "password"})
+    @PhonkMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+    @PhonkMethodParam(params = {"ssidName", "type", "password"})
     public void connectWifi(String networkSSID, String type, String networkPass) {
 
         WifiConfiguration conf = new WifiConfiguration();
@@ -759,7 +759,7 @@ public class PNetwork extends ProtoBase {
             conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
         }
 
-        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.addNetwork(conf);
 
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
@@ -778,11 +778,11 @@ public class PNetwork extends ProtoBase {
     private Object mIsWifiAPEnabled = true;
 
 
-    @ProtoMethod(description = "Enable/Disable mContext Wifi access point", example = "")
-    @ProtoMethodParam(params = {"boolean, apName"})
+    @PhonkMethod(description = "Enable/Disable mContext Wifi access point", example = "")
+    @PhonkMethodParam(params = {"boolean, apName"})
     public void wifiAP(boolean enabled, String wifiName) {
 
-        WifiManager wifi = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
         Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
         for (Method method : wmMethods) {
@@ -817,8 +817,8 @@ public class PNetwork extends ProtoBase {
         void event();
     }
 
-    @ProtoMethod(description = "Ping mContext Ip address", example = "")
-    @ProtoMethodParam(params = {"ip", "function(time)"})
+    @PhonkMethod(description = "Ping mContext Ip address", example = "")
+    @PhonkMethodParam(params = {"ip", "function(time)"})
     public void ping(final String where, final int num, final ReturnInterface callbackfn) {
        mHandler.post(new Runnable() {
            @Override
@@ -848,8 +848,8 @@ public class PNetwork extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Start a ftp server in the given port", example = "")
-    @ProtoMethodParam(params = {"port", "function(activity)"})
+    @PhonkMethod(description = "Start a ftp server in the given port", example = "")
+    @PhonkMethodParam(params = {"port", "function(activity)"})
     public PFtpServer createFtpServer(final int port, PFtpServer.FtpServerCb callback) {
         PFtpServer ftpServer = new PFtpServer(port, callback);
         getAppRunner().whatIsRunning.add(ftpServer);
@@ -858,16 +858,16 @@ public class PNetwork extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Connect to ftp", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Connect to ftp", example = "")
+    @PhonkMethodParam(params = {})
     public PFtpClient createFtpConnection() {
         PFtpClient ftpClient = new PFtpClient(getAppRunner());
 
         return ftpClient;
     }
 
-    @ProtoMethod(description = "Connect to a MQTT service", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Connect to a MQTT service", example = "")
+    @PhonkMethodParam(params = {})
     public PMqtt createMQTTClient() {
         PMqtt pMqtt = new PMqtt(getAppRunner());
 

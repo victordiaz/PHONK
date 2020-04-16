@@ -40,9 +40,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="1"
+        android:padding="5dp"
         android:paddingBottom="0dp"
         android:animateLayoutChanges="true">
 
+        <!--
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="150dp"
@@ -51,6 +53,7 @@
             android:scaleType="fitEnd"
             android:src="@drawable/logo_partial"
             android:visibility="visible" />
+        -->
 
         <LinearLayout
             android:id="@+id/logo_area"
@@ -63,8 +66,9 @@
                 style="@style/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
+            <!--
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -75,6 +79,7 @@
                 android:paddingTop="5dp"
                 android:paddingLeft="5dp"
                 android:src="@drawable/thingie_undertext" />
+            -->
 
             <View
                 android:layout_width="match_parent"

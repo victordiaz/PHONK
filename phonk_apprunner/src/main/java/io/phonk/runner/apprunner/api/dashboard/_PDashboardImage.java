@@ -28,8 +28,8 @@ import org.json.JSONObject;
 import java.net.UnknownHostException;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.StrUtils;
 
@@ -43,7 +43,7 @@ public class _PDashboardImage extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "", example = "")
+    @PhonkMethod(description = "", example = "")
     public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
         this.id = StrUtils.generateUUID();
 
@@ -66,8 +66,8 @@ public class _PDashboardImage extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "change image with a provided url", example = "")
-    @ProtoMethodParam(params = {"url"})
+    @PhonkMethod(description = "change image with a provided url", example = "")
+    @PhonkMethodParam(params = {"url"})
     public void changeImage(String url) throws JSONException, UnknownHostException {
 
         JSONObject values = new JSONObject()

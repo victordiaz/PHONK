@@ -32,8 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import io.phonk.runner.R;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PWindow extends RelativeLayout {
 
@@ -67,8 +67,8 @@ public class PWindow extends RelativeLayout {
     }
 
 
-    @ProtoMethod(description = "Adds a new view", example = "")
-    @ProtoMethodParam(params = {"view"})
+    @PhonkMethod(description = "Adds a new view", example = "")
+    @PhonkMethodParam(params = {"view"})
     public PWindow addWidget(View v) {
         v.setAlpha(0);
         v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
@@ -79,8 +79,8 @@ public class PWindow extends RelativeLayout {
     }
 
 
-    @ProtoMethod(description = "Show/hides the window bar", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Show/hides the window bar", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public PWindow showBar(boolean b) {
         if (b) {
             mBar.setVisibility(View.VISIBLE);
@@ -93,8 +93,8 @@ public class PWindow extends RelativeLayout {
     }
 
 
-    @ProtoMethod(description = "Sets the window title", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "Sets the window title", example = "")
+    @PhonkMethodParam(params = {"text"})
     public PWindow setTitle(String text) {
         mTitle.setText(text);
 
@@ -103,8 +103,8 @@ public class PWindow extends RelativeLayout {
     }
 
 
-    @ProtoMethod(description = "Sets the title color", example = "")
-    @ProtoMethodParam(params = {"colorHext"})
+    @PhonkMethod(description = "Sets the title color", example = "")
+    @PhonkMethodParam(params = {"colorHext"})
     public PWindow setTitleColor(String color) {
         mTitle.setTextColor(Color.parseColor(color));
 
@@ -112,8 +112,8 @@ public class PWindow extends RelativeLayout {
     }
 
 
-    @ProtoMethod(description = "Sets the bar background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the bar background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PWindow setBarBackgroundColor(String color) {
         mBar.setBackgroundColor(Color.parseColor(color));
 
@@ -121,8 +121,8 @@ public class PWindow extends RelativeLayout {
     }
 
 
-    @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PWindow setWindowBackgroundColor(String color) {
         mWindow.setBackgroundColor(Color.parseColor(color));
 

@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,12 +15,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-package io.phonk.runner.apprunner;
+package io.phonk.runner.apprunner.interpreter;
 
 
 import org.mozilla.javascript.Callable;
@@ -32,6 +32,8 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.debug.Debugger;
 
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.permissions.PermissionNotGrantedException;
 import io.phonk.runner.base.utils.MLog;
 
 public class AppRunnerInterpreter {
@@ -51,7 +53,7 @@ public class AppRunnerInterpreter {
     private InterpreterInfo mInterpreterListener;
     // public ObservingDebugger observingDebugger;
 
-    AppRunnerInterpreter(AppRunner appRunner) {
+    public AppRunnerInterpreter(AppRunner appRunner) {
         this.mAppRunner = appRunner;
         init();
     }
@@ -159,12 +161,6 @@ public class AppRunnerInterpreter {
         return rhino.newArray(scope, obj);
     }
 
-    public Scriptable newNativeObject() {
-        Scriptable qq = rhino.newObject(scope);
-
-        return qq;
-    }
-
     /*
     *   Errors and misc
     */
@@ -176,7 +172,7 @@ public class AppRunnerInterpreter {
         this.mInterpreterListener = listener;
     }
 
-    //TODO not ready yet
+    // TODO not ready yet
     public void addDebugger(Debugger debugger) {
         rhino.setDebugger(debugger, scope);
     }

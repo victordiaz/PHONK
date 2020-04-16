@@ -31,7 +31,6 @@ import android.webkit.WebViewClient;
 import java.util.Map;
 
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 
 public class PWebView extends WebView implements PViewMethodsInterface {
 

@@ -25,7 +25,7 @@ package io.phonk.events;
 import java.io.File;
 import java.util.ArrayList;
 
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class Events {

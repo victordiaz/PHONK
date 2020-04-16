@@ -41,8 +41,8 @@ import java.util.Map;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -67,7 +67,7 @@ public class PSerial extends ProtoBase {
         super(appRunner);
     }
 
-    @ProtoMethod(description = "starts serial", example = "")
+    @PhonkMethod(description = "starts serial", example = "")
     public void start() {
         getAppRunner().whatIsRunning.add(this);
         mUsbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
@@ -80,8 +80,8 @@ public class PSerial extends ProtoBase {
         findSerialPortDevice();
     }
 
-    @ProtoMethod(description = "stop serial", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "stop serial", example = "")
+    @PhonkMethodParam(params = {})
     public void stop() {
         if (mSerialPortConnected) {
             mSerialPort.close();
@@ -89,8 +89,8 @@ public class PSerial extends ProtoBase {
         getContext().unregisterReceiver(usbReceiver);
     }
 
-    @ProtoMethod(description = "sends commands to the serial")
-    @ProtoMethodParam(params = {"data"})
+    @PhonkMethod(description = "sends commands to the serial")
+    @PhonkMethodParam(params = {"data"})
     public void write(String data) {
         if (!mSerialPortConnected) return;
         mSerialPort.write(data.getBytes());

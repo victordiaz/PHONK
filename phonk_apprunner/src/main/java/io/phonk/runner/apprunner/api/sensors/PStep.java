@@ -29,8 +29,8 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PStep extends CustomSensorManager implements WhatIsRunningInterface {
@@ -43,8 +43,8 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
     }
 
 
-    @ProtoMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
-    @ProtoMethodParam(params = {"function(value)"})
+    @PhonkMethod(description = "Start the step counter. Not superacurate and only few devices", example = "")
+    @PhonkMethodParam(params = {"function(value)"})
     public void start() {
         super.start();
 
@@ -79,8 +79,8 @@ public class PStep extends CustomSensorManager implements WhatIsRunningInterface
     }
 
 
-    @ProtoMethod(description = "Start the step sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
+    @PhonkMethod(description = "Start the step sensor. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
     public PStep onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 

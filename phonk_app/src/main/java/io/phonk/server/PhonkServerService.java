@@ -23,7 +23,6 @@
 package io.phonk.server;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -60,12 +59,12 @@ import io.phonk.events.EventsProxy;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class PhonkServerService extends Service {
 

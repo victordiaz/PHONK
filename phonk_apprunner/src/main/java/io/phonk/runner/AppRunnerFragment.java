@@ -46,11 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.phonk.runner.api.other.PLiveCodingFeedback;
+import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.AppRunnerInterpreter;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
@@ -68,13 +68,13 @@ public class AppRunnerFragment extends Fragment {
     private RelativeLayout parentScriptedLayout;
     private RelativeLayout infoLayout;
 
-    public  PLiveCodingFeedback liveCoding;
+    public PLiveCodingFeedback liveCoding;
     private View mMainView;
     private TextView txtTitle;
     private TextView txtSubtitle;
 
-    String name = "defaultName";
-    String folder = "defaulFolder";
+    private String name = "defaultName";
+    private String folder = "defaulFolder";
 
     @Override
     public void onAttach(Context context) {
@@ -137,7 +137,8 @@ public class AppRunnerFragment extends Fragment {
                 mAppRunner.pConsole.p_error(resultType, message);
             }
         };
-        mAppRunner.interp.addListener(appRunnerCb);
+        // TODO REENABLE
+        // mAppRunner.interp.addListener(appRunnerCb);
 
         mAppRunner.initProject();
 
@@ -148,7 +149,7 @@ public class AppRunnerFragment extends Fragment {
         startFileObserver();
 
         // Call the onCreate JavaScript function.
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
+        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onCreate"); // , savedInstanceState);
     }
 
     public static AppRunnerFragment newInstance(Bundle bundle, Map<String, Object> scriptSettings) {
@@ -177,7 +178,7 @@ public class AppRunnerFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         MLog.d(TAG, "onDestroy");
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
+        // if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
         mAppRunner.byebye();
     }
 

@@ -29,10 +29,9 @@ import android.widget.LinearLayout;
 
 import java.util.HashMap;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 
 public class PLinearLayout extends LinearLayout {
 
@@ -64,8 +63,8 @@ public class PLinearLayout extends LinearLayout {
         setOrientation(mode);
 
     }
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void add(View v, String name) {
         addView(v);
         mViews.put(name, v);
@@ -123,8 +122,8 @@ public class PLinearLayout extends LinearLayout {
         setPadding((int) l, (int) t, (int) r, (int) b);
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void clear() {
         removeAllViews();
     }

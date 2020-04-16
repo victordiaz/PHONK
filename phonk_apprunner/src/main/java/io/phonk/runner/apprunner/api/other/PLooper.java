@@ -26,8 +26,8 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PLooper implements WhatIsRunningInterface {
@@ -68,7 +68,6 @@ public class PLooper implements WhatIsRunningInterface {
 
         rl.add(task);
 
-        //TODO enable
         mAppRunner.whatIsRunning.add(this);
     }
 
@@ -78,8 +77,8 @@ public class PLooper implements WhatIsRunningInterface {
         return this;
     }
 
-    @ProtoMethod(description = "Change the current time speed to a new one", example = "")
-    @ProtoMethodParam(params = {"duration"})
+    @PhonkMethod(description = "Change the current time speed to a new one", example = "")
+    @PhonkMethodParam(params = {"duration"})
     public PLooper speed(int duration) {
         this.speed = duration;
         if (duration < this.speed) {
@@ -103,7 +102,7 @@ public class PLooper implements WhatIsRunningInterface {
     }
      */
 
-    @ProtoMethod(description = "Stop the looper", example = "")
+    @PhonkMethod(description = "Stop the looper", example = "")
     public PLooper stop() {
         this.isLooping = false;
         handler.removeCallbacks(task);
@@ -111,7 +110,7 @@ public class PLooper implements WhatIsRunningInterface {
         return this;
     }
 
-    @ProtoMethod(description = "Start the looper", example = "")
+    @PhonkMethod(description = "Start the looper", example = "")
     public PLooper start() {
         if (!this.isLooping) {
           this.isLooping = true;

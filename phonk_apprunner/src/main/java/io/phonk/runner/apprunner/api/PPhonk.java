@@ -31,19 +31,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.debug.DebugFrame;
-import org.mozilla.javascript.debug.DebuggableScript;
-
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.apprunner.api.widgets.PWebEditor;
 import io.phonk.runner.apidoc.annotation.APIRequires;
 import io.phonk.runner.apidoc.annotation.APIVersion;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.models.Project;
 
 /*
@@ -79,37 +73,21 @@ public class PPhonk extends ProtoBase {
 //	}
 
 
-    //TODO reenable this
-    @ProtoMethod(description = "get the current project HTTP URL", example = "")
+    @PhonkMethod(description = "get the current project HTTP URL", example = "")
     public String urlForFiles() {
-        // http://127.0.0.1:8585/api/project/user_projects%2FUser%20Projects%2Fcss3_1%2Ffiles/view/patata2.png
         Project p = getAppRunner().getProject();
         String url = getAppRunner().getServingUrl() + "api/project/" + p.getSandboxPath() + "files/view/";
         return url;
     }
 
-    //TODO this is a place holder
-    //
-    @ProtoMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
-    @ProtoMethodParam(params = {})
+    //TODO reenable?
+    @PhonkMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
+    @PhonkMethodParam(params = {})
     public PWebEditor webEditor() {
         PWebEditor pWebEditor = new PWebEditor(getAppRunner());
 
         return pWebEditor;
     }
-
-//TODO reenable this
-    //
-//    @APIMethod(description = "Returns an object to manipulate the device app", example = "")
-//    @APIParam(params = { })
-//    public PDeviceEditor deviceEditor() {
-//        contextUi.get().initLayout();
-//
-//        PDeviceEditor pEditor = new PDeviceEditor(mContext);
-//
-//        return pEditor;
-//    }
-
 
 //TODO reenable this
 //
@@ -127,9 +105,9 @@ public class PPhonk extends ProtoBase {
 //		contextUi.get().startActivityForResult(intent, 22);
 //	}
 
-    //TODO this is mContext place holder
+    //TODO this is a place holder
     //
-    @ProtoMethod(description = "", example = "")
+    @PhonkMethod(description = "", example = "")
     @APIVersion(minLevel = "2")
     @APIRequires("android.permission.INTERNET")
     public void returnValueToScript(String returnValue) {
@@ -142,7 +120,7 @@ public class PPhonk extends ProtoBase {
 
     //TODO this doesnt work
 
-    @ProtoMethod(description = "", example = "")
+    @PhonkMethod(description = "", example = "")
     public void returnResult(String data) {
 
         Bundle conData = new Bundle();
@@ -159,75 +137,7 @@ public class PPhonk extends ProtoBase {
         void data(String debuggableScript);
     }
 
-//reenable this
-//
-//
-//	@APIMethod(description = "Add mContext debugger to the execution", example = "")
-//	@APIVersion(minLevel = "2")
-//	@APIRequires("android.permission.INTERNET")
-//	public void addDebugger(final AddDebuggerCB cb) {
-//
-//        Debugger debugger = new Debugger() {
-//            @Override
-//            public void handleCompilationDone(Context context, DebuggableScript debuggableScript, String s) {
-//                //cb.data("qq");
-//                MLog.network(mContext, TAG, "" + debuggableScript.getFunctionName());
-//            }
-//
-//            @Override
-//            public DebugFrame getFrame(Context context, DebuggableScript debuggableScript) {
-//                //cb.data("qq");
-//                MLog.network(mContext, TAG, "" + debuggableScript.getFunctionName());
-//
-//                return new MyDebugFrame(debuggableScript);
-//            }
-//        };
-//
-//        contextUi.get().interp.addDebugger(debugger);
-//
-//
-//    }
-
-    class MyDebugFrame implements DebugFrame {
-        private final DebuggableScript debuggableScript;
-
-        public MyDebugFrame(DebuggableScript debuggableScript) {
-            this.debuggableScript = debuggableScript;
-        }
-
-        public void onEnter(Context cx, Scriptable activation,
-                            Scriptable thisObj, Object[] args) {
-            MLog.network(getContext(), TAG, "" + "Frame entered");
-
-        }
-
-        public void onExceptionThrown(Context cx, Throwable ex) {
-        }
-
-        public void onExit(Context cx, boolean byThrow,
-                           Object resultOrException) {
-            MLog.network(getContext(), TAG, "" + "Frame exit, result=" + resultOrException);
-
-        }
-
-        @Override
-        public void onDebuggerStatement(Context context) {
-
-        }
-
-        public void onLineChange(Context cx, int lineNumber) {
-            if (isBreakpoint(lineNumber)) {
-                MLog.network(getContext(), TAG, "" + "Breakpoint hit: " + debuggableScript.getSourceName() + ":" + lineNumber);
-            }
-        }
-
-        private boolean isBreakpoint(int lineNumber) {
-            return true;
-        }
-    }
-
-
-    @ProtoMethod(description = "Get the current Protocoder version name", example = "")
+    @PhonkMethod(description = "Get the current Protocoder version name", example = "")
     public String versionName() {
         PackageInfo pInfo = null;
         try {
@@ -239,7 +149,7 @@ public class PPhonk extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Get the current Protocoder version code", example = "")
+    @PhonkMethod(description = "Get the current Protocoder version code", example = "")
     public int versionCode() {
         PackageInfo pInfo = null;
         try {
@@ -251,7 +161,7 @@ public class PPhonk extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Install a Proto app programatically", example = "")
+    @PhonkMethod(description = "Install a Proto app programatically", example = "")
     public void installPhonkApp(String src, boolean b) {
         //TODO reenable this
         final String projectPath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath();

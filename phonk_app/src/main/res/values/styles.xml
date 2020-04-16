@@ -69,14 +69,15 @@
         <item name="android:shadowDy">1</item>
         <item name="android:text">phonk</item>
         <item name="android:textColor">@color/phonk_textColor_primary</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">monospace</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="qq">
-        <item name="android:paddingLeft">4px</item>
-        <item name="android:paddingBottom">4px</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
         <item name="android:textColor">#ffffffff</item>
         <item name="android:background">#00000088</item>
         <item name="android:textSize">12sp</item>
@@ -126,6 +127,12 @@
         <item name="android:textColor">@color/phonk_textColor_primary</item>
         <!-- <item name="android:fontFamily">monospace</item>
         <item name="android:textAllCaps">false</item> -->
+    </style>
+
+    <style name = "ToggleButton" parent = "Widget.AppCompat.Button">
+        <item name = "android:textColor">@color/phonk_accentColor_primary</item>
+        <item name = "android:background">@drawable/grey_rounded_rect</item>
+        <item name = "android:textSize">10sp</item>
     </style>
 
 </resources>

@@ -52,7 +52,7 @@ import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
@@ -141,13 +141,8 @@ public class ProjectListFragment extends BaseFragment {
         LinearLayout llFolderLocation = v.findViewById(R.id.folderLocation2);
         if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
 
-        // TODO add the bottom bar any day.....
         mBottomBar = v.findViewById(R.id.bottombar);
         mBottomBar.setVisibility(View.GONE);
-        /*
-        mBottomBar.setTranslationY(AndroidUtils.dpToPixels(mContext, 52));
-        mBottomBar.animate().translationY(AndroidUtils.dpToPixels(mContext, 0)).setDuration(5000).start();
-        */
 
         return v;
     }
@@ -161,11 +156,6 @@ public class ProjectListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-
-        //TODO reenable
-        //if (!AndroidUtils.isWear(getActivity())) {
-        //    ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        //}
     }
 
     @Override

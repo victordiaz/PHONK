@@ -33,10 +33,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface ProtoObject {
-
+public @interface PhonkObject {
     String description() default "";
-
     String example() default "";
-
 }

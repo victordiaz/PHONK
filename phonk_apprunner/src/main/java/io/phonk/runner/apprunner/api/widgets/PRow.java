@@ -27,8 +27,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PRow {
     int n;
@@ -50,8 +50,8 @@ public class PRow {
     }
 
 
-    @ProtoMethod(description = "Add a new view to the row", example = "")
-    @ProtoMethodParam(params = {"view"})
+    @PhonkMethod(description = "Add a new view to the row", example = "")
+    @PhonkMethodParam(params = {"view"})
     public void addView(View v) {
         v.setLayoutParams(lParams);
         ll.addView(v);

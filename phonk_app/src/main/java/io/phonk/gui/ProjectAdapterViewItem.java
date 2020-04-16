@@ -47,7 +47,7 @@ import io.phonk.events.Events;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class ProjectAdapterViewItem extends LinearLayout {
 

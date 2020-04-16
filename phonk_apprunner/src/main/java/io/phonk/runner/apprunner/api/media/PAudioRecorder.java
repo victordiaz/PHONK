@@ -30,8 +30,8 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PAudioRecorder extends ProtoBase {
@@ -57,8 +57,8 @@ public class PAudioRecorder extends ProtoBase {
         recorder.setAudioSamplingRate(44100);
     }
 
-    @ProtoMethod(description = "Starts recording", example = "")
-    @ProtoMethodParam(params = {"showProgressBoolean"})
+    @PhonkMethod(description = "Starts recording", example = "")
+    @PhonkMethodParam(params = {"showProgressBoolean"})
     public PAudioRecorder record(String fileName) {
         init();
 
@@ -114,8 +114,8 @@ public class PAudioRecorder extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "Stops recording", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Stops recording", example = "")
+    @PhonkMethodParam(params = {""})
     public void stop() {
         recorder.stop();
     }

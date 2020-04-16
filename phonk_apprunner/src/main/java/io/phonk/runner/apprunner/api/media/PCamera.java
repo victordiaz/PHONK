@@ -28,8 +28,8 @@ import android.hardware.Camera;
 import java.util.List;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.gui.CameraTexture;
 
@@ -55,8 +55,8 @@ public class PCamera extends CameraTexture implements PCameraInterface {
         });
     }
 
-    @ProtoMethodParam(params = {"fileName", "function()"})
-    @ProtoMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
+    @PhonkMethodParam(params = {"fileName", "function()"})
+    @PhonkMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
     // @APIRequires()
     public void takePicture(String file, final ReturnInterface callbackfn) {
 
@@ -103,8 +103,8 @@ public class PCamera extends CameraTexture implements PCameraInterface {
         applyParameters();
     }
 
-    @ProtoMethodParam(params = {"function(data)"})
-    @ProtoMethod(description = "Gets frames", example = "")
+    @PhonkMethodParam(params = {"function(data)"})
+    @PhonkMethod(description = "Gets frames", example = "")
     public void startLearning(LearnImages.Callback callback) {
       learnImages.start();
       learnImages.addCallback(callback);
@@ -146,44 +146,44 @@ public class PCamera extends CameraTexture implements PCameraInterface {
         return detectImage;
     }
 
-    @ProtoMethodParam(params = {"function(data)"})
-    @ProtoMethod(description = "Gets data frames in yuv format (bytes)", example = "")
+    @PhonkMethodParam(params = {"function(data)"})
+    @PhonkMethod(description = "Gets data frames in yuv format (bytes)", example = "")
     public void onNewFrame(CallbackData callbackfn) {
       cam.addCallbackData(callbackfn);
     }
 
-    @ProtoMethodParam(params = {"function(bitmap)"})
-    @ProtoMethod(description = "Gets bitmap frames ready to use", example = "")
+    @PhonkMethodParam(params = {"function(bitmap)"})
+    @PhonkMethod(description = "Gets bitmap frames ready to use", example = "")
     public void onNewFrameBitmap(final CameraTexture.CallbackBmp callbackfn) {
         cam.addCallbackBmp(callbackfn);
     }
 
-    @ProtoMethodParam(params = {"function(base64Image)"})
-    @ProtoMethod(description = "Get the frames ready to stream", example = "")
+    @PhonkMethodParam(params = {"function(base64Image)"})
+    @PhonkMethod(description = "Get the frames ready to stream", example = "")
     public void onNewFrameBase64(CameraTexture.CallbackStream callbackfn) {
         cam.addCallbackStream(callbackfn);
     }
 
-    @ProtoMethodParam(params = {"width", "height"})
-    @ProtoMethod(description = "Set the camera preview resolution", example = "")
+    @PhonkMethodParam(params = {"width", "height"})
+    @PhonkMethod(description = "Set the camera preview resolution", example = "")
     public void setPreviewSize(int w, int h) {
         super.setPreviewSize(w, h);
     }
 
-    @ProtoMethodParam(params = {"width", "height"})
-    @ProtoMethod(description = "Set the camera picture resolution", example = "")
+    @PhonkMethodParam(params = {"width", "height"})
+    @PhonkMethod(description = "Set the camera picture resolution", example = "")
     public void setPictureResolution(int w, int h) {
         super.setPictureSize(w, h);
     }
 
-    @ProtoMethodParam(params = {"{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}"})
-    @ProtoMethod(description = "Set the camera picture effect if supported", example = "")
+    @PhonkMethodParam(params = {"{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}"})
+    @PhonkMethod(description = "Set the camera picture effect if supported", example = "")
     public void setColorEffect(String effect) {
         super.setColorEffect(effect);
     }
 
-    @ProtoMethod(description = "Records a video in fileName", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Records a video in fileName", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public void recordVideo(String file, final ReturnInterface callbackfn) {
         recordVideo(mAppRunner.getProject().getFullPathForFile(file));
         addListener(new CameraListener() {
@@ -200,32 +200,32 @@ public class PCamera extends CameraTexture implements PCameraInterface {
         });
     }
 
-    @ProtoMethod(description = "Stops recording the video", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Stops recording the video", example = "")
+    @PhonkMethodParam(params = {""})
     public void stopRecordingVideo() {
         stopRecordingVideo();
     }
 
-    @ProtoMethod(description = "Checks if flash is available", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Checks if flash is available", example = "")
+    @PhonkMethodParam(params = {""})
     public boolean isFlashAvailable() {
         return super.isFlashAvailable();
     }
 
-    @ProtoMethod(description = "Turns on/off the flash", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Turns on/off the flash", example = "")
+    @PhonkMethodParam(params = {""})
     public void turnOnFlash(boolean b) {
         super.turnOnFlash(b);
     }
 
-    @ProtoMethod(description = "Focus", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Focus", example = "")
+    @PhonkMethodParam(params = {""})
     public void focus() {
         super.focus(null);
     }
 
-    @ProtoMethod(description = "Focus with callback on finish", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Focus with callback on finish", example = "")
+    @PhonkMethodParam(params = {""})
     public void focus(ReturnInterface callback) {
         super.focus(callback);
     }

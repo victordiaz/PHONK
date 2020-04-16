@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.base.utils.MLog;
 
 /*
@@ -63,7 +63,7 @@ public class APIManager {
     }
 
     /**
-     * add mContext new class to extract the methods
+     * add a new class to extract the methods
      *
      * @param c
      */
@@ -106,15 +106,15 @@ public class APIManager {
                     for (Annotation annotation2 : annotations) {
 
                         // description and example
-                        if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
-                            apiMethod.description = ((ProtoMethod) annotation2).description();
-                            apiMethod.example = ((ProtoMethod) annotation2).example();
+                        if (annotation2.annotationType().getSimpleName().equals(PhonkMethod.class.getSimpleName())) {
+                            apiMethod.description = ((PhonkMethod) annotation2).description();
+                            apiMethod.example = ((PhonkMethod) annotation2).example();
 
                         }
 
                         // get parameters names
-                        if (annotation2.annotationType().getSimpleName().equals(ProtoMethodParam.class.getSimpleName())) {
-                            apiMethod.parametersName = ((ProtoMethodParam) annotation2).params();
+                        if (annotation2.annotationType().getSimpleName().equals(PhonkMethodParam.class.getSimpleName())) {
+                            apiMethod.parametersName = ((PhonkMethodParam) annotation2).params();
                             MLog.d(TAG, "getting names " + apiMethod.parametersName);
                         }
 
@@ -157,11 +157,11 @@ public class APIManager {
                 for (Annotation annotation2 : annotations) {
 
                     MLog.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
-                            + ProtoMethod.class.getSimpleName());
+                            + PhonkMethod.class.getSimpleName());
 
-                    if (annotation2.annotationType().getSimpleName().equals(ProtoMethod.class.getSimpleName())) {
-                        String desc = ((ProtoMethod) annotation2).description();
-                        String example = ((ProtoMethod) annotation2).example();
+                    if (annotation2.annotationType().getSimpleName().equals(PhonkMethod.class.getSimpleName())) {
+                        String desc = ((PhonkMethod) annotation2).description();
+                        String example = ((PhonkMethod) annotation2).example();
                         MLog.d(TAG, desc);
                     }
                 }
@@ -187,7 +187,6 @@ public class APIManager {
     }
 
     class API {
-
         public Class cls;
         public Method[] methods;
 

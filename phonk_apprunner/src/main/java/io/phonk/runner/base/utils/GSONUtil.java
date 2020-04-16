@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,27 +15,23 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-package io.phonk.runner.base;
+package io.phonk.runner.base.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
 
-/**
- * Created by biquillo on 16/06/17.
- */
-
-public class ProtoSingleton {
+public class GSONUtil {
 
     public final Gson gson;
-    private static ProtoSingleton inst;
+    private static GSONUtil inst;
 
-    ProtoSingleton() {
+    GSONUtil() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLongSerializationPolicy(LongSerializationPolicy.STRING);
         // gsonBuilder.setPrettyPrinting();
@@ -44,9 +40,9 @@ public class ProtoSingleton {
     }
 
     // Singleton (one app view, different URLs)
-    public static ProtoSingleton getInstance() {
+    public static GSONUtil getInstance() {
         if (inst == null) {
-            inst = new ProtoSingleton();
+            inst = new GSONUtil();
         }
         return inst;
     }

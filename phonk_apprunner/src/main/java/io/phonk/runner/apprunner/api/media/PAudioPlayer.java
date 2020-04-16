@@ -31,8 +31,8 @@ import java.io.IOException;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -122,64 +122,64 @@ public class PAudioPlayer extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer loop(boolean b) {
         mMediaPlayer.setLooping(b);
 
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer pause() {
         mMediaPlayer.pause();
 
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer seekTo(int ms) {
         mMediaPlayer.seekTo(ms);
 
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public boolean isLooping() {
         return mMediaPlayer.isLooping();
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public boolean isPlaying() {
         return mMediaPlayer.isPlaying();
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public int position() {
         return mMediaPlayer.getCurrentPosition();
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public int duration() {
         return mMediaPlayer.getDuration();
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer volume(float vol) {
         mMediaPlayer.setVolume(vol, vol);
 
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer volume(float volLeft, float volRight) {
         mMediaPlayer.setVolume(volLeft, volRight);
 
@@ -221,8 +221,8 @@ public class PAudioPlayer extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer finish() {
         mMediaPlayer.stop();
         mMediaPlayer.release();
@@ -231,8 +231,8 @@ public class PAudioPlayer extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public PAudioPlayer onFinish(PAudioPlayer.OnFinishCB callbackfn) {
 
         return this;

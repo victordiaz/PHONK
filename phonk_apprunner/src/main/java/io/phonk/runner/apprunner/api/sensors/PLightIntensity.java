@@ -30,8 +30,8 @@ import android.hardware.SensorManager;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PLightIntensity extends CustomSensorManager implements WhatIsRunningInterface {
@@ -48,8 +48,8 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
     }
 
 
-    @ProtoMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
-    @ProtoMethodParam(params = {"function(intensity)"})
+    @PhonkMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
+    @PhonkMethodParam(params = {"function(intensity)"})
     public void start() {
         super.start();
 
@@ -87,8 +87,8 @@ public class PLightIntensity extends CustomSensorManager implements WhatIsRunnin
     }
 
 
-    @ProtoMethod(description = "Start the light sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
+    @PhonkMethod(description = "Start the light sensor. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
     public PLightIntensity onChange(final ReturnInterface callbackfn) {
         mCallbackLightChange = callbackfn;
 

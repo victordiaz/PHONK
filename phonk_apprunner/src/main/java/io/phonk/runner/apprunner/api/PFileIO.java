@@ -36,16 +36,16 @@ import java.io.IOException;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PSqLite;
-import io.phonk.runner.apprunner.api.other.PhonkNativeArray;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.Image;
 
-@ProtoObject
+@PhonkObject
 public class PFileIO extends ProtoBase {
 
     final private String TAG = PFileIO.class.getSimpleName();
@@ -54,8 +54,8 @@ public class PFileIO extends ProtoBase {
         super(appRunner);
     }
 
-    @ProtoMethod(description = "Move a file or directory", example = "")
-    @ProtoMethodParam(params = {"name", "destination"})
+    @PhonkMethod(description = "Move a file or directory", example = "")
+    @PhonkMethodParam(params = {"name", "destination"})
     public boolean createFile(String name) {
         File file = new File(getAppRunner().getProject().getFullPathForFile(name));
         try {
@@ -67,15 +67,15 @@ public class PFileIO extends ProtoBase {
         }
     }
 
-    @ProtoMethod(description = "Create a directory", example = "")
-    @ProtoMethodParam(params = {"dirName"})
+    @PhonkMethod(description = "Create a directory", example = "")
+    @PhonkMethodParam(params = {"dirName"})
     public boolean createFolder(String name) {
         File file = new File(getAppRunner().getProject().getFullPathForFile(name));
         return file.mkdirs();
     }
 
-    @ProtoMethod(description = "Delete a filename", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Delete a filename", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public void delete(String name) {
         FileIO.deleteFileDir(getAppRunner().getProject().getFullPathForFile(name));
     }
@@ -93,8 +93,8 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
-    @ProtoMethod(description = "Get 1 is is a file, 2 if is a directory and -1 if the file doesnt exists", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Get 1 is is a file, 2 if is a directory and -1 if the file doesnt exists", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public String type(String name) {
         String ret = "none";
 
@@ -107,8 +107,8 @@ public class PFileIO extends ProtoBase {
         return ret;
     }
 
-    @ProtoMethod(description = "Move a file to a directory", example = "")
-    @ProtoMethodParam(params = {"name", "destination"})
+    @PhonkMethod(description = "Move a file to a directory", example = "")
+    @PhonkMethodParam(params = {"name", "destination"})
     public void move(String name, String to) {
         File fromFile = new File(getAppRunner().getProject().getFullPathForFile(name));
         File dir = new File(getAppRunner().getProject().getFullPathForFile(to));
@@ -150,8 +150,8 @@ public class PFileIO extends ProtoBase {
     }
     */
 
-    @ProtoMethod(description = "Copy a file or directory", example = "")
-    @ProtoMethodParam(params = {"name", "destination"})
+    @PhonkMethod(description = "Copy a file or directory", example = "")
+    @PhonkMethodParam(params = {"name", "destination"})
     public void copy(String name, String to) {
         File file = new File(getAppRunner().getProject().getFullPathForFile(name));
         File dir = new File(getAppRunner().getProject().getFullPathForFile(to));
@@ -184,8 +184,8 @@ public class PFileIO extends ProtoBase {
     }
     */
 
-    @ProtoMethod(description = "Rename a file or directory", example = "")
-    @ProtoMethodParam(params = {"name", "destination"})
+    @PhonkMethod(description = "Rename a file or directory", example = "")
+    @PhonkMethodParam(params = {"name", "destination"})
     public void rename(String oldName, String newName) {
         //File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
         //file.mkdirs();
@@ -196,8 +196,8 @@ public class PFileIO extends ProtoBase {
         origin.renameTo(new File(path + File.separator + newName));
     }
 
-    @ProtoMethod(description = "Save an array with text into a file", example = "")
-    @ProtoMethodParam(params = {"fileName", "lines[]"})
+    @PhonkMethod(description = "Save an array with text into a file", example = "")
+    @PhonkMethodParam(params = {"fileName", "lines[]"})
     public void saveTextToFile(String lines, String fileName) {
         FileIO.saveStringToFile(lines, getAppRunner().getProject().getFullPathForFile(fileName));
     }
@@ -215,15 +215,15 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
-    @ProtoMethod(description = "Append an array of text into a file", example = "")
-    @ProtoMethodParam(params = {"fileName", "lines[]"})
+    @PhonkMethod(description = "Append an array of text into a file", example = "")
+    @PhonkMethodParam(params = {"fileName", "lines[]"})
     public void appendTextToFile(String line, String fileName) {
         FileIO.appendString(getAppRunner().getProject().getFullPathForFile(fileName), line);
     }
 
 
-    @ProtoMethod(description = "Append an array of text into a file", example = "")
-    @ProtoMethodParam(params = {"fileName", "lines[]"})
+    @PhonkMethod(description = "Append an array of text into a file", example = "")
+    @PhonkMethodParam(params = {"fileName", "lines[]"})
     public void appendTextToFileAsync(final String line, final String fileName, final ReturnInterface callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -236,8 +236,8 @@ public class PFileIO extends ProtoBase {
 
 
 
-    @ProtoMethod(description = "Load the Strings of a text file into an array", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Load the Strings of a text file into an array", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public String loadTextFromFile(String fileName) {
         return FileIO.loadStringFromFile(getAppRunner().getProject().getFullPathForFile(fileName));
     }
@@ -256,13 +256,13 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
-    @ProtoMethod(description = "Loads a font", example = "")
-    @ProtoMethodParam(params = {"fontFile"})
+    @PhonkMethod(description = "Loads a font", example = "")
+    @PhonkMethodParam(params = {"fontFile"})
     public Typeface loadFont(String fontName) {
         return Typeface.createFromFile(getAppRunner().getProject().getFullPathForFile(fontName));
     }
 
-    @ProtoMethod(description = "Loads a bitmap", example = "")
+    @PhonkMethod(description = "Loads a bitmap", example = "")
     public Bitmap loadBitmap(String path) {
         return Image.loadBitmap(getAppRunner().getProject().getFullPathForFile(path));
     }
@@ -278,14 +278,14 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
-    @ProtoMethod(description = "List all the files in the directory", example = "")
-    @ProtoMethodParam(params = {"path"})
+    @PhonkMethod(description = "List all the files in the directory", example = "")
+    @PhonkMethodParam(params = {"path"})
     public PhonkNativeArray list(String path) {
         return list(path, "");
     }
 
-    @ProtoMethod(description = "List all the files with a given extension", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "List all the files with a given extension", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public PhonkNativeArray list(String path, String filter) {
         File[] files = FileIO.listFiles(getAppRunner().getProject().getFullPathForFile(path), filter);
 
@@ -302,15 +302,15 @@ public class PFileIO extends ProtoBase {
         return f.length();
     }
 
-    @ProtoMethod(description = "Open a sqlite database", example = "")
-    @ProtoMethodParam(params = {"filename"})
+    @PhonkMethod(description = "Open a sqlite database", example = "")
+    @PhonkMethodParam(params = {"filename"})
     public PSqLite openSqlLite(String db) {
         return new PSqLite(getAppRunner(), db);
     }
 
 
-    @ProtoMethod(description = "Zip a file/folder into a zip", example = "")
-    @ProtoMethodParam(params = {"folder", "filename"})
+    @PhonkMethod(description = "Zip a file/folder into a zip", example = "")
+    @PhonkMethodParam(params = {"folder", "filename"})
     public void zip(final String fOrigin, final String fDestiny, final ReturnInterface callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -328,8 +328,8 @@ public class PFileIO extends ProtoBase {
 
     }
 
-    @ProtoMethod(description = "Unzip a file into a folder", example = "")
-    @ProtoMethodParam(params = {"zipFile", "folder"})
+    @PhonkMethod(description = "Unzip a file into a folder", example = "")
+    @PhonkMethodParam(params = {"zipFile", "folder"})
     public void unzip(final String src, final String dst, final ReturnInterface callback) {
         Thread t = new Thread(new Runnable() {
             @Override
@@ -394,8 +394,8 @@ public class PFileIO extends ProtoBase {
         }
     }
 
-    @ProtoMethod(description = "Observer file changes in a folder", example = "")
-    @ProtoMethodParam(params = {"path", "function(action, file"})
+    @PhonkMethod(description = "Observer file changes in a folder", example = "")
+    @PhonkMethodParam(params = {"path", "function(action, file"})
     public PFileObserver createFileObserver(String path) {
         PFileObserver pFileObserver = new PFileObserver(getAppRunner(), path);
 

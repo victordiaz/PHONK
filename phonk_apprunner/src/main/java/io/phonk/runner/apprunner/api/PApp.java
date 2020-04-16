@@ -55,9 +55,9 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PEvents;
 import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
-import io.phonk.runner.apidoc.annotation.ProtoField;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkField;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.SchedulerManager;
 import io.phonk.runner.base.utils.ExecuteCmd;
@@ -65,13 +65,13 @@ import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.models.Project;
 
-@ProtoObject
+@PhonkObject
 public class PApp extends ProtoBase {
 
-    @ProtoField
+    @PhonkField
     public Notification notification;
 
-    @ProtoField
+    @PhonkField
     public Map<String, Object> settings;
 
     PEvents pevents;
@@ -101,11 +101,10 @@ public class PApp extends ProtoBase {
     /**
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public SchedulerManager alarmManager() {
         return new SchedulerManager(getContext(), getAppRunner().getProject());
     }
-
 
     /**
      * Gets shared data?
@@ -114,7 +113,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public void getSharedData(String type, String data) {
 
     }
@@ -124,7 +123,7 @@ public class PApp extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void close() {
         getActivity().finish();
     }
@@ -140,12 +139,12 @@ public class PApp extends ProtoBase {
      * @advanced
      */
     @android.webkit.JavascriptInterface
-    @ProtoMethod
+    @PhonkMethod
     public void eval(final String code) {
         runOnUiThread(new ReturnInterface() {
             @Override
             public void event(ReturnObject r) {
-                getAppRunner().interp.eval(code);
+                // getAppRunner().interp.eval(code);
             }
         });
     }
@@ -158,11 +157,11 @@ public class PApp extends ProtoBase {
      * @exampleLink /examples/Advanced/LoadJsFile
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void load(String filename) {
         String code = FileIO.loadStringFromFile(getAppRunner().getProject().getFullPathForFile(filename));
 
-        getAppRunner().interp.eval(code);
+        // getAppRunner().interp.eval(code);
     }
 
     /*
@@ -287,7 +286,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public void shareImage(String imagePath) {
         ContentValues values = new ContentValues();
         values.put(MediaColumns.MIME_TYPE, "image/png");
@@ -309,7 +308,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void shareText(String text) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/*");
@@ -324,7 +323,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public String path() {
         String url = getAppRunner().getProject().getSandboxPath();
         return url;
@@ -336,7 +335,7 @@ public class PApp extends ProtoBase {
      * @return
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public String fullPath() {
         String url = getAppRunner().getProject().getFullPath();
         return url;
@@ -350,7 +349,7 @@ public class PApp extends ProtoBase {
      * @advanced
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void runOnUiThread(final ReturnInterface callback) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -370,7 +369,7 @@ public class PApp extends ProtoBase {
      * @advanced
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public ExecuteCmd executeShellCommand(final String cmd, final ReturnInterface callbackfn) {
 
         return new ExecuteCmd(cmd, callbackfn);
@@ -383,7 +382,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public PLiveCodingFeedback liveCodingOverlay() {
         PLiveCodingFeedback l = getFragment().liveCodingFeedback();
         l.enable = true;
@@ -403,7 +402,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void sendEvent(String name, Object obj) {
         pevents.sendEvent(name, (NativeObject) obj);
     }
@@ -420,7 +419,7 @@ public class PApp extends ProtoBase {
      * @see PApp#removeEvent
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public String listenEvent(String name, PEvents.EventCB callback) {
         return pevents.add(name, callback);
     }
@@ -437,7 +436,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void removeEvent(String id) {
         pevents.remove(id);
     }
@@ -448,7 +447,7 @@ public class PApp extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public void openFileWithApp(final String src) {
         /*
         final String projectPath = ProjectManager.getInstance().getCurrentProject().getStoragePath();
@@ -470,7 +469,7 @@ public class PApp extends ProtoBase {
      * @advanced
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public void startActivity(NativeObject params) throws JSONException {
         Intent intent = new Intent();
 
@@ -518,7 +517,7 @@ public class PApp extends ProtoBase {
      * @status OK
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onCreate(ReturnInterface callback) {
       //  callback.event(null);
     }
@@ -538,7 +537,7 @@ public class PApp extends ProtoBase {
      * @advanced
      *
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onPause(ReturnInterface callback) {
       //  callback.event(null);
     }
@@ -558,7 +557,7 @@ public class PApp extends ProtoBase {
      * @advanced
      *
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onResume(ReturnInterface callback) {
       //  callback.event(null);
     }
@@ -578,13 +577,13 @@ public class PApp extends ProtoBase {
      * @advanced
      *
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onDestroy(ReturnInterface callback) {
       //  callback.event(null);
     }
 
     public void breakPoint() {
-        getAppRunner().interp.stop();
+        // getAppRunner().interp.stop();
     }
 
     public void resumeFromBreakPoint() {

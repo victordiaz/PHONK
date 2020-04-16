@@ -46,7 +46,7 @@ import io.phonk.gui.settings.UserPreferences;
 import io.phonk.runner.AppRunnerLauncherService;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class PhonkAppHelper {
 

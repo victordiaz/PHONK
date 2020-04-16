@@ -35,10 +35,9 @@ import androidx.core.widget.TextViewCompat;
 
 import java.util.Map;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 
 public class PText extends AppCompatTextView implements PViewMethodsInterface, PTextInterface {
 
@@ -52,23 +51,23 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
         styler.apply();
     }
 
-    @ProtoMethod(description = "Sets the text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PText color(String c) {
         this.setTextColor(Color.parseColor(c));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PText background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
 
-    @ProtoMethod(description = "Enables/disables the scroll in the text view", example = "")
-    @ProtoMethodParam(params = {"size"})
+    @PhonkMethod(description = "Enables/disables the scroll in the text view", example = "")
+    @PhonkMethodParam(params = {"size"})
     public PText scrollable(boolean b) {
         if (b) {
             this.setMovementMethod(new ScrollingMovementMethod());
@@ -80,15 +79,15 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
         return this;
     }
 
-    @ProtoMethod(description = "Changes the text to the given text", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "Changes the text to the given text", example = "")
+    @PhonkMethodParam(params = {"text"})
     public PText text(String text) {
         this.setText(text);
         return this;
     }
 
-    @ProtoMethod(description = "Changes the text to the given text", example = "")
-    @ProtoMethodParam(params = {"text, text, ..., text"})
+    @PhonkMethod(description = "Changes the text to the given text", example = "")
+    @PhonkMethodParam(params = {"text, text, ..., text"})
     public PText text(String... txt) {
         String joinedText = "";
         for (int i = 0; i < txt.length; i++) {
@@ -101,8 +100,8 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
 
 
     @SuppressWarnings("deprecation")
-    @ProtoMethod(description = "Changes the text to the given html text", example = "")
-    @ProtoMethodParam(params = {"htmlText"})
+    @PhonkMethod(description = "Changes the text to the given html text", example = "")
+    @PhonkMethodParam(params = {"htmlText"})
     public PText html(String html) {
 
         Spanned text;
@@ -116,60 +115,60 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
         return this;
     }
 
-    @ProtoMethod(description = "Appends text to the text view", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "Appends text to the text view", example = "")
+    @PhonkMethodParam(params = {"text"})
     public PText append(String text) {
         this.setText(getText() + text);
 
         return this;
     }
 
-    @ProtoMethod(description = "Clears the text", example = "")
+    @PhonkMethod(description = "Clears the text", example = "")
     public PText clear() {
         this.setText("");
         return this;
     }
 
-    @ProtoMethod(description = "Changes the box size of the text", example = "")
-    @ProtoMethodParam(params = {"w", "h"})
+    @PhonkMethod(description = "Changes the box size of the text", example = "")
+    @PhonkMethodParam(params = {"w", "h"})
     public PText boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
         return this;
     }
 
-    @ProtoMethod(description = "Fits the text to the bounding box", example = "")
-    @ProtoMethodParam(params = {"w", "h"})
+    @PhonkMethod(description = "Fits the text to the bounding box", example = "")
+    @PhonkMethodParam(params = {"w", "h"})
     public PText autoFitText(boolean b) {
         if (b) TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_UNIFORM);
         else TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_NONE);
         return this;
     }
 
-    @ProtoMethod(description = "Sets a new position for the text", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Sets a new position for the text", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PText pos(int x, int y) {
         this.setX(x);
         this.setY(y);
         return this;
     }
 
-    @ProtoMethod(description = "Specifies a shadow for the text", example = "")
-    @ProtoMethodParam(params = {"x", "y", "radius", "colorHex"})
+    @PhonkMethod(description = "Specifies a shadow for the text", example = "")
+    @PhonkMethodParam(params = {"x", "y", "radius", "colorHex"})
     public PText shadow(int x, int y, int r, String c) {
         this.setShadowLayer(r, x, y, Color.parseColor(c));
         return this;
     }
 
-    @ProtoMethod(description = "Centers the text inside the textview", example = "")
-    @ProtoMethodParam(params = {"Typeface"})
+    @PhonkMethod(description = "Centers the text inside the textview", example = "")
+    @PhonkMethodParam(params = {"Typeface"})
     public PText center(String centering) {
         this.setGravity(Gravity.CENTER_VERTICAL);
         return this;
     }
 
-    @ProtoMethod(description = "Changes the font", example = "")
-    @ProtoMethodParam(params = {"Typeface"})
+    @PhonkMethod(description = "Changes the font", example = "")
+    @PhonkMethodParam(params = {"Typeface"})
     public PText font(Typeface f) {
         this.currentFont = f;
         this.setTypeface(f);
@@ -180,8 +179,8 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
         this.setTypeface(Typeface.MONOSPACE);
     }
 
-    @ProtoMethod(description = "Sets the text size", example = "")
-    @ProtoMethodParam(params = {"size"})
+    @PhonkMethod(description = "Sets the text size", example = "")
+    @PhonkMethodParam(params = {"size"})
     public PText textSize(int size) {
         this.setTextSize(size);
         return this;
@@ -194,8 +193,8 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
     }
 
     @Override
-    @ProtoMethod(description = "Changes the font text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Changes the font text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
         return this;

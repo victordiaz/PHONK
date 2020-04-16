@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 import io.phonk.R;
 import io.phonk.runner.base.BaseActivity;
-import io.phonk.runner.base.SchedulerManager;
+import io.phonk.runner.base.utils.SchedulerManager;
 import io.phonk.runner.base.utils.MLog;
 
 public class SchedulerActivity extends BaseActivity {
@@ -90,7 +90,7 @@ public class SchedulerActivity extends BaseActivity {
 
             SchedulerManager.Task task = getItem(position);
 
-            MLog.d(TAG, "ww task loaded " + task.id + " " + txtTaskId);
+            MLog.d(TAG, "task loaded " + task.id + " " + txtTaskId);
 
             txtTaskProjectName.setText(task.project.getSandboxPath());
 

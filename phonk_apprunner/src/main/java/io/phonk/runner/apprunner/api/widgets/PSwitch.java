@@ -33,10 +33,9 @@ import java.util.Map;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 
 @SuppressLint("NewApi")
 public class PSwitch extends Switch implements PViewMethodsInterface {
@@ -67,23 +66,23 @@ public class PSwitch extends Switch implements PViewMethodsInterface {
     }
 
 
-    @ProtoMethod(description = "Sets the text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PSwitch color(String c) {
         this.setTextColor(Color.parseColor(c));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PSwitch background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
 
-    @ProtoMethod(description = "Changes the text to the given text", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "Changes the text to the given text", example = "")
+    @PhonkMethodParam(params = {"text"})
     public PSwitch text(String text) {
         this.setText(text);
         return this;

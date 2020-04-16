@@ -30,8 +30,8 @@ import android.hardware.SensorManager;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class POrientation extends CustomSensorManager implements WhatIsRunningInterface {
@@ -44,8 +44,8 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
         type = Sensor.TYPE_ORIENTATION;
     }
 
-    @ProtoMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
-    @ProtoMethodParam(params = {"function(pitch, roll, yaw)"})
+    @PhonkMethod(description = "Start the orientation sensor. Returns pitch, roll, yaw", example = "")
+    @PhonkMethodParam(params = {"function(pitch, roll, yaw)"})
     public void start() {
         super.start();
 
@@ -86,8 +86,8 @@ public class POrientation extends CustomSensorManager implements WhatIsRunningIn
     }
 
 
-    @ProtoMethod(description = "Start the orientation sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
+    @PhonkMethod(description = "Start the orientation sensor. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
     public POrientation onChange(final ReturnInterface callbackfn) {
         mCallbackOrientationChange = callbackfn;
 

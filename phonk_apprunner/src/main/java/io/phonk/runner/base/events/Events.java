@@ -20,9 +20,9 @@
  *
  */
 
-package io.phonk.runner.common.events;
+package io.phonk.runner.base.events;
 
-import io.phonk.runner.common.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class Events {
     public static final String KEY                  = "key";

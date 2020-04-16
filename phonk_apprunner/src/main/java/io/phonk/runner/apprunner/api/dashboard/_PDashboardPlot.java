@@ -28,8 +28,8 @@ import org.json.JSONObject;
 import java.net.UnknownHostException;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.StrUtils;
 
@@ -67,8 +67,8 @@ public class _PDashboardPlot extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "update the plot with a given value", example = "")
-    @ProtoMethodParam(params = {"value"})
+    @PhonkMethod(description = "update the plot with a given value", example = "")
+    @PhonkMethodParam(params = {"value"})
     public void update(float val) throws UnknownHostException, JSONException {
 
         JSONObject values = new JSONObject()

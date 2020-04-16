@@ -53,8 +53,7 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class ProjectItem extends LinearLayout {
 
@@ -111,13 +110,6 @@ public class ProjectItem extends LinearLayout {
             }
         });
 
-    }
-
-    // TODO
-    public void setImage(int resId) {
-      //  customIcon.setImageResource(resId);
-
-        // drawText(customIcon, t);
     }
 
     public void setImage(Bitmap bmp) {

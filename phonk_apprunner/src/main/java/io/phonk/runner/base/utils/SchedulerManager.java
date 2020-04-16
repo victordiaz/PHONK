@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,12 +15,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-package io.phonk.runner.base;
+package io.phonk.runner.base.utils;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -36,9 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.phonk.runner.base.services.AlarmReceiver;
-import io.phonk.runner.base.utils.GSONUtil;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.common.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class SchedulerManager {
 

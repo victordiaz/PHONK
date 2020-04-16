@@ -37,8 +37,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
@@ -211,8 +211,8 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Init a plot name", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Init a plot name", example = "")
+    @PhonkMethodParam(params = {""})
     public PPlotView_ init(String plotName) {
 
         if (plots.containsKey(plotName) == false) {
@@ -224,8 +224,8 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Updates the value of the plotName plot", example = "")
-    @ProtoMethodParam(params = {"plotName", "value"})
+    @PhonkMethod(description = "Updates the value of the plotName plot", example = "")
+    @PhonkMethodParam(params = {"plotName", "value"})
     public PPlotView_ update(String plotName, float v1) {
 
         if (mReady) {
@@ -251,16 +251,16 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Updates the value of the default plot", example = "")
-    @ProtoMethodParam(params = {"value"})
+    @PhonkMethod(description = "Updates the value of the default plot", example = "")
+    @PhonkMethodParam(params = {"value"})
     public PPlotView_ update(float v) {
         update("default", v);
 
         return this;
     }
 
-    @ProtoMethod(description = "Changes the plot limits", example = "")
-    @ProtoMethodParam(params = {"min", "max"})
+    @PhonkMethod(description = "Changes the plot limits", example = "")
+    @PhonkMethodParam(params = {"min", "max"})
     public PPlotView_ range(float min, float max) {
         mMinBoundary = min;
         mMaxBoundary = max;
@@ -268,8 +268,8 @@ public class PPlotView_ extends View {
         return this;
     }
 
-    @ProtoMethod(description = "Changes the plot definition", example = "")
-    @ProtoMethodParam(params = {"definition"})
+    @PhonkMethod(description = "Changes the plot definition", example = "")
+    @PhonkMethodParam(params = {"definition"})
     public PPlotView_ definition(int definition) {
         mDefinition = definition;
         return this;
@@ -304,8 +304,8 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Sets the line thickness", example = "")
-    @ProtoMethodParam(params = {"thickness"})
+    @PhonkMethod(description = "Sets the line thickness", example = "")
+    @PhonkMethodParam(params = {"thickness"})
     public PPlotView_ thickness(float r) {
         thickness = r; // when dot
         mPaint.setStrokeWidth(thickness); // when line
@@ -313,8 +313,8 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Changes the plot color", example = "")
-    @ProtoMethodParam(params = {"plotName", "colorHex"})
+    @PhonkMethod(description = "Changes the plot color", example = "")
+    @PhonkMethodParam(params = {"plotName", "colorHex"})
     public PPlotView_ color(String plotName, String rgb) {
         new Color();
         int c = Color.parseColor(rgb);
@@ -328,15 +328,15 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Get the plot array size", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Get the plot array size", example = "")
+    @PhonkMethodParam(params = {""})
     public int size() {
         return mNumPoints;
     }
 
 
-    @ProtoMethod(description = "Get the current values of the plot as an array", example = "")
-    @ProtoMethodParam(params = {"plotName"})
+    @PhonkMethod(description = "Get the current values of the plot as an array", example = "")
+    @PhonkMethodParam(params = {"plotName"})
     public Float[] getArray(String plotName) {
         Plot p = plots.get(plotName);
         //MLog.d(TAG, "plot " + p);
@@ -345,8 +345,8 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Set an array of values in the plot", example = "")
-    @ProtoMethodParam(params = {"plotName", "value"})
+    @PhonkMethod(description = "Set an array of values in the plot", example = "")
+    @PhonkMethodParam(params = {"plotName", "value"})
     public PPlotView_ setArray(String plotName, float[] values) {
         Plot p = plots.get(plotName);
 
@@ -363,8 +363,8 @@ public class PPlotView_ extends View {
     }
 
 
-    @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PPlotView_ setBackground(String c) {
         super.setBackgroundColor(Color.parseColor(c));
 

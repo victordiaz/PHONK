@@ -30,8 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import io.phonk.runner.models.Folder;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Folder;
+import io.phonk.runner.base.models.Project;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
 

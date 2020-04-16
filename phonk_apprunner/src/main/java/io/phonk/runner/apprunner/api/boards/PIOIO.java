@@ -23,8 +23,8 @@
 package io.phonk.runner.apprunner.api.boards;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.hardware.IOIOBoard;
 import io.phonk.runner.base.utils.MLog;
@@ -54,8 +54,8 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     }
 
 
-    @ProtoMethod(description = "initializes ioio board", example = "ioio.start();")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
+    @PhonkMethodParam(params = {""})
     public void start() {
         if (!mIoioStarted) {
             this.board = new IOIOBoard(getContext(), this);
@@ -65,8 +65,8 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     }
 
 
-    @ProtoMethod(description = "initializes ioio board", example = "ioio.start();")
-    @ProtoMethodParam(params = {"function()"})
+    @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
+    @PhonkMethodParam(params = {"function()"})
     public void start(startCB callbackfn) {
         mIoioCallbackfn = callbackfn;
         if (!mIoioStarted) {
@@ -81,7 +81,7 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     }
 
 
-    @ProtoMethod(description = "stops the ioio board", example = "ioio.stop();")
+    @PhonkMethod(description = "stops the ioio board", example = "ioio.stop();")
     public void stop() {
         mIoioStarted = false;
         board.powerOff();
@@ -89,32 +89,32 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     }
 
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"pinNumber"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"pinNumber"})
     public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
         return mIoio.openDigitalOutput(pinNum, false); // start with the on board
 
     }
 
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"pinNumber"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"pinNumber"})
     public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
         return mIoio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
 
     }
 
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"pinNumber"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"pinNumber"})
     public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
         return mIoio.openAnalogInput(pinNum);
 
     }
 
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"pinNumber", "frequency"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"pinNumber", "frequency"})
     public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
         return mIoio.openPwmOutput(pinNum, freq);
     }
@@ -127,7 +127,7 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     }
 
 
-    @ProtoMethod(description = "returns true is the ioio board is connected", example = "")
+    @PhonkMethod(description = "returns true is the ioio board is connected", example = "")
     public boolean isStarted() {
         return mIoioStarted;
     }

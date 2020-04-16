@@ -32,6 +32,7 @@ import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
@@ -151,7 +152,7 @@ public class PMqtt extends ProtoBase {
         mConnection.subscribe(topics, new Callback<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                String dataString = bytes.toString();
+                String dataString = Arrays.toString(bytes);
                 MLog.d(TAG, "subscribe onSuccess byte " + dataString);
                 // callback.event(dataString);
                 ReturnObject ret = new ReturnObject();

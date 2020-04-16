@@ -38,8 +38,7 @@ import io.phonk.gui._components.ResizableRecyclerView;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Folder;
+import io.phonk.runner.base.models.Folder;
 
 @SuppressLint("NewApi")
 public class FolderListFragment extends BaseFragment {

@@ -26,7 +26,7 @@ import android.app.Application;
 
 import androidx.multidex.MultiDex;
 
-import io.phonk.helpers.Timer2;
+import io.phonk.runner.base.utils.TimerUtils;
 
 public class App extends Application {
 
@@ -38,15 +38,15 @@ public class App extends Application {
 
         MultiDex.install(this);
 
-        Timer2.start();
-        Timer2.stamp("start");
-        Timer2.stamp("MultiDex.install");
+        TimerUtils.start();
+        TimerUtils.stamp("start");
+        TimerUtils.stamp("MultiDex.install");
 
         myLifecycleHandler = new MyLifecycleHandler();
-        Timer2.stamp("MyLifecycleHandler");
+        TimerUtils.stamp("MyLifecycleHandler");
 
         registerActivityLifecycleCallbacks(myLifecycleHandler);
-        Timer2.stamp("registerActivityLifecycleCallbacks");
+        TimerUtils.stamp("registerActivityLifecycleCallbacks");
 
         // Fabric.with(this, new Crashlytics());
 

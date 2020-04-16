@@ -31,10 +31,9 @@ import java.util.Map;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
 
 public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
@@ -56,8 +55,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         styler.apply();
     }
 
-    @ProtoMethod(description = "Triggers the function when the button is clicked", example = "")
-    @ProtoMethodParam(params = {"function"})
+    @PhonkMethod(description = "Triggers the function when the button is clicked", example = "")
+    @PhonkMethodParam(params = {"function"})
     public PButton onClick(final ReturnInterface callbackfn) {
         // Set on click behavior
         this.setOnClickListener(new OnClickListener() {
@@ -76,8 +75,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
 
-    @ProtoMethod(description = "Changes the font type to the button", example = "")
-    @ProtoMethodParam(params = {"Typeface"})
+    @PhonkMethod(description = "Changes the font type to the button", example = "")
+    @PhonkMethodParam(params = {"Typeface"})
     public PButton font(Typeface f) {
         this.setTypeface(f);
 
@@ -107,31 +106,31 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
 
     @Override
-    @ProtoMethod(description = "Changes the font text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Changes the font text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PButton textColor(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
 
     @Override
-    @ProtoMethod(description = "Changes the font text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Changes the font text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PButton textColor(int c) {
         this.setTextColor(c);
         return this;
     }
 
-    @ProtoMethod(description = "Changes the background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Changes the background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PButton background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
     }
 
 
-    @ProtoMethod(description = "Sets html text", example = "")
-    @ProtoMethodParam(params = {"htmlText"})
+    @PhonkMethod(description = "Sets html text", example = "")
+    @PhonkMethodParam(params = {"htmlText"})
     public PButton html(String htmlText) {
         this.setText(Html.fromHtml(htmlText));
 
@@ -139,8 +138,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
 
-    @ProtoMethod(description = "Changes the button size", example = "")
-    @ProtoMethodParam(params = {"w", "h"})
+    @PhonkMethod(description = "Changes the button size", example = "")
+    @PhonkMethodParam(params = {"w", "h"})
     public PButton boxsize(int w, int h) {
         this.setWidth(w);
         this.setHeight(h);
@@ -149,16 +148,16 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     @Override
-    @ProtoMethod(description = "Changes the text size", example = "")
-    @ProtoMethodParam(params = {"size"})
+    @PhonkMethod(description = "Changes the text size", example = "")
+    @PhonkMethodParam(params = {"size"})
     public View textSize(float size) {
         this.setTextSize(size);
 
         return this;
     }
 
-    @ProtoMethod(description = "Button position", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Button position", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PButton pos(int x, int y) {
         this.setX(x);
         this.setY(y);

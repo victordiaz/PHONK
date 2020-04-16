@@ -29,10 +29,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import org.mozilla.javascript.NativeArray;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.views.FitRecyclerView;
 
 public class PList extends FitRecyclerView {
@@ -83,20 +82,20 @@ public class PList extends FitRecyclerView {
         return this;
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void setItems(NativeArray data) {
         mViewAdapter.setArray(data);
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void clear() {
 
     }
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void notifyDataChanged() {
         mViewAdapter.notifyDataSetChanged();
     }

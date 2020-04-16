@@ -24,12 +24,12 @@ package io.phonk.runner.apprunner.api;
 
 import io.phonk.runner.apprunner.api.boards.PIOIO;
 import io.phonk.runner.apprunner.api.boards.PSerial;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 
-@ProtoObject
+@PhonkObject
 public class PBoards extends ProtoBase {
 
     private final String TAG = PBoards.class.getSimpleName();
@@ -39,8 +39,8 @@ public class PBoards extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "initializes the ioio board", example = "")
-    @ProtoMethodParam(params = {"function()"})
+    @PhonkMethod(description = "initializes the ioio board", example = "")
+    @PhonkMethodParam(params = {"function()"})
     public PIOIO connectIOIO(PIOIO.startCB callbackfn) {
         PIOIO ioio = new PIOIO(getAppRunner());
         ioio.start(callbackfn);
@@ -48,8 +48,8 @@ public class PBoards extends ProtoBase {
         return ioio;
     }
 
-    @ProtoMethod(description = "initializes serial communication", example = "")
-    @ProtoMethodParam(params = {"bauds", "function()"})
+    @PhonkMethod(description = "initializes serial communication", example = "")
+    @PhonkMethodParam(params = {"bauds", "function()"})
     public PSerial createSerial(int bauds) {
         PSerial serial = new PSerial(getAppRunner());
         return serial;

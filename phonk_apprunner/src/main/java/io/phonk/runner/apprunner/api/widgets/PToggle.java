@@ -32,10 +32,9 @@ import java.util.Map;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 
 public class PToggle extends ToggleButton implements PViewMethodsInterface, PTextInterface {
 
@@ -94,8 +93,8 @@ public class PToggle extends ToggleButton implements PViewMethodsInterface, PTex
     }
 
     @Override
-    @ProtoMethod(description = "Changes the font text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Changes the font text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
         return this;

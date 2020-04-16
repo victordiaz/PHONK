@@ -42,14 +42,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 import io.phonk.MainActivity;
 import io.phonk.R;
-import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.api.other.PLooper;
+import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class ConnectionInfoFragment extends Fragment {
 
@@ -141,11 +140,14 @@ public class ConnectionInfoFragment extends Fragment {
         mComputerText = rootView.findViewById(R.id.computerText);
         mComputerText.setMovementMethod(new ScrollingMovementMethod());
 
-        startInfoPolling();
+        // TODO REENABLE
+        // startInfoPolling();
 
         return rootView;
     }
 
+    // TODO REENABLE
+    /*
     public void startInfoPolling() {
         mAppRunner = ((MainActivity) getActivity()).getAppRunner();
 
@@ -160,6 +162,7 @@ public class ConnectionInfoFragment extends Fragment {
         });
         mLooper.start();
     }
+     */
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -171,14 +174,16 @@ public class ConnectionInfoFragment extends Fragment {
         super.onResume();
         setConnectionMessage(mLastConnectionMessage, mLastIp);
         EventBus.getDefault().register(this);
-        mLooper.start();
+        // TODO REENABLE
+        // mLooper.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-        mLooper.stop();
+        // TODO REENABLE
+        // mLooper.stop();
     }
 
     // network notification

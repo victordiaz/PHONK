@@ -28,10 +28,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.SeekBar;
 
-/**
- * Created by victormanueldiazbarrales on 26/07/14.
- */
-public class PVerticalSeekbar extends SeekBar {
+public class PVerticalSeekbar extends androidx.appcompat.widget.AppCompatSeekBar {
 
     public PVerticalSeekbar(Context context) {
         super(context);

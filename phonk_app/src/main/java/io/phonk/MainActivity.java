@@ -34,13 +34,10 @@ import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
@@ -72,13 +69,13 @@ import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.runner.api.other.PDelay;
+import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 import io.phonk.server.PhonkServerService;
 
 public class MainActivity extends BaseActivity {
@@ -145,12 +142,7 @@ public class MainActivity extends BaseActivity {
 
         // PhonkAppHelper.launchScript(this, new Project("playground/User Projects/cameraX"));
 
-        mDelay = mAppRunner.pUtil.delay(3000, new PDelay.DelayCB() {
-            @Override
-            public void event() {
-                mViewPager.setCurrentItem(1);
-            }
-        });
+        mDelay = mAppRunner.pUtil.delay(3000, () -> mViewPager.setCurrentItem(1));
     }
 
 
@@ -256,12 +248,9 @@ public class MainActivity extends BaseActivity {
         mConnectionInfo = findViewById(R.id.ip_container);
 
         mToggleConnectionInfo = findViewById(R.id.toggleConnectionInfo);
-        mToggleConnectionInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mConnectionInfo.getVisibility() == View.GONE) mConnectionInfo.setVisibility(View.VISIBLE);
-                else mConnectionInfo.setVisibility(View.GONE);
-            }
+        mToggleConnectionInfo.setOnClickListener(view -> {
+            if (mConnectionInfo.getVisibility() == View.GONE) mConnectionInfo.setVisibility(View.VISIBLE);
+            else mConnectionInfo.setVisibility(View.GONE);
         });
 
         // Set up the ViewPager with the sections adapter.
@@ -300,37 +289,31 @@ public class MainActivity extends BaseActivity {
         mViewPager.setCurrentItem(toPage);
 
         final ImageButton moreOptionsButton = findViewById(R.id.more_options);
-        moreOptionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Context wrapper = new ContextThemeWrapper(MainActivity.this, R.style.phonk_PopupMenu);
-                PopupMenu myPopup = new PopupMenu(wrapper, moreOptionsButton);
-                myPopup.inflate(R.menu.more_options);
-                myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(final MenuItem menuItem) {
-                        int itemId = menuItem.getItemId();
+        moreOptionsButton.setOnClickListener(view -> {
+            Context wrapper = new ContextThemeWrapper(MainActivity.this, R.style.phonk_PopupMenu);
+            PopupMenu myPopup = new PopupMenu(wrapper, moreOptionsButton);
+            myPopup.inflate(R.menu.more_options);
+            myPopup.setOnMenuItemClickListener(menuItem -> {
+                int itemId = menuItem.getItemId();
 
-                        if (itemId == R.id.more_options_new) {
-                            PhonkAppHelper.newProjectDialog(MainActivity.this);
-                            return true;
-                        } else if (itemId == R.id.more_options_settings) {
-                            PhonkAppHelper.launchSettings(MainActivity.this);
-                            return true;
-                        } else if (itemId == R.id.more_options_help) {
-                            PhonkAppHelper.launchHelp(MainActivity.this);
-                            return true;
-                        }  else if (itemId == R.id.more_options_about) {
-                            PhonkAppHelper.launchHelp(MainActivity.this);
-                            return true;
-                        }
+                if (itemId == R.id.more_options_new) {
+                    PhonkAppHelper.newProjectDialog(MainActivity.this);
+                    return true;
+                } else if (itemId == R.id.more_options_settings) {
+                    PhonkAppHelper.launchSettings(MainActivity.this);
+                    return true;
+                } else if (itemId == R.id.more_options_help) {
+                    PhonkAppHelper.launchHelp(MainActivity.this);
+                    return true;
+                }  else if (itemId == R.id.more_options_about) {
+                    PhonkAppHelper.launchHelp(MainActivity.this);
+                    return true;
+                }
 
-                        return false;
-                    }
-                });
+                return false;
+            });
 
-                myPopup.show();
-            }
+            myPopup.show();
         });
     }
 
@@ -366,14 +349,11 @@ public class MainActivity extends BaseActivity {
             MLog.d(TAG, "template " + template);
         }
 
-        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
-            @Override
-            public void onFinishEditDialog(String inputText) {
-                String template = "default";
-                Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = PhonkScriptHelper.createNewProject(MainActivity.this, template, "user_projects/User Projects/", inputText);
-                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
-            }
+        newProjectDialog.setListener(inputText -> {
+            String template = "default";
+            Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
+            Project p = PhonkScriptHelper.createNewProject(MainActivity.this, template, "user_projects/User Projects/", inputText);
+            EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
         });
     }
 
@@ -392,7 +372,7 @@ public class MainActivity extends BaseActivity {
 
 
     /*
-     * This broadcast will receive JS commands if is in debug cornerMode, useful to debug the app through adb
+     * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
      */
     BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -441,7 +421,9 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
-        if (e.getAction() == Events.CLOSE_APP) { }
+        if (e.getAction().equals(Events.CLOSE_APP)) {
+            MLog.d(TAG, "closing app (not implemented)");
+        }
     }
 
     // folder choose

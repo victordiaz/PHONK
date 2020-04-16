@@ -24,16 +24,16 @@
 <resources>
 
 
-    <color name="phonk_accentColor_primary">#FF356B</color>
-    <color name="phonk_accentColor_primary_opacity_30">#33FF356B</color>
+    <color name="phonk_accentColor_primary">#FFC700</color>
+    <color name="phonk_accentColor_primary_opacity_30">#33FFC700</color>
     <color name="phonk_accentColor_secondary">#35ffd0</color>
     <color name="phonk_accentColor_terciary">#FFD735</color>
 
-    <color name="phonk_backgroundColor_primary">#373234</color>
-    <color name="phonk_backgroundColor_secondary">#FFFFFF</color> <!-- #272822 -->
+    <color name="phonk_backgroundColor_primary">#372B2B</color>
+    <color name="phonk_backgroundColor_secondary">#372B2B</color> <!-- #272822 -->
 
     <color name="phonk_textColor_primary">#ffffff</color>
-    <color name="phonk_textColor_secondary">#373234</color>
+    <color name="phonk_textColor_secondary">#ffffff</color>
     <color name="phonk_textColor_gray">#555</color>
 
     <!-- theme -->

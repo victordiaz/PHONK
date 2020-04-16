@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.runner.common.models;
+package io.phonk.runner.base.models;
 
 import java.io.File;
 

@@ -34,8 +34,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -106,8 +106,8 @@ public class PSocketIOClient extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Sends a JSONObject to the destination", example = "")
-    @ProtoMethodParam(params = {"jsonObject"})
+    @PhonkMethod(description = "Sends a JSONObject to the destination", example = "")
+    @PhonkMethodParam(params = {"jsonObject"})
     public PSocketIOClient emit(JSONObject jsonMessage) throws JSONException {
         mSocketIOClient.emit(jsonMessage);
 
@@ -115,8 +115,8 @@ public class PSocketIOClient extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Sends an array to the destination", example = "")
-    @ProtoMethodParam(params = {"message", "array"})
+    @PhonkMethod(description = "Sends an array to the destination", example = "")
+    @PhonkMethodParam(params = {"message", "array"})
     public PSocketIOClient emit(String message, NativeArray array) {
         try {
             JSONArray jsonArray = new JSONArray();
@@ -135,8 +135,8 @@ public class PSocketIOClient extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Sends an array to the destination", example = "")
-    @ProtoMethodParam(params = {"message"})
+    @PhonkMethod(description = "Sends an array to the destination", example = "")
+    @PhonkMethodParam(params = {"message"})
     public PSocketIOClient emit(String message) {
         mSocketIOClient.emit(message);
 
@@ -144,8 +144,8 @@ public class PSocketIOClient extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Receiving callback", example = "")
-    @ProtoMethodParam(params = {"function(data)"})
+    @PhonkMethod(description = "Receiving callback", example = "")
+    @PhonkMethodParam(params = {"function(data)"})
     public PSocketIOClient onNewData(final connectSocketIOCB callbackfn) {
         mCallbackfn = callbackfn;
 

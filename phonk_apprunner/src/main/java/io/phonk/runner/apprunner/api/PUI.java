@@ -64,7 +64,7 @@ import io.phonk.runner.apprunner.api.media.PCamera;
 import io.phonk.runner.apprunner.api.media.PCameraXOne;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.api.other.PProcessing;
-import io.phonk.runner.apprunner.api.other.PhonkNativeArray;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.apprunner.api.widgets.PAbsoluteLayout;
 import io.phonk.runner.apprunner.api.widgets.PButton;
 import io.phonk.runner.apprunner.api.widgets.PCustomView;
@@ -95,14 +95,14 @@ import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
 import io.phonk.runner.apprunner.api.widgets.WidgetHelper;
-import io.phonk.runner.apidoc.annotation.ProtoField;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkField;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.FeatureNotAvailableException;
-import io.phonk.runner.apprunner.PermissionNotGrantedException;
-import io.phonk.runner.apprunner.StyleProperties;
+import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
+import io.phonk.runner.apprunner.permissions.PermissionNotGrantedException;
+import io.phonk.runner.apprunner.api.widgets.StyleProperties;
 import io.phonk.runner.base.gui.CameraTexture;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -111,7 +111,7 @@ import io.phonk.runner.base.utils.MLog;
  * Hola
  * @author Victor Diaz
  */
-@ProtoObject
+@PhonkObject
 public class PUI extends ProtoBase {
 
     private final AppRunner mAppRunner;
@@ -166,7 +166,7 @@ public class PUI extends ProtoBase {
     protected void initializeLayout() {
         if (!isMainLayoutSetup) {
             MLog.d(TAG, "" + getAppRunner());
-            MLog.d(TAG, "" + getAppRunner().interp);
+            // MLog.d(TAG, "" + getAppRunner().interp);
 
             // View v = getActivity().getLayoutInflater().inflate(R.layout.apprunner_user_layout, null);
 
@@ -411,7 +411,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void positionMode(String type) {
         uiAbsoluteLayout.mode(type);
     }
@@ -467,7 +467,7 @@ public class PUI extends ProtoBase {
      * @status TODO_EXAMPLE
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     protected void addViewAbsolute(View v, Object x, Object y, Object w, Object h) {
 
         //TODO
@@ -486,7 +486,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void removeAllViews() {
         uiAbsoluteLayout.removeAllViews();
         viewArray.clear();
@@ -500,7 +500,7 @@ public class PUI extends ProtoBase {
      * @param scroll
      * @staus TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void allowScroll(boolean scroll) {
         uiScrollView.setScrollingEnabled(scroll);
         isScrollEnabled = scroll;
@@ -511,7 +511,7 @@ public class PUI extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoField
+    @PhonkField
     public PToolbar toolbar;
 
     /**
@@ -519,7 +519,7 @@ public class PUI extends ProtoBase {
      * @param gray
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void background(int gray) {
         uiHolderLayout.setBackgroundColor(Color.rgb(gray, gray, gray));
     }
@@ -533,7 +533,7 @@ public class PUI extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void background(int red, int green, int blue) {
         uiHolderLayout.setBackgroundColor(Color.rgb(red, green, blue));
     }
@@ -548,7 +548,7 @@ public class PUI extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void background(int red, int green, int blue, int alpha) {
         uiHolderLayout.setBackgroundColor(Color.argb(alpha, red, green, blue));
     }
@@ -560,7 +560,7 @@ public class PUI extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void background(String c) {
         uiHolderLayout.setBackgroundColor(Color.parseColor(c));
     }
@@ -613,7 +613,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PButton newButton(String label) {
         PButton b = new PButton(mAppRunner);
         b.setText(label);
@@ -633,7 +633,7 @@ public class PUI extends ProtoBase {
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PButton addButton(String label, Object x, Object y, Object w, Object h) {
         PButton b = newButton(label);
         addViewAbsolute(b, x, y, w, h);
@@ -641,7 +641,7 @@ public class PUI extends ProtoBase {
         return b;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PButton addButton(String label, Object x, Object y) {
         PButton b = newButton(label);
         addViewAbsolute(b, x, y, -1, -1);
@@ -676,7 +676,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PImageButton newImageButton(String imagePath) {
         final PImageButton ib = new PImageButton(getAppRunner());
         ib.load(imagePath);
@@ -696,7 +696,7 @@ public class PUI extends ProtoBase {
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y, Object w, Object h) {
         PImageButton pImageButton = newImageButton(imagePath);
         addViewAbsolute(pImageButton, x, y, w, h);
@@ -713,7 +713,7 @@ public class PUI extends ProtoBase {
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y) {
         PImageButton pImageButton = newImageButton(imagePath);
         addViewAbsolute(pImageButton, x, y, -1, -1);
@@ -729,7 +729,7 @@ public class PUI extends ProtoBase {
      * @status OK
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PText newText(String text) {
         // int defaultTextSize = AndroidUtils.pixelsToSp(getContext(), 16);
         PText tv = new PText(mAppRunner);
@@ -752,29 +752,29 @@ public class PUI extends ProtoBase {
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"label", "x", "y"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"label", "x", "y"})
     public PText addText(Object x, Object y) {
         PText tv = newText("");
         addViewAbsolute(tv, x, y, -1, -1);
         return tv;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PText addText(Object x, Object y, Object w, Object h) {
         PText tv = newText("");
         addViewAbsolute(tv, x, y, w, h);
         return tv;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PText addText(String text, Object x, Object y) {
         PText tv = newText(text);
         addViewAbsolute(tv, x, y, -1, -1);
         return tv;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PText addText(String label, Object x, Object y, Object w, Object h) {
         PText tv = newText(label);
         addViewAbsolute(tv, x, y, w, h);
@@ -791,7 +791,7 @@ public class PUI extends ProtoBase {
      * @status OK
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PInput newInput(String label) {
         final PInput et = new PInput(mAppRunner);
         et.setHint(label);
@@ -810,14 +810,14 @@ public class PUI extends ProtoBase {
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PInput addInput(Object x, Object y, Object w, Object h) {
         PInput et = newInput("");
         addViewAbsolute(et, x, y, w, h);
         return et;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PInput addInput(String label, Object x, Object y, Object w, Object h) {
         PInput et = newInput(label);
         addViewAbsolute(et, x, y, w, h);
@@ -830,7 +830,7 @@ public class PUI extends ProtoBase {
      * @param label
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public PCheckBox newCheckbox(String label) {
         PCheckBox cb = new PCheckBox(mAppRunner);
         cb.setText(label);
@@ -851,7 +851,7 @@ public class PUI extends ProtoBase {
      * @status OK
      *
      */
-    @ProtoMethod
+    @PhonkMethod
     public PCheckBox addCheckbox(String label, Object x, Object y, Object w, Object h) {
         PCheckBox cb = newCheckbox(label);
         addViewAbsolute(cb, x, y, w, h);
@@ -866,7 +866,7 @@ public class PUI extends ProtoBase {
      * @status OK
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PToggle newToggle(final String label) {
         PToggle tb = new PToggle(mAppRunner);
         tb.checked(false);
@@ -887,7 +887,7 @@ public class PUI extends ProtoBase {
      * @exampleLink /examples/User Interface/Basic Views
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PToggle addToggle(final String text, Object x, Object y, Object w, Object h) {
         PToggle tb = newToggle(text);
         addViewAbsolute(tb, x, y, w, h);
@@ -902,7 +902,7 @@ public class PUI extends ProtoBase {
      * @status OK
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PSwitch newSwitch(String text) {
         PSwitch s = new PSwitch(mAppRunner);
         s.setText(text);
@@ -922,7 +922,7 @@ public class PUI extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public PSwitch addSwitch(String text, Object x, Object y, Object w, Object h) {
         PSwitch s = newSwitch(text);
         addViewAbsolute(s, x, y, w, h);
@@ -936,7 +936,7 @@ public class PUI extends ProtoBase {
      * @status TODO
      * @advanced
      */
-    @ProtoMethod(description = "Creates a new pager", example = "")
+    @PhonkMethod(description = "Creates a new pager", example = "")
     public PViewPager newViewPager() {
         PViewPager pViewPager = new PViewPager(getContext());
         return pViewPager;
@@ -949,7 +949,7 @@ public class PUI extends ProtoBase {
      *
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PSlider newSlider() {
         // final PSlider slider = new PSlider(mAppRunner).range(0, 1);
         final PSlider slider = new PSlider(mAppRunner);
@@ -966,7 +966,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PSlider addSlider(Object x, Object y, Object w, Object h) {
         PSlider slider = newSlider();
         addViewAbsolute(slider, x, y, w, h);
@@ -979,7 +979,7 @@ public class PUI extends ProtoBase {
      *
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PKnob newKnob() {
         final PKnob slider = new PKnob(mAppRunner);
         return slider;
@@ -996,7 +996,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PKnob addKnob(Object x, Object y, Object w, Object h) {
         PKnob slider = newKnob();
         addViewAbsolute(slider, x, y, w, h);
@@ -1013,7 +1013,7 @@ public class PUI extends ProtoBase {
      * @status OK
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PMatrix newMatrix(int m, int n) {
         final PMatrix matrix = new PMatrix(mAppRunner, m, n);
         return matrix;
@@ -1032,7 +1032,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PMatrix addMatrix(Object x, Object y, Object w, Object h, int m, int n) {
         PMatrix matrix = newMatrix(m, n);
         addViewAbsolute(matrix, x, y, w, h);
@@ -1047,7 +1047,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PProgressBar newProgress() {
         PProgressBar pb = new PProgressBar(getContext(), android.R.attr.progressBarStyleHorizontal);
         return pb;
@@ -1064,7 +1064,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PProgressBar addProgressBar(Object x, Object y, Object w, Object h) {
         PProgressBar pb = newProgress();
         addViewAbsolute(pb, x, y, w, -1);
@@ -1093,14 +1093,14 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PRadioButtonGroup addRadioButtonGroup(Object x, Object y) {
         PRadioButtonGroup rbg = newPRadioButtonGroup();
         addViewAbsolute(rbg, x, y, -1, -1);
         return rbg;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PRadioButtonGroup addRadioButtonGroup(Object x, Object y, Object w, Object h) {
         PRadioButtonGroup rbg = newPRadioButtonGroup();
         addViewAbsolute(rbg, x, y, w, h);
@@ -1116,7 +1116,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PImage newImage(String imagePath) {
         final PImage iv = new PImage(mAppRunner);
         if (imagePath != null) iv.load(imagePath);
@@ -1132,7 +1132,7 @@ public class PUI extends ProtoBase {
      * @return
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PImage addImage(Object x, Object y) {
         final PImage iv = newImage(null);
         addViewAbsolute(iv, x, y, -1, -1);
@@ -1140,14 +1140,14 @@ public class PUI extends ProtoBase {
     }
 
 
-    @ProtoMethod
+    @PhonkMethod
     public PImage addImage(Object x, Object y, Object w, Object h) {
         final PImage iv = newImage(null);
         addViewAbsolute(iv, x, y, w, h);
         return iv;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PImage addImage(String imagePath, Object x, Object y) {
         final PImage iv = newImage(imagePath);
         addViewAbsolute(iv, x, y, -1, -1);
@@ -1155,7 +1155,7 @@ public class PUI extends ProtoBase {
         return iv;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PImage addImage(String imagePath, Object x, Object y, Object w, Object h) {
         final PImage iv = newImage(imagePath);
         addViewAbsolute(iv, x, y, w, h);
@@ -1171,7 +1171,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PSpinner newChoiceBox(final String[] array) {
         PSpinner pSpinner = new PSpinner(getContext());
         pSpinner.setData(array);
@@ -1191,7 +1191,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PSpinner addChoiceBox(final String[] array, Object x, Object y, Object w, Object h) {
         PSpinner pSpinner = newChoiceBox(array);
         addViewAbsolute(pSpinner, x, y, w, h);
@@ -1207,7 +1207,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PNumberPicker newNumberPicker(int from, int to) {
         PNumberPicker pNumberPicker = new PNumberPicker(getContext());
         pNumberPicker.setMinValue(from);
@@ -1229,7 +1229,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PNumberPicker addNumberPicker(int from, int to, Object x, Object y, Object w, Object h) {
         PNumberPicker pNumberPicker = newNumberPicker(from, to);
         addViewAbsolute(pNumberPicker, x, y, w, h);
@@ -1246,7 +1246,7 @@ public class PUI extends ProtoBase {
      *
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public Object newCameraView(String type) {
         int camNum = -1;
         switch (type) {
@@ -1295,7 +1295,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public Object addCameraView(String type, Object x, Object y, Object w, Object h) {
         Object pCamera = newCameraView(type);
         addViewAbsolute((View) pCamera, x, y, w, h);
@@ -1337,7 +1337,7 @@ public class PUI extends ProtoBase {
      *
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public View add(View v, Object x, Object y, Object w, Object h) {
         addViewAbsolute(v, x, y, w, h);
         return v;
@@ -1350,7 +1350,7 @@ public class PUI extends ProtoBase {
      *
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PWebView newWebView() {
         PWebView webView = new PWebView(getAppRunner());
         return webView;
@@ -1367,7 +1367,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PWebView addWebView(Object x, Object y, Object w, Object h) {
         PWebView webView = newWebView();
         addViewAbsolute(webView, x, y, w, h);
@@ -1381,7 +1381,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PPlot newPlot() {
         PPlot pPlot = new PPlot(mAppRunner);
         // pPlotView.range(0, 1);
@@ -1399,7 +1399,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PPlot addPlot(Object x, Object y, Object w, Object h) {
         PPlot pPlot = newPlot();
         addViewAbsolute(pPlot, x, y, w, h);
@@ -1414,7 +1414,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PTouchPad newTouchPad() {
         PTouchPad taV = new PTouchPad(mAppRunner);
 
@@ -1431,7 +1431,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PTouchPad addTouchPad(Object x, Object y, Object w, Object h) {
         PTouchPad taV = newTouchPad();
         addViewAbsolute(taV, x, y, w, h);
@@ -1446,7 +1446,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PCustomView newCanvas() {
         PCustomView customview = new PCustomView(mAppRunner);
         return customview;
@@ -1469,7 +1469,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PCustomView addCanvas(Object x, Object y, Object w, Object h) {
         final PCustomView canvasView = newCanvas(); // (int) w, (int) h);
         addViewAbsolute(canvasView, x, y, w, h);
@@ -1484,7 +1484,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public PMap newMap() {
         PMap mapView = new PMap(getAppRunner());
         return mapView;
@@ -1501,8 +1501,8 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"x", "y", "w", "h"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"x", "y", "w", "h"})
     public PMap addMap(Object x, Object y, Object w, Object h) {
         PMap mapView = newMap();
         addViewAbsolute(mapView, x, y, w, h);
@@ -1520,7 +1520,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PList newList(int numCols, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
         PList pList = new PList(getAppRunner());
         pList.init(data, numCols, creating, binding);
@@ -1543,7 +1543,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PList addGrid(Object x, Object y, Object w, Object h, int numCols, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
         PList list = newList(numCols, data, creating, binding);
         addViewAbsolute(list, x, y, w ,h);
@@ -1565,7 +1565,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public PList addList(Object x, Object y, Object w, Object h, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
         PList list = newList(1, data, creating, binding);
         addViewAbsolute(list, x, y, w ,h);
@@ -1709,8 +1709,8 @@ public class PUI extends ProtoBase {
      *
      * @exampleLink /examples/Others/Processing
      */
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"x", "y", "w", "h"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"x", "y", "w", "h"})
     public PProcessing addProcessingCanvas(Object x, Object y, Object w, Object h) {
         // Create the main layout. This is where all the items actually go
         FrameLayout fl = new FrameLayout(getContext());
@@ -1736,7 +1736,7 @@ public class PUI extends ProtoBase {
      *
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public PLinearLayout newLinearLayout() {
         PLinearLayout pLinearLayout = new PLinearLayout(getAppRunner());
         pLinearLayout.orientation("vertical");
@@ -1750,7 +1750,7 @@ public class PUI extends ProtoBase {
      * @param y
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y) {
         PLinearLayout pLinearLayout = newLinearLayout();
         addViewAbsolute(pLinearLayout, x, y, -1, -1);
@@ -1758,7 +1758,7 @@ public class PUI extends ProtoBase {
         return pLinearLayout;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y, Object w, Object h) {
         PLinearLayout pLinearLayout = newLinearLayout();
         addViewAbsolute(pLinearLayout, x, y, w, h);
@@ -1788,7 +1788,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public void showWeb(String url) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         builder.setToolbarColor(Color.BLUE);
@@ -1807,12 +1807,12 @@ public class PUI extends ProtoBase {
      *
      * @param text
      */
-    @ProtoMethod
+    @PhonkMethod
     public void toast(String text) {
         Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public void toast(String text, boolean length) {
         int duration = Toast.LENGTH_SHORT;
         if (length) {
@@ -1831,7 +1831,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public void clipAndShadow(View v, int type, int r) {
         AndroidUtils.setViewGenericShadow(v, type, 0, 0, v.getWidth(), v.getHeight(), r);
         // v.setElevation();
@@ -1839,7 +1839,7 @@ public class PUI extends ProtoBase {
         // v.animate().
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public void clipAndShadow(View v, int type, int x, int y, int w, int h, int r) {
         AndroidUtils.setViewGenericShadow(v, type, x, y, w, h, r);
     }
@@ -1861,7 +1861,7 @@ public class PUI extends ProtoBase {
      * @advanced
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void resize(final View v, int w, int h, boolean animated) {
         if (!animated) {
             if (h != -1) {
@@ -1912,7 +1912,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public void movable(View viewHandler, View viewContainer, ReturnInterface callback) {
         WidgetHelper.setMovable(viewHandler, viewContainer, callback);
     }
@@ -1925,7 +1925,7 @@ public class PUI extends ProtoBase {
      * @status TOREVIEW
      * @advanced
      */
-    @ProtoMethod
+    @PhonkMethod
     public void removeMovable(View viewHandler) {
         WidgetHelper.removeMovable(viewHandler);
     }
@@ -1962,7 +1962,7 @@ public class PUI extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onTouches(View view, final ReturnInterface callback) {
         final PhonkNativeArray ar = new PhonkNativeArray(20);
         final HashMap<Integer, Touch> touches = new HashMap<Integer, Touch>();
@@ -2064,7 +2064,7 @@ public class PUI extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public Bitmap takeViewScreenshot(View v) {
         return AndroidUtils.takeScreenshotView(v);
     }

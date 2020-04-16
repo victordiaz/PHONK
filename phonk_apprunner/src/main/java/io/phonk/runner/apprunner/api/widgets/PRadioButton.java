@@ -25,7 +25,7 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.content.Context;
 import android.widget.RadioButton;
 
-public class PRadioButton extends RadioButton {
+public class PRadioButton extends androidx.appcompat.widget.AppCompatRadioButton {
 
     public PRadioButton(Context context) {
         super(context);

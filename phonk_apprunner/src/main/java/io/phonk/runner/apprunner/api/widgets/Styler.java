@@ -33,7 +33,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.MLog;
 
 import static android.view.View.TEXT_ALIGNMENT_TEXT_START;

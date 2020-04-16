@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class AppRunnerHelper {
 

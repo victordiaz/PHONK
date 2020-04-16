@@ -37,9 +37,9 @@ import de.sciss.net.OSCListener;
 import de.sciss.net.OSCMessage;
 import de.sciss.net.OSCReceiver;
 import de.sciss.net.OSCTransmitter;
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.PhonkNativeArray;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.MLog;
 
 public class OSC {

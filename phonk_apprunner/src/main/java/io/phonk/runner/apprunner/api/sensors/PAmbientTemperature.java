@@ -29,7 +29,7 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PAmbientTemperature extends CustomSensorManager {
@@ -81,7 +81,7 @@ public class PAmbientTemperature extends CustomSensorManager {
         return "ºC";
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PAmbientTemperature onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 

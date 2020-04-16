@@ -31,8 +31,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.phonk.runner.R;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PCard extends LinearLayout {
 
@@ -60,8 +60,8 @@ public class PCard extends LinearLayout {
 
     @Override
 
-    @ProtoMethod(description = "Adds a new view", example = "")
-    @ProtoMethodParam(params = {"view"})
+    @PhonkMethod(description = "Adds a new view", example = "")
+    @PhonkMethodParam(params = {"view"})
     public void addView(View v) {
         v.setAlpha(0);
         v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
@@ -71,8 +71,8 @@ public class PCard extends LinearLayout {
     }
 
 
-    @ProtoMethod(description = "Add a row of n columns", example = "")
-    @ProtoMethodParam(params = {"columnNumber"})
+    @PhonkMethod(description = "Add a row of n columns", example = "")
+    @PhonkMethodParam(params = {"columnNumber"})
     public PRow addRow(int n) {
         PRow row = new PRow(c, cardLl, n);
 
@@ -80,8 +80,8 @@ public class PCard extends LinearLayout {
     }
 
 
-    @ProtoMethod(description = "Set the title of the card", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "Set the title of the card", example = "")
+    @PhonkMethodParam(params = {"text"})
     public void setTitle(String text) {
         if (text.isEmpty() == false) {
             title.setVisibility(View.VISIBLE);
@@ -90,23 +90,23 @@ public class PCard extends LinearLayout {
     }
 
 
-    @ProtoMethod(description = "Changes the title color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Changes the title color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public void setTitleColor(String color) {
         title.setBackgroundColor(Color.parseColor(color));
     }
 
 
-    @ProtoMethod(description = "Card with horizontal views", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Card with horizontal views", example = "")
+    @PhonkMethodParam(params = {""})
     public void setHorizontal() {
         LinearLayout ll = findViewById(R.id.cardWidgets);
         ll.setOrientation(LinearLayout.HORIZONTAL);
     }
 
 
-    @ProtoMethod(description = "Card with vertical views", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Card with vertical views", example = "")
+    @PhonkMethodParam(params = {""})
     public void setVertical() {
         LinearLayout ll = findViewById(R.id.cardWidgets);
         ll.setOrientation(LinearLayout.VERTICAL);

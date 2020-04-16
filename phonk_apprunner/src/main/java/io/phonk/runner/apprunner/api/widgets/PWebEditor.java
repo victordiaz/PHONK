@@ -23,8 +23,8 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PWebEditor extends ProtoBase {
@@ -36,23 +36,23 @@ public class PWebEditor extends ProtoBase {
 
     //TODO this is mContext place holder
 
-    @ProtoMethod(description = "Loads a Html file in the webIde sidebar", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Loads a Html file in the webIde sidebar", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public void loadHTMLonSideBar(boolean visible) {
 
     }
 
     //TODO this is mContext place holder
 
-    @ProtoMethod(description = "Shows/Hides the webIde sidebar", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Shows/Hides the webIde sidebar", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public void showSideBar(boolean visible) {
 
     }
 
 
-    @ProtoMethod(description = "Execute custom js in the webIde", example = "")
-    @ProtoMethodParam(params = {"jsText"})
+    @PhonkMethod(description = "Execute custom js in the webIde", example = "")
+    @PhonkMethodParam(params = {"jsText"})
     public void sendJs(String js) {
         //TODO change to events
         //IDEcommunication.getInstance(getContext()).sendCustomJs(js);

@@ -117,18 +117,14 @@
 
             <ToggleButton
                 android:id="@+id/webide_connection_toggle"
-                style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/white"
                 android:minHeight="12dp"
                 android:textAllCaps="true"
-                android:textColor="@color/phonk_textColor_secondary"
                 android:textOff="Start Web Editor"
                 android:textOn="Stop Web Editor"
-                android:textSize="10sp"
                 android:textStyle="normal|bold"
                 android:visibility="visible" />
         </LinearLayout>

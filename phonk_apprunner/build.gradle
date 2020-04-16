@@ -101,6 +101,7 @@ dependencies {
     api 'org.apache.commons:commons-lang3:3.5'
 
     api 'org.mozilla:rhino:1.7.7.2'                         //
+    implementation 'com.eclipsesource.j2v8:j2v8:6.1.0@aar'
 
     //network
     api files('libs/java_websocket.jar')

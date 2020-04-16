@@ -43,12 +43,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import io.phonk.runner.R;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.base.utils.MLog;
 
 public class PLiveCodingFeedback {
-
     private static final String TAG = PLiveCodingFeedback.class.getSimpleName();
 
     protected Context a;
@@ -110,8 +109,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Show/hide the live coding feedback", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Show/hide the live coding feedback", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public PLiveCodingFeedback show(boolean b) {
         this.show = b;
 
@@ -125,24 +124,24 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Auto hide the text after shown", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Auto hide the text after shown", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public PLiveCodingFeedback autoHide(boolean b) {
         this.autoHide = b;
         return this;
     }
 
 
-    @ProtoMethod(description = "Elapsed time until text is hidden", example = "")
-    @ProtoMethodParam(params = {"milliseconds"})
+    @PhonkMethod(description = "Elapsed time until text is hidden", example = "")
+    @PhonkMethodParam(params = {"milliseconds"})
     public PLiveCodingFeedback timeToHide(int t) {
         this.timeToHide = t;
         return this;
     }
 
 
-    @ProtoMethod(description = "Background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PLiveCodingFeedback backgroundColor(String c) {
         new Color();
         this.bgColor = Color.parseColor(c);
@@ -152,8 +151,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Text color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public PLiveCodingFeedback textColor(String color) {
         new Color();
         this.textColor = color;
@@ -163,8 +162,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Sets up the text size", example = "")
-    @ProtoMethodParam(params = {"size"})
+    @PhonkMethod(description = "Sets up the text size", example = "")
+    @PhonkMethodParam(params = {"size"})
     public PLiveCodingFeedback textSize(int textSize) {
         this.textSize = textSize;
         MLog.d(TAG, "textsize " + textSize);
@@ -173,8 +172,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Adds a text padding", example = "")
-    @ProtoMethodParam(params = {"left", "bottom"})
+    @PhonkMethod(description = "Adds a text padding", example = "")
+    @PhonkMethodParam(params = {"left", "bottom"})
     public PLiveCodingFeedback padding(int left, int bottom) {
         paddingLeft = left;
         paddingBottom = bottom;
@@ -183,8 +182,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Aligns the text", example = "")
-    @ProtoMethodParam(params = {"align={left,center,right}"})
+    @PhonkMethod(description = "Aligns the text", example = "")
+    @PhonkMethodParam(params = {"align={left,center,right}"})
     public PLiveCodingFeedback align(String alignment) {
         if (alignment.equals("right")) {
             this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
@@ -198,8 +197,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Writes simple text in the feedback", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "Writes simple text in the feedback", example = "")
+    @PhonkMethodParam(params = {"text"})
     public PLiveCodingFeedback write(String text) {
         write(text, this.textColor, this.textSize);
 
@@ -207,8 +206,8 @@ public class PLiveCodingFeedback {
     }
 
 
-    @ProtoMethod(description = "Writes text specifing the color and the size", example = "")
-    @ProtoMethodParam(params = {"text", "colorHex", "size"})
+    @PhonkMethod(description = "Writes text specifing the color and the size", example = "")
+    @PhonkMethodParam(params = {"text", "colorHex", "size"})
     public PLiveCodingFeedback write(String text, String color, int size) {
         // this.text = text;
 

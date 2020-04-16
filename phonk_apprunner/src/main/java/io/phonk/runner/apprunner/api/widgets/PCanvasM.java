@@ -36,9 +36,9 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 
-import io.phonk.runner.apidoc.annotation.ProtoField;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkField;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.Image;
 
@@ -51,10 +51,10 @@ public class PCanvasM {
     private Canvas mCanvasBuffer;
     public Canvas mCanvas;
 
-    @ProtoField(description = "Canvas width", example = "")
+    @PhonkField(description = "Canvas width", example = "")
     public int width;
 
-    @ProtoField(description = "Canvas height", example = "")
+    @PhonkField(description = "Canvas height", example = "")
     public int height;
 
     private RectF mRectf;
@@ -87,39 +87,39 @@ public class PCanvasM {
     /**
      * Fill and stroke colors
      */
-    @ProtoMethod(description = "Clear the canvas", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Clear the canvas", example = "")
+    @PhonkMethodParam(params = {})
     public void clear() {
         mCanvasBuffer.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         refresh();
     }
 
-    @ProtoMethod(description = "Sets the filling color", example = "")
-    @ProtoMethodParam(params = {"hex"})
+    @PhonkMethod(description = "Sets the filling color", example = "")
+    @PhonkMethodParam(params = {"hex"})
     public PCanvasM fill(String hex) {
         fill(Color.parseColor(hex));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the filling color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
+    @PhonkMethod(description = "Sets the filling color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
     public PCanvasM fill(int r, int g, int b, int alpha) {
         fill(Color.argb(alpha, r, g, b));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the filling color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b"})
+    @PhonkMethod(description = "Sets the filling color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b"})
     public PCanvasM fill(int r, int g, int b) {
         fill(Color.argb(255, r, g, b));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the filling color", example = "")
-    @ProtoMethodParam(params = {"hex"})
+    @PhonkMethod(description = "Sets the filling color", example = "")
+    @PhonkMethodParam(params = {"hex"})
     public PCanvasM fill(int c) {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setColor(c);
@@ -128,38 +128,38 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Removes the filling color", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Removes the filling color", example = "")
+    @PhonkMethodParam(params = {})
     public void noFill() {
         fillOn = false;
     }
 
-    @ProtoMethod(description = "Sets the stroke color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
+    @PhonkMethod(description = "Sets the stroke color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
     public PCanvasM stroke(int r, int g, int b, int alpha) {
         stroke(Color.argb(alpha, r, g, b));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the stroke color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b"})
+    @PhonkMethod(description = "Sets the stroke color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b"})
     public PCanvasM stroke(int r, int g, int b) {
         stroke(Color.argb(255, r, g, b));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the stroke color", example = "")
-    @ProtoMethodParam(params = {"hex"})
+    @PhonkMethod(description = "Sets the stroke color", example = "")
+    @PhonkMethodParam(params = {"hex"})
     public PCanvasM stroke(String c) {
         stroke(Color.parseColor(c));
 
         return this;
     }
 
-    @ProtoMethod(description = "Sets the stroke color", example = "")
-    @ProtoMethodParam(params = {"hex"})
+    @PhonkMethod(description = "Sets the stroke color", example = "")
+    @PhonkMethodParam(params = {"hex"})
     public PCanvasM stroke(int c) {
         mPaintStroke.setStyle(Paint.Style.STROKE);
         mPaintStroke.setColor(c);
@@ -168,22 +168,22 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Removes the stroke color", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Removes the stroke color", example = "")
+    @PhonkMethodParam(params = {})
     public PCanvasM noStroke() {
         strokeOn = false;
         return this;
     }
 
-    @ProtoMethod(description = "Sets a stroke width", example = "")
-    @ProtoMethodParam(params = {"width"})
+    @PhonkMethod(description = "Sets a stroke width", example = "")
+    @PhonkMethodParam(params = {"width"})
     public PCanvasM strokeWidth(float w) {
         mPaintStroke.setStrokeWidth(w);
         return this;
     }
 
-    @ProtoMethod(description = "Sets a stroke cap", example = "")
-    @ProtoMethodParam(params = {"cap"})
+    @PhonkMethod(description = "Sets a stroke cap", example = "")
+    @PhonkMethodParam(params = {"cap"})
     public PCanvasM strokeCap(String cap) {
 
         Paint.Cap c = Paint.Cap.SQUARE;
@@ -208,8 +208,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Change the background color with alpha value", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
+    @PhonkMethod(description = "Change the background color with alpha value", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
     public PCanvasM background(int r, int g, int b, int alpha) {
         mPaintBackground.setStyle(Paint.Style.FILL);
         mPaintBackground.setARGB(alpha, r, g, b);
@@ -222,8 +222,8 @@ public class PCanvasM {
     /**
      * Drawing cornerMode
      */
-    @ProtoMethod(description = "Drawing will be done from a corner if true, otherwise from the center", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Drawing will be done from a corner if true, otherwise from the center", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PCanvasM cornerMode(boolean mode) {
         mModeCorner = mode;
 
@@ -233,8 +233,8 @@ public class PCanvasM {
     /**
      * Drawing thingies
      */
-    @ProtoMethod(description = "Change the background color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b"})
+    @PhonkMethod(description = "Change the background color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b"})
     public PCanvasM background(int r, int g, int b) {
         background(r, g, b, 255);
         refresh();
@@ -242,8 +242,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Draw a point", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Draw a point", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PCanvasM point(float x, float y) {
         mCanvasBuffer.drawPoint(x, y, mPaintStroke);
         refresh();
@@ -255,8 +255,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Draws a rectangle", example = "")
-    @ProtoMethodParam(params = {"x", "y", "width", "height"})
+    @PhonkMethod(description = "Draws a rectangle", example = "")
+    @PhonkMethodParam(params = {"x", "y", "width", "height"})
     public PCanvasM rect(float x, float y, float width, float height) {
         if (fillOn) mCanvasBuffer.drawRect(place(x, y, width, height), mPaintFill);
         if (strokeOn) mCanvasBuffer.drawRect(place(x, y, width, height), mPaintStroke);
@@ -265,8 +265,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Draws a rectangle with a given roundness value", example = "")
-    @ProtoMethodParam(params = {"x", "y", "width", "height", "rx", "ry"})
+    @PhonkMethod(description = "Draws a rectangle with a given roundness value", example = "")
+    @PhonkMethodParam(params = {"x", "y", "width", "height", "rx", "ry"})
     public PCanvasM rect(float x, float y, float width, float height, float rx, float ry) {
         if (fillOn) mCanvasBuffer.drawRoundRect(place(x, y, width, height), rx, ry, mPaintFill);
         if (strokeOn) mCanvasBuffer.drawRoundRect(place(x, y, width, height), rx, ry, mPaintStroke);
@@ -275,8 +275,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Draws and ellipse", example = "")
-    @ProtoMethodParam(params = {"x1", "y1", "width", "height"})
+    @PhonkMethod(description = "Draws and ellipse", example = "")
+    @PhonkMethodParam(params = {"x1", "y1", "width", "height"})
     public PCanvasM ellipse(float x, float y, float width, float height) {
         if (fillOn) mCanvasBuffer.drawOval(place(x, y, width, height), mPaintFill);
         if (strokeOn) mCanvasBuffer.drawOval(place(x, y, width, height), mPaintStroke);
@@ -285,8 +285,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Draws an arc", example = "")
-    @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center"})
+    @PhonkMethod(description = "Draws an arc", example = "")
+    @PhonkMethodParam(params = {"x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center"})
     public PCanvasM arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
         if (fillOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
         if (strokeOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
@@ -344,8 +344,8 @@ public class PCanvasM {
     /**
      * Text stuff
      */
-    @ProtoMethod(description = "Sets the size of the text", example = "")
-    @ProtoMethodParam(params = {"size"})
+    @PhonkMethod(description = "Sets the size of the text", example = "")
+    @PhonkMethodParam(params = {"size"})
     public PCanvasM textSize(int size) {
         mPaintFill.setTextSize(size);
         mPaintStroke.setTextSize(size);
@@ -382,8 +382,8 @@ public class PCanvasM {
     //    return this;
     //}
 
-    @ProtoMethod(description = "Writes text", example = "")
-    @ProtoMethodParam(params = {"text", "x", "y"})
+    @PhonkMethod(description = "Writes text", example = "")
+    @PhonkMethodParam(params = {"text", "x", "y"})
     public PCanvasM text(String text, float x, float y) {
         if (fillOn) mCanvasBuffer.drawText(text, x, y, mPaintFill);
         if (strokeOn) mCanvasBuffer.drawText(text, x, y, mPaintStroke);
@@ -392,8 +392,8 @@ public class PCanvasM {
         return this;
     }
 
-    @ProtoMethod(description = "Draws a text on a path", example = "")
-    @ProtoMethodParam(params = {"text", "path", "initOffset", "outOffsett"})
+    @PhonkMethod(description = "Draws a text on a path", example = "")
+    @PhonkMethodParam(params = {"text", "path", "initOffset", "outOffsett"})
     public PCanvasM text(String text, Path path, float initOffset, float outOffset) {
         if (fillOn) mCanvasBuffer.drawTextOnPath(text, path, initOffset, outOffset, mPaintFill);
         if (strokeOn) mCanvasBuffer.drawTextOnPath(text, path, initOffset, outOffset, mPaintStroke);
@@ -433,22 +433,22 @@ public class PCanvasM {
         mPaintFill.setTypeface(selectedType);
     }
 
-    @ProtoMethod(description = "Load an image", example = "")
-    @ProtoMethodParam(params = {"imagePath"})
+    @PhonkMethod(description = "Load an image", example = "")
+    @PhonkMethodParam(params = {"imagePath"})
     public Bitmap loadImage(String imagePath) {
         return Image.loadBitmap(mAppRunner.getProject().getFullPathForFile(imagePath));
     }
 
-    @ProtoMethod(description = "Draws an image", example = "")
-    @ProtoMethodParam(params = {"bitmap", "x", "y"})
+    @PhonkMethod(description = "Draws an image", example = "")
+    @PhonkMethodParam(params = {"bitmap", "x", "y"})
     public PCanvasM image(Bitmap bmp, int x, int y) {
         mCanvasBuffer.drawBitmap(bmp, x, y, mPaintBackground);
         refresh();
         return this;
     }
 
-    @ProtoMethod(description = "Draws an image", example = "")
-    @ProtoMethodParam(params = {"bitmap", "x", "y", "w", "h"})
+    @PhonkMethod(description = "Draws an image", example = "")
+    @PhonkMethodParam(params = {"bitmap", "x", "y", "w", "h"})
     public PCanvasM image(Bitmap bmp, int x, int y, int w, int h) {
         Rect rectSrc = new Rect(0, 0, bmp.getWidth(), bmp.getHeight());
         RectF rectDst = new RectF(x, y, x + w, y + h);
@@ -462,43 +462,43 @@ public class PCanvasM {
     /**
      *
      */
-    @ProtoMethod(description = "push", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "push", example = "")
+    @PhonkMethodParam(params = {})
     public PCanvasM push() {
         mCanvasBuffer.save();
         return this;
     }
 
-    @ProtoMethod(description = "Rotate given degrees", example = "")
-    @ProtoMethodParam(params = {"degrees"})
+    @PhonkMethod(description = "Rotate given degrees", example = "")
+    @PhonkMethodParam(params = {"degrees"})
     public PCanvasM rotate(float degrees) {
         mCanvasBuffer.rotate(degrees);
         return this;
     }
 
-    @ProtoMethod(description = "Translate", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Translate", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PCanvasM translate(float x, float y) {
         mCanvasBuffer.translate(x, y);
         return this;
     }
 
-    @ProtoMethod(description = "Skew values 0 - 1)", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Skew values 0 - 1)", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PCanvasM skew(float x, float y) {
         mCanvasBuffer.skew(x, y);
         return this;
     }
 
-    @ProtoMethod(description = "Scale", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Scale", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PCanvasM scale(float x, float y) {
         mCanvasBuffer.scale(x, y);
         return this;
     }
 
-    @ProtoMethod(description = "Restore", example = "")
-    @ProtoMethodParam(params = {"x", "y"})
+    @PhonkMethod(description = "Restore", example = "")
+    @PhonkMethodParam(params = {"x", "y"})
     public PCanvasM pop() {
         mCanvasBuffer.restore();
         return this;
@@ -519,16 +519,16 @@ public class PCanvasM {
     /**
      * Shadows
      */
-    @ProtoMethod(description = "Sets the shadow fill", example = "")
-    @ProtoMethodParam(params = {"x", "y", "radius", "colorHext"})
+    @PhonkMethod(description = "Sets the shadow fill", example = "")
+    @PhonkMethodParam(params = {"x", "y", "radius", "colorHext"})
     public PCanvasM shadow(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintFill.setShadowLayer(radius, x, y, c);
         return this;
     }
 
-    @ProtoMethod(description = "Set the shadow stroke", example = "")
-    @ProtoMethodParam(params = {"x", "y", "radius", "colorHex"})
+    @PhonkMethod(description = "Set the shadow stroke", example = "")
+    @PhonkMethodParam(params = {"x", "y", "radius", "colorHex"})
     public PCanvasM shadowStroke(int x, int y, float radius, String colorHex) {
         int c = Color.parseColor(colorHex);
         mPaintStroke.setShadowLayer(radius, x, y, c);
@@ -538,15 +538,15 @@ public class PCanvasM {
     /**
      * Shaders
      */
-    @ProtoMethod(description = "Sets a shader", example = "")
-    @ProtoMethodParam(params = {"shader"})
+    @PhonkMethod(description = "Sets a shader", example = "")
+    @PhonkMethodParam(params = {"shader"})
     public void setShader(Shader shader) {
         mPaintFill.setAntiAlias(true);
         mPaintFill.setShader(shader);
     }
 
-    @ProtoMethod(description = "Create a linear shader", example = "")
-    @ProtoMethodParam(params = {"x1", "y1", "x2", "y2", "colorHex1", "colorHex2", "tileMode"})
+    @PhonkMethod(description = "Create a linear shader", example = "")
+    @PhonkMethodParam(params = {"x1", "y1", "x2", "y2", "colorHex1", "colorHex2", "tileMode"})
     public Shader linearShader(float x1, float y1, float x2, float y2, String c1, String c2) {
         Shader.TileMode mode = Shader.TileMode.REPEAT;
 
@@ -557,8 +557,8 @@ public class PCanvasM {
     /**
      *
      */
-    @ProtoMethod(description = "Enable/Disable antialiasing", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Enable/Disable antialiasing", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public PCanvasM antiAlias(boolean b) {
         mPaintFill.setAntiAlias(b);
         mPaintStroke.setAntiAlias(b);

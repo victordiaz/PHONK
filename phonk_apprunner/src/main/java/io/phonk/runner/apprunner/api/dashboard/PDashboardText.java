@@ -28,8 +28,8 @@ import org.json.JSONObject;
 import java.net.UnknownHostException;
 
 import io.phonk.runner.apprunner.api.PDashboard;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PDashboardText extends PDashboardWidget {
@@ -38,8 +38,8 @@ public class PDashboardText extends PDashboardWidget {
         super(appRunner, dashboardServer, "text");
     }
 
-    @ProtoMethod(description = "change the text", example = "")
-    @ProtoMethodParam(params = {"text"})
+    @PhonkMethod(description = "change the text", example = "")
+    @PhonkMethodParam(params = {"text"})
     public void setText(String text) throws UnknownHostException, JSONException {
 
         JSONObject values = new JSONObject()

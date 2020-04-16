@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import io.phonk.runner.api.PDevice;
+import io.phonk.runner.apprunner.api.PDevice;
 import io.phonk.runner.base.utils.MLog;
 
 public class PhonkWebsocketServer extends WebSocketServer {

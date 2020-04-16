@@ -47,10 +47,10 @@ import java.util.Locale;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.FeatureNotAvailableException;
+import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
 import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -83,8 +83,8 @@ public class PLocation extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Start the location. Returns lat, lon, alt, speed, bearing", example = "")
-    @ProtoMethodParam(params = {"function(lat, lon, alt, speed, bearing)"})
+    @PhonkMethod(description = "Start the location. Returns lat, lon, alt, speed, bearing", example = "")
+    @PhonkMethodParam(params = {"function(lat, lon, alt, speed, bearing)"})
     public void start() {
 
         if (!isAvailable()) {
@@ -204,8 +204,8 @@ public class PLocation extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Start the GPS. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
+    @PhonkMethod(description = "Start the GPS. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
     public PLocation onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 
@@ -213,16 +213,16 @@ public class PLocation extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Get the last known location", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Get the last known location", example = "")
+    @PhonkMethodParam(params = {""})
     public Location getLastKnownLocation() {
         return locationManager.getLastKnownLocation(provider);
 
     }
 
 
-    @ProtoMethod(description = "Get the location name of a given latitude and longitude", example = "")
-    @ProtoMethodParam(params = {"latitude", "longitude"})
+    @PhonkMethod(description = "Get the location name of a given latitude and longitude", example = "")
+    @PhonkMethodParam(params = {"latitude", "longitude"})
     public String getLocationName(double lat, double lon) {
         String gpsLocation = "";
         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
@@ -272,8 +272,8 @@ public class PLocation extends ProtoBase {
         alertDialog.show();
     }
 
-    @ProtoMethod(description = "Get the distance from two points", example = "")
-    @ProtoMethodParam(params = {"startLatitude", "starLongitude", "endLatitude", "endLongitude"})
+    @PhonkMethod(description = "Get the distance from two points", example = "")
+    @PhonkMethodParam(params = {"startLatitude", "starLongitude", "endLatitude", "endLongitude"})
     public double distance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
         float[] results = null;
         // Location.distanceBetween(startLatitude, startLongitude, endLatitude,

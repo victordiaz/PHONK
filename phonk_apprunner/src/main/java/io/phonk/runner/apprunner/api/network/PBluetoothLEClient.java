@@ -39,10 +39,10 @@ import java.util.UUID;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.api.other.PhonkNativeArray;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -74,8 +74,8 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         status = DISCONNECTED;
     }
 
-    @ProtoMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
-    @ProtoMethodParam(params = {"mac", "function(data)"})
+    @PhonkMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
+    @PhonkMethodParam(params = {"mac", "function(data)"})
     public void connectGatt(String mac) {
     }
 
@@ -86,8 +86,8 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         MLog.d(TAG, "connecting to " + address);
     }
 
-    @ProtoMethod(description = "Disconnect the bluetooth", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Disconnect the bluetooth", example = "")
+    @PhonkMethodParam(params = {""})
     public void disconnectGatt() {
         if (status != DISCONNECTED) {
             mGatt.close();
@@ -99,14 +99,14 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         mGatt.discoverServices();
     }
 
-    @ProtoMethod(description = "Write value to characteristic", example = "")
-    @ProtoMethodParam(params = {"uuid", "value"})
+    @PhonkMethod(description = "Write value to characteristic", example = "")
+    @PhonkMethodParam(params = {"uuid", "value"})
     public void writeCharacteristic(String uuid, Object value) {
 
     }
 
-    @ProtoMethod(description = "Read value from characteristic", example = "")
-    @ProtoMethodParam(params = {"uuid"})
+    @PhonkMethod(description = "Read value from characteristic", example = "")
+    @PhonkMethodParam(params = {"uuid"})
     public void readCharacteristic(String uuid) {
 
     }
@@ -124,8 +124,8 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         mGatt.setCharacteristicNotification(characteristic, true);
     }
 
-    @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public boolean isConnected() {
         return status == CONNECTED;
     }

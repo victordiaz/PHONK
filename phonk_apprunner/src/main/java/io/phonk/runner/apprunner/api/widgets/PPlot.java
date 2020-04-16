@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.StyleProperties;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 

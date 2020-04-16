@@ -30,13 +30,13 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PSqLite extends ProtoBase {
 
-    String TAG = "PSqlite";
+    String TAG = PSqLite.class.getSimpleName();
     private SQLiteDatabase db;
 
     public PSqLite(AppRunner appRunner, String dbName) {
@@ -46,22 +46,22 @@ public class PSqLite extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Open a SQLite ", example = "")
-    @ProtoMethodParam(params = {"dirName"})
+    @PhonkMethod(description = "Open a SQLite ", example = "")
+    @PhonkMethodParam(params = {"dirName"})
     public void open(String dbName) {
         db = getContext().openOrCreateDatabase(getAppRunner().getProject().getFullPathForFile(dbName), Context.MODE_PRIVATE, null);
     }
 
-    @ProtoMethod(description = "Executes a SQL sentence", example = "")
-    @ProtoMethodParam(params = {"sql"})
+    @PhonkMethod(description = "Executes a SQL sentence", example = "")
+    @PhonkMethodParam(params = {"sql"})
     public void execSql(String sql) {
         db.execSQL(sql);
     }
 
     // http://stackoverflow.com/questions/8830753/android-sqlite-which-query-query-or-rawquery-is-faster
 
-    @ProtoMethod(description = "Querys the database in the given array of columns and returns a cursor", example = "")
-    @ProtoMethodParam(params = {"table", "colums[]"})
+    @PhonkMethod(description = "Querys the database in the given array of columns and returns a cursor", example = "")
+    @PhonkMethodParam(params = {"table", "colums[]"})
     public Cursor query(String table, String[] columns) {
         for (String column : columns) {
         }
@@ -70,20 +70,20 @@ public class PSqLite extends ProtoBase {
         return c;
     }
 
-    @ProtoMethod(description = "Close the database connection", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Close the database connection", example = "")
+    @PhonkMethodParam(params = {})
     public void close() {
         db.close();
     }
 
-    @ProtoMethod(description = "Deletes a table in the database", example = "")
-    @ProtoMethodParam(params = {"tableName"})
+    @PhonkMethod(description = "Deletes a table in the database", example = "")
+    @PhonkMethodParam(params = {"tableName"})
     public void delete(String table) {
         this.db.delete(table, null, null);
     }
 
-    @ProtoMethod(description = "Exectutes SQL sentence in the database", example = "")
-    @ProtoMethodParam(params = {"table", "fields"})
+    @PhonkMethod(description = "Exectutes SQL sentence in the database", example = "")
+    @PhonkMethodParam(params = {"table", "fields"})
     public void insert(String table, ArrayList<DBDataType> fields) {
 
         String names = "";

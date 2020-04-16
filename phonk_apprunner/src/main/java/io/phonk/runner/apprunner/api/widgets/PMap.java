@@ -51,8 +51,8 @@ import java.util.Map;
 
 import io.phonk.runner.BuildConfig;
 import io.phonk.runner.R;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -172,7 +172,7 @@ public class PMap extends MapView {
      * @param color
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public PMapPath createPath(String color) {
         PMapPath path = new PMapPath();
         path.setColor(Color.parseColor(color));
@@ -183,10 +183,10 @@ public class PMap extends MapView {
 
     /**
      * Removes a path from the map
-     * @param PMapPath
+     * @param path
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public PMapPath removePath(PMapPath path) {
         mapView.getOverlays().remove(path);
 
@@ -201,7 +201,7 @@ public class PMap extends MapView {
      * @param url
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView tileSource(String name, String url) {
 
         String[] tileSourcesUrl = new String[1];
@@ -221,7 +221,7 @@ public class PMap extends MapView {
      * @param type
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView tileSource(String type) {
         OnlineTileSourceBase source;
         if (type.equals("hikebikemap")) {
@@ -242,7 +242,7 @@ public class PMap extends MapView {
      * @param mapId
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView mapBoxTileSource(String accessToken, String mapId) {
         final MapBoxTileSource tileSource = new MapBoxTileSource();
 
@@ -270,7 +270,7 @@ public class PMap extends MapView {
      * @param params
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public PMapMarker addMarker(Map params) {
         PMapMarker m = new PMapMarker(mapView);
 
@@ -308,7 +308,7 @@ public class PMap extends MapView {
      *
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView clearCache() {
         mapView.getTileProvider().clearTileCache();
 
@@ -321,7 +321,7 @@ public class PMap extends MapView {
      * @param zoom
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView zoom(int zoom) {
         mapController.setZoom(zoom);
 
@@ -334,7 +334,7 @@ public class PMap extends MapView {
      * @param b
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView showControls(boolean b) {
         mapView.setBuiltInZoomControls(b);
 
@@ -347,7 +347,7 @@ public class PMap extends MapView {
      * @param b
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView multitouch(boolean b) {
         mapView.setMultiTouchControls(b);
         return this;
@@ -360,7 +360,7 @@ public class PMap extends MapView {
      * @param lon
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView moveTo(double lat, double lon) {
         GeoPoint point2 = new GeoPoint(lat, lon);
         mapController.animateTo(point2);
@@ -375,7 +375,7 @@ public class PMap extends MapView {
      * @param lon
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView center(double lat, double lon) {
         GeoPoint point2 = new GeoPoint(lat, lon);
         mapController.setCenter(point2);
@@ -389,7 +389,7 @@ public class PMap extends MapView {
      *
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public GeoPoint center() {
         return mapView.getBoundingBox().getCenter();
     }
@@ -400,7 +400,7 @@ public class PMap extends MapView {
      *
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public float zoom() {
         return mapView.getZoomLevel();
     }
@@ -413,7 +413,7 @@ public class PMap extends MapView {
      * @param max
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public MapView zoomLimits(double min, double max) {
         mapView.setMinZoomLevel(min);
         mapView.setMaxZoomLevel(max);
@@ -428,7 +428,7 @@ public class PMap extends MapView {
      * @param y
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public org.osmdroid.api.IGeoPoint pixelsToGeo(int x, int y) {
         return mapView.getProjection().fromPixels(x, y);
     }
@@ -440,7 +440,7 @@ public class PMap extends MapView {
      * @param lon
      * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public Point geoToPixels(double lat, double lon) {
         GeoPoint point = new GeoPoint(lat, lon);
 
@@ -588,8 +588,8 @@ public class PMap extends MapView {
             super();
         }
 
-        @ProtoMethod(description = "Add a point to the path", example = "")
-        @ProtoMethodParam(params = {"path", "latitude", "longitude"})
+        @PhonkMethod(description = "Add a point to the path", example = "")
+        @PhonkMethodParam(params = {"path", "latitude", "longitude"})
         public PMapPath addGeoPoint(double lat, double lon) {
             addPoint(new GeoPoint(lat, lon));
             mapView.invalidate();

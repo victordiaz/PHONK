@@ -22,6 +22,8 @@
 
 package io.phonk.runner.apprunner.api;
 
+import com.eclipsesource.v8.V8Object;
+import com.eclipsesource.v8.V8Value;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,16 +31,16 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.AppRunnerInterpreter;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.GSONUtil;
 import io.phonk.runner.base.utils.StrUtils;
 import io.phonk.runner.base.events.Events;
 
-@ProtoObject
+@PhonkObject
 public class PConsole extends ProtoBase {
 
     private boolean showTime = false;
@@ -53,14 +55,15 @@ public class PConsole extends ProtoBase {
      * @param outputs
      *
      * @status TODO_EXAMPLE
+     * @return
      */
-    @ProtoMethod
+    @PhonkMethod
     public PConsole log(Object... outputs) {
         base_log("log", outputs);
         return this;
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PConsole logImage(String imgPath) {
         imgPath = imgPath + "?" + StrUtils.generateUUID();
         String img = "<img src = '" + imgPath + "'/>";
@@ -76,8 +79,8 @@ public class PConsole extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
-    @ProtoMethodParam(params = {"text", "text", "..."})
+    @PhonkMethod(description = "shows any HTML text in the webIde console marked as error", example = "")
+    @PhonkMethodParam(params = {"text", "text", "..."})
     public PConsole error(Object outputs) {
         base_log("log_error", outputs);
 
@@ -106,8 +109,8 @@ public class PConsole extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod(description = "clear the console", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "clear the console", example = "")
+    @PhonkMethodParam(params = {""})
     public PConsole clear() {
         send("clear", "");
         return this;
@@ -119,8 +122,8 @@ public class PConsole extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod(description = "show/hide the console", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "show/hide the console", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public PConsole show(boolean b) {
         if (b) send("show", "");
         else send("hide", "");
@@ -222,9 +225,7 @@ public class PConsole extends ProtoBase {
             // format the objects to json output if the object is a ReturnObject
             String out = "";
             Gson gson = GSONUtil.getInstance().getGson();
-            // if (output instanceof ReturnObject)out = gson.toJson(output);
-            //else if (output instanceof PhonkNativeArray)out = gson.toJson(output);
-            // else
+
             out = output.toString();
             builder.append(" ").append(out);
         }
@@ -241,10 +242,8 @@ public class PConsole extends ProtoBase {
         return s.format(new Date());
     }
 
-    @Override
     public void __stop() {
 
     }
-
 }
 

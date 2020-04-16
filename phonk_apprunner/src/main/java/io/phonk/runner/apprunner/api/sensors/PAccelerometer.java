@@ -29,7 +29,7 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PAccelerometer extends CustomSensorManager {
@@ -85,7 +85,7 @@ public class PAccelerometer extends CustomSensorManager {
         return "m/s^2";
     }
 
-    @ProtoMethod
+    @PhonkMethod
     public PAccelerometer onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
         return this;

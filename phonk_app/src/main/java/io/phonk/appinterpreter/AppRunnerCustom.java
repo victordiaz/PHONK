@@ -44,7 +44,7 @@ public class AppRunnerCustom extends AppRunner {
 
     public AppRunnerCustom initInterpreter() {
         super.initInterpreter();
-        interp.addJavaObjectToJs("phonkApp", phonkApp);
+        // interp.addJavaObjectToJs("phonkApp", phonkApp);
 
         return this;
     }

@@ -27,7 +27,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import io.phonk.runner.apprunner.api.other.PLooper;
-import io.phonk.runner.apidoc.annotation.ProtoField;
+import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -39,7 +39,7 @@ public class PCustomView extends View {
     protected final AppRunner mAppRunner;
     private PCanvasM mPCanvas;
 
-    @ProtoField(description = "Time interval between draws", example = "")
+    @PhonkField(description = "Time interval between draws", example = "")
     private int drawInterval = 35;
     protected boolean mAutoDraw = false;
     private PLooper loop;

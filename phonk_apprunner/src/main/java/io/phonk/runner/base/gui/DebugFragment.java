@@ -43,9 +43,9 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import io.phonk.runner.R;
-import io.phonk.runner.apprunner.AppRunnerInterpreter;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.events.Events;
+import io.phonk.runner.base.events.Events;
 
 public class DebugFragment extends Fragment {
 

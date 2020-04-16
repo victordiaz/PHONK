@@ -40,10 +40,10 @@ import java.util.UUID;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apprunner.api.other.PhonkNativeArray;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -63,8 +63,8 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         super(appRunner);
     }
 
-    @ProtoMethod(description = "Start the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Start the bluetooth adapter", example = "")
+    @PhonkMethodParam(params = {""})
     public PBluetooth start() {
         MLog.d(TAG, "Bluetooth is started: " + mBtStarted);
 
@@ -114,16 +114,16 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         return this;
     }
 
-    @ProtoMethod(description = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "")
+    @PhonkMethodParam(params = {""})
     public PBluetoothClient createClient() {
         start();
         PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
         return pBluetoothClient;
     }
 
-    @ProtoMethod(description = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "")
+    @PhonkMethodParam(params = {""})
     public PBluetoothServer createServer(String name) {
         start();
         PBluetoothServer pBluetoothServer = new PBluetoothServer(this, getAppRunner(), name);
@@ -131,8 +131,8 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         return pBluetoothServer;
     }
 
-    @ProtoMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
-    @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
+    @PhonkMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")
+    @PhonkMethodParam(params = {"function(name, macAddress, strength)"})
     public void scanNetworks(final ReturnInterface callbackfn) {
         MLog.d(TAG, "scanNetworks");
         start();
@@ -164,8 +164,8 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
     }
 
-    @ProtoMethod(description = "Send bluetooth serial message", example = "")
-    @ProtoMethodParam(params = {"string"})
+    @PhonkMethod(description = "Send bluetooth serial message", example = "")
+    @PhonkMethodParam(params = {"string"})
     public NativeArray getBondedDevices() {
         start();
 
@@ -190,14 +190,14 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         return array;
     }
 
-    @ProtoMethod(description = "Enable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Enable the bluetooth adapter", example = "")
+    @PhonkMethodParam(params = {})
     public void enable() {
         start();
     }
 
-    @ProtoMethod(description = "Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {})
+    @PhonkMethod(description = "Disable the bluetooth adapter", example = "")
+    @PhonkMethodParam(params = {})
     public void disable() {
         start();
         mAdapter.disable();

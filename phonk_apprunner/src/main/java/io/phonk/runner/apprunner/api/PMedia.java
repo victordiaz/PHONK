@@ -65,15 +65,15 @@ import io.phonk.runner.apprunner.api.media.PPureData;
 import io.phonk.runner.apprunner.api.media.PTextToSpeech;
 import io.phonk.runner.apprunner.api.media.PVideo;
 import io.phonk.runner.apprunner.api.media.PWave;
-import io.phonk.runner.apprunner.api.other.PhonkNativeArray;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
-@ProtoObject
+@PhonkObject
 public class PMedia extends ProtoBase {
 
     String TAG = PMedia.class.getSimpleName();
@@ -87,51 +87,51 @@ public class PMedia extends ProtoBase {
         super(appRunner);
     }
 
-    @ProtoMethod(description = "Set the main volume", example = "")
-    @ProtoMethodParam(params = {"volume"})
+    @PhonkMethod(description = "Set the main volume", example = "")
+    @PhonkMethodParam(params = {"volume"})
     public void volume(int volume) {
         AndroidUtils.setVolume(getContext(), volume);
     }
 
-    @ProtoMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Routes the audio through the speakers", example = "media.playSound(fileName);")
+    @PhonkMethodParam(params = {""})
     public void audioOnSpeakers(boolean b) {
         AudioManager audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.setMode(AudioManager.MODE_IN_CALL);
         audioManager.setSpeakerphoneOn(!b);
     }
 
-    @ProtoMethod(description = "Enable sounds effects (default false)", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Enable sounds effects (default false)", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public void enableSoundEffects(boolean b) {
         AndroidUtils.setEnableSoundEffects(getContext(), b);
     }
 
-    @ProtoMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
+    @PhonkMethodParam(params = {"fileName"})
     public PAudioPlayer createSoundPlayer() {
         PAudioPlayer pAudioPlayer = new PAudioPlayer(getAppRunner());
 
         return pAudioPlayer;
     }
 
-    @ProtoMethod(description = "Adds a video view and starts playing the fileName", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Adds a video view and starts playing the fileName", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public PVideo createVideoPlayer() {
         final PVideo video = new PVideo(getAppRunner());
         return video;
     }
 
-    @ProtoMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
-    @ProtoMethodParam(params = {"fileName"})
+    @PhonkMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
+    @PhonkMethodParam(params = {"fileName"})
     public PPureData initLibPd() {
         PPureData pPureData = new PPureData(getAppRunner());
 
         return pPureData;
     }
 
-    @ProtoMethod(description = "Record a sound with the microphone", example = "")
-    @ProtoMethodParam(params = {"fileName", "showProgressBoolean"})
+    @PhonkMethod(description = "Record a sound with the microphone", example = "")
+    @PhonkMethodParam(params = {"fileName", "showProgressBoolean"})
     public PAudioRecorder createRecorder() {
         return new PAudioRecorder(getAppRunner());
     }
@@ -144,8 +144,8 @@ public class PMedia extends ProtoBase {
     }
     */
 
-    @ProtoMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
-    @ProtoMethodParam(params = {"text", "Locale"})
+    @PhonkMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
+    @PhonkMethodParam(params = {"text", "Locale"})
     public PTextToSpeech createTextToSpeech() {
         PTextToSpeech tts = null;
         try {
@@ -158,8 +158,8 @@ public class PMedia extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-    @ProtoMethodParam(params = {"function(recognizedText)"})
+    @PhonkMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @PhonkMethodParam(params = {"function(recognizedText)"})
     public void startVoiceRecognition(ReturnInterface callbackfn) {
         startVoiceRecognition(callbackfn, true);
 
@@ -279,8 +279,8 @@ public class PMedia extends ProtoBase {
         void onNewResult(ArrayList<String> text);
     }
 
-    @ProtoMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
-    @ProtoMethodParam(params = {"function(recognizedText)"})
+    @PhonkMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @PhonkMethodParam(params = {"function(recognizedText)"})
     public PMidi startMidi() {
         PMidi pMidi = new PMidi(getAppRunner());
 

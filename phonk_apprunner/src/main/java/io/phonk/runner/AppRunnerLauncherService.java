@@ -33,7 +33,7 @@ import java.util.Map;
 import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class AppRunnerLauncherService extends Service {
 

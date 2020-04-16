@@ -41,8 +41,8 @@ import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
@@ -76,8 +76,8 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         mCallbackData = callbackfn;
     }
 
-    @ProtoMethod(description = "Connects to a bluetooth device using a popup with the available devices", example = "")
-    @ProtoMethodParam(params = {"function(name, macAddress, strength)"})
+    @PhonkMethod(description = "Connects to a bluetooth device using a popup with the available devices", example = "")
+    @PhonkMethodParam(params = {"function(name, macAddress, strength)"})
     public void connectSerialUsingMenu() {
         final NativeArray nativeArray = mPBluetooth.getBondedDevices();
         String[] arrayStrings = new String[nativeArray.size()];
@@ -101,15 +101,15 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
     }
 
 
-    @ProtoMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
-    @ProtoMethodParam(params = {"mac", "function(data)"})
+    @PhonkMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
+    @PhonkMethodParam(params = {"mac", "function(data)"})
     public void connectSerial(String mac) {
         BluetoothDevice device = mPBluetooth.getAdapter().getRemoteDevice(mac);
         tryToConnect(device);
     }
 
-    @ProtoMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
-    @ProtoMethodParam(params = {"name, function(data)"})
+    @PhonkMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
+    @PhonkMethodParam(params = {"name, function(data)"})
     public PBluetoothClient connectSerialByName(String name) {
         Set<BluetoothDevice> pairedDevices = mPBluetooth.getAdapter().getBondedDevices();
         if (pairedDevices.size() > 0) {
@@ -124,20 +124,20 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         return this;
     }
 
-    @ProtoMethod(description = "Send bluetooth serial message", example = "")
-    @ProtoMethodParam(params = {"string"})
+    @PhonkMethod(description = "Send bluetooth serial message", example = "")
+    @PhonkMethodParam(params = {"string"})
     public void send(String string) {
         mConnectedThread.write(string.getBytes());
     }
 
-    @ProtoMethod(description = "Send bluetooth serial message", example = "")
-    @ProtoMethodParam(params = {"int"})
+    @PhonkMethod(description = "Send bluetooth serial message", example = "")
+    @PhonkMethodParam(params = {"int"})
     public void sendBytes(byte[] bytes) {
         mConnectedThread.write(bytes);
     }
 
-    @ProtoMethod(description = "Disconnect the bluetooth", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Disconnect the bluetooth", example = "")
+    @PhonkMethodParam(params = {""})
     public void disconnect() {
         if (mConnectingThread != null) {
             mConnectingThread.cancel();
@@ -151,8 +151,8 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         changeStatus(DISCONNECTED, mDevice);
     }
 
-    @ProtoMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public boolean isConnected() {
         return status == CONNECTED;
     }

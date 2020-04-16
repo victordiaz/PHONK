@@ -30,8 +30,8 @@ import android.hardware.SensorManager;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PProximity extends CustomSensorManager implements WhatIsRunningInterface {
@@ -45,8 +45,8 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
     }
 
 
-    @ProtoMethod(description = "Start the proximity sensor. Returns a proximity value. It might differ per device", example = "")
-    @ProtoMethodParam(params = {"function(proximity)"})
+    @PhonkMethod(description = "Start the proximity sensor. Returns a proximity value. It might differ per device", example = "")
+    @PhonkMethodParam(params = {"function(proximity)"})
     public void start() {
         super.start();
 
@@ -83,8 +83,8 @@ public class PProximity extends CustomSensorManager implements WhatIsRunningInte
         return "cm";
     }
 
-    @ProtoMethod(description = "Start the proximity sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
+    @PhonkMethod(description = "Start the proximity sensor. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
     public PProximity onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 

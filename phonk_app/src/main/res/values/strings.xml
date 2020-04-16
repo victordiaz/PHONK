@@ -28,12 +28,12 @@
     <string name="runner_name">Phonk Runner</string>
     <string name="connect_message">Click to connect</string>
     <string name="connection_message_connected">Point the web browser in your computer to</string>
-    <string name="connection_message_wifi">Connected to WIFI. Point your computer\'s web browser to this address</string>
+    <string name="connection_message_wifi">Use your computer\'s web browser to access</string>
     <string name="connection_message_tethering">Start coding using your computer</string>
     <!--
     <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
     -->
-    <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
+    <string name="connection_message_not_connected">Use the Web Editor connecting this device and your computer to same network</string>
     <string name="menu_settings">Settings</string>
     <string name="BT_Home">Connect</string>
     <string name="title_activity_launcher">LauncherActivity</string>

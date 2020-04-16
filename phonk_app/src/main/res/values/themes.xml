@@ -34,6 +34,8 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:actionMenuTextColor">@color/phonk_textColor_primary</item>
         <item name="popupMenuStyle">@style/phonk_PopupMenu</item>
+        <item name ="fontFamily">monospace</item>
+        <item name = "android:buttonStyleToggle">@style/ToggleButton</item>
     </style>
 
     <style name="phonk_PopupMenu" parent="Widget.AppCompat.PopupMenu">

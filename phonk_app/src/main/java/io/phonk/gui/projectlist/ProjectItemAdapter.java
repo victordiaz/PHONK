@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = ProjectItemAdapter.class.getSimpleName();

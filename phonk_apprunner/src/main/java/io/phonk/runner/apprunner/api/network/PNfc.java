@@ -38,8 +38,8 @@ import java.util.Locale;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PNfc extends ProtoBase {
@@ -52,8 +52,8 @@ public class PNfc extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
-    @ProtoMethodParam(params = {"function(id, data)"})
+    @PhonkMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
+    @PhonkMethodParam(params = {"function(id, data)"})
     public void onNewData(final ReturnInterface callback) {
 
         getActivity().addNFCReadListener(new onNFCListener() {
@@ -74,8 +74,8 @@ public class PNfc extends ProtoBase {
         void event(boolean b);
     }
 
-    @ProtoMethod(description = "Write text into a NFC tag", example = "")
-    @ProtoMethodParam(params = {"function()"})
+    @PhonkMethod(description = "Write text into a NFC tag", example = "")
+    @PhonkMethodParam(params = {"function()"})
     public void write(String data, final writeNFCCB fn) {
         PNfc.nfcMsg = data;
         getActivity().initializeNFC();
@@ -116,8 +116,8 @@ public class PNfc extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {"function(msg)"})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"function(msg)"})
     public void onDataWritten(ReturnInterface callback) {
         getActivity().initializeNFC();
 

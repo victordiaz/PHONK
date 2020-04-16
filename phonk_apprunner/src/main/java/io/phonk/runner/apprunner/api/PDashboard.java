@@ -37,13 +37,13 @@ import io.phonk.runner.apprunner.api.dashboard.PDashboardButton;
 import io.phonk.runner.apprunner.api.dashboard.PDashboardMainObject;
 import io.phonk.runner.apprunner.api.dashboard.PDashboardText;
 import io.phonk.runner.apprunner.api.dashboard.PDashboardWebview;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
-@ProtoObject
+@PhonkObject
 public class PDashboard extends ProtoBase {
 
     private final DashboardServer mDashboardServer;
@@ -110,8 +110,8 @@ public class PDashboard extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "add a button in the dashboard", example = "")
-    @ProtoMethodParam(params = {"name", "x", "y", "w", "h", "function()"})
+    @PhonkMethod(description = "add a button in the dashboard", example = "")
+    @PhonkMethodParam(params = {"name", "x", "y", "w", "h", "function()"})
     public PDashboardButton addButton(String name, int x, int y, int w, int h) throws UnknownHostException, JSONException {
         PDashboardButton pWebAppButton = new PDashboardButton(getAppRunner(), mDashboardServer);
         pWebAppButton.add(name, x, y, w, h);
@@ -121,8 +121,8 @@ public class PDashboard extends ProtoBase {
 
 
 
-    @ProtoMethod(description = "add a text in the dashboard", example = "")
-    @ProtoMethodParam(params = {"name", "x", "y", "size", "hexColor"})
+    @PhonkMethod(description = "add a text in the dashboard", example = "")
+    @PhonkMethodParam(params = {"name", "x", "y", "size", "hexColor"})
     public PDashboardText addText(String name, int x, int y, int width, int height) throws UnknownHostException, JSONException {
 
         PDashboardText pWebAppText = new PDashboardText(getAppRunner(), mDashboardServer);
@@ -132,8 +132,8 @@ public class PDashboard extends ProtoBase {
     }
 
 
-    @ProtoMethod(description = "add a HTML content in the dashboard", example = "")
-    @ProtoMethodParam(params = {"htmlFile", "x", "y"})
+    @PhonkMethod(description = "add a HTML content in the dashboard", example = "")
+    @PhonkMethodParam(params = {"htmlFile", "x", "y"})
     public PDashboardWebview addHtml(int x, int y, int width, int height) throws UnknownHostException, JSONException {
 
         PDashboardWebview pWebAppHTML = new PDashboardWebview(getAppRunner(), mDashboardServer);
@@ -145,8 +145,8 @@ public class PDashboard extends ProtoBase {
 
 
 
-    @ProtoMethod(description = "show/hide the dashboard", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "show/hide the dashboard", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public void show(boolean b) {
         JSONObject msg = new JSONObject();
         try {

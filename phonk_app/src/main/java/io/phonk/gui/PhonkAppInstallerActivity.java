@@ -39,7 +39,7 @@ import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 
 public class PhonkAppInstallerActivity extends BaseActivity {
 

@@ -31,8 +31,8 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PListItem extends LinearLayout {
 
@@ -52,8 +52,8 @@ public class PListItem extends LinearLayout {
 
     //TODO place holder
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void setImage(int resId) {
         //TODO activate this
         ImageView imageView = null; //(ImageView) v.get().findViewById(R.id.customViewImage);
@@ -64,8 +64,8 @@ public class PListItem extends LinearLayout {
 
     //TODO place holder
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public void setText(String text) {
         this.t = text;
         //TODO activate this
@@ -76,8 +76,8 @@ public class PListItem extends LinearLayout {
 
     //TODO place holder
 
-    @ProtoMethod(description = "", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
     public String getName() {
         return t;
     }

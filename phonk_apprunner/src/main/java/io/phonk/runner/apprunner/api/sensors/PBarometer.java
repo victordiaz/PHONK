@@ -30,8 +30,8 @@ import android.hardware.SensorManager;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PBarometer extends CustomSensorManager implements WhatIsRunningInterface {
@@ -82,8 +82,8 @@ public class PBarometer extends CustomSensorManager implements WhatIsRunningInte
     }
 
 
-    @ProtoMethod(description = "Start the barometer sensor. Returns x, y, z", example = "")
-    @ProtoMethodParam(params = {"function(x, y, z)"})
+    @PhonkMethod(description = "Start the barometer sensor. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
     public PBarometer onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
         

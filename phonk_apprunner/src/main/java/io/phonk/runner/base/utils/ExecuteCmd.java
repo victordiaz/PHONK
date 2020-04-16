@@ -30,9 +30,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 
 public class ExecuteCmd {
 
@@ -119,7 +119,7 @@ public class ExecuteCmd {
         return this;
     }
 
-    @ProtoMethod(description = "stop the running command", example = "")
+    @PhonkMethod(description = "stop the running command", example = "")
     public ExecuteCmd stop() {
         Message msg = mHandler.obtainMessage();
         msg.arg1 = 0;

@@ -59,14 +59,14 @@ import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.ApplicationInfo;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.Intents;
 import io.phonk.runner.base.utils.MLog;
 
-@ProtoObject
+@PhonkObject
 public class PDevice extends ProtoBase {
 
     private BroadcastReceiver batteryReceiver;
@@ -213,7 +213,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onKeyDown(ReturnInterface fn) {
         keyInit();
         mOnKeyDownfn = fn;
@@ -225,7 +225,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onKeyUp(ReturnInterface fn) {
         keyInit();
         mOnKeyUpfn = fn;
@@ -237,7 +237,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onKeyEvent(ReturnInterface fn) {
         keyInit();
         mOnKeyEventfn = fn;
@@ -251,7 +251,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public void ignoreVolumeKeys(boolean b) {
         getActivity().ignoreVolumeEnabled = b;
     }
@@ -263,7 +263,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TODO
      */
-    @ProtoMethod
+    @PhonkMethod
     public void ignoreBackKey(boolean b) {
         getActivity().ignoreBackEnabled = b;
     }
@@ -275,7 +275,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void vibrate(int duration) {
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(duration);
@@ -291,12 +291,13 @@ public class PDevice extends ProtoBase {
      * @param repeat Number of times that the pattern will repeat
      *
      * @status TODO_EXAMPLE
-     */
-    @ProtoMethod
+    @PhonkMethod
     public void vibrate(long[] pattern, int repeat) {
         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(pattern, repeat);
     }
+     */
+
 
     /**
      * Sends a SMS to a given phone number.
@@ -307,7 +308,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void smsSend(String number, String msg) {
         SmsManager sm = SmsManager.getDefault();
         sm.sendTextMessage(number, null, msg, null, null);
@@ -319,7 +320,7 @@ public class PDevice extends ProtoBase {
      * @param callback
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onSmsReceived(final ReturnInterface callback) {
 
         // SMS receive
@@ -351,7 +352,7 @@ public class PDevice extends ProtoBase {
      * @return brightness value
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public float brightness() {
         int brightness = -1;
 
@@ -370,7 +371,7 @@ public class PDevice extends ProtoBase {
      * @param value
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void brightness(float value) {
         getActivity().setBrightness(value);
     }
@@ -382,7 +383,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void globalBrightness(int value) {
         AndroidUtils.setGlobalBrightness(getContext(), value);
     }
@@ -393,7 +394,7 @@ public class PDevice extends ProtoBase {
      * @param b
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void screenAlwaysOn(boolean b) {
         getActivity().setScreenAlwaysOn(b);
     }
@@ -404,7 +405,7 @@ public class PDevice extends ProtoBase {
      * @return status (true / false)
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public boolean isScreenOn() {
         return AndroidUtils.isScreenOn(getContext());
     }
@@ -430,7 +431,7 @@ public class PDevice extends ProtoBase {
      * @param time in milliseconds
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void screenTimeout(int time) {
         AndroidUtils.setScreenTimeout(getContext(), time);
     }
@@ -441,7 +442,7 @@ public class PDevice extends ProtoBase {
      * @return
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public boolean isAirplaneMode() {
         return AndroidUtils.isAirplaneMode(getContext());
     }
@@ -452,7 +453,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void wakeLock(boolean b) {
         AndroidUtils.setWakeLock(getContext(), b);
     }
@@ -464,7 +465,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void launchIntent(String intent) {
         Intent market_intent = new Intent(intent);
         getContext().startActivity(market_intent);
@@ -480,7 +481,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void openEmailApp(String recipient, String subject, String msg) {
         Intents.sendEmail(getContext(), recipient, subject, msg);
     }
@@ -493,7 +494,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void openMapApp(double longitude, double latitude) {
         Intents.openMap(getContext(), longitude, latitude);
     }
@@ -503,7 +504,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void openDial() {
         Intents.openDial(getContext());
     }
@@ -515,7 +516,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void call(String number) {
         Intents.call(getActivity(), number);
     }
@@ -527,7 +528,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void openWebApp(String url) {
         Intents.openWeb(getActivity(), url);
     }
@@ -538,7 +539,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public void openWebSearch(String text) {
         Intents.webSearch(getActivity(), text);
     }
@@ -569,7 +570,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void copyToClipboard(String label, String text) {
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
@@ -584,7 +585,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public String getFromClipboard(String label, String text) {
         ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         return clipboard.getPrimaryClip().getItemAt(clipboard.getPrimaryClip().getItemCount()).getText().toString();
@@ -596,7 +597,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TODO_EXAMPLE
      */
-    @ProtoMethod
+    @PhonkMethod
     public void battery(final ReturnInterface callback) {
         batteryReceiver = new BroadcastReceiver() {
             int scale = -1;
@@ -645,7 +646,7 @@ public class PDevice extends ProtoBase {
      *
      * @status OK
      */
-    @ProtoMethod
+    @PhonkMethod
     public float battery() {
         Intent batteryIntent = getContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
@@ -665,7 +666,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public String orientation() {
         int orientation = getContext().getResources().getConfiguration().orientation;
         String orientationStr = "";
@@ -691,7 +692,7 @@ public class PDevice extends ProtoBase {
      *
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public ReturnObject info() {
         ReturnObject ret = new ReturnObject();
 
@@ -784,7 +785,7 @@ public class PDevice extends ProtoBase {
      * @param callback
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public void onNewNotification(final ReturnInterface callback) {
         if (!isNotificationServiceRunning()) {
             showNotificationsManager();
@@ -813,7 +814,7 @@ public class PDevice extends ProtoBase {
      * @return
      * @status TOREVIEW
      */
-    @ProtoMethod
+    @PhonkMethod
     public List listInstalledApps() {
         ArrayList<ApplicationInfo> mApplications = new ArrayList<ApplicationInfo>();
 

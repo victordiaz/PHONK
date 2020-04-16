@@ -24,7 +24,7 @@ package io.phonk.runner.apprunner.api.other;
 
 import android.os.Handler;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PDelay implements WhatIsRunningInterface {
@@ -57,11 +57,10 @@ public class PDelay implements WhatIsRunningInterface {
         };
         handler.postDelayed(task, delay);
 
-        //TODO enable
         mAppRunner.whatIsRunning.add(this);
     }
 
-    @ProtoMethod(description = "Stop the timer", example = "")
+    @PhonkMethod(description = "Stop the timer", example = "")
     public PDelay stop() {
         handler.removeCallbacks(task);
         mCancelJob = true;

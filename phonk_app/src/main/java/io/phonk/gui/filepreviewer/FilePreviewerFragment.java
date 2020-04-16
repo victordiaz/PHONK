@@ -40,7 +40,7 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.utils.Image;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 @SuppressLint("NewApi")

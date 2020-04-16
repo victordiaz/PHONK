@@ -29,8 +29,8 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public abstract class CustomSensorManager implements WhatIsRunningInterface {
@@ -56,7 +56,7 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
         return false;
     }
 
-    @ProtoMethod(description = "Start the sensor", example = "")
+    @PhonkMethod(description = "Start the sensor", example = "")
     public void start() {
         if (isEnabled) {
             return;
@@ -65,8 +65,8 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
         sensor = mSensormanager.getDefaultSensor(type);
     }
 
-    @ProtoMethod(description = "Stop the sensor", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Stop the sensor", example = "")
+    @PhonkMethodParam(params = {""})
     public void stop() {
         isEnabled = false;
         if (mListener != null) {
@@ -76,8 +76,8 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
     }
 
 
-    @ProtoMethod(description = "Set the speed of the sensor 'slow', 'normal', 'fast'", example = "")
-    @ProtoMethodParam(params = {"speed=['slow', 'normal', 'fast']"})
+    @PhonkMethod(description = "Set the speed of the sensor 'slow', 'normal', 'fast'", example = "")
+    @PhonkMethodParam(params = {"speed=['slow', 'normal', 'fast']"})
     public void sensorSpeed(String speed) {
         if (speed.equals("slow")) {
             this.speed = SensorManager.SENSOR_DELAY_UI;
@@ -100,7 +100,7 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
         return sensor.getResolution();
     }
 
-    @ProtoMethod(description = "Check if the device has accelerometer", example = "")
+    @PhonkMethod(description = "Check if the device has accelerometer", example = "")
     public boolean isAvailable() {
         return mSensormanager.getDefaultSensor(type) != null;
     }

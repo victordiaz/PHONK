@@ -32,8 +32,8 @@ import android.view.WindowManager;
 
 import java.lang.reflect.InvocationTargetException;
 
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -107,8 +107,8 @@ public class PAbsoluteLayout extends FixedLayout {
         // mHeight = h;
     }
 
-    @ProtoMethod(description = "Sets the background color", example = "")
-    @ProtoMethodParam(params = {"colorHex"})
+    @PhonkMethod(description = "Sets the background color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
     public void backgroundColor(String c) {
         this.setBackgroundColor(Color.parseColor(c));
     }
@@ -174,8 +174,8 @@ public class PAbsoluteLayout extends FixedLayout {
     }
 
 
-    @ProtoMethod(description = "Adds a view", example = "")
-    @ProtoMethodParam(params = {"view", "x", "y", "w", "h"})
+    @PhonkMethod(description = "Adds a view", example = "")
+    @PhonkMethodParam(params = {"view", "x", "y", "w", "h"})
     public void addView(View v, Object x, Object y, Object w, Object h) {
         MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " "  + h);
 

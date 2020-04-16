@@ -41,9 +41,9 @@ import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.Image;
 import io.phonk.runner.base.utils.MLog;
 
-public class PHelper {
+public class PImageHelper {
 
-    private static final java.lang.String TAG = PHelper.class.getSimpleName();
+    private static final java.lang.String TAG = PImageHelper.class.getSimpleName();
 
     /**
      * This class lets us set images from a file asynchronously

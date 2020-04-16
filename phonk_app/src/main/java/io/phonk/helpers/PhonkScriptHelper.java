@@ -23,16 +23,11 @@
 package io.phonk.helpers;
 
 import android.app.ActivityManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.widget.Toast;
 
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
@@ -50,19 +45,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import io.phonk.App;
 import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
-import io.phonk.runner.apprunner.AppRunnerHelper;
-import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
-import io.phonk.runner.models.Folder;
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Folder;
+import io.phonk.runner.base.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class PhonkScriptHelper {
@@ -344,10 +336,8 @@ public class PhonkScriptHelper {
     }
 
     public static boolean importProtoFile(String folder, String zipFilePath) {
-
         // TODO: Use thread
-
-        //decompress
+        // extract files
         try {
             FileIO.extractZip(zipFilePath, getProjectFolderPath(folder));
         } catch (Exception e) {
@@ -433,31 +423,6 @@ public class PhonkScriptHelper {
                     .build();
             ShortcutManagerCompat.requestPinShortcut(c, shortcutInfo, null);
         }
-
-        /*
-            try {
-                Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
-                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                shortcutIntent.putExtra(Project.NAME, p.getName());
-                shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
-
-                Map<String, Object> map = AppRunnerHelper.readProjectProperties(c, p);
-
-                final Intent putShortCutIntent = new Intent();
-                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
-                putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-                putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                c.sendBroadcast(putShortCutIntent);
-            } catch (Exception e) {
-                // TODO
-            }
-            // Show toast
-            Toast.makeText(c, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
-        }
-         */
-
     }
 
     public static void shareMainJsDialog(Context c, String folder, String name) {

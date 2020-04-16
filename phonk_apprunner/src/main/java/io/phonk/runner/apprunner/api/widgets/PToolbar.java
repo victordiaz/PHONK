@@ -33,8 +33,8 @@ import android.graphics.drawable.Drawable;
 import androidx.appcompat.app.ActionBar;
 
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PToolbar extends ProtoBase {
@@ -50,22 +50,22 @@ public class PToolbar extends ProtoBase {
         mToolbar = toolbar;
     }
 
-    @ProtoMethod(description = "Set toolbar title name", example = "")
-    @ProtoMethodParam(params = {"titleName"})
+    @PhonkMethod(description = "Set toolbar title name", example = "")
+    @PhonkMethodParam(params = {"titleName"})
     public PToolbar title(String title) {
         mToolbar.setTitle(title);
         return this;
     }
 
-    @ProtoMethod(description = "Sets toolbar secondary title", example = "")
-    @ProtoMethodParam(params = {"subtitleName"})
+    @PhonkMethod(description = "Sets toolbar secondary title", example = "")
+    @PhonkMethodParam(params = {"subtitleName"})
     public PToolbar subtitle(String subtitle) {
         mToolbar.setSubtitle(subtitle);
         return this;
     }
 
-    @ProtoMethod(description = "Show/Hide title bar", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Show/Hide title bar", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public PToolbar show(Boolean b) {
         if (b) {
             mToolbar.show();
@@ -75,8 +75,8 @@ public class PToolbar extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "Changes the title bar color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
+    @PhonkMethod(description = "Changes the title bar color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
     public PToolbar background(int r, int g, int b, int alpha) {
         int c = Color.argb(alpha, r, g, b);
 
@@ -87,8 +87,8 @@ public class PToolbar extends ProtoBase {
         return this;
     }
 
-    @ProtoMethod(description = "Changes the title bar color", example = "")
-    @ProtoMethodParam(params = {"r", "g", "b", "alpha"})
+    @PhonkMethod(description = "Changes the title bar color", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
     public PToolbar background(int r, int g, int b) {
         int c = Color.rgb(r, g, b);
 
@@ -118,8 +118,8 @@ public class PToolbar extends ProtoBase {
 //    }
 
 
-    @ProtoMethod(description = "Sets an image rather than text as toolbar title", example = "")
-    @ProtoMethodParam(params = {"imageName"})
+    @PhonkMethod(description = "Sets an image rather than text as toolbar title", example = "")
+    @PhonkMethodParam(params = {"imageName"})
     public PToolbar icon(String imagePath) {
         Bitmap myBitmap = BitmapFactory.decodeFile(mAppRunner.getProject().getFullPathForFile(imagePath));
         Drawable icon = new BitmapDrawable(mAppRunner.getAppContext().getResources(), myBitmap);

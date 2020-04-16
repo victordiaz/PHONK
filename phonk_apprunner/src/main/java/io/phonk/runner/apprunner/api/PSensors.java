@@ -37,41 +37,41 @@ import io.phonk.runner.apprunner.api.sensors.PBarometer;
 import io.phonk.runner.apprunner.api.sensors.PProximity;
 import io.phonk.runner.apprunner.api.sensors.PRotationVector;
 import io.phonk.runner.apprunner.api.sensors.PStep;
-import io.phonk.runner.apidoc.annotation.ProtoField;
-import io.phonk.runner.apidoc.annotation.ProtoObject;
+import io.phonk.runner.apidoc.annotation.PhonkField;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 
 
-@ProtoObject
+@PhonkObject
 public class PSensors extends ProtoBase {
 
-    @ProtoField
+    @PhonkField
     public final PAccelerometer accelerometer;
-    @ProtoField
+    @PhonkField
     public final PLinearAcceleration linearAcceleration;
-    @ProtoField
+    @PhonkField
     public final PGravity gravity;
-    @ProtoField
+    @PhonkField
     public final PGyroscope gyroscope;
-    @ProtoField
+    @PhonkField
     public final PRotationVector rotationVector;
-    @ProtoField
+    @PhonkField
     public final PLocation location;
-    @ProtoField
+    @PhonkField
     public final PLightIntensity light;
-    @ProtoField
+    @PhonkField
     public final PMagneticField magneticField;
-    @ProtoField
+    @PhonkField
     public final POrientation orientation;
-    @ProtoField
+    @PhonkField
     public final PBarometer barometer;
-    @ProtoField
+    @PhonkField
     public final PProximity proximity;
-    @ProtoField
+    @PhonkField
     public final PStep stepDetector;
-    @ProtoField
+    @PhonkField
     public final PAmbientTemperature ambientTemperature;
-    @ProtoField
+    @PhonkField
     public final PHumidity humidity;
 
     public PSensors(AppRunner appRunner) {

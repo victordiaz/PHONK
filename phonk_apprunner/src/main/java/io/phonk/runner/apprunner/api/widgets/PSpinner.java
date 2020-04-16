@@ -31,7 +31,7 @@ import android.widget.Spinner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
-public class PSpinner extends Spinner {
+public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner {
     private String[] mData;
 
     public PSpinner(Context context) {

@@ -29,8 +29,8 @@ import android.hardware.SensorManager;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 public class PGyroscope extends CustomSensorManager {
@@ -83,8 +83,8 @@ public class PGyroscope extends CustomSensorManager {
     }
 
 
-    @ProtoMethod(description = "Start the gyroscope. Returns data", example = "")
-    @ProtoMethodParam(params = {"function(data)"})
+    @PhonkMethod(description = "Start the gyroscope. Returns data", example = "")
+    @PhonkMethodParam(params = {"function(data)"})
     public PGyroscope onChange(final ReturnInterface callbackfn) {
         mCallback = callbackfn;
 

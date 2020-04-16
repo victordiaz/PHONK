@@ -61,8 +61,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Vector;
 
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.media.AutoFitTextureView;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.media.AutoFitTextureView;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;

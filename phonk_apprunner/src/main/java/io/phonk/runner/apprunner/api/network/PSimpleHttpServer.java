@@ -36,8 +36,8 @@ import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
-import io.phonk.runner.apidoc.annotation.ProtoMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -104,8 +104,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
         this.mCallback = callbackfn;
     }
 
-    @ProtoMethod(description = "Responds to the request with a given text", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Responds to the request with a given text", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public Response response(String data) {
         Response r = newFixedLengthResponse(data);
         MLog.d(TAG, "responding with " + r);
@@ -113,8 +113,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
         return r;
     }
 
-    @ProtoMethod(description = "Responds to the request with a given text", example = "")
-    @ProtoMethodParam(params = {"boolean"})
+    @PhonkMethod(description = "Responds to the request with a given text", example = "")
+    @PhonkMethodParam(params = {"boolean"})
     public Response response(int code, String type, String data) {
         Status status = Status.lookup(code);
         return newFixedLengthResponse(status, MIME_TYPES.get(type), data);
@@ -148,8 +148,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
 
         return mime;
     }
-    @ProtoMethod(description = "Serves a file", example = "")
-    @ProtoMethodParam(params = {"uri", "header"})
+    @PhonkMethod(description = "Serves a file", example = "")
+    @PhonkMethodParam(params = {"uri", "header"})
     @Override
     public Response serve(IHTTPSession session) {
         if (mCallback == null) return null;
@@ -203,8 +203,8 @@ public class PSimpleHttpServer extends NanoHTTPD {
         return res;
     }
 
-    @ProtoMethod(description = "Stops the http server", example = "")
-    @ProtoMethodParam(params = {""})
+    @PhonkMethod(description = "Stops the http server", example = "")
+    @PhonkMethodParam(params = {""})
     public void stop() {
         super.stop();
     }
