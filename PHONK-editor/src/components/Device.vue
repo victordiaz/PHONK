@@ -60,13 +60,13 @@ export default {
     Store.on('device', this.device_update)
   },
   destroyed () {
-    Store.remove_listener('device', this.device_update)
+    Store.removeListener('device', this.device_update)
   }
 }
 </script>
 
 <style lang = "less" scoped>
-@import (reference) "../assets/css/variables.less";
+@import (reference) '../assets/css/variables.less';
 
 #device_frame {
   .all-transitions;
@@ -99,9 +99,18 @@ ul {
   align-items: center;
   margin: 12px;
 
-  .icon { font-size: 1em; text-align: center; }
-  .wifi { opacity: 0.3; }
-  .ban { color: rgba(255, 0, 0, 0.8); font-size: 1.5em; padding: 10px 0px 0 10px}
+  .icon {
+    font-size: 1em;
+    text-align: center;
+  }
+  .wifi {
+    opacity: 0.3;
+  }
+  .ban {
+    color: rgba(255, 0, 0, 0.8);
+    font-size: 1.5em;
+    padding: 10px 0px 0 10px;
+  }
 
   p {
     margin-top: 22px;
@@ -111,5 +120,4 @@ ul {
     font-weight: 400;
   }
 }
-
 </style>

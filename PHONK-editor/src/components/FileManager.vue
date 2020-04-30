@@ -10,10 +10,12 @@
           <li title = "Edit files" class = "material-icons" v-on:click = "edit_files" v-bind:class="{'enabled':isEditingFiles}">edit</li>
           <li title = "Refresh files" class = "material-icons" v-on:click = "refresh_files">refresh</li>
         </ul>
-        <div id = "upload_container" v-bind:class = "{'show' : isDnd, 'todrop': isReadyToDrop }">
-          <p>Drop the files here</p>
-          <input id = "upload" type = "file" @change = "onFileChange" multiple = "">
-        </div>
+        <transition name = "scaleanim">
+          <div id = "upload_container" v-if = "dnd.showMode === 'drophere' || dnd.showMode === 'dropready'" v-bind:class = "{ 'todrop': dnd.showMode === 'dropready' }">
+            <p>Drop the files here <!-- {{ dnd }} {{ uploadingFiles }} --></p>
+            <input id = "upload" type = "file" @change = "onFileChange" multiple = "">
+          </div>
+        </transition>
       </div>
 
       <transition name = "banneranim">
@@ -74,23 +76,31 @@
               <td v-if = "isEditingFiles && !isCutting"><input type="checkbox" v-model="file.selected" :class = "{ disabled: isRenaming}"></td>
               <td><i class = "material-icons">{{get_icon(file)}}</i></td>
               <td><span v-if = "!checkRenaming(isRenaming, file.name)">{{file.name}}</span> <input v-else = "checkRenaming(isRenaming, file.name)" v-model = "file.name" v-on:keyup.enter = "rename_file_submit"></input> </td>
-              <td class = "file_size"> {{file.size}} </td>
+              <td class = "file_size"> {{file.size / 1000}} kb</td>
             </tr>
           </tbody>
         </table>
 
       </div>
-      <div id = "uploading" v-show = "showUploadingFiles">
+
+      <div id = "uploading" v-show = "dnd.showMode === 'uploading'">
         <h1> uploading... </h1>
         <ul>
           <li v-for = "u in uploadingFiles" v-show = "u.uploading">
             {{u.data.name}} <!-- {{u.uploading}} -->
+            <!--
             <div class = "progress pre"></div>
             <div class = "progress"></div>
+            -->
+
+            <div class="progress_container">
+              <div class="progress"></div>
+            </div>
           </li>
         </ul>
       </div>
     </div>
+
     <popup arrow = "right" :posx = "posx" :posy = "posy" v-if = "showpopover">
       <p v-html = "popup_content"></p>
       <audio-player v-show = "showAudioPlayer" v-bind:src = "url"></audio-player>
@@ -128,7 +138,6 @@ export default {
       showpopover: false,
       showAudioPlayer: false,
       showVideoPlayer: false,
-      qq: true,
       selected: -1,
       popup_content: '',
       current_folder: '',
@@ -143,19 +152,10 @@ export default {
       is_moving_files: false,
       files: [
         /*
-        { type: 'folder-o', name: 'qq1.png', size: '25kb' },
-        { type: 'folder-o', name: 'qq2.png', size: '25kb' },
-        { type: 'folder-o', name: 'qq3.png', size: '25kb' },
-        { type: 'folder-o', name: 'qq4.png', size: '25kb' },
-        { type: 'folder-o', name: 'qq5.png', size: '25kb' },
+        { type: 'folder-o', name: 'qq1.png', size: '25kb' }
         */
       ],
-      uploadingFiles: [
-      ],
-      showUploadingFiles: false,
-      isDnd: false,
-      isReadyToDrop: false,
-      dndState: 'none',
+      uploadingFiles: [],
       posx: 0,
       posy: 0,
       input: null,
@@ -164,7 +164,11 @@ export default {
         type: 'file',
         name: ''
       },
-      expanded: true
+      expanded: true,
+      dnd: {
+        showMode: 'none',
+        counter: 0
+      }
     }
   },
   computed: {
@@ -184,65 +188,73 @@ export default {
       store.on('project_files_action_completed', this.project_files_action_completed)
       store.on('close_popup', this.close_popup)
 
-      var that = this
-      var firstTarget
-
-      this.$el.ondrop = function (e) {
-        // upload
-        that.showUploadingFiles = true
-
-        that.onFileChange(e)
-        that.isDnd = false
-        that.isReadyToDrop = false
+      this.$el.addEventListener('drop', (e) => {
         e.preventDefault()
-      }
 
-      document.addEventListener('dragenter', function (e) {
-        firstTarget = e.target
-        // console.log('dragenter ', e)
-        that.isDnd = true
-        // e.stopPropagation()
-        e.preventDefault()
-      })
-
-      document.addEventListener('dragover', function (e) {
-        e.target.effectAllowed = true
-      })
-
-      document.addEventListener('dragover', function (e) {
-        // console.log('dragover')
-        // console.log('dragover -->' + e.target.id)
-        if (e.target.id === 'upload') {
-          // console.log('yeah!')
-          e.dataTransfer.dropEffect = 'copy'
-          that.isReadyToDrop = true
-          that.showUploadingFiles = true
-        }
-        // e.stopPropagation()
-        e.preventDefault()
+        console.log('drop', e.dataTransfer.files[0])
+        e.dataTransfer.dropEffect = 'copy'
+        this.onFileChange(e)
       }, false)
 
-      document.addEventListener('dragleave', function (e) {
-        if (firstTarget === e.target) {
-          // console.log('dragleave')
-          that.isDnd = false
-          that.isReadyToDrop = false
-          // e.stopPropagation()
-          e.preventDefault()
-        } else if (e.target.id === 'upload') {
-          that.isReadyToDrop = false
+      this.$el.addEventListener('dragover', (e) => {
+        console.log('dragover el', e)
+
+        if (e.target.id === 'upload') {
+          e.effectAllowed = true
         }
+
+        // e.dataTransfer.dropEffect = 'copy'
+        // e.originalEvent.dataTransfer.dropEffect = 'copy'
+        // e.stopPropagation()
+        // e.preventDefault()
+      }, false)
+
+      document.addEventListener('dragenter', (e) => {
+        console.log('dragenter')
+        if (this.dnd.showMode === 'dropready') this.dnd.showMode = 'drophere'
+
+        this.dnd.counter++
+        this.dnd.showMode = 'drophere'
+
+        e.stopPropagation()
+        e.preventDefault()
       })
 
-      document.addEventListener('dragcancel', function (e) {
-        if (firstTarget === e.target) {
-          // console.log('dragcancel')
-          that.isDnd = false
-          that.isReadyToDrop = false
-          e.stopPropagation()
-          e.preventDefault()
+      document.addEventListener('dragover', (e) => {
+        console.log('dragover', e.target.id)
+
+        if (e.target.id === 'upload') {
+          e.effectAllowed = true
+         // e.dataTransfer.dropEffect = 'copy'
+          this.dnd.showMode = 'dropready'
         }
+        e.stopPropagation()
+        // this.logDndState(2)
+        e.preventDefault()
+        // e.stopPropagation()
+      }, false)
+
+      document.addEventListener('dragleave', e => {
+        this.dnd.counter--
+        if (this.dnd.counter === 0) {
+          this.dnd.showMode = 'none'
+        }
+        console.log('dragleave')
+        e.preventDefault()
       })
+
+      document.addEventListener('drop', e => {
+        console.log('document drop', e, e.target.id === 'upload')
+
+        if (!(e.target.id === 'upload')) {
+          this.dnd.counter = 0
+          this.dnd.showMode = 'none'
+        }
+        // this.onFileChange(e)
+
+        // e = e || event
+        e.preventDefault()
+      }, false)
 
       this.input = this.$el.querySelector('#upload')
     },
@@ -344,34 +356,39 @@ export default {
     edit_files: function (e) {
       this.showCreateDialog = false
       this.isEditingFiles = !this.isEditingFiles
-      console.log('qq ' + this.isEditingFiles)
     },
     /* file upload */
     onFileChange: function (e) {
-      console.log('onFileChange')
+      console.log('onFileChange', e)
 
-      this.showUploadingFiles = true
-      var files = e.target.files || e.dataTransfer.files
+      let files = e.target.files.length > 0 ? e.target.files : e.dataTransfer.files
+
+      console.log('--------------------->')
+      console.log('->', files.length)
+      console.log('->', e.target.files)
+      console.log('->', e.dataTransfer.files)
+
+      this.dnd.showMode = 'uploading'
 
       // clean uploading files
       // store.clearArray(this.uploadingFiles)
 
       // send
       for (var i = 0; i < files.length; i++) {
-        console.log('uploading...', files[i].name + ' ' + files[i].size + ' ' + files[i].type)
-        this.uploadingFiles.push({data: files[i], uploading: true})
+        console.log('uploading...', files[i], files[i].name + ' ' + files[i].size + ' ' + files[i].type)
+        this.uploadingFiles.push({ data: files[i], uploading: true, name: files[i].name })
         store.uploadFile(this.uploadingFiles[i], this.current_folder)
       }
       // if (!files.length) return
       // this.createImage(files[0])
     },
     project_file_uploaded: function (name) {
-      console.log('------> uploaded ')
+      console.log('------> uploaded ', name)
 
       var uploading = false
 
       for (var i = 0; i < this.uploadingFiles.length; i++) {
-        if (this.uploadingFiles[i].data.name === name) {
+        if (this.uploadingFiles[i].name === name) {
           console.log(name + ' is uploaded')
           this.uploadingFiles[i].uploading = false
         }
@@ -379,8 +396,9 @@ export default {
         this.uploadingFiles.splice(i, 1) // remove item
       }
 
+      console.log('uploading ', uploading)
       if (!uploading) {
-        this.showUploadingFiles = false
+        this.dnd.showMode = 'none'
         store.list_files_in_path(this.current_folder)
       }
     },
@@ -496,17 +514,17 @@ export default {
     document.removeEventListener('dragleave')
     document.removeEventListener('dragcancel')
 
-    store.remove_listener('project_files_list')
-    store.remove_listener('project_file_uploaded')
-    store.remove_listener('project_files_action_completed')
-    store.remove_listener('close_popup')
+    store.removeListener('project_files_list', this.project_files_list)
+    store.removeListener('project_file_uploaded', this.project_file_uploaded)
+    store.removeListener('project_files_action_completed', this.project_files_action_completed)
+    store.removeListener('close_popup', this.close_popup)
   }
 }
 </script>
 
 <style lang='less'>
-@import (reference) "../assets/css/variables.less";
-@import (reference) "../assets/css/hacks.less";
+@import (reference) '../assets/css/variables.less';
+@import (reference) '../assets/css/hacks.less';
 
 #file_manager {
   z-index: 1;
@@ -549,8 +567,9 @@ export default {
   }
 
   #upload_container {
-    display: none;
+    display: flex;
     background: fadeout(@accentColor, 20%);
+    border: 10px solid @transparent;
     position: absolute;
     top: 0px;
     right: 0;
@@ -558,15 +577,19 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
+    align-items: center;
+    font-size: 2em;
 
-    &.show {
-      display: flex;
-      align-items: center;
-      font-size: 2em;
+    p {
+      color: white;
+      text-shadow: 0 0 2px #0000003d;
+      text-transform: capitalize;
+      font-size: 1.5rem;
     }
 
     &.todrop {
-      background: red;
+      // background: red;
+      border: 10px solid white;
     }
 
     p {
@@ -624,13 +647,13 @@ export default {
 
       th:last-child {
       }
-
     }
 
     tbody {
       font-size: 0.8em;
       td {
         padding: 0.5em;
+        line-height: 1.2em;
         // white-space: nowrap;
         // overflow: hidden;
         // text-overflow: ellipsis;
@@ -670,7 +693,7 @@ export default {
     }
 
     .file_size {
-      color: #00000088;
+      color: #fff0;
     }
 
     .action {
@@ -722,6 +745,7 @@ export default {
       }
     }
 
+    /*
     .progress {
       position: absolute;
       background: #ffeb00;
@@ -730,12 +754,12 @@ export default {
       border-radius: 2px;
       margin-top: 3px;
     }
+    */
 
     .pre {
       background: gray;
       width: 100%;
     }
-
   }
 
   .actionable {
@@ -755,17 +779,22 @@ export default {
     }
   }
 
-  .new_file, .file_editing {
+  .new_file,
+  .file_editing {
     display: flex;
     align-items: center;
     align-content: normal;
     display: inherit;
     align-items: center;
-    background: @accentColor_1;
-    color : @secondaryTextColor;
+    background: @accentColor;
+    color: @secondaryTextColor;
     padding: 0px;
     min-height: 40px;
     max-height: 40px;
+
+    button {
+      color: @backgroundColor;
+    }
 
     & > * {
       font-weight: 600;
@@ -789,18 +818,18 @@ export default {
     }
 
     select {
-      text-transform: uppercase;
+      // text-transform: uppercase;
       background: transparent;
       border: 0px;
       padding: 10px;
       min-width: 10px;
       font-size: 0.7rem;
       appearance: none;
-    	background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
-	    linear-gradient(to bottom, transparent 0%, transparent 100%);
-	    background-repeat: no-repeat, repeat;
-	    background-position: right .7em top 50%, 0 0;
-	    background-size: .65em auto, 100%;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+        linear-gradient(to bottom, transparent 0%, transparent 100%);
+      background-repeat: no-repeat, repeat;
+      background-position: right 0.7em top 50%, 0 0;
+      background-size: 0.65em auto, 100%;
     }
 
     select option {
@@ -809,7 +838,9 @@ export default {
       padding: 15px;
     }
 
-    select option:hover, select option:active, select option:active {
+    select option:hover,
+    select option:active,
+    select option:active {
       background: yellow;
     }
 
@@ -832,7 +863,6 @@ export default {
         }
       }
     }
-
   }
 
   .file_info {
@@ -842,36 +872,74 @@ export default {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 2px;
     padding: 1px 2px;
+    align-items: center;
 
     input {
       background: rgba(0, 0, 0, 0);
       outline: none;
       border: 0px;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);;
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
       border-radius: 2px;
-      color: black;
-      font-size: 0.9em;
+      color: white;
+      font-size: 0.8rem;
       -webkit-box-flex: 1;
       -ms-flex: 1;
       flex: 1;
       margin-right: 2px 5px;
       padding: 2px;
       font-family: @editorFont;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 5px 12px;
     }
 
     a {
-      color: black;
+      color: white;
       padding: 5px;
+      opacity: 0.7;
+
+      i {
+        font-size: 1.1rem;
+      }
 
       &:hover {
-        opacity: 0.7;
+        opacity: 1;
       }
 
       &:active {
-        opacity: 0.4;
+        opacity: 0.7;
       }
     }
   }
 }
 
+.progress_container {
+  width: 250px;
+  height: 2px;
+  overflow: hidden;
+  background-color: @accentColor;
+  margin-top: 5px;
+
+  .progress {
+    background-color: #ffffffcc;
+    margin-top: 0;
+    animation-name: loading_animation;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    width: 250px;
+    height: 19px;
+  }
+}
+
+@keyframes loading_animation {
+  0% {
+    margin-left: -250px;
+  }
+
+  100% {
+    margin-left: 250px;
+  }
+}
 </style>

@@ -83,7 +83,7 @@ export default {
     // console.log('--------> created')
   },
   destroyed () {
-    // Store.remove_listener('project_created', this.project_created)
+    Store.removeListener('project_created', this.project_created)
   }
 }
 </script>

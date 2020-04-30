@@ -35,13 +35,13 @@ export default {
     Store.on('project_created', this.debug_print)
   },
   destroyed () {
-    Store.remove_listener('project_created', this.debug_print)
+    Store.removeListener('project_created', this.debug_print)
   }
 }
 </script>
 
 <style lang = "less">
-@import (reference) "../assets/css/variables.less";
+@import (reference) '../assets/css/variables.less';
 
 .debug_panel {
   position: absolute;
@@ -69,5 +69,4 @@ export default {
     }
   }
 }
-
 </style>

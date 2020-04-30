@@ -73,17 +73,17 @@ export default {
     })
   },
   destroyed () {
-    Store.remove_listener('toggle', this.toggle_section)
+    Store.removeListener('toggle', this.toggle_section)
   }
 }
 </script>
 
 <style lang='less'>
-@import (reference) "../assets/css/variables.less";
+@import (reference) '../assets/css/variables.less';
 
 #handle {
-
-  &.vertical, &.horizontal  {
+  &.vertical,
+  &.horizontal {
     &.dark {
       background: transparent;
     }
@@ -100,7 +100,7 @@ export default {
 
   &.vertical {
     width: 8px;
-    height: calc(~"100%");
+    height: calc(~'100%');
     right: 0px;
     top: 0px;
     margin: -3px;
@@ -109,21 +109,17 @@ export default {
     &:hover {
       cursor: col-resize;
     }
-
   }
 
   &.horizontal {
     width: 100%;
     height: 8px;
-    width: calc(~"100%");
+    width: calc(~'100%');
     margin-top: -2px;
 
     &:hover {
       cursor: row-resize;
     }
   }
-
 }
-
-
 </style>

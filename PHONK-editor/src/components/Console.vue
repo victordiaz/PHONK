@@ -40,7 +40,8 @@ export default {
       limitOffset: 0,
       showingTime: false,
       showing: true,
-      slicedLogs: []
+      slicedLogs: [],
+      i: 0
     }
   },
   computed: {
@@ -49,7 +50,8 @@ export default {
     // }
   },
   methods: {
-    console: function (data) {
+    console_log: function (data) {
+      console.log('log', data)
       if (!this.consoleIsStarted && this.consoleCanStart) {
         this.consoleIsStarted = true
         this.updateInterval = setInterval(() => {
@@ -66,15 +68,19 @@ export default {
 
       if (this.lock) return
 
-      var ul = this.$refs.log
       // wait until vue rerenders and scroll down console log
       this.$nextTick(function () {
-        ul.scrollTop = ul.scrollHeight
+        setTimeout(() => {
+          var ul = this.$refs.log
+          // console.log('ul', ul, this.i++)
+          ul.scrollTop = ul.scrollHeight
+        }, 300)
       })
     },
     clear: function () {
       // console.log('clear')
-      this.logs = []
+      this.$options.logsq = []
+      this.slicedLogs = []
       this.limitOffset = 0
     },
     toggleLock () {
@@ -103,7 +109,7 @@ export default {
     }
   },
   created () {
-    Store.on('console', this.console)
+    Store.on('console', this.console_log)
     Store.on('project_action', this.project_action)
     console.log('qq', this.$options.logsq)
 
@@ -115,28 +121,29 @@ export default {
     */
   },
   destroyed () {
-    Store.remove_listener('console', this.console)
+    Store.removeListener('console', this.console_log)
+    Store.removeListener('project_action', this.project_action)
   }
 }
 </script>
 
 <style lang='less'>
-@import (reference) "../assets/css/variables.less";
-@import (reference) "../assets/css/hacks.less";
+@import (reference) '../assets/css/variables.less';
+@import (reference) '../assets/css/hacks.less';
 
 #console {
   height: 100% !important;
   flex: 2;
 
   .actionbar {
-    }
+  }
 
   .content {
     color: white !important;
   }
 
   .content ul {
-    height: calc(~"100%");
+    height: calc(~'100%');
     width: 100%;
     overflow-y: auto;
     .scrollbar;
@@ -162,7 +169,7 @@ export default {
       }
 
       &.log_error::before {
-        content: "😭 problem!";
+        content: '😭 problem!';
         font-size: 0.8em;
         background: @error;
         padding: 3px 5px;
@@ -170,7 +177,7 @@ export default {
       }
 
       &.log_error:hover {
-        background: lighten(@error, 10%)
+        background: lighten(@error, 10%);
       }
 
       &:hover {
@@ -188,6 +195,4 @@ export default {
     }
   }
 }
-
-
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div id="dashboard" class="proto_panel panel_above">
     <div class="actionbar">
-      <h1>Dashboard</h1>
       <div class="adding_buttons">
         <button v-on:click="addModule">Add</button>
         <button v-on:click="removeModule">Del</button>
@@ -98,7 +97,7 @@ export default {
   },
   mounted () {},
   destroyed () {
-    Store.remove_listener('dashboard', this.handleEvent)
+    Store.removeListener('dashboard', this.handleEvent)
   }
 }
 </script>

@@ -74,7 +74,7 @@ store.vm = vm
  */
 store.project_list_all = function () {
   // console.log('project_list_all(query)')
-  var query = { }
+  var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project/list/'), query).then(function (response) {
     // console.log('project_list_got', response.data)
@@ -94,7 +94,7 @@ store.project_list_all = function () {
  * Load a project
  */
 store.project_load = function (uri) {
-  var query = { }
+  var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project' + uri + '/load'), query).then(function (response) {
     // console.log(TAG + ': project_load(status) > ' + response.status)
@@ -184,15 +184,15 @@ store.load_file = function (file) {
   var query = {}
   // console.log('load_file', file)
   Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(
-  function (response) {
-    // console.log(response)
-    file.code = response.data.files[0].code
+    function (response) {
+      // console.log(response)
+      file.code = response.data.files[0].code
 
-    // console.log('load_file(status) > ' + response.status, file.code)
-    store.emit('file_loaded', file)
-  }, function (response) {
-    // console.log(TAG + ': project_save(status) > ' + response.status)
-  })
+      // console.log('load_file(status) > ' + response.status, file.code)
+      store.emit('file_loaded', file)
+    }, function (response) {
+      // console.log(TAG + ': project_save(status) > ' + response.status)
+    })
 }
 
 /*
@@ -219,12 +219,12 @@ store.create_file = function (filetype, filename) {
 store.project_create = function (projectName) {
   // console.log('project create')
 
-  var query = { }
+  var query = {}
 
   // vm.$log()
 
   Vue.axios.get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), query).then(function (response) {
-    var data = {'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName}
+    var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName }
     store.emit('project_created', true, data)
     store.project_list_all()
   }, function (response) {
@@ -269,7 +269,7 @@ store.project_save = function (files) {
  * Run a loaded project
  */
 store.project_action = function (action) {
-  var query = { }
+  var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + action), query).then(function (response) {
     // console.log(response.status)
@@ -282,7 +282,7 @@ store.project_action = function (action) {
  * Run a project
  */
 store.project_run = function (project) {
-  var query = { }
+  var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), query).then(function (response) {
     // console.log(response.status)
@@ -295,7 +295,7 @@ store.project_run = function (project) {
  * Project stop all and run
  */
 store.project_stop_all_and_run = function (project) {
-  var query = { }
+  var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/stop_all_and_run'), query).then(function (response) {
     // console.log(response.status)
@@ -363,7 +363,7 @@ xhr: {
  * List views
  */
 store.views_list_types = function (action) {
-  var query = { }
+  var query = {}
   Vue.axios.get(getUrlWebapp('/api/project/views_list_types'), query).then(function (response) {
     // console.log(response.status)
     // console.log(response.data)
@@ -377,7 +377,7 @@ store.views_list_types = function (action) {
  * Add views all
  */
 store.views_get_all = function (action) {
-  var query = { }
+  var query = {}
   Vue.axios.get(getUrlWebapp('/api/project/views_get_all'), query).then(function (response) {
     // console.log(response.status)
     // console.log(response.data)
@@ -402,7 +402,7 @@ store.get_current_project = function () {
   return '/' + store.state.current_project.project.folder + '/' + store.state.current_project.project.name
 }
 
-store.userproject = {'type': 'playground', 'folder': 'User Projects'}
+store.userproject = { 'type': 'playground', 'folder': 'User Projects' }
 store.get_userproject_url = function (name) {
   return '/' + store.userproject.type + '/' + store.userproject.folder + '/' + name
 }
@@ -448,7 +448,7 @@ store.getUrlForCurrentProject = function () {
 }
 
 store.loadDocumentation = function () {
-  var query = { }
+  var query = {}
 
   Vue.axios.get('/static/documentation.json', query).then(function (response) {
     // console.log(TAG + ': project_load(status) > ' + response.status)
@@ -482,6 +482,10 @@ store.websockets_init = function () {
 
   // console.log('trying to connect to ' + getUrlWs())
   ws = new WebSocket(getUrlWs())
+
+  ws.onerror = function (e) {
+    console.log('ws error', e)
+  }
 
   ws.onopen = function () {
     // console.log('ws connected')
@@ -537,7 +541,7 @@ store.websockets_init = function () {
     reconnectionInterval = setTimeout(function () {
       console.log('trying to reconnect')
       that.websockets_init()
-    }, 200)
+    }, 20000)
   }
 }
 
@@ -548,7 +552,7 @@ store.send_ws_data = function (data) {
 store.websockets_init()
 
 store.mouse = function () {
-  document.onmousemove = function handleMouseMove (event) {
+  document.onmousemove = function handleMouseMove(event) {
     event = event || window.event
     // console.log(event.button)
     // console.log(event.pageX, event.pageY)
@@ -599,7 +603,7 @@ store.mydragg = function () {
     },
     stopMoving: function (container) {
       document.getElementById(container).style.cursor = 'default'
-      document.onmousemove = function () {}
+      document.onmousemove = function () { }
     }
   }
 }

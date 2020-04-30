@@ -92,13 +92,13 @@ export default {
     Store.on('project_listed_all', this.project_listed)
   },
   destroyed () {
-    Store.remove_listener('project_listed_all', this.project_listed)
+    Store.removeListener('project_listed_all', this.project_listed)
   }
 }
 </script>
 
 <style lang='less'>
-@import (reference) "../assets/css/variables.less";
+@import (reference) '../assets/css/variables.less';
 
 .check_list {
   background: rgba(0, 0, 0, 0.55);
@@ -108,7 +108,7 @@ export default {
   h1 {
     color: @accentColor;
     font-weight: 600;
-    padding: 5px 0px;;
+    padding: 5px 0px;
     border-bottom: 0px solid @accentColor;
     margin-bottom: 5px;
     text-transform: uppercase;
@@ -184,5 +184,4 @@ export default {
   z-index: 10;
   padding: 0;
 }
-
 </style>

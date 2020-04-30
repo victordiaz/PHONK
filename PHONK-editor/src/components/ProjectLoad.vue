@@ -203,8 +203,8 @@ export default {
     Store.on('load_project_from_app', this.load_project_from_app)
   },
   destroyed () {
-    Store.remove_listener('new_project', this.new_project)
-    Store.remove_listener('load_project_from_app', this.load_project_from_app)
+    Store.removeListener('new_project', this.new_project)
+    Store.removeListener('load_project_from_app', this.load_project_from_app)
   }
 }
 </script>
@@ -330,11 +330,6 @@ export default {
         border-radius: 1px;
         position: relative;
 
-        .icon {
-          // color: white;
-          // border-color: white;
-        }
-
         .action {
           display: block;
           margin: 0;
@@ -348,6 +343,11 @@ export default {
       &.selected {
         color: @secondaryTextColor;
         background: darken(@accentColor, 10%);
+
+        .icon {
+          color: @backgroundColor;
+          border-color: @backgroundColor;
+        }
       }
     }
   }

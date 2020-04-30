@@ -347,8 +347,8 @@ export default {
     */
   },
   destroyed () {
-    Store.remove_listener('toggle', this.toggle_section)
-    Store.remove_listener('project_created', this.project_created)
+    Store.removeListener('toggle', this.toggle_section)
+    Store.removeListener('project_created', this.project_created)
   },
   events: {
     run: function (msg) {
@@ -770,6 +770,17 @@ button {
 
 .banneranim-enter-active,
 .banneranim-leave-active {
+  transition: all 0.3s ease;
+}
+
+.scaleanim-enter,
+.scaleanim-leave-active {
+  opacity: 0;
+  transform: translate3d(0px, 0px, 0) scale3d(1, 1.2, 1);
+}
+
+.scaleanim-enter-active,
+.scaleanim-leave-active {
   transition: all 0.3s ease;
 }
 

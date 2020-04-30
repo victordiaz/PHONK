@@ -96,12 +96,12 @@ export default {
   },
   destroyed () {
     // console.log('editor destroyed')
-    store.remove_listener('project_loaded', this.load_project)
-    store.remove_listener('file_loaded', this.load_file)
-    store.remove_listener('device', this.device_update)
-    store.remove_listener('project_created', this.project_created)
-    store.remove_listener('font_changed', this.changeFontSize)
-    store.remove_listener('project_saved', this.project_saved)
+    store.removeListener('project_loaded', this.load_project)
+    store.removeListener('file_loaded', this.load_file)
+    store.removeListener('device', this.device_update)
+    store.removeListener('project_created', this.project_created)
+    store.removeListener('font_changed', this.changeFontSize)
+    store.removeListener('project_saved', this.project_saved)
 
     this.editor.remove()
   },

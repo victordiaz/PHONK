@@ -16,9 +16,7 @@
             <p v-if="not_loaded">
               <span class="folder">/{{ sharedState.current_project.project.folder }}/</span>
               <span class="name">
-                {{
-                sharedState.current_project.project.name
-                }}
+                {{ sharedState.current_project.project.name }}
               </span>
             </p>
             <p v-else class="bold">
@@ -53,7 +51,9 @@
           <span>{{ infoMsg.text }}</span>
         </div>
       </transition>
+      <!--
       <button class="material-icons icon" v-show="true" v-on:click="toggle_dashboard">dashboard</button>
+      -->
       <button
         class="material-icons icon"
         v-bind:class="{
@@ -172,10 +172,10 @@ export default {
     Store.on('show_info', this.show_info)
   },
   destroyed () {
-    Store.remove_listener('project_saved', this.project_saved)
-    Store.remove_listener('project_action', this.project_action)
-    Store.remove_listener('device', this.device_update)
-    Store.remove_listener('show_info', this.showInfo)
+    Store.removeListener('project_saved', this.project_saved)
+    Store.removeListener('project_action', this.project_action)
+    Store.removeListener('device', this.device_update)
+    Store.removeListener('show_info', this.showInfo)
   }
 }
 </script>
@@ -213,8 +213,7 @@ export default {
 
   .name {
     color: @accentColor;
-    margin-left: 3px;
-    margin-right: 3px;
+    display: inline-block;
   }
 
   .bold {
@@ -329,6 +328,7 @@ export default {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+      display: inline-flex;
     }
 
     .closer {
