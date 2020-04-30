@@ -15,7 +15,7 @@ sensors.orientation.onChange(function (data) {
 })
 
 // start / stop orientation sensor
-ui.addToggle('ON', 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
+ui.addToggle(['ON', 'OFF'], 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
   if (o.checked) sensors.orientation.start()
   else sensors.orientation.stop()
 })

@@ -16,7 +16,7 @@ var loop = util.loop(5000, function () {
 })
 
 // start / stop orientation sensor
-ui.addToggle('ON', 0.1, 0.65, 0.2, 0.1).onChange(function (o) {
+ui.addToggle(['ON', 'OFF'], 0.1, 0.65, 0.2, 0.1).onChange(function (o) {
   if (o.checked) loop.start()
   else loop.stop()
 })

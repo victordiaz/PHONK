@@ -15,7 +15,7 @@ sensors.gyroscope.onChange(function (data) {
 })
 
 // start / stop gyroscope
-ui.addToggle('ON', 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
+ui.addToggle(['ON', 'OFF'], 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
   if (o.checked) sensors.gyroscope.start()
   else sensors.gyroscope.stop()
 })

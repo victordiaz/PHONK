@@ -7,7 +7,7 @@
 
 ui.addTitle(app.name)
 
-var canvas = ui.addCanvas(0, 0, 1, 1)
+var canvas = ui.addCustomView(0, 0, 1, 1)
 
 canvas.draw = function (c) {
   c.clear()

@@ -15,9 +15,9 @@ ui.addTitle(app.name)
 var url = 'http://yoururlhere'
 
 var data = [
-  { 'name' : 'field_1', 'content' : 'hello', 'type' : 'text' },
-  { 'name' : 'field_2', 'content' : 'world', 'type' : 'text' },
-  { 'name' : 'userfile', 'content' : 'patata2.png', 'type' : 'file', 'mediaType': 'image/png'}
+  { 'name': 'field_1', 'content': 'hello', 'type': 'text' },
+  { 'name': 'field_2', 'content': 'world', 'type': 'text' },
+  { 'name': 'userfile', 'content': 'patata.png', 'type': 'file', 'mediaType': 'image/png'}
 ]
 
 network.httpPost(url, data, function (e) {

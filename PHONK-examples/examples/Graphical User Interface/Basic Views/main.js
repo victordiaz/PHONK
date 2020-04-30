@@ -21,9 +21,9 @@ var toggle = ui.addToggle('ON', 0.7, 0.5, 0.2, 0.1).onChange(function (o) {
   console.log(o.checked)
 })
 
-var image = ui.addImage('patata2.png', 0.55, 0.7, 0.35, 0.25)
-var imageButton = ui.addImageButton('patata2.png', 0.1, 0.7, 0.35, 0.25).onClick(function (e) {
+var image = ui.addImage('patata.png', 0.55, 0.7, 0.35, 0.25)
+var imageButton = ui.addImageButton('patata.png', 0.1, 0.7, 0.35, 0.25).onClick(function (e) {
   console.log(e)
 })
-// image.load('patata2.png')
+// image.load('patata.png')
 // image.load('http://')

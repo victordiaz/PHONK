@@ -20,7 +20,7 @@ ui.addButton('Scan bluetooth', 0.1, 0.6, 0.8, 0.1).onClick(function () {
 })
 
 ui.addToggle('Connect to bluetooth', 0.1, 0.72, 0.80, 0.1).onChange(function (e) {
-  if (e.checked) btClient.connectSerial()
+  if (e.checked) btClient.connectSerialUsingMenu()
   else btClient.disconnect()
 })
 

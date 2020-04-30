@@ -6,17 +6,17 @@ ui.addTitle(app.name)
 ui.addSubtitle('Show app notifications')
 
 var n = app.notification.create({
-    'id': 12,
-    'ticker': 'ticker text',
-    'title' : 'MyTitle 2',
-    'description': 'MyDescription',
-    'subtext': 'qq',
-    'icon': 'patata2.png',
-    'color': '#FFFF00',
-    'autocancel': true,
-    'launchOnClick': 'examples/Advanced/Livecoding', // this is the script to launch on click
-    'notificationData': 'hello' // when the new script is launched
-  })
+  'id': 12,
+  'ticker': 'ticker text',
+  'title': 'MyTitle 2',
+  'description': 'MyDescription',
+  'subtext': 'Subtext',
+  'icon': 'patata.png',
+  'color': '#FFFF00',
+  'autocancel': true,
+  'launchOnClick': 'examples/Advanced/Livecoding', // this is the script to launch on click
+  'notificationData': 'hello' // when the new script is launched
+})
 
 // when the new script is launched we can retrieve information writing this in
 // the launching script

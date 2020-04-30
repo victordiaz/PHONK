@@ -15,7 +15,7 @@ sensors.accelerometer.onChange(function (data) {
 })
 
 // start / stop accelerometer
-ui.addToggle('ON', 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
+ui.addToggle(['ON', 'OFF'], 0.1, 0.6, 0.2, 0.1).onChange(function (o) {
   if (o.checked) sensors.accelerometer.start()
   else sensors.accelerometer.stop()
 })

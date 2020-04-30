@@ -35,7 +35,7 @@ pd.onNewData(function (data) {
 })
 
 // start / stop accelerometer
-ui.addToggle('ON', 0.1, 0.4, 0.2, 0.1).onChange(function (o) {
+ui.addToggle(['Start PdLib', 'Stop PdLib'], 0.3, 0.4, 0.4, 0.08).onChange(function (o) {
   if (o.checked) {
     sensors.accelerometer.start()
     pd.start()
@@ -46,3 +46,4 @@ ui.addToggle('ON', 0.1, 0.4, 0.2, 0.1).onChange(function (o) {
 })
 
 ui.addImage('puredata_patch.png', 0.1, 0.55, 0.8, 0.35)
+ui.addText('* This is a screenshot of the Pd patch running', 0.1, 0.8, 0.8, 0.15)

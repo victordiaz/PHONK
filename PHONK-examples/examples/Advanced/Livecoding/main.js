@@ -10,14 +10,14 @@
  */
 
 ui.addTitle(app.name)
-ui.addSubtitle('Code can be "live executed" from the WebEditor, selecting a line and pressing Ctrl (Cmd) + Shift + X. \n\nTry it out!')
+ui.addSubtitle('Code can be "live executed" from the Web Editor. Select a line and press Ctrl (Cmd) + Shift + X. \n\nTry it out!')
 
 // adding this we can overlay the lines executed in the app
 var l = app.liveCodingOverlay()
-						.autoHide(true)
-						.textSize(25)
-						.write('hello')
-						.backgroundColor('#55000055')
-						.show(false);
+          .autoHide(true)
+          .textSize(8)
+          .write('hello')
+          .backgroundColor('#33FFC700')
+          .show(false)
 
 device.vibrate(100) // Execute this line!

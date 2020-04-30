@@ -24,8 +24,9 @@ var id = app.listenEvent('event1', function (event) {
 })
 
 var txt = ui.addText('', 0.1, 0.3)
-txt.textSize(85)
+txt.textSize(35)
 // register an event and display it in the text field
 var id = app.listenEvent('event1', function (event) {
-  txt.text(Math.round(event.data.x * 100) / 100)
+  txt.text(event.data.x.toFixed(3))
 })
+

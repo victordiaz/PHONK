@@ -18,5 +18,6 @@ txt.add('network: ' + network.networkInfo().ip)
 
 // this is a callback that triggers everytime the battery changes
 device.battery(function (e) {
-  txt.add('battery update: ' + e.level)
+  txt.add('update * battery level: ' + e.level)
+  txt.add('update * battery connected ' + e.connected)
 })
