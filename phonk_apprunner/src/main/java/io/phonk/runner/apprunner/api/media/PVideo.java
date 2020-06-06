@@ -27,6 +27,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -34,6 +35,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.gui.CustomVideoTextureView;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass(mergeFrom = "AudioPlayer")
 public class PVideo extends PAudioPlayer {
 
     private static final java.lang.String TAG = PVideo.class.getSimpleName();

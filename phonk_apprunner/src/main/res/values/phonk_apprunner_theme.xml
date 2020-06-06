@@ -25,17 +25,17 @@
 
     <style name="PhonkAppRunnerTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:actionBarStyle">@style/PhonkAppRunnerTheme.ActionBarStyle</item>
-        <item name="android:windowBackground">@color/primaryAccent</item>
+        <item name="android:windowBackground">@color/phonk_backgroundColor</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="PhonkAppRunnerTheme" parent="PhonkAppRunnerTheme.Base">
-        <item name="android:windowBackground">@color/blue</item>
+        <item name="android:windowBackground">@color/phonk_backgroundColor</item>
         <!-- <item name="android:windowContentOverlay">@null</item> -->
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorAccent">@color/phonk_accentColor_primary</item>
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorAccent">@color/phonk_colorPrimary</item>
         <item name="colorPrimaryDark">#333333</item>
 
         <!--<item name="windowActionBar">false</item>-->

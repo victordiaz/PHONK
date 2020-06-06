@@ -29,22 +29,29 @@ import android.widget.ToggleButton;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.utils.MLog;
 
-public class PToggle extends ToggleButton implements PViewMethodsInterface, PTextInterface {
+@PhonkClass
+public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton implements PViewMethodsInterface, PTextInterface {
+    private static final String TAG = PToggle.class.getSimpleName();
 
     public StyleProperties props = new StyleProperties();
     private Styler styler;
+    private Typeface mFont;
 
     public PToggle(AppRunner appRunner) {
         super(appRunner.getAppContext());
 
         styler = new Styler(appRunner, this, props);
         styler.apply();
+        textFont(mFont);
+        checked(false);
     }
 
     public PToggle onChange(final ReturnInterface callbackfn) {
@@ -71,8 +78,11 @@ public class PToggle extends ToggleButton implements PViewMethodsInterface, PTex
     }
 
     @Override
-    public View font(Typeface font) {
+    public PToggle textFont(Typeface font) {
+        mFont = font;
         this.setTypeface(font);
+        MLog.d(TAG, "--> " + "font");
+
         return this;
     }
 
@@ -104,7 +114,7 @@ public class PToggle extends ToggleButton implements PViewMethodsInterface, PTex
 
     @Override
     public View textStyle(int style) {
-        this.setTypeface(null, style);
+        this.setTypeface(mFont, style);
         return this;
     }
 

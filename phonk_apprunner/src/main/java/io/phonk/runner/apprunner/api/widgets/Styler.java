@@ -99,6 +99,7 @@ public class Styler {
     private boolean mViewIsSet;
     public int plotBackground = Color.parseColor("#22000000");
     public int plotColor = Color.parseColor("#222222");
+    public int plotBorderColor = Color.parseColor("#222222");
     public float plotWidth = 2;
     String viewName;
     private Typeface font;
@@ -115,7 +116,6 @@ public class Styler {
         mStateListDrawable.addState(new int[]{android.R.attr.state_checked}, mCheckedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_pressed}, mPressedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_enabled}, mBackgroundDrawable);
-
 
         mStateListDrawable.addState(new int[]{android.R.attr.state_selected}, mSelectedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_hovered}, mHoveredDrawable);
@@ -210,6 +210,20 @@ public class Styler {
         textAlign = props.get("textAlign").toString();
         padding = toFloat(props.get("padding"));
 
+        float paddingLeft = padding;
+        float paddingTop = padding;
+        float paddingRight = padding;
+        float paddingBottom = padding;
+
+        try {
+            paddingLeft = toFloat(props.get("paddingLeft"));
+            paddingTop = toFloat(props.get("paddingTop"));
+            paddingRight = toFloat(props.get("paddingRight"));
+            paddingBottom = toFloat(props.get("paddingBottom"));
+        } catch (Exception e) {
+
+        }
+
         hintColor = Color.parseColor(props.get("hintColor").toString());
 
         src = props.get("src").toString();
@@ -248,7 +262,7 @@ public class Styler {
         mView.setAlpha(opacity);
         mView.setEnabled(enabled);
 
-        mView.setPadding((int) padding, (int) padding, (int) padding, (int) padding);
+        mView.setPadding((int) paddingLeft, (int) paddingTop, (int) paddingRight, (int) paddingBottom);
 
         // set background
         mBackgroundDrawable.setBackground(background);
@@ -294,7 +308,7 @@ public class Styler {
                     font = Typeface.MONOSPACE;
                     break;
             }
-            v.font(font);
+            v.textFont(font);
 
             switch (textStyle) {
                 case "normal":

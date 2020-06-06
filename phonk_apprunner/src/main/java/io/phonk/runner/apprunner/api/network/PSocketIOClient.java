@@ -40,8 +40,8 @@ import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.base.utils.MLog;
 
 public class PSocketIOClient extends ProtoBase {
+    private String TAG = PSocketIOClient.class.getSimpleName();
 
-    private String TAG = "PSocketIOClient";
     private SocketIOClient mSocketIOClient;
     private connectSocketIOCB mCallbackfn;
 

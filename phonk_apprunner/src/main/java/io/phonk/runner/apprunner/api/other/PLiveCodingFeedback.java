@@ -45,12 +45,13 @@ import android.widget.TextView;
 import io.phonk.runner.R;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
 public class PLiveCodingFeedback {
     private static final String TAG = PLiveCodingFeedback.class.getSimpleName();
 
-    protected Context a;
+    protected Context mContext;
 
     private LinearLayout liveRLayout;
     float liveTextY = 0;
@@ -58,9 +59,9 @@ public class PLiveCodingFeedback {
     private TextView liveText;
 
     private boolean show = true; //
-    private int bgColor = 0x55000000; // OK
+    private int bgColor; // OK
     private String textColor = "#FFFFFFFF";
-    private int textSize = 12; // OK
+    private int textSize;
     private boolean autoHide = false; // OK
     boolean hidingLiveText = true;
 
@@ -71,13 +72,19 @@ public class PLiveCodingFeedback {
 
     public boolean enable = false;
     private int paddingLeft = 5;
+    private int paddingRight = 5;
+    private int paddingTop = 5;
     private int paddingBottom = 5;
     private int alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
     private long timeToHide = 4000;
 
-    public PLiveCodingFeedback(Context a) {
-        this.a = a;
-        fontCode = Typeface.createFromAsset(a.getAssets(), "Inconsolata.otf");
+    public PLiveCodingFeedback(Context context) {
+        this.mContext = context;
+        fontCode = Typeface.createFromAsset(context.getAssets(), "Inconsolata.otf");
+
+        bgColor = mContext.getResources().getColor(R.color.phonk_colorPrimary_shade_1);
+        textSize = AndroidUtils.dpToPixels(mContext, 8);;
+        paddingLeft = paddingRight = paddingTop = paddingBottom = AndroidUtils.dpToPixels(mContext, 10);
 
         h = new Handler();
         r = () -> liveRLayout.animate().alpha(0.0f).setListener(new AnimatorListener() {
@@ -159,7 +166,7 @@ public class PLiveCodingFeedback {
     @PhonkMethod(description = "Sets up the text size", example = "")
     @PhonkMethodParam(params = {"size"})
     public PLiveCodingFeedback textSize(int textSize) {
-        this.textSize = textSize;
+        this.textSize = AndroidUtils.dpToPixels(mContext, textSize);
         MLog.d(TAG, "textsize " + textSize);
         // liveText.setTextSize(this.textSize);
         return this;
@@ -223,14 +230,14 @@ public class PLiveCodingFeedback {
             }
 
             // add text view
-            liveText = new TextView(a);
+            liveText = new TextView(mContext);
             RelativeLayout.LayoutParams liveTextLayoutParams = new RelativeLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             liveText.setLayoutParams(liveTextLayoutParams);
             liveText.setBackgroundColor(0x00000000);
-            liveText.setPadding(paddingLeft, 5, 5, paddingBottom);
+            liveText.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
             liveText.setTextColor(Color.parseColor(color));
             liveText.setTextSize(size);
             liveText.setShadowLayer(2, 1, 1, 0x55000000);
@@ -247,7 +254,7 @@ public class PLiveCodingFeedback {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public View add() {
         // live execution layout
-        liveRLayout = new LinearLayout(a);
+        liveRLayout = new LinearLayout(mContext);
         RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT);
         liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -277,7 +284,7 @@ public class PLiveCodingFeedback {
             LayoutTransition l = new LayoutTransition();
             l.enableTransitionType(LayoutTransition.CHANGING);
 
-            AnimatorSet as = (AnimatorSet) AnimatorInflater.loadAnimator(a, R.animator.live_code);
+            AnimatorSet as = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.animator.live_code);
             // as.se
             l.setAnimator(LayoutTransition.APPEARING, as);
             l.setDuration(LayoutTransition.APPEARING, 300);

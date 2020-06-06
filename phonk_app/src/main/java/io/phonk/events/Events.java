@@ -40,6 +40,7 @@ public class Events {
     public static final String PROJECT_DELETE = "delete";
     public static final String PROJECT_EXECUTE_CODE = "execute_code";
     public static final String PROJECT_REFRESH_LIST = "refresh_list";
+    public static final String PROJECT_RUNNING = "running";
 
     public static final String EDITOR_FILE_INTENT_LOAD = "editor_file_intent_load";
     public static final String EDITOR_FILE_LOAD = "editor_file_load";

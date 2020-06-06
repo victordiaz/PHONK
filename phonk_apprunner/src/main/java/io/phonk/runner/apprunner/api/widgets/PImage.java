@@ -31,13 +31,15 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
+@PhonkClass
 public class PImage extends androidx.appcompat.widget.AppCompatImageView implements PViewMethodsInterface {
-
     private static final String TAG = PImage.class.getSimpleName();
+
     protected final AppRunner mAppRunner;
 
     public StyleProperties props = new StyleProperties();

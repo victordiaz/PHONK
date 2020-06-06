@@ -163,7 +163,7 @@ public class PhonkServerService extends Service {
         // go back to app intent
         Intent resultIntent = new Intent(this, MainActivity.class);
 
-        // The stack mNotificationBuilder object will contain an artificial back stack for
+        // The stack object will contain an artificial back stack for
         // navigating backward from the Activity leads out your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
@@ -186,7 +186,7 @@ public class PhonkServerService extends Service {
                 .setContentTitle(this.getString(R.string.app_name))
                 .setContentText(msg)
                 .setOngoing(false)
-                .setColor(this.getResources().getColor(R.color.phonk_accentColor_primary))
+                .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
                 // .setContentIntent(pendingIntent)
                 // .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
@@ -247,8 +247,9 @@ public class PhonkServerService extends Service {
 
         // MDNS advertising
         boolean isMDNSAdvertising = (boolean) UserPreferences.getInstance().get("advertise_mdns");
-        appRunner.pNetwork.mDNS.register("Phonk WebIDE", "_http._tcp", 8585);
-
+        if (isMDNSAdvertising) {
+            appRunner.pNetwork.mDNS.register("Phonk WebIDE", "_http._tcp", 8585);
+        }
         final Handler handler = new Handler();
         Runnable r = new Runnable() {
             @Override
@@ -295,6 +296,7 @@ public class PhonkServerService extends Service {
 
                 String name = "none";
                 if (mProjectRunning != null) name = mProjectRunning.getName();
+
                 script.put("running script", name);
 
                 info.put("device", device);
@@ -486,9 +488,7 @@ public class PhonkServerService extends Service {
         String action = e.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
             PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
-            mProjectRunning = e.getProject();
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
-            // ProtoScriptHelper.stop_all_scripts();
             Intent i = new Intent("io.phonk.runner.intent.CLOSE");
             sendBroadcast(i);
             PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
@@ -507,6 +507,9 @@ public class PhonkServerService extends Service {
         } else if (action.equals(Events.PROJECT_EDIT)) {
             MLog.d(TAG, "edit " + e.getProject().getName());
             PhonkAppHelper.launchEditor(getApplicationContext(), e.getProject());
+        } else if (action.equals(Events.PROJECT_RUNNING)) {
+            MLog.d(TAG, "running " + e.getProject().getName());
+            mProjectRunning = e.getProject();
         }
     }
 

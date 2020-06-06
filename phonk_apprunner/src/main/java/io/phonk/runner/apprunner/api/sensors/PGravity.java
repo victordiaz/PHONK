@@ -27,13 +27,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
-public class PGravity extends CustomSensorManager {
-
+@PhonkClass
+public class PGravity extends PCustomSensorManager {
     private final static String TAG = PGravity.class.getSimpleName();
 
     public PGravity(AppRunner appRunner) {

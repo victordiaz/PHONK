@@ -37,6 +37,7 @@ import org.mozilla.javascript.NativeArray;
 import java.util.Set;
 import java.util.UUID;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -47,6 +48,7 @@ import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
     protected static final UUID UUID_SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");

@@ -23,12 +23,72 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import java.util.ArrayList;
+
+import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.PViewsArea;
+
+@PhonkClass
 public class PViewPager extends ViewPager {
+    MyAdapter mAdapter;
 
-    public PViewPager(Context context) {
-        super(context);
+    public PViewPager(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        mAdapter = new MyAdapter();
+        this.setAdapter(mAdapter);
+    }
+
+    public PViewPager add(View v) {
+        this.mAdapter.addView(v);
+        this.mAdapter.notifyDataSetChanged();
+        return this;
+    }
+
+    public PViewPager page(int p) {
+        this.setCurrentItem(p);
+        return this;
+    }
+
+    class MyAdapter extends PagerAdapter {
+        ArrayList<View> list = new ArrayList<>();
+
+        MyAdapter() {
+        }
+
+        public void addView(View v) {
+            list.add(v);
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view == object;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            View v = list.get(position);
+            container.addView(v, 0);
+            return v;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            container.removeView((View) object);
+        }
     }
 }

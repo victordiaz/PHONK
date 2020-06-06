@@ -29,18 +29,21 @@ import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.TextViewCompat;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.base.utils.MLog;
 
-public class PText extends AppCompatTextView implements PViewMethodsInterface, PTextInterface {
-
+@PhonkClass
+public class PText extends TextView implements PViewMethodsInterface, PTextInterface {
     public StyleProperties props = new StyleProperties();
     public Styler styler;
     private Typeface currentFont;
@@ -169,20 +172,22 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
 
     @PhonkMethod(description = "Changes the font", example = "")
     @PhonkMethodParam(params = {"Typeface"})
-    public PText font(Typeface f) {
+    public PText textFont(Typeface f) {
         this.currentFont = f;
         this.setTypeface(f);
         return this;
-    }
-
-    public void f1() {
-        this.setTypeface(Typeface.MONOSPACE);
     }
 
     @PhonkMethod(description = "Sets the text size", example = "")
     @PhonkMethodParam(params = {"size"})
     public PText textSize(int size) {
         this.setTextSize(size);
+        return this;
+    }
+
+    @Override
+    public View textSize(float textSize) {
+        this.setTextSize(textSize);
         return this;
     }
 
@@ -197,12 +202,6 @@ public class PText extends AppCompatTextView implements PViewMethodsInterface, P
     @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
-        return this;
-    }
-
-    @Override
-    public View textSize(float textSize) {
-        this.setTextSize(textSize);
         return this;
     }
 

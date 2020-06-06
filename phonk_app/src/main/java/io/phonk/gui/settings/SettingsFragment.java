@@ -117,6 +117,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         prefStartServers.setChecked((Boolean) mUserPreferences.get("servers_enabled_on_start"));
 
+        // Wake up device on play
+        final TwoStatePreference prefWakeUpOnPlay = (TwoStatePreference) findPreference("device_wakeup_on_play");
+        prefWakeUpOnPlay.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("device_wakeup_on_play", isChecked).save();
+            return true;
+        });
+        prefWakeUpOnPlay.setChecked((Boolean) mUserPreferences.get("device_wakeup_on_play"));
+
+
         // Start servers on launch
         final TwoStatePreference prefMaskIp = (TwoStatePreference) findPreference("servers_mask_ip");
         prefMaskIp.setOnPreferenceChangeListener((preference, o) -> {

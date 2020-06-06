@@ -25,8 +25,10 @@ package io.phonk.runner.base.models;
 import java.io.File;
 
 import io.phonk.runner.apprunner.AppRunnerSettings;
+import io.phonk.runner.base.utils.MLog;
 
 public class Project {
+    private final String TAG = Project.class.getSimpleName();
 
     // we need this to serialize the data using intent bundles
     //public final static String TYPE = "projectType";
@@ -40,7 +42,7 @@ public class Project {
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
     public static final String SETTINGS_SCREEN_ORIENTATION = "settings_screenOrientation";
-    public static final String SERVER_PORT = "settings_protocoder_port";
+    public static final String SERVER_PORT = "settings_phonk_port";
     public static final String SETTINGS = "project_settings";
     public static final String DEVICE_ID = "device_id";
 
@@ -49,6 +51,7 @@ public class Project {
      */
     public String name;
     public String folder;
+    public String parentFolder;
 
     public Project() {
 
@@ -61,8 +64,11 @@ public class Project {
 
     public Project(String script) {
         String[] path = script.split("/");
+        this.parentFolder = path[0];
         this.folder = path[0] + "/" + path[1];
         this.name = path[2];
+
+        MLog.d(TAG, "rename" + path[0] + " - " + path[1]);
     }
 
     public String getName() {
@@ -74,7 +80,7 @@ public class Project {
         return this.folder;
     }
 
-    public String getPathPrev() {
+    public String geFoldertPath() {
         return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
     }
 
@@ -93,6 +99,8 @@ public class Project {
     public String getParentPath() {
         return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
     }
+
+    public String getParentParentFullPath() { return AppRunnerSettings.getBaseDir() + this.parentFolder; }
 
     public String getFullPath() {
         return AppRunnerSettings.getBaseDir() + getSandboxPath();

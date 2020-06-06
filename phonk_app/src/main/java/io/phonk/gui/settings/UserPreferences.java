@@ -60,6 +60,7 @@ public class UserPreferences {
         resetIfEmpty("device_id", "12345");
         resetIfEmpty("screen_always_on", false);
         resetIfEmpty("servers_enabled_on_start", true);
+        resetIfEmpty("device_wakeup_on_play", false);
         resetIfEmpty("advertise_mdns", false);
         resetIfEmpty("servers_mask_ip", false);
         resetIfEmpty("notify_new_version", true);

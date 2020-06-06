@@ -139,7 +139,7 @@ public class AppRunner {
         interp.addJavaObjectToJs("fileio", pFileIO);
         interp.addJavaObjectToJs("media", pMedia);
         interp.addJavaObjectToJs("network", pNetwork);
-        interp.addJavaObjectToJs("protocoder", pPhonk);
+        interp.addJavaObjectToJs("phonk", pPhonk);
         interp.addJavaObjectToJs("sensors", pSensors);
         interp.addJavaObjectToJs("ui", pUi);
         interp.addJavaObjectToJs("util", pUtil);
@@ -201,6 +201,7 @@ public class AppRunner {
     boolean finished = false;
 
     public void byebye() {
+        MLog.d("byebye", "");
         if (!finished) {
             finished = true;
             whatIsRunning.stopAll();

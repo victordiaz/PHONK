@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api.boards;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -35,6 +36,7 @@ import ioio.lib.api.IOIO;
 import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 
+@PhonkClass
 public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
 
     private final String TAG = PIOIO.class.getSimpleName();

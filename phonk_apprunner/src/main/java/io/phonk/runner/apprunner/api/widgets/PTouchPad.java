@@ -24,6 +24,7 @@ package io.phonk.runner.apprunner.api.widgets;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -32,8 +33,8 @@ import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
+@PhonkClass
 public class PTouchPad extends PCustomView implements PViewMethodsInterface {
-
     private static final String TAG = PTouchPad.class.getSimpleName();
 
     public StyleProperties props = new StyleProperties();
@@ -122,7 +123,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvasM c) {
+        public void event(PCanvas c) {
             mWidth = c.width;
             mHeight = c.height;
 

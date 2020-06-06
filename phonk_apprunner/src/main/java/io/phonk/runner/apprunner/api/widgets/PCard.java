@@ -31,9 +31,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.phonk.runner.R;
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
+@PhonkClass
 public class PCard extends LinearLayout {
 
     private final int currentColor;

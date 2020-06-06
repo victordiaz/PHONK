@@ -23,36 +23,43 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.View;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PButton.class.getSimpleName();
     private final AppRunner mAppRunner;
 
     public StyleProperties props = new StyleProperties();
     public Styler styler;
+    private Typeface mFont;
 
     public PButton(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
-        // StyleProperties styleProperties = new StyleProperties();
-        // styleProperties.put("backgroundPressed", styleProperties, "#FF008800");
-        // appRunner.pUi.registerStyle("button", styleProperties);
-
         styler = new Styler(appRunner, this, props);
         styler.apply();
+        setTypeface(mFont);
+    }
+
+    public PButton text(String label) {
+        setText(label);
+        return this;
     }
 
     @PhonkMethod(description = "Triggers the function when the button is clicked", example = "")
@@ -74,15 +81,17 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     @PhonkMethod(description = "Changes the font type to the button", example = "")
     @PhonkMethodParam(params = {"Typeface"})
-    public PButton font(Typeface f) {
+    public PButton textFont(Typeface f) {
+        mFont = f;
         this.setTypeface(f);
+        MLog.d(TAG, "--> " + "font");
 
         return this;
     }
 
     @Override
     public View textStyle(int style) {
-        this.setTypeface(null, style);
+        this.setTypeface(mFont, style);
         return this;
     }
 

@@ -26,10 +26,12 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
+@PhonkClass
 public class PLooper implements WhatIsRunningInterface {
     private final AppRunner mAppRunner;
     private LooperCB mCallbackfn;

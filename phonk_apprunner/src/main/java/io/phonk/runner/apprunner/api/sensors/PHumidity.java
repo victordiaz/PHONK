@@ -27,6 +27,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -34,8 +35,8 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 
-public class PHumidity extends CustomSensorManager implements WhatIsRunningInterface {
-
+@PhonkClass
+public class PHumidity extends PCustomSensorManager implements WhatIsRunningInterface {
     private final static String TAG = PHumidity.class.getSimpleName();
 
     public PHumidity(AppRunner appRunner) {

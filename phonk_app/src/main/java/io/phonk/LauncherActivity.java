@@ -43,8 +43,8 @@ public class LauncherActivity extends Activity {
         SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
         boolean firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
-        // uncomment to avoid first launch
-        //userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
+        // uncomment to reset (true) first launch
+        userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), true).commit();
 
         Intent i = getIntent();
         boolean wasCrash = i.getBooleanExtra("wasCrash", false);

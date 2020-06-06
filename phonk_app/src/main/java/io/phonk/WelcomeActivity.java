@@ -99,7 +99,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void setupActivity() {
         super.setupActivity();
-        mToolbar.setVisibility(View.GONE);
+        // mToolbar.setVisibility(View.GONE);
     }
 
     @Override

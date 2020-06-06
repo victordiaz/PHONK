@@ -26,14 +26,15 @@ import android.hardware.Camera;
 
 import java.util.List;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.base.gui.CameraTexture;
 
+@PhonkClass
 public class PCamera extends CameraTexture implements PCameraInterface {
-
     private final PCamera cam;
     protected AppRunner mAppRunner;
 

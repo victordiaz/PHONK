@@ -25,10 +25,11 @@ package io.phonk;
 import android.app.Application;
 
 import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
 import io.phonk.runner.base.utils.TimerUtils;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     public static MyLifecycleHandler myLifecycleHandler;
 

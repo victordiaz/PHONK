@@ -26,18 +26,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.base.utils.MLog;
 
-
+@PhonkClass
 public class PCustomView extends View {
-
     private static final String TAG = PCustomView.class.getSimpleName();
 
     protected final AppRunner mAppRunner;
-    private PCanvasM mPCanvas;
+    private PCanvas mPCanvas;
 
     @PhonkField(description = "Time interval between draws", example = "")
     private int drawInterval = 35;
@@ -49,7 +49,7 @@ public class PCustomView extends View {
     }
 
     public interface OnDrawCallback {
-        void event(PCanvasM c);
+        void event(PCanvas c);
     }
 
     public OnSetupCallback setup;
@@ -69,7 +69,7 @@ public class PCustomView extends View {
         // mTransparentPaint = new Paint();
         // mTransparentPaint.setStyle(Paint.Style.FILL);
         // mTransparentPaint.setColor(Color.BLUE);
-        mPCanvas = new PCanvasM(mAppRunner);
+        mPCanvas = new PCanvas(mAppRunner);
     }
 
     /*

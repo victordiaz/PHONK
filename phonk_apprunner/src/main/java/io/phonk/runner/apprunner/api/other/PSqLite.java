@@ -29,14 +29,16 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 
+@PhonkClass
 public class PSqLite extends ProtoBase {
-
     String TAG = PSqLite.class.getSimpleName();
+
     private SQLiteDatabase db;
 
     public PSqLite(AppRunner appRunner, String dbName) {

@@ -30,6 +30,7 @@ import android.widget.Switch;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -37,8 +38,8 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 @SuppressLint("NewApi")
+@PhonkClass
 public class PSwitch extends Switch implements PViewMethodsInterface {
-
     public StyleProperties props = new StyleProperties();
     public Styler styler;
     private Typeface currentFont;

@@ -37,6 +37,7 @@ import org.puredata.core.utils.PdDispatcher;
 import java.io.IOException;
 import java.util.Arrays;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -45,6 +46,7 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PPureData extends ProtoBase {
 
     private String TAG = PPureData.class.getSimpleName();
@@ -84,6 +86,13 @@ public class PPureData extends ProtoBase {
         float millis = -1;
         if (millis < 0) millis = 50.0f;  // conservative choice
         int tpb = (int) (0.001f * millis * srate / PdBase.blockSize()) + 1;
+
+        MLog.d(TAG, "--> " + srate + " " + nic + " " + noc + " " + tpb);
+
+        /*
+        nic = 0;
+        tpb = 8;
+         */
 
         try {
             PdAudio.initAudio(srate, nic, noc, tpb, true);
@@ -236,9 +245,10 @@ public class PPureData extends ProtoBase {
 
         @Override
         public void receiveMessage(String source, String symbol, Object... args) {
-            MLog.d(TAG, "message: " + Arrays.toString(args));
+            MLog.d(TAG, "message: " + symbol + " " + Arrays.toString(args));
 
             JSONArray jsonArray = new JSONArray();
+            jsonArray.put(symbol);
             for (Object arg : args) {
                 jsonArray.put(arg);
             }
@@ -297,8 +307,9 @@ public class PPureData extends ProtoBase {
 
     @PhonkMethod(description = "Sends a float number to PdLib", example = "")
     @PhonkMethodParam(params = {"name", "value"})
-    public void sendFloat(String name, int value) {
-        PdBase.sendFloat(name, value);
+    public void sendFloat(String name, float value) {
+        MLog.d(TAG, "--> " + value);
+        PdBase.sendFloat(name, (float) value);
     }
 
     @PhonkMethod(description = "Sends a note to PdLib", example = "")

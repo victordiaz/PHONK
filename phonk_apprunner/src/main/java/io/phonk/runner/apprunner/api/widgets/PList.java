@@ -37,12 +37,13 @@ import io.phonk.runner.base.views.FitRecyclerView;
 public class PList extends FitRecyclerView {
 
     private final Context mContext;
-    private final AppRunner mAppRunner;
+    protected final AppRunner mAppRunner;
     private GridLayoutManager mGridLayoutManager;
     private PViewItemAdapter mViewAdapter;
 
     public StyleProperties props = new StyleProperties();
     public Styler styler;
+    private int nNumCols = 1;
 
     public PList(AppRunner appRunner) {
         super(appRunner.getAppContext());
@@ -50,11 +51,11 @@ public class PList extends FitRecyclerView {
         mContext = appRunner.getAppContext();
     }
 
-    public void init(NativeArray data, int numCols, ReturnInterfaceWithReturn createCallback, ReturnInterfaceWithReturn bindingCallback) {
+    public void init(NativeArray data, ReturnInterfaceWithReturn createCallback, ReturnInterfaceWithReturn bindingCallback) {
         styler = new Styler(mAppRunner, this, props);
         styler.apply();
 
-        mGridLayoutManager = new GridLayoutManager(mContext, numCols);
+        mGridLayoutManager = new GridLayoutManager(mContext, nNumCols);
         setLayoutManager(mGridLayoutManager);
         // setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         mViewAdapter = new PViewItemAdapter(mContext, data, createCallback, bindingCallback);
@@ -76,22 +77,22 @@ public class PList extends FitRecyclerView {
         super.scrollToPosition(pos);
     }
 
-    public PList setNumCols(int num) {
-        mGridLayoutManager.setSpanCount(num);
+    public PList numColumns(int num) {
+        nNumCols = num;
+        if (mGridLayoutManager != null) mGridLayoutManager.setSpanCount(num);
 
         return this;
     }
 
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
-    public void setItems(NativeArray data) {
+    public void items(NativeArray data) {
         mViewAdapter.setArray(data);
     }
 
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
     public void clear() {
-
     }
 
     @PhonkMethod(description = "", example = "")

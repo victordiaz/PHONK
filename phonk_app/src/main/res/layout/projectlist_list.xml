@@ -24,7 +24,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/phonk_backgroundColor_secondary" >
+    android:background="@color/phonk_backgroundColor" >
 
     <include layout="@layout/projectlist_location_view"
         android:id="@+id/folderLocation2"/>
@@ -93,13 +93,14 @@
         <!--android:src="@drawable/protocoder_none" />-->
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:maxWidth="220sp"
             android:layout_height="match_parent"
-            android:text="Select a folder"
-            android:textSize="22sp"
+            android:text="Choose a folder in the previous screen"
+            android:textSize="16sp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="#55000000"
+            android:textColor="@color/phonk_colorSecondary"
             />
 
     </LinearLayout>
@@ -110,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/phonk_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor"
         android:orientation="vertical">
 
         <ScrollView
@@ -177,6 +178,7 @@
             android:layout_height="60dp"
             android:layout_toEndOf="@+id/empty_grid_view"
             android:layout_toRightOf="@+id/empty_grid_view"
+            android:layout_marginTop="15dp"
             android:weightSum="3"
             android:visibility="gone">
 
@@ -184,7 +186,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/phonk_accentColor_secondary"
+                android:background="@color/phonk_colorSecondary"
                 android:src="@drawable/ic_play_arrow_black_24dp" />
 
             <View

@@ -30,10 +30,11 @@ import android.webkit.WebViewClient;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 
+@PhonkClass
 public class PWebView extends WebView implements PViewMethodsInterface {
-
     private final AppRunner mAppRunner;
 
     public StyleProperties props = new StyleProperties();

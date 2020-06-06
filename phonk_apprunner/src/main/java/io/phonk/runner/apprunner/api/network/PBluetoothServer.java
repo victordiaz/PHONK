@@ -34,12 +34,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PBluetoothServer extends ProtoBase {
 
     private final PBluetooth mPBluetooth;

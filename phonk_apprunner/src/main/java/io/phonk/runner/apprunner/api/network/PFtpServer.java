@@ -43,12 +43,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.base.utils.MLog;
 
-
+@PhonkClass
 public class PFtpServer {
+    final String TAG = PFtpServer.class.getSimpleName();
 
-    final String TAG = "PFtpServer";
     private final int mPort;
     private final FtpServerCb mCallback;
     //private final String mUserName;

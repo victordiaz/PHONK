@@ -29,19 +29,19 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:gravity="center"
-    android:background="@color/phonk_backgroundColor_primary"
+    android:background="@color/phonk_backgroundColor"
     tools:context="io.phonk.MainActivity">
 
     <RelativeLayout
         android:id="@+id/header"
-        android:background="@color/phonk_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="1"
         android:padding="5dp"
-        android:paddingBottom="0dp"
+        android:paddingBottom="100dp"
         android:animateLayoutChanges="true">
 
         <!--
@@ -60,12 +60,13 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:gravity="left|center"
-            android:padding="12dp">
+            android:padding="0dp">
 
             <TextView
                 style="@style/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="12dp"
                 android:visibility="visible" />
 
             <!--
@@ -100,17 +101,16 @@
 
             <ImageButton
                 android:id="@+id/more_options"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="12dp"
                 android:layout_marginLeft="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_more_vert_white_24dp"
                 android:text=""
                 android:textOff=""
                 android:textOn="" />
-
         </LinearLayout>
-
 
         <RelativeLayout
             android:id="@+id/ip_container"
@@ -130,56 +130,35 @@
 
             <FrameLayout
                 android:id="@+id/infoLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"></FrameLayout>
+
+            <View
+                android:layout_below="@id/infoLayout"
+                android:background="@color/phonk_colorSecondary_shade_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:layout_marginTop="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" />
 
         </RelativeLayout>
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/textgroup2"
+        android:id="@+id/appintro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:gravity="center"
+        android:padding="40dp"
         android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:visibility="visible"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/logo_and_text" />
-
-            <TextView
-                android:id="@+id/textView32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="Phonk"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/textView42"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:paddingLeft="0dp"
-                android:text="We shape our tools and thereafter our tools shape us \n- Marshall McLuhan"
-                android:textColor="@color/phonk_textColor_primary"
-                android:textSize="12sp"
-                android:visibility="gone"/>
-
-        </LinearLayout>
+        <include layout="@layout/appintro" />
 
     </RelativeLayout>
 

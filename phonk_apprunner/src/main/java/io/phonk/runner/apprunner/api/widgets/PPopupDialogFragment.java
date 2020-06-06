@@ -40,12 +40,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PPopupDialogFragment extends DialogFragment {
-
     private static final java.lang.String TAG = PPopupDialogFragment.class.getSimpleName();
 
     private static FragmentManager mFragmentManager;

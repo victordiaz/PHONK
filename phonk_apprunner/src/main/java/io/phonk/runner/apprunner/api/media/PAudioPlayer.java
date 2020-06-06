@@ -28,6 +28,7 @@ import android.media.PlaybackParams;
 
 import java.io.IOException;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -36,9 +37,10 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PAudioPlayer extends ProtoBase {
-
     private final String TAG = PAudioPlayer.class.getSimpleName();
+
     protected MediaPlayer mMediaPlayer;
     private ReturnInterface callbackfn;
 

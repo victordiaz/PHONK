@@ -64,7 +64,7 @@ public class ConnectionInfoFragment extends Fragment {
     private TextView mComputerText;
     private String mRealIp = "";
     private String mMaskedIp = "XXX.XXX.XXX.XXX";
-    private PLooper mLooper;
+    // private PLooper mLooper;
     private String mLastConnectionMessage;
     private String mLastIp;
 
@@ -270,6 +270,8 @@ public class ConnectionInfoFragment extends Fragment {
             addTextToConsole("edit project" + p.getSandboxPath());
         } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
             addTextToConsole("refreshing list");
+        } else if (action.equals(Events.PROJECT_RUNNING)) {
+            addTextToConsole("running " + e.getProject().getSandboxPath());
         }
     }
 

@@ -22,6 +22,6 @@
 
 package io.phonk.runner.apprunner.api.sensors;
 
-public interface CustomSensorListener {
+public interface PCustomSensorListener {
 
 }

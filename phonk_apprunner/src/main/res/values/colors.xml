@@ -23,17 +23,15 @@
 
 <resources>
 
+    <color name="phonk_colorPrimary">#FFC700</color>
+    <color name="phonk_colorPrimary_shade_1">#33FFC700</color>
+    <color name="phonk_colorSecondary">#FFFFFF</color>
+    <color name="phonk_colorSecondary_shade_1">#33FFFFFF</color>
+    <color name="phonk_backgroundColor">#272822</color>
 
-    <color name="phonk_accentColor_primary">#FFC700</color>
-    <color name="phonk_accentColor_primary_opacity_30">#33FFC700</color>
-    <color name="phonk_accentColor_secondary">#35ffd0</color>
-    <color name="phonk_accentColor_terciary">#FFD735</color>
-
-    <color name="phonk_backgroundColor_primary">#372B2B</color>
-    <color name="phonk_backgroundColor_secondary">#372B2B</color> <!-- #272822 -->
-
-    <color name="phonk_textColor_primary">#ffffff</color>
+    <color name="phonk_textColor_primary">#FFC700</color>
     <color name="phonk_textColor_secondary">#ffffff</color>
+    <color name="phonk_textColor_secondary_shade">#88ffffff</color>
     <color name="phonk_textColor_gray">#555</color>
 
     <!-- theme -->
@@ -60,7 +58,7 @@
     <color name="project_user_color">#FF33b5e5</color>
     <color name="project_example_color">#FFffbb33</color>
 
-    <color name="primaryAccent">@color/phonk_accentColor_primary</color>
+    <color name="primaryAccent">@color/phonk_colorPrimary</color>
 
     <color name="theme_bg_blue">#BB33B5E5</color>
     <color name="theme_bg_magenta">#BBCD005B</color>

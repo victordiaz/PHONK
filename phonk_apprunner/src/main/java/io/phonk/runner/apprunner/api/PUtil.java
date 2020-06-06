@@ -39,6 +39,8 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.welie.blessed.BluetoothBytesParser;
+
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 
@@ -70,7 +72,6 @@ public class PUtil extends ProtoBase {
     }
 
     public void setAnObject(NativeObject obj) {
-
         for (Map.Entry<Object, Object> entry : obj.entrySet()) {
             String key = (String) entry.getKey();
             Object o = entry.getValue();
@@ -82,7 +83,6 @@ public class PUtil extends ProtoBase {
     }
 
     public ReturnObject getAnObject() {
-
         // HashMap map = new HashMap();
 
         ReturnObject ret = new ReturnObject();
@@ -182,6 +182,19 @@ public class PUtil extends ProtoBase {
                 .getDisplayMetrics());
 
         return px * onepx;
+    }
+
+    public Object parseBytes(byte[] bytes, String type) {
+        BluetoothBytesParser parser = new BluetoothBytesParser(bytes);
+
+        switch (type) {
+            case "uint8":
+                return parser.getIntValue(BluetoothBytesParser.FORMAT_UINT8);
+            case "string":
+                return parser.getStringValue(0);
+            default:
+                return null;
+        }
     }
 
     public interface AnimCB {

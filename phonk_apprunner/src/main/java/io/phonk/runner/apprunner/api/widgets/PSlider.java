@@ -24,16 +24,22 @@ package io.phonk.runner.apprunner.api.widgets;
 
 import android.view.MotionEvent;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.views.CanvasUtils;
 
+@PhonkClass
 public class PSlider extends PCustomView implements PViewMethodsInterface {
-
     private static final String TAG = PSlider.class.getSimpleName();
 
     public StyleProperties props = new StyleProperties();
@@ -51,12 +57,21 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private float rangeFrom = 0;
     private float rangeTo = 1;
 
+    private DecimalFormat df;
+    private String formatString = "#.##";
+    private int numDecimals = 1;
+
     public PSlider(AppRunner appRunner) {
         super(appRunner);
 
         draw = mydraw;
         styler = new Styler(appRunner, this, props);
         styler.apply();
+
+        DecimalFormatSymbols symbol = new DecimalFormatSymbols(Locale.FRANCE);
+        symbol.setDecimalSeparator('.');
+        df = new DecimalFormat(formatString, symbol);
+        df.setMinimumFractionDigits(2);
     }
 
     @Override
@@ -99,7 +114,7 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvasM c) {
+        public void event(PCanvas c) {
             mWidth = c.width;
             mHeight = c.height;
 
@@ -111,6 +126,15 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             c.strokeWidth(styler.sliderBorderSize);
             c.stroke(styler.sliderBorderColor);
             c.rect(0, 0, unmappedVal, c.height);
+
+            df.setRoundingMode(RoundingMode.DOWN);
+
+            c.fill(styler.textColor);
+            c.noStroke();
+            c.typeface("monospace");
+
+            c.textSize(AndroidUtils.spToPixels(getContext(), (int) styler.textSize));
+            c.drawTextCentered("" + df.format(mappedVal));
         }
     };
 

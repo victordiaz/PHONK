@@ -32,13 +32,14 @@ import android.graphics.drawable.Drawable;
 
 import androidx.appcompat.app.ActionBar;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 
+@PhonkClass
 public class PToolbar extends ProtoBase {
-
     private final AppRunner mAppRunner;
     private final ActionBar mToolbar;
     private int currentColor;

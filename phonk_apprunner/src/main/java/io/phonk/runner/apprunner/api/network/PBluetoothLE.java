@@ -27,7 +27,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
@@ -39,9 +42,12 @@ import io.phonk.runner.base.utils.MLog;
  * TODO
  */
 @SuppressLint("NewApi")
+@PhonkClass
 public class PBluetoothLE extends ProtoBase {
     private Context mContext;
     private final AppRunner mAppRunner;
+
+    public Handler mHandler;
 
     // private List<BluetoothDevice> mDevices;
     // private BluetoothDevice currentDevice;
@@ -60,6 +66,7 @@ public class PBluetoothLE extends ProtoBase {
         // mDevices = new ArrayList<BluetoothDevice>();
         mBleAdapter = ((BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         mAppRunner.whatIsRunning.add(this);
+        mHandler = new Handler(Looper.getMainLooper());
 
         return this;
     }
@@ -83,7 +90,10 @@ public class PBluetoothLE extends ProtoBase {
             o.put("mac", device.getAddress());
             o.put("rssi", rssi);
             o.put("device", device);
-            mCallbackScan.event(o);
+
+            mHandler.post(() -> {
+                mCallbackScan.event(o);
+            });
         }
     };
 

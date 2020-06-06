@@ -88,6 +88,7 @@ import io.phonk.runner.apprunner.api.network.PWebSocketServer;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.network.OSC;
 import io.phonk.runner.base.network.ServiceDiscovery;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.ExecuteCmd;
 import io.phonk.runner.base.utils.MLog;
 import okhttp3.MediaType;
@@ -112,7 +113,10 @@ public class PNetwork extends ProtoBase {
         super(appRunner);
 
         bluetooth = new PBluetooth(appRunner);
-        bluetoothLE = new PBluetoothLE(appRunner);
+
+        if (AndroidUtils.isVersionLollipop()) {
+            bluetoothLE = new PBluetoothLE(appRunner);
+        }
 
         mDNS = new ServiceDiscovery(appRunner);
     }

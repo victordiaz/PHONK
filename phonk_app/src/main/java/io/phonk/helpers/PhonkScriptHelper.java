@@ -48,6 +48,7 @@ import io.phonk.App;
 import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.models.Folder;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
@@ -311,7 +312,7 @@ public class PhonkScriptHelper {
     }
 
     public static String exportProjectAsProtoFile(Project p) {
-        File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PROTO_FILE_EXTENSION);
+        File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PHONK_FILE_EXTENSION);
 
         MLog.d(TAG, "compress " + p.getFullPath());
         MLog.d(TAG, "to " + f.getAbsolutePath());
@@ -363,6 +364,37 @@ public class PhonkScriptHelper {
         }
 
         return protoFiles;
+    }
+
+    public static boolean renameProject(Project p, String newName) {
+        // p.getFullPath();
+        MLog.d(TAG, "renameProject 1 -->" + p.getFullPath());
+        MLog.d(TAG, "renameProject 2 -->" + p.getParentPath());
+
+        // if new path doent exist then => rename
+        File fd = new File(p.getParentPath() + "/" + newName);
+        if (!fd.exists()) {
+            return new File(p.getFullPath()).renameTo(fd);
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean cloneProject(Project p, String newName) {
+        File fo = new File(p.getFullPath());
+        File fd = new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER) + "/User Projects/" + newName);
+
+        MLog.d(TAG, "rename_ " + fo.toString() + " - " + fd.toString());
+        if (!fd.exists()) {
+            try {
+                FileUtils.copyDirectory(fo, fd);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void listProcesses(Context context) {

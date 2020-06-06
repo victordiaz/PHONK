@@ -279,7 +279,6 @@ public class PDevice extends ProtoBase {
         v.vibrate(duration);
     }
 
-
     /**
      * Makes the device vibrate
      *
@@ -289,11 +288,11 @@ public class PDevice extends ProtoBase {
      * @param repeat Number of times that the pattern will repeat
      *
      * @status TODO_EXAMPLE
-     @PhonkMethod public void vibrate(long[] pattern, int repeat) {
-     Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-     v.vibrate(pattern, repeat);
-     }
      */
+     @PhonkMethod public void vibrate(long[] pattern, int repeat) {
+         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+         v.vibrate(pattern, repeat);
+    }
 
 
     /**

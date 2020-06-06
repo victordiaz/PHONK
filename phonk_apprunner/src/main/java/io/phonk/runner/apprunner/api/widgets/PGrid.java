@@ -27,12 +27,11 @@ import android.widget.LinearLayout;
 
 import org.mozilla.javascript.NativeArray;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
-/**
- * Created by victormanueldiazbarrales on 28/07/14.
- */
+@PhonkClass
 public class PGrid extends LinearLayout {
     private final Context context;
     private int columns = 1;

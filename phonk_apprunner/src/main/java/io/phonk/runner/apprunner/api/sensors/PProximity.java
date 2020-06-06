@@ -27,6 +27,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -34,8 +35,8 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 
-public class PProximity extends CustomSensorManager implements WhatIsRunningInterface {
-
+@PhonkClass
+public class PProximity extends PCustomSensorManager implements WhatIsRunningInterface {
     private final static String TAG = PProximity.class.getSimpleName();
 
     public PProximity(AppRunner appRunner) {

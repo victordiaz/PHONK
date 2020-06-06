@@ -25,13 +25,14 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PImageButton extends PImage {
-
     private String TAG = PImageButton.class.getSimpleName();
 
     private boolean hideBackground = true;

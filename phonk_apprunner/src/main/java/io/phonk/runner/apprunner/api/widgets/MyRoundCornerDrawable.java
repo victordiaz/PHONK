@@ -23,11 +23,14 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
 public class MyRoundCornerDrawable extends Drawable {
@@ -46,9 +49,9 @@ public class MyRoundCornerDrawable extends Drawable {
         // background
         mPaintBg = new Paint();
         mPaintBg.setStyle(Paint.Style.FILL);
-        // mPaintBg.setAntiAlias(true);
         mPaintBg.setStrokeWidth(0);
         // mPaintBg.setShadowLayer(10, 22, 22, Color.BLACK);
+        mPaintBg.setAntiAlias(true);
 
         // border
         mPaintBorder = new Paint();
@@ -94,6 +97,12 @@ public class MyRoundCornerDrawable extends Drawable {
 
     public void setBackground(int c) {
         this.mPaintBg.setColor(c);
+
+        int c1 = Color.argb(100, 0, 252, 0);
+        int c2 = Color.argb(100, 0, 252, 0);
+        //     mPaintBg.setAntiAlias(true);
+        // mPaintBg.setShader(new LinearGradient(0, 0, 0, 150, c, c, Shader.TileMode.CLAMP));
+
         invalidateSelf();
     }
 

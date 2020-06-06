@@ -36,6 +36,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -43,15 +44,14 @@ import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
+@PhonkClass
 public class PNfc extends ProtoBase {
-
     public static String nfcMsg = null;
     private NdefMessage messageToWrite;
 
     public PNfc(AppRunner appRunner) {
         super(appRunner);
     }
-
 
     @PhonkMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
     @PhonkMethodParam(params = {"function(id, data)"})

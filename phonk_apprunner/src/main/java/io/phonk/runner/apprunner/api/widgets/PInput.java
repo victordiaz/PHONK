@@ -34,19 +34,21 @@ import android.widget.EditText;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
-public class PInput extends androidx.appcompat.widget.AppCompatEditText implements PViewMethodsInterface, PTextInterface {
-
+@PhonkClass
+public class PInput extends EditText implements PViewMethodsInterface, PTextInterface {
     private final AppRunner mAppRunner;
     private EditText mInput;
 
     public StyleProperties props = new StyleProperties();
     public Styler styler;
+    private Typeface mFont;
 
     public PInput(AppRunner appRunner) {
         super(appRunner.getAppContext());
@@ -59,8 +61,17 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         styler.apply();
 
         setHintTextColor(styler.hintColor);
+        setHint("");
 
         mInput = this;
+
+        textFont(mFont);
+    }
+
+    @PhonkMethod
+    public PInput hint(String hint) {
+        this.setHint(hint);
+        return this;
     }
 
     public void text(String txt) {
@@ -111,9 +122,10 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         });
     }
 
-
     @Override
-    public View font(Typeface font) {
+    public View textFont(Typeface font) {
+        mFont = font;
+
         this.setTypeface(font);
         return this;
     }

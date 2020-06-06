@@ -39,7 +39,7 @@ public class WhatIsRunning {
     }
 
     public void stopAll() {
-
+        MLog.d("qqbyebye", "stopping");
         for (Object o : runners) {
             // MLog.d(TAG, "list " + o.getClass().getCanonicalName());
         }
@@ -53,7 +53,7 @@ public class WhatIsRunning {
             } catch (NoSuchMethodException e) {
             }
 
-            MLog.d(TAG, "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
+            MLog.d("qqbyebye", "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
 
             try {
                 //if (method !== null) {

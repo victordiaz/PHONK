@@ -39,35 +39,24 @@
         android:layout_alignParentTop="true"
         android:alpha="1"
         android:animateLayoutChanges="true"
-        android:background="@color/phonk_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor"
         android:paddingBottom="0dp">
-
-        <ImageView
-            android:id="@+id/imageView12"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/logo_partial_land" />
 
         <LinearLayout
             android:id="@+id/logo_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="12dp">
+            android:padding="0dp">
 
-            <ImageView
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/logo"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:cropToPadding="false"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:scaleType="fitStart"
-                android:src="@drawable/thingie_undertext" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="12dp"
+                android:visibility="visible" />
 
             <!--
             <TextView
@@ -77,11 +66,6 @@
                 style="@style/logo"
                 android:visibility="visible" />
             -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_weight="2"></View>
 
             <ImageButton
                 android:id="@+id/toggleConnectionInfo"
@@ -97,10 +81,10 @@
 
             <ImageButton
                 android:id="@+id/more_options"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginLeft="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
                 android:src="@drawable/ic_more_vert_white_24dp"
                 android:text=""
                 android:textOff=""
@@ -136,7 +120,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/textgroup2"
+        android:id="@+id/appintro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -144,28 +128,10 @@
         android:gravity="center"
         android:visibility="visible">
 
-        <LinearLayout
+        <include
+            layout="@layout/appintro"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/logo_and_text" />
-
-            <TextView
-                android:id="@+id/textView42"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:paddingLeft="0dp"
-                android:text="We shape our tools and thereafter our tools shape us \n- Marshall McLuhan"
-                android:textColor="@color/phonk_textColor_primary"
-                android:textSize="12sp"
-                android:visibility="gone" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 

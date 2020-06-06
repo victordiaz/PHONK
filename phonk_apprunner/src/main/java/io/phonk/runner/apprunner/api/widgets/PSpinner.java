@@ -23,18 +23,35 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
-public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner {
+@PhonkClass
+public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner implements PViewMethodsInterface, PTextInterface {
     private String[] mData;
 
-    public PSpinner(Context context) {
-        super(context);
+    public StyleProperties props = new StyleProperties();
+    // public Styler styler;
+    private Typeface mFont;
+
+    public PSpinner(AppRunner appRunner) {
+        super(appRunner.getAppContext());
+        // styler = new Styler(appRunner, this, props);
+        // styler.apply();
+        // setTypeface(mFont);
     }
 
     public PSpinner onSelected(final ReturnInterface callback) {
@@ -59,11 +76,79 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner {
     public PSpinner setData(String[] data) {
         this.mData = data;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, mData);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayList<String> data_ = new ArrayList<>();
+        data_.add("qq1");
+        data_.add("qq2");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, data_);
+        // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         return this;
     }
+
+
+    @Override
+    public View textFont(Typeface font) {
+        mFont = font;
+
+        // this.setTypeface(font);
+        return this;
+    }
+
+    @Override
+    public View textSize(int size) {
+        // this.setTextSize(size);
+        return this;
+    }
+
+    @Override
+    public View textColor(String textColor) {
+        // this.setTextColor(Color.parseColor(textColor));
+        return this;
+    }
+
+    @Override
+    @PhonkMethod(description = "Changes the font text color", example = "")
+    @PhonkMethodParam(params = {"colorHex"})
+    public View textColor(int c) {
+        // this.setTextColor(c);
+        return this;
+    }
+
+    @Override
+    public View textSize(float textSize) {
+        // this.setTextSize(textSize);
+        return this;
+    }
+
+    @Override
+    public View textStyle(int style) {
+        // this.setTypeface(null, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        setGravity(alignment);
+        return this;
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        // styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public void setStyle(Map style) {
+        // styler.setStyle(style);
+    }
+
+    @Override
+    public Map getStyle() {
+        return props;
+    }
+
 
 }

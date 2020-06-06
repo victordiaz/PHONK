@@ -26,17 +26,20 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.views.CanvasUtils;
 
+@PhonkClass
 public class PKnob extends PCustomView implements PViewMethodsInterface, PTextInterface {
-
     private static final String TAG = PKnob.class.getSimpleName();
 
     public StyleProperties props = new StyleProperties();
@@ -58,13 +61,17 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     private float rangeFrom = 0;
     private float rangeTo = 360;
 
+    private DecimalFormat df;
+    private String formatString = "#.##";
+    private int numDecimals = 1;
+
     public PKnob(AppRunner appRunner) {
         super(appRunner);
 
         draw = mydraw;
         styler = new Styler(appRunner, this, props);
         styler.apply();
-
+        df = new DecimalFormat(formatString);
     }
 
     @Override
@@ -109,7 +116,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvasM c) {
+        public void event(PCanvas c) {
             mWidth = c.width;
             mHeight = c.height;
 
@@ -130,7 +137,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             c.stroke(styler.knobBorderColor);
             c.ellipse(posX, posY, diameter - styler.knobBorderWidth, diameter - styler.knobBorderWidth);
 
-            c.strokeWidth(30); //styler.sliderBorderSize);
+            c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 5)); //styler.sliderBorderSize);
             c.stroke(styler.knobProgressColor); // styler.sliderBorderColor);
 
             float d = diameter - styler.knobBorderWidth - styler.knobProgressWidth - styler.knobProgressSeparation;
@@ -165,14 +172,23 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
             c.fill(styler.textColor);
             c.noStroke();
-            c.setTypeface("monospace");
+            c.typeface("monospace");
 
+            df.setRoundingMode(RoundingMode.DOWN);
             if (autoTextSize) c.textSize((diameter / 5));
             else c.textSize(AndroidUtils.spToPixels(getContext(), (int) styler.textSize));
 
-            c.drawTextCentered("" + Math.round(mappedVal * 100.0f) / 100.0f);
+            c.drawTextCentered("" + df.format(mappedVal));
         }
     };
+
+    public PKnob decimals(int num) {
+        if (num <= 0) formatString = "#";
+        else {
+            formatString = "#." + new String(new char[num]).replace("\0", "#");
+        }
+        return this;
+    }
 
     public PKnob onChange(final ReturnInterface callbackfn) {
         this.callback = callbackfn;
@@ -216,7 +232,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
 
     @Override
-    public View font(Typeface font) {
+    public View textFont(Typeface font) {
         this.textFont = font;
 
         return this;

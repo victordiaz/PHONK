@@ -37,4 +37,5 @@ public class NEOProject {
     public String current_folder;
     public ArrayList<ProtoFile> files = new ArrayList<>();
     public String code = "";
+    public String newName = "";
 }

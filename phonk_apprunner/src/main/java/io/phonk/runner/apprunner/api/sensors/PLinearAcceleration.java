@@ -27,13 +27,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
-public class PLinearAcceleration extends CustomSensorManager {
-
+@PhonkClass
+public class PLinearAcceleration extends PCustomSensorManager {
     private final static String TAG = PLinearAcceleration.class.getSimpleName();
 
     public PLinearAcceleration(AppRunner appRunner) {

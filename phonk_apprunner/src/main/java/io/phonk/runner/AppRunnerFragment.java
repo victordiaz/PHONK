@@ -132,8 +132,7 @@ public class AppRunnerFragment extends Fragment {
 
         // catch errors and send them to the WebIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
-        // TODO REENABLE
-        // mAppRunner.interp.addListener(appRunnerCb);
+        mAppRunner.interp.addListener(appRunnerCb);
 
         mAppRunner.initProject();
 
@@ -166,7 +165,6 @@ public class AppRunnerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         MLog.d(TAG, "onPause");
-
         if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onPause");
     }
 
@@ -174,7 +172,7 @@ public class AppRunnerFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         MLog.d(TAG, "onDestroy");
-        // if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
+        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
         mAppRunner.byebye();
     }
 
@@ -183,7 +181,7 @@ public class AppRunnerFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
     }
 
-    public void addScriptedLayout(RelativeLayout scriptedUILayout) {
+    public void addScriptedLayout(View scriptedUILayout) {
         parentScriptedLayout.addView(scriptedUILayout);
     }
 
@@ -270,10 +268,10 @@ public class AppRunnerFragment extends Fragment {
 
     public TextView changeTitle(String title) {
         txtTitle.setText(title);
+        txtTitle.setVisibility(View.VISIBLE);
         txtTitle.setAlpha(0.0f);
         txtTitle.setX(-100f);
-        txtTitle.setVisibility(View.VISIBLE);
-        txtTitle.animate().x(50).alpha(1.0f).setStartDelay(300);
+        txtTitle.animate().translationX(0f).alpha(1.0f).setStartDelay(300);
         txtTitle.setEnabled(false);
 
         return txtTitle;
@@ -284,9 +282,10 @@ public class AppRunnerFragment extends Fragment {
         txtSubtitle.setX(-100f);
         txtSubtitle.setAlpha(0.0f);
         txtSubtitle.setVisibility(View.VISIBLE);
+        txtSubtitle.setEnabled(false);
 
         // invalidating the text because sometimes when overlaying OpenGL surfaces the view is not fully rendered
-        txtSubtitle.animate().x(50).alpha(1.0f).setStartDelay(500).setListener(new Animator.AnimatorListener() {
+        txtSubtitle.animate().translationX(0f).alpha(1.0f).setStartDelay(500).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
 

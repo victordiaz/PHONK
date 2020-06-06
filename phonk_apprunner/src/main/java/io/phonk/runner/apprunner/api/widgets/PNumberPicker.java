@@ -26,12 +26,15 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.content.Context;
 import android.widget.NumberPicker;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
+@PhonkClass
 public class PNumberPicker extends NumberPicker {
-    public PNumberPicker(Context context) {
-        super(context);
+    public PNumberPicker(AppRunner appRunner) {
+        super(appRunner.getAppContext());
     }
 
     public PNumberPicker onSelected(final ReturnInterface callback) {
@@ -44,5 +47,10 @@ public class PNumberPicker extends NumberPicker {
         return this;
     }
 
+    public PNumberPicker range(int from, int to) {
+       this.setMinValue(from);
+       this.setMaxValue(to);
+       return this;
+    }
 
 }

@@ -34,7 +34,7 @@ public class PWebEditor extends ProtoBase {
 
     }
 
-    //TODO this is mContext place holder
+    //TODO this is a place holder
 
     @PhonkMethod(description = "Loads a Html file in the webIde sidebar", example = "")
     @PhonkMethodParam(params = {"boolean"})
@@ -42,7 +42,7 @@ public class PWebEditor extends ProtoBase {
 
     }
 
-    //TODO this is mContext place holder
+    //TODO this is a place holder
 
     @PhonkMethod(description = "Shows/Hides the webIde sidebar", example = "")
     @PhonkMethodParam(params = {"boolean"})

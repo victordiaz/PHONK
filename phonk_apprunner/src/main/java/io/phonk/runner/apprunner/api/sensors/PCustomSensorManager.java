@@ -27,15 +27,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 
-public abstract class CustomSensorManager implements WhatIsRunningInterface {
-
-    private final static String TAG = CustomSensorManager.class.getSimpleName();
+@PhonkClass
+public abstract class PCustomSensorManager implements WhatIsRunningInterface {
+    private final static String TAG = PCustomSensorManager.class.getSimpleName();
 
     AppRunner mAppRunner;
 
@@ -47,7 +48,7 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
     protected int type = -1;
     protected boolean isEnabled = false;
 
-    public CustomSensorManager(AppRunner appRunner) {
+    public PCustomSensorManager(AppRunner appRunner) {
         mAppRunner = appRunner;
         mSensormanager = (SensorManager) mAppRunner.getAppContext().getSystemService(Context.SENSOR_SERVICE);
     }
@@ -88,14 +89,17 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
         }
     }
 
+    @PhonkMethod
     public float max() {
         return sensor.getMaximumRange();
     }
 
+    @PhonkMethod
     public float power() {
         return sensor.getPower();
     }
 
+    @PhonkMethod
     public float resolution() {
         return sensor.getResolution();
     }
@@ -105,10 +109,12 @@ public abstract class CustomSensorManager implements WhatIsRunningInterface {
         return mSensormanager.getDefaultSensor(type) != null;
     }
 
+    @PhonkMethod
     public Sensor info() {
         return mSensormanager.getDefaultSensor(type);
     }
 
+    @PhonkMethod
     public abstract String units();
 
     public void __stop() {

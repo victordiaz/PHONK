@@ -25,13 +25,16 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.content.Context;
 import android.widget.RadioGroup;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
+@PhonkClass
 public class PRadioButtonGroup extends RadioGroup {
 
-    public PRadioButtonGroup(Context context) {
-        super(context);
+    public PRadioButtonGroup(AppRunner appRunner) {
+        super(appRunner.getAppContext());
         orientation("vertical");
     }
 
@@ -60,12 +63,14 @@ public class PRadioButtonGroup extends RadioGroup {
         clearCheck();
     }
 
-    public void onSelected(final ReturnInterface cb) {
+    public PRadioButtonGroup onSelected(final ReturnInterface cb) {
         this.setOnCheckedChangeListener((group, checkedId) -> {
             ReturnObject r = new ReturnObject(PRadioButtonGroup.this);
             PRadioButton rb = findViewById(checkedId);
             r.put("selected", rb.getText());
             cb.event(r);
         });
+
+        return this;
     }
 }

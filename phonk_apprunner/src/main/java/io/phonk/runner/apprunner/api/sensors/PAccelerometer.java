@@ -27,13 +27,15 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.utils.MLog;
 
-public class PAccelerometer extends CustomSensorManager {
-
+@PhonkClass(mergeFrom = "CustomSensorManager")
+public class PAccelerometer extends PCustomSensorManager {
     private final static String TAG = PAccelerometer.class.getSimpleName();
 
     public PAccelerometer(AppRunner appRunner) {
@@ -57,6 +59,7 @@ public class PAccelerometer extends CustomSensorManager {
                     float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
                     r.put("force", force);
                     mCallback.event(r);
+                    MLog.d(TAG, "accelerometer changed");
                 }
             }
 

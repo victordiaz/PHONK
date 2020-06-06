@@ -34,6 +34,7 @@ import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -43,10 +44,11 @@ import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PSimpleHttpServer extends NanoHTTPD {
     public static final String TAG = PSimpleHttpServer.class.getSimpleName();
-    public Handler mHandler = new Handler(Looper.getMainLooper());
 
+    public Handler mHandler = new Handler(Looper.getMainLooper());
     private AppRunner mAppRunner;
 
     private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {

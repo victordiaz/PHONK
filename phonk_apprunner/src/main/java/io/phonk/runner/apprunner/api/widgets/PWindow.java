@@ -36,8 +36,8 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PWindow extends RelativeLayout {
+    private static final String TAG = PWindow.class.getSimpleName();
 
-    private static final String TAG = "PWindow";
     private final int currentColor;
     private final int viewCount = 0;
     private final Context c;

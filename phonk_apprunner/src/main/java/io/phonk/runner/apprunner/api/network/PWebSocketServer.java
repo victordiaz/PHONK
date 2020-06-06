@@ -36,13 +36,14 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Collections;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
+@PhonkClass
 public class PWebSocketServer extends ProtoBase {
-
     public Handler mHandler = new Handler(Looper.getMainLooper());
     WebSocketServer websocketServer;
     private ReturnInterface mCallbackfn;

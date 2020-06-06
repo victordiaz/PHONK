@@ -49,7 +49,6 @@ import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.server.model.ProtoFile;
 
 public class EditorActivity extends BaseActivity {
@@ -313,7 +312,7 @@ public class EditorActivity extends BaseActivity {
                 bundle.putString(FileManagerFragment.ROOT_FOLDER, mCurrentProject.getFullPath());
 
                 // we pass the initial route to hide
-                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.getPathPrev());
+                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.geFoldertPath());
                 fileFragment.setArguments(bundle);
 
                 if (isTablet) {
@@ -400,8 +399,6 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void setProjectTitleAndSubtitle(String projectName, String fileName) {
-        MLog.d("qq2", "project: " + projectName);
-
         mToolbar.setTitle(projectName);
         mToolbar.setSubtitle(fileName);
     }

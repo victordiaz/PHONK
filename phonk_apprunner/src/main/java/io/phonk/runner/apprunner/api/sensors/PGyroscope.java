@@ -27,14 +27,15 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
-public class PGyroscope extends CustomSensorManager {
-
+@PhonkClass
+public class PGyroscope extends PCustomSensorManager {
     private final static String TAG = PGyroscope.class.getSimpleName();
 
     public PGyroscope(AppRunner appRunner) {

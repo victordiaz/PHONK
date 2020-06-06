@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -39,12 +40,13 @@ import io.phonk.runner.base.utils.MLog;
 
 //current source :http://androiddev.orkitra.com/?p=28
 
+@PhonkClass
 public class PFtpClient extends ProtoBase {
+    String TAG = PFtpClient.class.getSimpleName();
 
     public static String workDir;
 
     private FTPClient mFTPClient;
-    String TAG = "PFtpClient";
     Boolean isConnected = false;
 
     public PFtpClient(AppRunner appRunner) {

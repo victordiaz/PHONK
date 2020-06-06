@@ -34,14 +34,16 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
+@PhonkClass
 public class PWebSocketClient extends ProtoBase {
+    private static final String TAG = PWebSocketClient.class.getSimpleName();
 
-    private static final String TAG = "PWebSocketClient";
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private ReturnInterface mCallbackfn;
     private WebSocketClient mWebSocketClient = null;
@@ -80,7 +82,6 @@ public class PWebSocketClient extends ProtoBase {
                     });
 
                     //Log.d(TAG, "onMessage client");
-
                 }
 
                 @Override

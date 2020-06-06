@@ -24,6 +24,7 @@ package io.phonk.runner.apprunner.api.other;
 
 import android.annotation.SuppressLint;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import processing.android.PFragment;
 import processing.cardboard.PCardboard;
@@ -31,6 +32,7 @@ import processing.core.PApplet;
 
 
 @SuppressLint("ValidFragment")
+@PhonkClass
 public class PProcessing extends PFragment {
     private static final java.lang.String TAG = PProcessing.class.getSimpleName();
     private final PSketch p;

@@ -29,13 +29,14 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 
+@PhonkClass
 public class PAudioRecorder extends ProtoBase {
-
     MediaRecorder recorder;
     ProgressDialog mProgressDialog;
     boolean showProgress = false;

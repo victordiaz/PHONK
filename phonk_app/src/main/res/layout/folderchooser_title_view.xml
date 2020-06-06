@@ -38,6 +38,6 @@
         android:gravity="center_horizontal"
         android:text="Large Text"
         android:textAlignment="center"
-        android:textColor="@color/phonk_accentColor_primary"
+        android:textColor="@color/phonk_colorPrimary"
         android:textStyle="bold" />
 </RelativeLayout>

@@ -23,9 +23,11 @@
 package io.phonk.runner.base.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -52,12 +54,29 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.R;
 import io.phonk.runner.apprunner.AppRunnerSettings;
+import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
+import io.phonk.runner.apprunner.permissions.PermissionNotGrantedException;
 
 public class AndroidUtils {
 
-    private static final String TAG = "AndroidUtils";
+    private static final String TAG = AndroidUtils.class.getSimpleName();
+
+    public static boolean checkFeature(AppRunnerActivity c, String what, String feature, String permission) {
+        boolean ret = false;
+
+        PackageManager pm = c.getPackageManager();
+
+        // check if available
+        if (!pm.hasSystemFeature(feature)) throw new FeatureNotAvailableException(what);
+        if (!c.checkPermission(permission))
+            throw new PermissionNotGrantedException(what);
+        ret = true;
+
+        return ret;
+    }
 
     public static void takeScreenshot(View v) {
         // create bitmap screen capture

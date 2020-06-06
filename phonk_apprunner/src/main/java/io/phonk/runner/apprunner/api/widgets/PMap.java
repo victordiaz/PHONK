@@ -51,13 +51,14 @@ import java.util.Map;
 
 import io.phonk.runner.BuildConfig;
 import io.phonk.runner.R;
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PMap extends MapView {
-
     final String TAG = PMap.class.getSimpleName();
 
     private IMapController mapController = null;

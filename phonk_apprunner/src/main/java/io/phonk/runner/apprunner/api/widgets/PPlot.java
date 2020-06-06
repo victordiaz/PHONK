@@ -29,15 +29,18 @@ import android.os.SystemClock;
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PPlot extends PCustomView implements PViewMethodsInterface {
-
     private static final String TAG = PPlot.class.getSimpleName();
+
     private final Handler handler;
     private final Runnable r;
+    private final int mStrokeWeight;
 
     StyleProperties props = new StyleProperties();
     private Styler styler;
@@ -63,6 +66,8 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         styler.apply();
 
         mAppRunner.whatIsRunning.add(this);
+
+        mStrokeWeight = AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 1);
 
         MLog.d(TAG, "starting runnable");
 
@@ -109,7 +114,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
 
     OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
-        public void event(PCanvasM c) {
+        public void event(PCanvas c) {
             mWidth = c.width;
             mHeight = c.height;
             // MLog.d(TAG, "paint ");
@@ -126,7 +131,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
             */
 
             c.stroke("#55000000"); // styler.plotColor);
-            c.strokeWidth(1);           // center line
+            c.strokeWidth(mStrokeWeight);           // center line
             c.line(0, c.height / 2, c.width, c.height / 2);
 
             if (!arrayViz.isEmpty()) {
@@ -135,7 +140,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
                 c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2)); // styler.plotWidth);
                 c.noFill();
                 c.strokeWidth(styler.plotWidth);
-                c.stroke(styler.plotColor); // styler.plotColor);
+                c.stroke(styler.plotColor);
 
                 c.beginPath();
                 p = arrayViz.get(0);
@@ -168,6 +173,12 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
             c.textAlign("right");
 
             c.text(name, mWidth - 20, 50);
+
+            c.noFill();
+            c.stroke(styler.borderColor);
+            c.strokeWidth(5);
+            c.cornerMode(true);
+            c.rect(0, 0, c.width, c.height);
         }
     };
 
@@ -251,7 +262,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     }
 
     public void __stop() {
-        // handler.removeCallbacks(r);
+        handler.removeCallbacks(r);
     }
 
     private long now() {

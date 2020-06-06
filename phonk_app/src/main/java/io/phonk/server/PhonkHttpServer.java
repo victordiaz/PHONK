@@ -243,7 +243,6 @@ public class PhonkHttpServer extends NanoHTTPD {
                     res = newFixedLengthResponse("OK");
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                 }
-
             } else if (uriSplitted[PROJECT_ACTION].equals("save")) {
                 // MLog.d(TAG, "project save");
                 String json;
@@ -252,10 +251,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 try {
                     session.parseBody(map);
                     if (map.isEmpty()) return newFixedLengthResponse("BUG");
-
                     json = map.get("postData");
-                    // MLog.d(TAG, "map " + map.toString());
-                    // MLog.d(TAG, "post data " + json);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return newFixedLengthResponse("NOP");
@@ -295,27 +291,72 @@ public class PhonkHttpServer extends NanoHTTPD {
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
-                String path = "";
-                // PhonkScriptHelper.deleteFileOrFolder(path);
+                MLog.d(TAG, "delete");
+                PhonkScriptHelper.deleteFileOrFolder(p.getFullPath());
+                res = newFixedLengthResponse("OK");
+            } else if (uriSplitted[PROJECT_ACTION].equals("rename")) {
+                MLog.d(TAG, "rename");
 
+                String json;
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
+
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+                if (PhonkScriptHelper.renameProject(p, neo.newName)) {
+                    res = newFixedLengthResponse("OK");
+                } else {
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
+            } else if (uriSplitted[PROJECT_ACTION].equals("clone")) {
+                MLog.d(TAG, "clone");
+
+                String json;
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
+
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+                if (PhonkScriptHelper.cloneProject(p, neo.newName)) {
+                    res = newFixedLengthResponse("OK");
+                } else {
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
             } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
                 MLog.d(TAG, "run --> " + p.getFolder());
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
-
                 res = newFixedLengthResponse("OK");
-
             } else if (uriSplitted[PROJECT_ACTION].equals("stop_all_and_run")) {
                 MLog.d(TAG, "stop_all_and_run --> ");
-
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
-
                 res = newFixedLengthResponse("STOP_AND_RUN");
             } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
                 MLog.d(TAG, "stop --> ");
-
-                // MLog.d(TAG, "stop");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
-
                 res = newFixedLengthResponse("OK");
             }
         } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
@@ -381,7 +422,9 @@ public class PhonkHttpServer extends NanoHTTPD {
                 String json = null;
                 try {
                     session.parseBody(map);
-                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    if (map.isEmpty()) {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
                     json = map.get("postData");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -413,7 +456,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                         res = newFixedLengthResponse("OK");
 
                     } else {
-                        res = newFixedLengthResponse("NOP");
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
                     }
                 }
 

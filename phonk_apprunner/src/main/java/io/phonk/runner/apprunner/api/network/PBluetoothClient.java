@@ -37,6 +37,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -46,8 +47,8 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterface {
-
     private final PBluetooth mPBluetooth;
     private ReturnInterface mCallbackConnected;
     private ReturnInterface mCallbackData;

@@ -31,10 +31,9 @@
     <style name="LicenseCardTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/license_header</item>
+        <item name="android:textColor">@color/primaryAccent</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:padding">@dimen/license_card_title_padding</item>
-        <item name="android:textSize">20sp</item>
     </style>
 
     <!-- Styler for the body of each license card -->
@@ -42,7 +41,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/phonk_textColor_secondary</item>
-        <item name="android:textSize">16sp</item>
         <item name="android:padding">@dimen/license_card_title_padding</item>
     </style>
 

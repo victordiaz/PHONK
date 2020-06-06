@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -53,8 +54,8 @@ import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
 import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+@PhonkClass
 public class PLocation extends ProtoBase {
-
     protected static final String TAG = PLocation.class.getSimpleName();
 
     LocationManager locationManager;

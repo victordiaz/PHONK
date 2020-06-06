@@ -26,6 +26,7 @@ import android.hardware.usb.UsbDevice;
 
 import androidx.annotation.NonNull;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
@@ -35,14 +36,14 @@ import jp.kshoji.driver.midi.device.MidiInputDevice;
 import jp.kshoji.driver.midi.device.MidiOutputDevice;
 import jp.kshoji.driver.midi.util.UsbMidiDriver;
 
+@PhonkClass
 public class PMidi extends ProtoBase {
-
     private static final String TAG = PMidi.class.getSimpleName();
+
     private ReturnInterface mConnectionCallback;
     private ReturnInterface mMidiEvent;
 
     private void callbackData(final String deviceAddress, final int cable, final int channel, final int function, final int value) {
-
         MLog.d(TAG, "new val + " + cable + " " + channel + " " + function + " " + value);
         mHandler.post(() -> {
             ReturnObject o = new ReturnObject();

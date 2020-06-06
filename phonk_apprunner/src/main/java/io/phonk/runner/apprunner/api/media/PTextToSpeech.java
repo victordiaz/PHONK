@@ -34,9 +34,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
+@PhonkClass
 public class PTextToSpeech {
     private static final String TAG = PTextToSpeech.class.getSimpleName();
 

@@ -50,6 +50,8 @@ public class PLinearLayout extends LinearLayout {
         styler.apply();
 
         mLp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
+        orientation("vertical");
+
         setLayoutParams(mLp);
     }
 

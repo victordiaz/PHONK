@@ -24,9 +24,11 @@ package io.phonk.runner.apprunner.api.other;
 
 import android.os.Handler;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 
+@PhonkClass
 public class PDelay implements WhatIsRunningInterface {
     private final AppRunner mAppRunner;
     private final int delay;

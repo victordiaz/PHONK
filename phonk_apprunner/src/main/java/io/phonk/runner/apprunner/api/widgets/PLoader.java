@@ -22,37 +22,28 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.view.SurfaceView;
+import android.content.Context;
+import android.widget.ProgressBar;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 
+@PhonkClass
+public class PLoader extends ProgressBar {
 
-public class PCanvas2 extends SurfaceView {
-
-    private static final String TAG = PCanvas2.class.getSimpleName();
-
-    protected final AppRunner mAppRunner;
-
-    public interface OnSetupCallback {
-        void event(PCanvas2 c);
-    }
-
-    public interface OnDrawCallback {
-        void event(PCanvas2 c);
-    }
-
-    public OnSetupCallback setup;
-    public OnDrawCallback draw;
-
-
-    public PCanvas2(AppRunner appRunner, int w, int h) {
-        this(appRunner);
-    }
-
-    public PCanvas2(AppRunner appRunner) {
+    public PLoader(AppRunner appRunner) {
         super(appRunner.getAppContext());
-        mAppRunner = appRunner;
+        // setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
     }
 
+    public PLoader(Context a, int style) {
+        super(a, null, style);
+        this.setProgress(0);
+    }
+
+    public PLoader progress(float val) {
+        this.setProgress((int) val);
+        return this;
+    }
 
 }

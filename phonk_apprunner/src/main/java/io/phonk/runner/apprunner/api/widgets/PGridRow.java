@@ -27,9 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-/**
- * Created by victormanueldiazbarrales on 29/07/14.
- */
+import io.phonk.runner.apidoc.annotation.PhonkClass;
+
+@PhonkClass
 public class PGridRow extends LinearLayout {
 
     public PGridRow(Context context, int cols) {

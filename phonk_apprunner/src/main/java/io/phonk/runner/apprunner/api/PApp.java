@@ -158,7 +158,7 @@ public class PApp extends ProtoBase {
     public void load(String filename) {
         String code = FileIO.loadStringFromFile(getAppRunner().getProject().getFullPathForFile(filename));
 
-        // getAppRunner().interp.eval(code);
+        getAppRunner().interp.eval(code);
     }
 
     /*

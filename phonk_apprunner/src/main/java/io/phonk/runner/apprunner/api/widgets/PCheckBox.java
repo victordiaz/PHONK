@@ -28,14 +28,15 @@ import android.view.View;
 
 import java.util.Map;
 
+import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
+@PhonkClass
 public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox implements PViewMethodsInterface, PTextInterface {
-
     public StyleProperties props = new StyleProperties();
     public Styler styler;
 
@@ -57,7 +58,7 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     }
 
     @Override
-    public View font(Typeface font) {
+    public View textFont(Typeface font) {
         this.setTypeface(font);
         return this;
     }

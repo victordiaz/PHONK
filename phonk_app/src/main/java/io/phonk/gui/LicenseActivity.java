@@ -84,7 +84,7 @@ public class LicenseActivity extends BaseActivity {
                 for (int i = 0; i < mLicenseFiles.length; i++) {
                     View v = getLayoutInflater().inflate(R.layout.license_view, null);
                     TextView txtView = v.findViewById(R.id.license_title);
-                    txtView.setText(mLicenseFiles[i]);
+                    txtView.setText(mLicenseFiles[i].trim());
 
                     myAdapter.notifyDataSetChanged();
                     mLicenseList.invalidateViews();

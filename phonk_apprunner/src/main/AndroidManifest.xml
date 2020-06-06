@@ -114,10 +114,7 @@
             <intent-filter>
                 <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
             </intent-filter>
-
-
         </activity>
-
 
         <service
             android:name="io.phonk.runner.AppRunnerLauncherService"
@@ -169,6 +166,5 @@
         </receiver>
     </application>
 
-    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core" />
-
+    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core, com.welie.blessed" />
 </manifest>

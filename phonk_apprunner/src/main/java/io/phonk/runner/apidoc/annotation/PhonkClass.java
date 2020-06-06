@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,32 +15,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-package io.phonk.runner.apprunner.api.widgets;
+package io.phonk.runner.apidoc.annotation;
 
-import android.content.Context;
-import android.widget.ProgressBar;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class PProgressBar extends ProgressBar {
-
-    public PProgressBar(Context context) {
-        super(context);
-
-        // setProgressDrawable(getResources().getDrawable(R.drawable.ui_seekbar_progress));
-    }
-
-    public PProgressBar(Context a, int style) {
-        super(a, null, style);
-
-        this.setProgress(0);
-    }
-
-    public PProgressBar progress(float val) {
-        this.setProgress((int) val);
-        return this;
-    }
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface PhonkClass {
+    String description() default "";
+    String example() default "";
+    String mergeWith() default "";
+    String mergeFrom() default "";
 }

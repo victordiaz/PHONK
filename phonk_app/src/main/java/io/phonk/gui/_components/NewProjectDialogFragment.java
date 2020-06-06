@@ -36,6 +36,7 @@ import android.widget.TextView.OnEditorActionListener;
 import androidx.fragment.app.DialogFragment;
 
 import io.phonk.R;
+import io.phonk.runner.base.utils.MLog;
 
 public class NewProjectDialogFragment extends DialogFragment implements OnEditorActionListener {
 
@@ -46,9 +47,7 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
     private EditText mEditText;
     private NewProjectDialogListener mListener;
 
-
     public NewProjectDialogFragment() {
-
     }
 
     @Override
@@ -74,18 +73,16 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (EditorInfo.IME_ACTION_DONE == actionId) {
-            // Return input text to activity
-            doOK();
-            this.dismiss();
-            return true;
-        }
-        return false;
+        if (EditorInfo.IME_ACTION_DONE != actionId) return false;
+
+        // Return input text to activity
+        doOK();
+        this.dismiss();
+        return true;
     }
 
     public void setListener(NewProjectDialogListener listener) {
         this.mListener = listener;
-
     }
 
     public void doOK() {

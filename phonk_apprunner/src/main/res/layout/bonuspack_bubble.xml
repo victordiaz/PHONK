@@ -73,7 +73,7 @@
             android:layout_marginTop="2dp"
             android:maxEms="17"
             android:text="Description"
-            android:textColor="@color/phonk_backgroundColor_primary"
+            android:textColor="@color/phonk_backgroundColor"
             android:textSize="12dp" />
 
         <TextView
