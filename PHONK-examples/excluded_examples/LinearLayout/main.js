@@ -7,14 +7,14 @@
 ui.addTitle(app.name)
 ui.addSubtitle('Layout that organizes the widgets horizontal or vertically')
 
-var btn1 = ui.newImage('patata.png')
-var btn2 = ui.newButton('btn 2')
-var btn3 = ui.newButton('btn 3')
+var img1 = ui.newView('image').load('patata.png')
+var btn2 = ui.newView('button').text('btn 2')
+var btn3 = ui.newView('button').text('btn 3')
 
 var layout = ui.addLinearLayout(0, 0.4, 1, 0.1)
 layout.props.background = '#22FFFFFF'
 layout.orientation('horizontal')
-layout.add(btn1, 0.2)
+layout.add(img1, 0.2)
 layout.add(btn2, 0.4)
 layout.add(btn3, 0.4)
 

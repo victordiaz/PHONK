@@ -20,12 +20,12 @@ var LED = function (x, y, w, h) {
 
   this.canvas.draw = function (c) {
     c.clear()
-    c.mode(false)
+    c.cornerMode(false)
 
     c.stroke(255, 255, 255, 255)
     c.strokeWidth(10)
 
-    if (that.isOn)  c.fill(0, 255, 0, 255)
+    if (that.isOn) c.fill(0, 255, 0, 255)
     else c.fill(255, 0, 0, 255)
 
     var size = c.width > c.height ? c.height : c.width

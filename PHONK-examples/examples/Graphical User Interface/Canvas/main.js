@@ -7,11 +7,14 @@
 
 ui.addTitle(app.name)
 
-var canvas = ui.addCustomView(0, 0, 1, 1)
+var canvas = ui.addCanvas(0, 0, 1, 1)
 
+// inside canvas we use pixels as a metric
+// the method util.dpToPixels(pxvalue)
+// is very handy in many ocassions
 canvas.draw = function (c) {
   c.clear()
-  c.mode(false)
+  c.cornerMode(false)
   c.fill(255, 255, 255, 150)
 
   for (var i = 0; i < 100; i++) {

@@ -5,7 +5,7 @@
 ui.addTitle(app.name)
 ui.addSubtitle('MQTT client example. Edit the values to connect to your server.')
 
-var clientId = 'proto'
+var clientId = 'phonk'
 var host = '192.168.43.172'
 var port = 1883
 var username = null

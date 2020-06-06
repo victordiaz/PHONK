@@ -21,7 +21,7 @@ ui.addToggle('Start Bluetooth Server', 0.1, 0.72, 0.80, 0.1).onChange(function (
 })
 
 // send bluetooth messages
-var input = ui.addInput('message', 0.1, 0.85, 0.58, 0.1)
+var input = ui.addInput(0.1, 0.85, 0.58, 0.1).hint('message')
 var send = ui.addButton('Send', 0.7, 0.85, 0.2, 0.1).onClick(function () {
   connectedDevice.send(input.text() + '\n')
 })
@@ -37,4 +37,4 @@ btServer.onNewConnection(function (e) {
 
 btServer.onNewData(function (e) {
   txt.add('recevided from ' + e.device.mac + ': ' + e.data)
- })
+})
