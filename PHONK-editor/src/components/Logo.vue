@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-@import (reference) "../assets/css/variables.less";
+@import (reference) '../assets/css/variables.less';
 
 img {
   height: 22px;
@@ -25,7 +25,7 @@ img {
 
 /* logo */
 h1.logo {
-  font-family: 'Roboto Condensed';
+  font-family: 'Roboto Mono';
   font-size: 1em;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   font-weight: 100;
@@ -50,5 +50,4 @@ h1.logo {
     font-weight: 500;
   }
 }
-
 </style>

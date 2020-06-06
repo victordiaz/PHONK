@@ -94,7 +94,7 @@ ul {
 li {
   display: inline-flex;
   align-items: center;
-  height: 32px;
+  padding: 0.5em 0;
   text-transform: capitalize;
 
   p {

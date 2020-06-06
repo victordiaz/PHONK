@@ -14,21 +14,33 @@
 
       <div class="section">
         <h3>Load a project</h3>
-        <transition name="upanim" mode="out-in">
-          <div v-show="isShowingActions" class="actionable">
+          <div v-show="showingAction" class="actionable">
             <!-- <button>rename</button>-->
+            <transition name="scaleanim" mode="out-in">
 
-            <div v-if="!isShowingConfirmation">
-              <button v-on:click="deleteAction">delete</button>
-              <button v-on:click="cancelActions">cancel</button>
-            </div>
-            <div v-else class="confirmation">
-              <p>Are you sure?</p>
-              <button v-on:click="deleteActionSubmit">ok</button>
-              <button v-on:click="cancelActions">cancel</button>
-            </div>
+              <div v-if="showingAction === 'general'" key="general" class = "confirmation">
+                <button v-on:click="setAction('clone')">clone</button>
+                <button v-on:click="setAction('rename')">rename</button>
+                <button v-on:click="setAction('delete')">delete</button>
+                <button v-on:click="cancelActions">cancel</button>
+              </div>
+              <div v-else-if = "showingAction === 'delete'" class="confirmation" key="delete">
+                <p>Are you sure?</p>
+                <button v-on:click="deleteActionSubmit">delete</button>
+                <button v-on:click="backActions">cancel</button>
+              </div>
+              <div v-else-if = "showingAction === 'rename'" class = "confirmation" key = "rename">
+                <input v-model = "newName" placeholder="New name..." class = "project-input"/>
+                <button v-on:click="renameActionSubmit">rename</button>
+                <button v-on:click="backActions">cancel</button>
+              </div>
+              <div v-else-if = "showingAction === 'clone'" class = "confirmation" key = "clone">
+                <input v-model = "newName" placeholder="Clone name..." class = "project-input"/>
+                <button v-on:click="cloneActionSubmit">clone</button>
+                <button v-on:click="backActions">cancel</button>
+              </div>
+            </transition>
           </div>
-        </transition>
 
         <div v-if="store.state.projects" id="project-load">
           <div class="left">
@@ -105,9 +117,9 @@ export default {
         folder: '',
         fullpath: ''
       },
-      isShowingActions: false,
-      isShowingConfirmation: false,
-      actionOnProject: null
+      showingAction: null,
+      actionOnProject: null,
+      newName: ''
     }
   },
   computed: {
@@ -178,21 +190,42 @@ export default {
     },
     openActions: function (f) {
       // console.log('openActions', f)
-      this.isShowingActions = true
+      this.showingAction = 'general'
       this.actionOnProject = f
     },
-    deleteAction: function () {
-      this.isShowingConfirmation = true
+    cloneAction: function () {
+    },
+    setAction: function (action) {
+      this.showingAction = action
     },
     deleteActionSubmit: function () {
-      if (this.actionOnProject) {
-        // TODO api call
+      console.log('deleteSubmit')
+      Store.project_delete(this.actionOnProject.path)
+    },
+    renameActionSubmit: function () {
+      console.log('renameSubmit')
+
+      if (this.newName !== '') {
+        Store.project_rename(this.actionOnProject.path, this.newName)
+        this.backActions()
       }
     },
+    cloneActionSubmit: function () {
+      console.log('cloneSubmit')
+
+      if (this.newName !== '') {
+        Store.project_clone(this.actionOnProject.path, this.newName)
+        this.backActions()
+      }
+    },
+    backActions: function () {
+      this.showingAction = 'general'
+      this.newName = ''
+    },
     cancelActions: function () {
-      this.isShowingActions = false
-      this.isShowingConfirmation = false
+      this.showingAction = null
       this.actionOnProject = null
+      this.newName = ''
     }
   },
   mounted () {
@@ -235,6 +268,21 @@ export default {
     margin: 8px 12%;
   }
 
+  .project-input {
+    flex: 2;
+    width: 100%;
+    min-width: 20%;
+    outline: none;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    color: black;
+    font-size: 1rem;
+    background: white;
+    padding: 10px;
+    border: 1px solid @accentColor_1;
+  }
+
   h3 {
     // text-transform: uppercase;
     font-weight: 400;
@@ -254,17 +302,31 @@ export default {
     .actionable {
       position: absolute;
       top: -10px;
-      right: 120px;
+      right: 12%;
       display: flex;
       flex-direction: row;
       align-items: center;
+      height: 38px;
+      overflow: hidden;
+      justify-content: end;
+
+      button {
+        padding: 12px 8px;
+      }
 
       p {
         padding: 5px;
       }
 
       .confirmation {
-        display: inherit;
+        align-items: center;
+        // background: @accentColor;
+        color: @accentColor;
+        display: flex;
+
+        input {
+          // color: white;
+        }
       }
     }
   }
@@ -334,8 +396,8 @@ export default {
           display: block;
           margin: 0;
           position: absolute;
-          padding: 0 20px;
-          right: 10px;
+          padding: 12px;
+          right: 0px;
           // background: rgba(255, 255, 255, 0.5);
         }
       }
@@ -412,7 +474,6 @@ export default {
     }
 
     ul {
-      padding: 0.5em;
       font-weight: 500;
       height: 100%;
     }

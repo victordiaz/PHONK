@@ -11,6 +11,7 @@
 .scrollbar {
   scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.1);
   scrollbar-width: thin;
+  // scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar {
@@ -25,6 +26,26 @@
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 2px;
+}
+
+
+.placeHolder {
+  color: @accentColor_1;
+  font-family: 'Roboto Mono';
+  font-size: 1rem;
+}
+
+/* do not group these rules */
+*::-webinput-placeholder {
+  .placeHolder;
+}
+*::-moz-placeholder {
+  /* FF 19+ */
+  .placeHolder;
+}
+*:-ms-input-placeholder {
+  /* IE 10+ */
+  .placeHolder;
 }
 
 /*

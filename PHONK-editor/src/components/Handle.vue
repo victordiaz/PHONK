@@ -90,20 +90,20 @@ export default {
 
     &:hover {
       cursor: col-resize;
-      background: @accentColor_1;
+      background: @accentColor;
     }
 
     &:active {
-      background: @accentColor;
+      background: @accentColor_1;
     }
   }
 
   &.vertical {
-    width: 8px;
+    width: 4px;
     height: calc(~'100%');
     right: 0px;
     top: 0px;
-    margin: -3px;
+    margin-right: -4px;
     z-index: 2;
 
     &:hover {
@@ -113,7 +113,7 @@ export default {
 
   &.horizontal {
     width: 100%;
-    height: 8px;
+    height: 4px;
     width: calc(~'100%');
     margin-top: -2px;
 

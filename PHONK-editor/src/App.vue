@@ -94,7 +94,7 @@ import Banner from './components/views/Banner'
 import FileManager from './components/FileManager'
 import Console from './components/Console'
 import Dashboard from './components/Dashboard'
-import Documentation from './components/Documentation'
+import Documentation from './components/documentation/Documentation'
 
 import ProjectLoad from './components/ProjectLoad'
 import Preferences from './components/Preferences'
@@ -752,9 +752,10 @@ button {
         // overflow-y: hidden;
         overflow: hidden;
         height: 100%;
+        
 
         & > * {
-          padding: 10px;
+          // padding: 10px;
         }
       }
     }
@@ -804,6 +805,21 @@ button {
 .upanim2-enter-active,
 .upanim2-leave-active {
   transition: all 0.2s ease-in-out;
+}
+
+.info-anim-item {
+  transition: all 0.3s;
+  display: inline-block;
+  // margin-right: 10px;
+}
+.info-anim-enter, .info-anim-leave-to
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translate3d(30px, 0, 0);
+}
+.info-anim-leave-active {
+  transform: translate3d(300px, 0, 0);
+  // position: absolute;
 }
 
 /*
@@ -868,8 +884,22 @@ button {
   #toolbar {
     button {
       max-width: 200px;
-      direction: rtl;
     }
+  }
+}
+
+@media screen and (max-width: 525px) {
+  .left_side { display: none !important; }
+   #toolbar {
+     .central_side {
+       justify-content: left !important;
+     }
+     .project_actions button {
+       min-width: 100px !important;
+     }
+     .folder {
+       display: none;
+     }
   }
 }
 

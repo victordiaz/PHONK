@@ -81,7 +81,7 @@ export default {
     padding: 5px;
 
     .key {
-      font-weight: 800;
+      // font-weight: 800;
     }
 
     .value {
@@ -131,11 +131,12 @@ export default {
   }
 
   h3 {
-    padding-bottom: 0.4em;
+    margin-bottom: 0.2em;
   }
 
   .block {
     padding: 0.4em 0;
+    margin-bottom: 0.4em;
   }
 }
 </style>

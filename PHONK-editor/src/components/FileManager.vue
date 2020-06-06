@@ -654,6 +654,7 @@ export default {
       td {
         padding: 0.5em;
         line-height: 1.2em;
+        font-weight: 300;
         // white-space: nowrap;
         // overflow: hidden;
         // text-overflow: ellipsis;
@@ -819,6 +820,7 @@ export default {
 
     select {
       // text-transform: uppercase;
+      color: @backgroundColor;
       background: transparent;
       border: 0px;
       padding: 10px;

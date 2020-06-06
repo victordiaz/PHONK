@@ -35,8 +35,6 @@ export default {
   font-size: 1rem;
   z-index: 5;
   text-align: center;
-  // width: 402px;
-  // height: 100%;
   vertical-align: middle;
   display: flex;
   justify-content: center;
@@ -51,8 +49,8 @@ export default {
     margin: 20px;
     color: @primaryTextColor;
     line-height: 1.5em;;
-    // border-radius: 58px;
-    border: 1px solid @secondaryColor;
+    border: 1px solid @accentColor;
+    // font-weight: 300;
   }
 
   button {
@@ -64,6 +62,7 @@ export default {
     text-transform: uppercase;
     background: none;
     color: @accentColor;
+    font-size: 0.9rem;
 
     &:hover {
       color: lighten(@accentColor, 30%);

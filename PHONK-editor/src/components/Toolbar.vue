@@ -45,12 +45,15 @@
     </div>
 
     <div class="right_side">
-      <transition name="upanim" mode="out-in">
-        <div v-if="infoMsg.isShowing" class="app_info_msg">
-          <span class="icon_left material-icons">{{ infoMsg.icon }}</span>
-          <span>{{ infoMsg.text }}</span>
-        </div>
-      </transition>
+      <div class = "app_info_msg_wrapper">
+        <transition-group name="info-anim" mode="out-in">
+          <div v-for = "infoMsg in infoQueue" class="app_info_msg info-anim-item" :key="infoMsg.id">
+            <span class="icon_left material-icons">{{ infoMsg.icon }}</span>
+            <span class = "msg">{{ infoMsg.text }}</span>
+          </div>
+        </transition-group>
+      </div>
+
       <!--
       <button class="material-icons icon" v-show="true" v-on:click="toggle_dashboard">dashboard</button>
       -->
@@ -109,7 +112,9 @@ export default {
       saveShortcut: false,
       saveAsShortcut: false,
       sharedState: Store.state,
-      infoMsg: { text: 'message...', icon: null, isShowing: false },
+      infoQueue: [],
+      infoQueueCount: 0,
+      // infoMsg: { text: 'message...', icon: null, isShowing: false },
       isProjectRunning: false,
       device_properties: {}
     }
@@ -125,24 +130,29 @@ export default {
       // console.log('toggling dashboard')
     },
     project_saved: function () {
-      this.show_info({ icon: 'save', text: 'Saved' })
+      // this.show_info({ icon: 'save', text: 'Saved' })
     },
     project_action: function (state) {
-      if (state === '/run') {
+      console.log('-->', state)
+      if (state === '/stop_all_and_run') {
         this.show_info({ icon: 'play_arrow', text: 'Running...' })
       } else {
         this.show_info({ icon: 'stop', text: 'Stopping...' })
       }
     },
     show_info (msg) {
-      this.infoMsg = {
+      // this.infoQueue.shift()
+
+      let infoMsg = {
+        id: this.infoQueueCount++,
         icon: msg.icon,
-        text: msg.text,
-        isShowing: true
+        text: msg.text
       }
+      this.infoQueue.push(infoMsg)
 
       setTimeout(() => {
-        this.infoMsg.isShowing = false
+        // infoMsg.isShowing = false
+        this.infoQueue.shift()
       }, 2000)
     },
     device_update: function (data) {
@@ -224,17 +234,32 @@ export default {
   // showing query (show waiting icon) => showing result (show tick result or convert to red if fail)
   // save / load / trying to reconnect
 
+  .app_info_msg_wrapper {
+    position: absolute;
+    z-index: 20;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    top: 9px;
+  }
+
   .app_info_msg {
     font-family: 'Roboto Mono';
     font-size: 0.7em;
     font-weight: 400;
-    margin-right: 20px;
+    margin-bottom: 10px;
     color: white;
     padding: 5px 15px;
-    background: rgba(0, 0, 0, 0.3);
+    // background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     display: flex;
     align-items: center;
+    // width: 125px;
+
+    background: #ffc709;
+    color: #272822;
+    font-size: 0.8rem;
 
     .icon_left,
     .icon_right {
@@ -245,6 +270,12 @@ export default {
     }
     .icon_right {
       color: green;
+    }
+
+    .msg {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      // overflow: hidden;
     }
   }
 
@@ -315,7 +346,7 @@ export default {
       display: inline-flex;
       align-items: center;
       font-family: @editorFont;
-      color: #ffffffa8;
+      color: #ffffff77;
       min-width: 300px;
     }
 

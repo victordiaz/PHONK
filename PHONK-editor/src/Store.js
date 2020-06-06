@@ -78,12 +78,7 @@ store.project_list_all = function () {
 
   Vue.axios.get(getUrlWebapp('/api/project/list/'), query).then(function (response) {
     // console.log('project_list_got', response.data)
-    // store.state.projects = response.data
     Vue.set(store.state, 'projects', response.data)
-    // store.clearArray(store.state.projects)
-    // store.state.projects.push(...response.data)
-
-    // store.state.projects = Object.assign({}, response.data)
     store.emit('project_listed_all')
   }, function (response) {
     // console.log(TAG + ': project_list_all(status) > ' + response.status)
@@ -96,15 +91,20 @@ store.project_list_all = function () {
 store.project_load = function (uri) {
   var query = {}
 
+  store.emit('show_info', { icon: 'description', text: 'Loading Project' })
+
   Vue.axios.get(getUrlWebapp('/api/project' + uri + '/load'), query).then(function (response) {
     // console.log(TAG + ': project_load(status) > ' + response.status)
     store.state.current_project = response.data
     store.emit('project_loaded', true)
     store.emit('project_files_list')
     store.load_project_preferences()
+    store.emit('show_info', { icon: 'description', text: 'Loaded' })
     // store.list_files_in_path('')
   }, function (response) {
     store.emit('project_loaded', false)
+    store.emit('show_info', { icon: 'error', text: 'Error loading' })
+
     // console.log(TAG + ': project_load(status) > ' + response.status)
   })
 }
@@ -137,8 +137,6 @@ store.list_files_in_path = function (p) {
     store.emit('project_files_list', true)
   }, function (response) {
     store.emit('project_files_list', false)
-
-    // console.log('list_files_in_path(status) > ' + response.status)
   })
 }
 
@@ -183,16 +181,16 @@ store.project_files_delete = function (files) {
 store.load_file = function (file) {
   var query = {}
   // console.log('load_file', file)
-  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(
-    function (response) {
-      // console.log(response)
-      file.code = response.data.files[0].code
+  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(function (response) {
+    // console.log(response)
+    file.code = response.data.files[0].code
 
-      // console.log('load_file(status) > ' + response.status, file.code)
-      store.emit('file_loaded', file)
-    }, function (response) {
-      // console.log(TAG + ': project_save(status) > ' + response.status)
-    })
+    // console.log('load_file(status) > ' + response.status, file.code)
+    store.emit('file_loaded', file)
+  }, function (response) {
+    // console.log(TAG + ': project_save(status) > ' + response.status)
+  }
+  )
 }
 
 /*
@@ -217,16 +215,54 @@ store.create_file = function (filetype, filename) {
  * Create a project
  */
 store.project_create = function (projectName) {
-  // console.log('project create')
-
-  var query = {}
-
-  // vm.$log()
-
-  Vue.axios.get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), query).then(function (response) {
+  Vue.axios.get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), {}).then(function (response) {
     var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName }
     store.emit('project_created', true, data)
     store.project_list_all()
+    store.emit('show_info', { icon: 'description', text: 'Created' })
+  }, function (response) {
+    store.emit('show_info', { icon: 'error', text: 'Error creating' })
+    store.emit('project_created', false)
+    console.log('project_create(status) > ' + response.status)
+  })
+}
+
+store.project_clone = function (uri, newName) {
+  let query = { newName: newName }
+
+  Vue.axios.post(getUrlWebapp('/api/project' + '/' + uri + '/clone'), query).then(function (response) {
+    var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': newName }
+    store.emit('project_cloned', true, data)
+    store.project_list_all()
+    store.emit('show_info', { icon: 'description', text: 'Cloned in User Projects' })
+  }, function (response) {
+    store.emit('project_created', false)
+    store.emit('show_info', { icon: 'error', text: 'Error cloning' })
+    console.log('project_create(status) > ' + response.status)
+  })
+}
+
+store.project_rename = function (uri, newName) {
+  console.log('rename', uri, newName)
+
+  let query = { newName: newName }
+  Vue.axios.post(getUrlWebapp('/api/project' + '/' + uri + '/rename'), query).then(function (response) {
+    // var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': newName }
+    store.emit('project_renamed')
+    store.project_list_all()
+    store.emit('show_info', { icon: 'description', text: 'Renamed' })
+  }, function (response) {
+    store.emit('project_created', false)
+    store.emit('show_info', { icon: 'error', text: 'Error renamming' })
+    console.log('project_create(status) > ' + response.status)
+  })
+}
+
+store.project_delete = function (uri) {
+  Vue.axios.get(getUrlWebapp('/api/project' + '/' + uri + '/delete'), {}).then(function (response) {
+    store.emit('project_deleted')
+    store.project_list_all()
+    store.emit('show_info', { icon: 'description', text: 'Deleted' })
   }, function (response) {
     store.emit('project_created', false)
     console.log('project_create(status) > ' + response.status)
@@ -245,8 +281,12 @@ store.project_save = function (files) {
   query.files = []
   query.files = Object.assign([], files)
 
+  store.emit('show_info', { icon: 'save', text: 'Saving...' })
+
   Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/save'), query).then(function (response) {
     // console.log('project_save(status) OK > ' + response.status)
+    store.emit('show_info', { icon: 'save', text: 'Saved' })
+
     store.emit('project_saved')
     store.list_files_in_path(store.state.current_project.current_folder)
 
@@ -259,7 +299,6 @@ store.project_save = function (files) {
   }, function (response) {
     console.log('project_save(status) NOP > ' + response.status)
     if (!response.status) {
-      console.log('qq')
       store.emit('show_info', { icon: 'error', text: 'Cannot save! Check the connection' })
     }
   })
@@ -272,9 +311,9 @@ store.project_action = function (action) {
   var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + action), query).then(function (response) {
-    // console.log(response.status)
+    console.log('project_action', response.status)
   }, function (response) {
-    // console.log(response.status)
+    console.log('project_action error', response.status)
   })
 }
 
@@ -284,10 +323,12 @@ store.project_action = function (action) {
 store.project_run = function (project) {
   var query = {}
 
+  store.emit('show_info', { icon: 'play', text: 'Playing...' })
+
   Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), query).then(function (response) {
-    // console.log(response.status)
+    console.log('project_run', response.status)
   }, function (response) {
-    // console.log(response.status)
+    console.log('project_run', response.status)
   })
 }
 
@@ -310,6 +351,7 @@ store.project_stop_all_and_run = function (project) {
 store.execute_code = function (code) {
   // console.log('execute_code ' + code)
   var query = { code: code }
+  store.emit('show_info', { icon: 'autorenew', text: 'Live...' })
 
   Vue.axios.post(getUrlWebapp('/api/project/execute_code'), query).then(function (response) {
     // console.log(response.status)
@@ -541,7 +583,7 @@ store.websockets_init = function () {
     reconnectionInterval = setTimeout(function () {
       console.log('trying to reconnect')
       that.websockets_init()
-    }, 20000)
+    }, 200)
   }
 }
 
@@ -552,7 +594,7 @@ store.send_ws_data = function (data) {
 store.websockets_init()
 
 store.mouse = function () {
-  document.onmousemove = function handleMouseMove(event) {
+  document.onmousemove = function (event) {
     event = event || window.event
     // console.log(event.button)
     // console.log(event.pageX, event.pageY)

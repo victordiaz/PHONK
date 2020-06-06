@@ -1,6 +1,6 @@
 <template>
-  <div id="info">
-    <div v-if class="btn-sidebar btn-close" v-on:click="close">
+  <div class="info">
+    <div v-if class="btn-sidebar btn-close" v-on:click="$emit('onCloseCard')">
       <i class="material-icons">close</i>
     </div>
 
@@ -10,9 +10,9 @@
           <h2>
             <span class="object">{{ data.object.name }}.</span>
             <span class="method">{{ data.method.name }}</span> (
-            <span v-for="f in signature.fields">
+            <span v-for="(f, i) in signature.fields">
               <span class="field">{{ f.name }}</span>
-              <span v-if="index != signature.fields.length - 1">,</span>
+              <span v-if="i < signature.fields.length - 1" class="comma">, </span>
             </span>)
           </h2>
         </li>
@@ -21,7 +21,7 @@
 
     <p class="description">{{ data.method.description }}</p>
 
-    <div class="example">
+    <div class="example" v-if = "false">
       <h3>example</h3>
       <div class="code_wrapper">
         <code class="code">
@@ -53,13 +53,13 @@ function () {
       <h3>returns</h3>
       <table>
         <tr>
-          <td class="type">{{ data.method.returning.type }}</td>
+          <td class="type" @click = "goToClass(data)">{{ data.method.returning.type }}</td>
           <td class="description">{{ data.method.returning.name }}</td>
         </tr>
       </table>
     </div>
 
-    <div class="related">
+    <div class="related" v-if = "false">
       <h3>Related</h3>
       <ul>
         <li v-for="p in data.method.see">{{ p }}</li>
@@ -72,14 +72,13 @@ function () {
       </a>
       <a v-bind:href="getGithubUrl(data.method)" target="_blank">
         <i class="material-icons">link</i>
-        <span>Show method sourcecode</span>
+        <span>Show in sourcecode</span>
       </a>
     </div>
   </div>
 </template>
 
 <script>
-import Store from '../Store'
 import Marked from 'marked'
 import Highlight from 'highlight.js'
 import 'highlight.js/styles/monokai.css'
@@ -101,11 +100,9 @@ export default {
   },
   data () {
     return {
-      store: Store
     }
   },
   computed: {
-    arrowposition: function () {}
   },
   methods: {
     getGithubUrl: function (method) {
@@ -118,8 +115,9 @@ export default {
         method.locationInfile
       )
     },
-    close: function () {
-      Store.emit('close_card')
+    goToClass (cls) {
+      console.log('goToClass ' + cls)
+      this.$emit('onGoToClass', cls)
     }
   },
   mounted () {
@@ -132,8 +130,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-@import (reference) '../assets/css/variables.less';
+<style lang="less" scoped>
+@import (reference) '../../assets/css/variables.less';
 
 .vertical #card {
   border-top: solid 0px #54524f;
@@ -143,9 +141,10 @@ export default {
   border-left: solid 0px #54524f;
 }
 
-#info {
+.info {
   font-size: 0.8em;
   position: relative;
+  padding: 10px;
 
   & > * {
     padding: 10px 0px;
@@ -156,6 +155,11 @@ export default {
     font-family: @editorFont;
     font-size: 1em;
     font-weight: 600;
+    display: inline-flex;
+
+    * {
+      display: inline-flex;
+    }
 
     .method {
       border-bottom: 2px solid @accentColor;
@@ -163,6 +167,10 @@ export default {
 
     .field {
       border-bottom: 1px dotted white;
+    }
+
+    .comma {
+      margin-right: 5px;
     }
   }
   h3 {
@@ -175,6 +183,13 @@ export default {
 
   table {
     width: 100%;
+  }
+
+  .returns {
+    .type:hover {
+      color: @accentColor;
+      cursor: pointer;
+    }
   }
 
   .params {
@@ -235,14 +250,14 @@ export default {
     /* animation: fadeIn 1s infinite alternate; */
 
     a {
-      padding: 5px 5px;
+      padding: 3px 5px;
       border-radius: 2px;
       color: @accentColor;
       font-weight: 600;
       text-decoration: none;
       display: inline-block;
-      margin-right: 5px;
-      margin-bottom: 2px;
+      margin-right: 15px;
+      margin-bottom: 0px;
       border: 1px solid @accentColor;
       display: inline-flex;
       line-height: 1.2rem;

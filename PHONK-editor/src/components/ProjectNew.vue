@@ -17,7 +17,7 @@
           name="projectname"
           type="text"
           placeholder="MyProject..."
-          class="form-control input-md"
+          class="form-control input-md project-input"
           v-model="projectName"
           required
           @keyup.enter="create_project()"
@@ -30,7 +30,9 @@
             class="btn btn-success boxed"
             v-on:click="create_project()"
           >Create</button>
+          <!--
           <message-error v-show="!status">The project cannot be created</message-error>
+          -->
         </div>
       </div>
     </div>
@@ -105,41 +107,6 @@ export default {
     font-size: 1em;
     line-height: 2em;
     text-align: center;
-  }
-
-  .placeHolder {
-    color: @accentColor_1;
-    font-family: 'Roboto Mono';
-    font-size: 1rem;
-  }
-
-  /* do not group these rules */
-  *::-webinput-placeholder {
-    .placeHolder;
-  }
-  *::-moz-placeholder {
-    /* FF 19+ */
-    .placeHolder;
-  }
-  *:-ms-input-placeholder {
-    /* IE 10+ */
-    .placeHolder;
-  }
-
-  select,
-  input {
-    flex: 2;
-    width: 100%;
-    min-width: 20%;
-    outline: none;
-    border: none;
-    width: 100%;
-    box-sizing: border-box;
-    color: black;
-    font-size: 1rem;
-    background: white;
-    padding: 10px;
-    border: 1px solid @accentColor_1;
   }
 
   .login_bottom {

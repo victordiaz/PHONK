@@ -5,7 +5,7 @@
         <li class = "block" v-for = "(prop, key1) in sharedState.device_properties.info">
           <h3 class = "title">{{key1}}</h3>
           <ul>
-            <li v-for = "(value, key2) in prop"><span class = "key">{{ key2 }} :</span> <span class = "value">{{ value }}</span></li>
+            <li v-for = "(value, key2) in prop"><span class = "key">{{ key2 }}: </span> <span class = "value">{{ value }}</span></li>
           </ul>
         </li>
       </ul>

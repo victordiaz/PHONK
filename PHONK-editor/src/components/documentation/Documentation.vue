@@ -19,41 +19,19 @@
           id="browser"
           class="scrollbar"
           v-bind:class="{
-            hide_debug: !sharedState.preferences['other'][
-              'show TODO in documentation'
-            ],
+            hide_debug: true,
           }"
         >
-          <!-- TODO orderBy -->
-          <div v-for="object in queriedDocumentation" class="object">
-            <h3>{{ object.name }}</h3>
-            <ul>
-              <!-- TODO filter and orderBy name-->
-              <li v-for="f in object.fields">
-                <p>{{ f.name }}</p>
-              </li>
-            </ul>
-            <ul>
-              <!-- TODO filter and orderBy name -->
-              <li
-                v-if="show_method(m)"
-                v-for="m in object.methods"
-                v-bind:class="{
-                  todo: m.status === 'TODO',
-                  todo_example: m.status === 'TODO_EXAMPLE',
-                  toreview: m.status === 'TOREVIEW',
-                  advanced: m.advanced === true,
-                  missing: m.status === 'missing',
-                }"
-              >
-                <p v-on:click="select_method(object, m)">{{ m.name }}()</p>
-              </li>
-            </ul>
+          <div v-for = "(index, name) in documentation">
+            <!-- TODO orderBy -->
+            <div v-for="(object, name) in documentation[name]">
+              <documentation-object :object = "object" v-on:onSelectMethod="select_method" :search = "search"/>
+            </div>
           </div>
         </div>
         <transition name="upanim2" mode="out-in">
           <div id="card" :class="{ inset: view_type === 'vertical' }" v-if="show_card">
-            <documentation-card :data="selected"></documentation-card>
+            <documentation-card :data="selected" v-on:onGoToClass="goToClass" v-on:onCloseCard = "close_card"></documentation-card>
           </div>
         </transition>
       </div>
@@ -62,20 +40,21 @@
 </template>
 
 <script>
-import Store from '../Store'
-import _ from 'lodash'
 import DocumentationCard from './DocumentationCard'
+import DocumentationObject from './DocumentationObject'
+import VueScrollTo from 'vue-scrollto'
+import documentation from './documentation.json'
 
 export default {
   name: 'Documentation',
   components: {
-    DocumentationCard
+    DocumentationCard,
+    DocumentationObject
   },
   data () {
     return {
-      sharedState: Store.state,
       msg: 'Hello World!',
-      documentation: Store.state.documentation,
+      documentation: documentation,
       showing: true,
       selected: {},
       search: '',
@@ -85,68 +64,28 @@ export default {
     }
   },
   computed: {
-    arrowposition: function () {},
-    queriedDocumentation: function () {
-      var that = this
-      var doc = _.cloneDeep(this.documentation)
-
-      if (!doc) return
-      var k = doc.length
-      while (k--) {
-        doc[k].methods = doc[k].methods.filter(function (o) {
-          if (o.name.toLowerCase().indexOf(that.search.toLowerCase()) !== -1) {
-            return o
-          }
-        })
-
-        doc[k].fields = doc[k].fields.filter(function (o) {
-          if (o.name.toLowerCase().indexOf(that.search.toLowerCase()) !== -1) {
-            return o
-          }
-        })
-
-        if (doc[k].methods.length === 0) {
-          doc.splice(k, 1)
-          // console.log('remove ' + k)
-        }
-      }
-      return doc
-    }
   },
   methods: {
-    show_method: function (m) {
-      if (m.advanced) {
-        return this.sharedState.preferences['other']['show advanced api']
-      } else {
-        return true
-      }
-    },
-    load_documentation: function (doc) {
-      // this.documentation = store.state.documentation
-      this.documentation = _.sortBy(Store.state.documentation, 'name')
-      for (var k in this.documentation) {
-        this.documentation[k].methods = _.sortBy(
-          this.documentation[k].methods,
-          'name'
-        )
-        this.documentation[k].fields = _.sortBy(
-          this.documentation[k].fields,
-          'name'
-        )
-      }
-      // console.log('loaded ', this.documentation)
-    },
-    select_method: function (object, method) {
-      var that = this
+    select_method: function (o) {
       this.show_card = false
-      setTimeout(function () {
-        console.log(object.name, method.name)
-        that.show_card = true
-        that.selected = { object: object, method: method }
-      }, 20)
-    },
-    close: function () {
-      Store.emit('toggle', 'load_documentation')
+
+      if (o.type === 'field') {
+        console.log(o.field, o.object)
+        VueScrollTo.scrollTo('#' + o.field.type,
+          500,
+          {
+            container: '#browser',
+            duration: 500,
+            easing: 'ease'
+          }
+        )
+      } else {
+        setTimeout(() => {
+          console.log(o.object.name, o.method.name)
+          this.show_card = true
+          this.selected = o
+        }, 20)
+      }
     },
     performSearch: function (objs) {
       var that = this
@@ -171,19 +110,31 @@ export default {
     },
     close_card: function () {
       this.show_card = false
+    },
+    goToClass: function (e) {
+      console.log('parent', e)
+      this.close_card()
+
+      VueScrollTo.scrollTo('#' + e.method.returning.type,
+        500,
+        {
+          container: '#browser',
+          duration: 500,
+          easing: 'ease'
+        }
+      )
     }
   },
   created () {
-    Store.loadDocumentation()
-    Store.on('documentation_loaded', this.load_documentation)
-    Store.on('close_card', this.close_card)
+  },
+  mounted () {
   }
 }
 </script>
 
 <style lang="less">
-@import (reference) '../assets/css/variables.less';
-@import (reference) '../assets/css/hacks.less';
+@import (reference) '../../assets/css/variables.less';
+@import (reference) '../../assets/css/hacks.less';
 
 .todo {
   background: cyan;
@@ -274,11 +225,11 @@ export default {
 
     .btn-close {
       color: gray;
-      right: 5px;
-      top: -8px;
+      right: 10px;
+      top: 0px;
 
       :hover {
-        color: black;
+        color: white;
       }
     }
 
@@ -310,6 +261,7 @@ export default {
       flex: 1;
       overflow-y: scroll;
       overflow-x: hidden;
+      padding: 10px;
 
       &.hide_debug {
         ul li {
@@ -328,8 +280,14 @@ export default {
       }
 
       h2 {
-        font-size: 1.2em;
+        display: flex;
+        margin-top: 2em;
+        margin-bottom: 1em;
+        padding-left: 4px;
+        font-size: 0.8em;
         font-weight: 600;
+        background: #52534f;
+        padding: 10px;
       }
 
       h3 {
@@ -347,7 +305,7 @@ export default {
         display: inline-block;
         vertical-align: top;
         width: 100%;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         box-sizing: border-box;
 
         ul {
@@ -362,7 +320,7 @@ export default {
 
         li {
           color: #f7f7f7;
-          font-weight: 400;
+          font-weight: 300;
           letter-spacing: 1px;
           font-size: 0.9em;
 
@@ -388,5 +346,10 @@ export default {
     .scrollbar;
     color: white;
   }
+}
+
+.debug {
+  font-size: 0.8rem;
+  color: white;
 }
 </style>

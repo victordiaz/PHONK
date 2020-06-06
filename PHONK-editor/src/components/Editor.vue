@@ -12,10 +12,10 @@
             device_disabled: !sharedState.device_properties.connected,
           }"
         >
-          <i class="material-icons" v-if="button_run_state">play_arrow</i>
-          <i class="material-icons" v-else>stop</i>
+          <i class="material-icons" v-if = "isRunning">stop</i>
+          <i class="material-icons" v-else>play_arrow</i>
         </button>
-        <button id="project_save" class="icon" v-on:click="save">
+        <button id="project_save" class="icon" :class="{ device_disabled: !sharedState.device_properties.connected }" v-on:click="save">
           <i class="material-icons">save</i>
         </button>
         <!-- </div> -->
@@ -60,7 +60,7 @@ export default {
   data () {
     return {
       sharedState: store.state,
-      button_run_state: true,
+      isRunning: true,
       currentTab: 0,
       tabs: [{ name: 'main.js', text: '', modified: '' }],
       isConnected: false,
@@ -122,7 +122,10 @@ export default {
       var folder = this.$route.params.folder
       var project = this.$route.params.project
       var url = type + '/' + folder + '/' + project
-      store.project_load('/' + url)
+
+      if (type) {
+        store.project_load('/' + url)
+      }
 
       this.title = url
 
@@ -156,6 +159,7 @@ export default {
       // this.editor.setPrintMarginColumn(true)
       this.editor.setShowPrintMargin(false)
       renderer.setPadding(8)
+      // this.editor.session.setUseWorker(false)
       // this.editor.getSession().setUseSoftTabs(false)
 
       /*
@@ -252,35 +256,32 @@ export default {
       }
     },
     run: function () {
-      var that = this
       // console.log('run/stop project')
-      // console.log(this.run_button_state + ' project')
 
-      // run the project
-      if (this.run_button_state === 'run') {
-        store.emit('project_action', '/run')
-        this.run_button_state = 'stop'
-        // stop the project
-      } else {
+      // stop the project
+      if (this.isRunning) {
         store.emit('project_action', '/stop')
-        this.run_button_state = 'run'
+        this.isRunning = false
+      // run the project
+      } else {
+        store.emit('project_action', '/stop_all_and_run')
+        this.isRunning = true
       }
 
       // higlight run button
-      that.runShortcut = true
-      setTimeout(function () {
-        that.runShortcut = false
+      this.runShortcut = true
+      setTimeout(() => {
+        this.runShortcut = false
       }, 200)
     },
     save: function () {
-      var that = this
       // console.log('save project')
       // this.$log()
       store.emit('project_save', this.tabs)
       store.list_files_in_path(store.state.current_project.current_folder)
-      that.saveShortcut = true
-      setTimeout(function () {
-        that.saveShortcut = false
+      this.saveShortcut = true
+      setTimeout(() => {
+        this.saveShortcut = false
       }, 200)
     },
     saveas: function () {
@@ -374,11 +375,11 @@ export default {
     device_update: function (data) {
       if (typeof data.info !== 'undefined') {
         if (data.info.script['running script'] === 'none') {
-          this.button_run_state = true
-          this.run_button_state = 'run'
+          console.log('update NOT running')
+          this.isRunning = false
         } else {
-          this.button_run_state = false
-          this.run_button_state = 'stop'
+          console.log('update running')
+          this.isRunning = true
         }
       }
       // console.log('device update ' + data.connected)
@@ -404,18 +405,12 @@ export default {
     try_again: function () {
       console.log('trying again')
 
-      // let type = this.$route.params.type
-      // let folder = this.$route.params.folder
       let project = this.$route.params.project
       console.log(project)
-      // let url = type + '/' + folder + '/' + project
-      // store.project_load('/' + url)
-
       /*
       let to = {name: 'editor.load', params: { type: type, folder: folder, project: project }}
       this.$router.push(to)
       */
-
       // this.$router.go(this.$router.currentRoute)
       this.sharedState.show_load_project = true
     }
@@ -519,6 +514,7 @@ export default {
       &.device_disabled {
         opacity: 0.3;
         cursor: not-allowed;
+        pointer-events: none;
 
         &:hover,
         &:active {
@@ -552,9 +548,11 @@ export default {
         max-width: 200px;
         white-space: nowrap;
         height: 100%;
+        font-weight: 300;
         box-sizing: border-box;
 
         &.active {
+          font-weight: 500;
           // background-color: darken(@mainColor, 2%);
           border-bottom: 2px solid white;
         }
@@ -628,7 +626,7 @@ export default {
 
     .folder {
       padding-bottom: 4px;
-      font-weight: 500;
+      font-weight: 400;
     }
 
     .name::before {
@@ -672,8 +670,15 @@ export default {
   line-height: 1.3em !important;
 }
 
-.ace_dark .ace_gutter-cell.ace_info {
-  background-image: none !important;
+.ace_dark .ace_gutter-cell {
+
+  &.ace_info {
+    background-image: none !important;
+  }
+
+  &.ace_error {
+    // display: none;
+  }
 }
 
 .ace-tm .ace_marker-layer .run_code {
@@ -691,6 +696,10 @@ export default {
 
 .ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
   background-color: @accentColor;
+}
+
+.ace_comment {
+  // font-style: italic;
 }
 
 .ace_scrollbar {

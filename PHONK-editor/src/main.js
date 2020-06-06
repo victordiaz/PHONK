@@ -20,8 +20,6 @@ Vue.filter('domain', domain)
 
 // install router
 Vue.use(VueRouter)
-
-// ajax stuff
 Vue.use(VueAxios, axios)
 
 // routing
