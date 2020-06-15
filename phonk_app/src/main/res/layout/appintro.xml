@@ -66,4 +66,10 @@
         android:textSize="12sp"
         android:visibility="visible" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/phonk_variant" />
+
 </LinearLayout>

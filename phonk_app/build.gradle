@@ -10,7 +10,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    // flavorDimensions "phonk_normal", "phonk_extended"
+    // flavorDimensions "normal", "extended"
+    flavorDimensions "default"
 
     compileSdkVersion 29
 
@@ -58,23 +59,21 @@ android {
         }
     }
 
-    /*
     productFlavors {
         normal {
-            dimension 'phonk_normal'
-            applicationId "io.phonk.beta"
-            versionName "0.19.0_normal"
-            resValue "string", "releaseMode", "normal"
+            // dimension 'normal'
+            applicationId "io.phonk"
+            versionName "1.12.0_normal"
+            // resValue "string", "releaseMode", "normal"
         }
 
         extended {
-            dimension 'phonk_extended'
-            applicationId "io.phonk.extended.beta"
-            versionName "0.19.0_extended"
-            resValue "string", "releaseMode", "all_features"
+            // dimension 'extended'
+            applicationId "io.phonk.extended"
+            versionName "1.12.0_extended"
+            // resValue "string", "releaseMode", "all_features"
         }
     }
-    */
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'

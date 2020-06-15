@@ -27,6 +27,7 @@
     <string name="app_name">PHONK</string>
     <string name="activity_name">PHONK</string>
     <string name="runner_name">PHONK Runner</string>
+    <string name="phonk_variant">PHONK Main</string>
     <string name="connect_message">Click to connect</string>
     <string name="connection_message_connected">Point the web browser in your computer to</string>
     <string name="connection_message_wifi">Use your computer\'s web browser to access</string>
@@ -87,11 +88,11 @@
     <!-- Welcome -->
     <string name="welcome_activity_name">Welcome to PHONK</string>
     <string name="welcome_1_title">Welcome!</string>
-    <string name="welcome_1_body">PHONK is coding environment for Android devices suited for tinkering, making and learning.\nYou can write code very rapidly using the Web Editor! Access any type of sensor, play sounds, display graphics or communicate with Arduino.</string>
+    <string name="welcome_1_body">PHONK is a coding environment for Android devices suited for tinkering, making and learning.\nYou can write code very rapidly using the Web Editor! Access any type of sensor, play sounds, display graphics or communicate with Arduino.</string>
     <string name="welcome_2_title">Grant permissions</string>
-    <string name="welcome_2_body">In order to write code that uses sensors, cameras, Internet access, etc you should grant some permissions. You can opt out some but some certain functionality won\'t work\nYou can always enable or disable them in PHONK or the system settings.</string>  
+    <string name="welcome_2_body">In order to write code that uses sensors, cameras, Internet access, etc you should grant some permissions. You can opt out some but some certain functionality won\'t work\nYou can always enable or disable them in PHONK or in the system settings.</string>  
     <string name="welcome_3_title">Installing examples</string>
-    <string name="welcome_3_body">    PHONK comes with lots of examples to get you started very fast!\n A copy of the examples will be in the phonk folder in your device, so you can access them from any other app.\If they get deleted or modified its easy to reinstall them from the Settings!</string>
+    <string name="welcome_3_body">PHONK comes with lots of examples to get you started very fast!\nA copy of the examples will be in the phonk folder in your device, so you can access them from any other app. If they get deleted or modified its easy to reinstall them from the Settings!</string>
 
     <string name="welcome_accept">Let\'s go.</string>
 

@@ -7,8 +7,8 @@ android {
 
     compileSdkVersion 29
 
-    //defaultPublishConfig "normalrunnerDebug"
-    //defaultPublishConfig "extendedrunnerDebug"
+    defaultPublishConfig "normalrunnerDebug"
+    // defaultPublishConfig "extendedrunnerDebug"
     publishNonDefault true
 
     defaultConfig {
@@ -60,7 +60,6 @@ android {
 
 
 repositories {
-
     maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
