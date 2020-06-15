@@ -183,10 +183,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 
         final EditTextPreference prefLaunchScript = (EditTextPreference) findPreference("launch_script_on_app_launch");
-        prefLaunchScript.setOnPreferenceChangeListener((preference, newValue) -> {
-            prefLaunchScript.setText((String) newValue);
-            mUserPreferences.set("launch_on_device_boot", newValue).save();
-            return false;
+        prefLaunchScript.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                prefLaunchScript.setText((String) newValue);
+                mUserPreferences.set("launch_script_on_app_launch", newValue).save();
+                return false;
+            }
         });
         prefLaunchScript.setText((String) UserPreferences.getInstance().get("launch_script_on_app_launch"));
 
