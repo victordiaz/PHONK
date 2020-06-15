@@ -52,24 +52,21 @@ public class IDEcommunication {
         }
         */
 
-        ws.addListener("phonkApp", new PhonkWebsocketServer.WebSocketListener() {
-            @Override
-            public void onUpdated(JSONObject jsonObject) {
-                try {
-                    String type = jsonObject.getString("type");
+        ws.addListener("phonkApp", jsonObject -> {
+            try {
+                String type = jsonObject.getString("type");
 
-                    if (type.equals("project_highlight")) {
-                        String folder = jsonObject.getString("folder");
-                        String name = jsonObject.getString("name");
+                if (type.equals("project_highlight")) {
+                    String folder = jsonObject.getString("folder");
+                    String name = jsonObject.getString("name");
 
-                        Events.SelectedProjectEvent evt = new Events.SelectedProjectEvent(folder, name);
-                        EventBus.getDefault().post(evt);
+                    Events.SelectedProjectEvent evt = new Events.SelectedProjectEvent(folder, name);
+                    EventBus.getDefault().post(evt);
 
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         });
 

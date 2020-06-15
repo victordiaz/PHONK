@@ -31,23 +31,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.runner.AppRunnerFragment;
-import io.phonk.runner.api.PApp;
-import io.phonk.runner.api.PBoards;
-import io.phonk.runner.api.PConsole;
-import io.phonk.runner.api.PDashboard;
-import io.phonk.runner.api.PDevice;
-import io.phonk.runner.api.PFileIO;
-import io.phonk.runner.api.PMedia;
-import io.phonk.runner.api.PNetwork;
-import io.phonk.runner.api.PProtocoder;
-import io.phonk.runner.api.PSensors;
-import io.phonk.runner.api.PUI;
-import io.phonk.runner.api.PUtil;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.WhatIsRunning;
+import io.phonk.runner.apprunner.api.PApp;
+import io.phonk.runner.apprunner.api.PBoards;
+import io.phonk.runner.apprunner.api.PConsole;
+import io.phonk.runner.apprunner.api.PDashboard;
+import io.phonk.runner.apprunner.api.PDevice;
+import io.phonk.runner.apprunner.api.PFileIO;
+import io.phonk.runner.apprunner.api.PMedia;
+import io.phonk.runner.apprunner.api.PNetwork;
+import io.phonk.runner.apprunner.api.PPhonk;
+import io.phonk.runner.apprunner.api.PSensors;
+import io.phonk.runner.apprunner.api.PUI;
+import io.phonk.runner.apprunner.api.PUtil;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.other.WhatIsRunning;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class AppRunner {
 
@@ -56,7 +57,6 @@ public class AppRunner {
     private final Context mContext;
     public boolean hasUserInterface = false;
     public WhatIsRunning whatIsRunning;
-    //public boolean hasCustomJSInterpreter = true;
 
     //Project properties
     private Project mProject;
@@ -80,7 +80,7 @@ public class AppRunner {
     public PFileIO pFileIO;
     public PMedia pMedia;
     public PNetwork pNetwork;
-    public PProtocoder pProtocoder;
+    public PPhonk pPhonk;
     public PSensors pSensors;
     public PUI pUi;
     public PUtil pUtil;
@@ -99,11 +99,11 @@ public class AppRunner {
     public AppRunner initDefaultObjects(AppRunnerFragment appRunnerFragment, Map<String, Object> mScriptSettings) {
         hasUserInterface = true;
 
-        //instantiate the objects that can be accessed from the interpreter
+        // instantiate the objects that can be accessed from the interpreter
 
-        //the reason to call initForParentFragment is because the class depends on the fragment ui.
-        //its not very clean and at some point it will be change to a more elegant solution that will allow to
-        //have services
+        // the reason to call initForParentFragment is because the class depends on the fragment ui.
+        // its not very clean and at some point it will be change to a more elegant solution that will allow to
+        // have services
         pApp = new PApp(this);
         pApp.initForParentFragment(appRunnerFragment);
         pApp.settings = mScriptSettings;
@@ -117,7 +117,7 @@ public class AppRunner {
         pMedia.initForParentFragment(appRunnerFragment);
         pNetwork = new PNetwork(this);
         pNetwork.initForParentFragment(appRunnerFragment);
-        pProtocoder = new PProtocoder(this);
+        pPhonk = new PPhonk(this);
         pSensors = new PSensors(this);
         pSensors.initForParentFragment(appRunnerFragment);
         pUi = new PUI(this);
@@ -139,7 +139,7 @@ public class AppRunner {
         interp.addJavaObjectToJs("fileio", pFileIO);
         interp.addJavaObjectToJs("media", pMedia);
         interp.addJavaObjectToJs("network", pNetwork);
-        interp.addJavaObjectToJs("protocoder", pProtocoder);
+        interp.addJavaObjectToJs("phonk", pPhonk);
         interp.addJavaObjectToJs("sensors", pSensors);
         interp.addJavaObjectToJs("ui", pUi);
         interp.addJavaObjectToJs("util", pUtil);
@@ -165,24 +165,24 @@ public class AppRunner {
 
         // run the script
         if (null != mScript) {
+            MLog.d(TAG, "evaluate qq");
             evaluate(mScript, mProject.getName());
         }
-        //can accept intent code if no project is loaded
+        // can accept intent code if no project is loaded
         if (!mIsProjectLoaded) {
             evaluate(mIntentCode, "");
         }
 
-        //script postfix
+        // script postfix
         if (!mIntentPostfixScript.isEmpty()) evaluate(mIntentPostfixScript, "");
 
-        //call the javascript method setup
+        // call the javascript method setup
         // interp.callJsFunction("setup");
 
         return this;
     }
 
     public void evaluate(String script, String projectName) {
-        MLog.d(TAG, "QQ 15 ----------- " + interp);
         if (interp != null) interp.eval(script, projectName);
     }
 
@@ -199,7 +199,9 @@ public class AppRunner {
     }
 
     boolean finished = false;
+
     public void byebye() {
+        MLog.d("byebye", "");
         if (!finished) {
             finished = true;
             whatIsRunning.stopAll();

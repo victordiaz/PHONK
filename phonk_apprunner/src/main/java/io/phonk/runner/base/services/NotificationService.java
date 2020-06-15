@@ -76,7 +76,7 @@ public class NotificationService extends NotificationListenerService {
     }
 
     private String getString(CharSequence c) {
-       String ret;
+        String ret;
 
         if (c == null) {
             ret = "";

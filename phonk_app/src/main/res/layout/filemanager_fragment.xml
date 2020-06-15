@@ -26,7 +26,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/phonk_backgroundColor_secondary">
+    android:background="@color/phonk_backgroundColor">
 
     <!-- primary bar -->
     <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="fill_vertical"
-                android:textColor="@color/phonk_accentColor_primary"
+                android:textColor="@color/phonk_colorPrimary"
                 android:gravity="center_vertical"
                 android:fontFamily="sans-serif-condensed"
                 android:text="Files included in the project"
@@ -127,7 +127,7 @@
             android:shadowDy="2"
             android:shadowRadius="2"
             android:text="@string/files_zero"
-            android:textColor="@color/phonk_accentColor_primary"
+            android:textColor="@color/phonk_colorPrimary"
             android:textSize="16sp" />
     </LinearLayout>
 

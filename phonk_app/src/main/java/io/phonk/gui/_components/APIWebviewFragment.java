@@ -109,7 +109,7 @@ public class APIWebviewFragment extends BaseFragment {
         // settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setDomStorageEnabled(true);
-        WebView.setWebContentsDebuggingEnabled(true);
+        // WebView.setWebContentsDebuggingEnabled(true);
 
         settings.setLightTouchEnabled(true);
 

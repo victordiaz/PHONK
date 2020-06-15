@@ -60,6 +60,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -88,7 +90,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <action android:name="io.phonk.runner.AppRunnerActivity" />
-
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <!--how tool
                 <action android:name="android.intent.action.VIEW" />
@@ -114,10 +116,7 @@
             <intent-filter>
                 <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
             </intent-filter>
-
-
         </activity>
-
 
         <service
             android:name="io.phonk.runner.AppRunnerLauncherService"
@@ -169,6 +168,5 @@
         </receiver>
     </application>
 
-    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core" />
-
+    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core, com.welie.blessed" />
 </manifest>

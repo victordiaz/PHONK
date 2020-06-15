@@ -30,24 +30,26 @@ import io.phonk.runner.apprunner.AppRunnerSettings;
 
 public class PhonkSettings extends AppRunnerSettings {
 
-	/*
-	 * Protocoder app settings
-	 */
-    public final static boolean DEBUG                       = true;
-    public static String PROTO_FILE_EXTENSION               = ".proto";
+    /*
+     * Phonk app settings
+     */
+    public final static boolean DEBUG = true;
+    public static String PHONK_FILE_EXTENSION = ".phonk";
 
-    public static final String APP_FOLDER_CUSTOM_WEBEDITOR  = "webeditors";
-    public static final String EXPORTED_FOLDER              = "exported";
-    public static final String TEMPLATES_FOLDER             = "templates";
+    public static final String APP_FOLDER_CUSTOM_WEBEDITOR = "webeditors";
+    public static final String EXPORTED_FOLDER = "exported";
+    public static final String TEMPLATES_FOLDER = "templates";
 
     public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     public static final String NOTIFICATION_CHANNEL_ID = "io.phonk";
 
-    public static final int WEBSOCKET_PORT                  = 8587;
-    public static final int HTTP_PORT                       = 8585;
-    public final int FTP_PORT                               = 8589;
+    public static final int WEBSOCKET_PORT = 8587;
+    public static final int HTTP_PORT = 8585;
+    public final int FTP_PORT = 8589;
 
-    public static String getBaseWebEditorsDir() { return getBaseDir() + APP_FOLDER_CUSTOM_WEBEDITOR + File.separator; }
+    public static String getBaseWebEditorsDir() {
+        return getBaseDir() + APP_FOLDER_CUSTOM_WEBEDITOR + File.separator;
+    }
 
     public static String getPrefUrl() {
         return getBaseDir() + "settings.conf";

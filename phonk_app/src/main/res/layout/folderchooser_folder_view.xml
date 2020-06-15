@@ -21,12 +21,19 @@
   ~
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:orientation="horizontal"
+    android:background="?attr/selectableItemBackground"
+    android:layout_marginBottom="6dp"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="0dp">
 
+    <!--
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +44,36 @@
         android:background="@drawable/project_folder_toggle_button"
         android:text="Folder"
         android:fontFamily="sans-serif-light"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@color/phonk_textColor_secondary"
         android:id="@+id/textFolder"/>
-</LinearLayout>
+    -->
+
+    <ImageView
+        android:id="@+id/txtProjectIcon"
+        android:background="@drawable/gray_box_bg_transparent"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_centerVertical="true"
+        android:padding="14dp"
+        android:gravity="center"
+        android:src="@drawable/ic_folder_list" />
+
+    <TextView
+        android:id="@+id/textFolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@id/txtProjectIcon"
+        android:gravity="left|center_vertical"
+        android:lines="1"
+        android:maxLines="1"
+        android:paddingLeft="0dp"
+        android:text="Title"
+        android:textColor="@color/phonk_textColor_secondary"
+        android:textSize="16sp" />
+</RelativeLayout>

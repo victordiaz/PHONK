@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_below="@id/statusbarspacer"
         android:layout_alignParentRight="true"
-        android:background="@color/phonk_backgroundColor_primary">
+        android:background="@color/phonk_backgroundColor">
     </androidx.appcompat.widget.Toolbar>
 
 </RelativeLayout>

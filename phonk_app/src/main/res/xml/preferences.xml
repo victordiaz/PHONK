@@ -25,27 +25,48 @@
     <PreferenceCategory android:title="@string/setting_options_title" >
 
         <EditTextPreference
-            android:icon="@drawable/ic_smartphone_black_24dp"
+            android:icon="@drawable/ic_smartphone_24dp"
             android:key="device_id"
             android:summary="@string/setting_device_id_description"
             android:title="@string/setting_device_id_title" />
 
         <CheckBoxPreference
-            android:icon="@drawable/ic_screen_lock_portrait_black_24dp"
+            android:icon="@drawable/ic_screen_lock_portrait_24dp"
             android:checked="false"
             android:key="screen_always_on"
             android:summary="@string/setting_screen_on_description"
             android:title="@string/setting_screen_on_title" />
 
         <CheckBoxPreference
-            android:icon="@drawable/ic_web_black_24dp"
+            android:icon="@drawable/ic_web_24dp"
             android:checked="false"
             android:key="servers_enabled_on_start"
             android:summary="@string/setting_enable_servers_on_start_description"
             android:title="@string/setting_enable_servers_on_start_title" />
 
         <CheckBoxPreference
-            android:icon="@drawable/ic_notifications_black_24dp"
+            android:icon="@drawable/ic_web_24dp"
+            android:checked="false"
+            android:key="device_wakeup_on_play"
+            android:summary="@string/setting_enable_wakeup_on_play_description"
+            android:title="@string/setting_enable_wakeup_on_play_title" />
+
+        <CheckBoxPreference
+            android:icon="@drawable/ic_public_24dp"
+            android:checked="false"
+            android:key="advertise_mdns"
+            android:summary="@string/setting_enable_advertise_mdns_description"
+            android:title="@string/setting_enable_advertise_mdns_title" />
+
+        <CheckBoxPreference
+            android:icon="@drawable/ic_visibility_off_24dp"
+            android:checked="false"
+            android:key="servers_mask_ip"
+            android:summary="@string/setting_maskip_description"
+            android:title="@string/setting_maskip_title" />
+
+        <CheckBoxPreference
+            android:icon="@drawable/ic_notifications_24dp"
             android:checked="true"
             android:key="notify_new_version"
             android:summary="@string/setting_new_version_description"
@@ -61,21 +82,21 @@
         -->
 
         <CheckBoxPreference
-            android:icon="@drawable/ic_featured_play_list_black_24dp"
+            android:icon="@drawable/ic_featured_play_list_24dp"
             android:checked="true"
             android:key="webide_mode"
             android:summary="@string/setting_show_html5_mode"
             android:title="@string/setting_show_html5_mode_title" />
 
          <CheckBoxPreference
-            android:icon="@drawable/ic_timer_black_24dp"
+            android:icon="@drawable/ic_timer_24dp"
             android:checked="true"
             android:key="launch_on_device_boot"
             android:summary="@string/setting_launch_on_device_boot_description"
             android:title="@string/setting_launch_on_device_boot_title" />
 
         <EditTextPreference
-            android:icon="@drawable/ic_description_black_24dp"
+            android:icon="@drawable/ic_description_24dp"
             android:key="launch_script_on_app_launch"
             android:summary="@string/setting_launch_script_on_app_launch_description"
             android:title="@string/setting_launch_script_on_app_launch_title" />
@@ -105,7 +126,7 @@
             android:title="@string/setting_app_color_title" />
         -->
         <Preference
-            android:icon="@drawable/ic_refresh_black_24dp"
+            android:icon="@drawable/ic_refresh_24dp"
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"
             android:title="@string/setting_reinstall_title" />
@@ -139,7 +160,7 @@
 
     <PreferenceCategory android:title="@string/setting_about_title" >
         <Preference
-            android:icon="@drawable/ic_notifications_black_24dp"
+            android:icon="@drawable/ic_notifications_24dp"
             android:key="licenses_detail"
             android:summary="@string/setting_opensource_description"
             android:title="@string/setting_opensource_title" />

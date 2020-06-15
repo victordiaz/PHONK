@@ -38,6 +38,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -50,11 +51,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.AppRunnerHelper;
-import io.phonk.runner.apprunner.AppRunnerInterpreter;
 import io.phonk.runner.apprunner.AppRunnerSettings;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
+import io.phonk.runner.base.events.Events;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.events.Events;
-import io.phonk.runner.models.Project;
 
 public class AppRunnerService extends Service {
 
@@ -151,16 +152,11 @@ public class AppRunnerService extends Service {
         mToast = Toast.makeText(AppRunnerService.this, "Service crashed :(", Toast.LENGTH_LONG);
 
         // catch errors and send them to the WebIDE or the app console
-        AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
-            @Override
-            public void onError(int resultType, Object message) {
-                mAppRunner.pConsole.p_error(resultType, message);
-            }
-        };
-        mAppRunner.interp.addListener(appRunnerCb);
+        AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
+        // mAppRunner.interp.addListener(appRunnerCb);
 
         mAppRunner.initProject();
-        mAppRunner.interp.callJsFunction("onCreate");
+        // mAppRunner.interp.callJsFunction("onCreate");
 
         return Service.START_NOT_STICKY;
     }
@@ -257,7 +253,7 @@ public class AppRunnerService extends Service {
     };
 
 
-    public void addScriptedLayout(RelativeLayout scriptedUILayout) {
+    public void addScriptedLayout(View scriptedUILayout) {
         parentScriptedLayout.addView(scriptedUILayout);
     }
 
@@ -290,7 +286,7 @@ public class AppRunnerService extends Service {
         super.onDestroy();
         MLog.d(TAG, "onDestroy");
 
-        mAppRunner.interp.callJsFunction("onDestroy");
+        // mAppRunner.interp.callJsFunction("onDestroy");
 
         if (mOverlayIsEnabled) windowManager.removeView(mainLayout);
 
@@ -302,7 +298,7 @@ public class AppRunnerService extends Service {
         unregisterReceiver(mReceiver);
         unregisterEventBus();
         mAppRunner.byebye();
-        mAppRunner.interp = null;
+        // mAppRunner.interp = null;
     }
 
     /**
@@ -350,7 +346,7 @@ public class AppRunnerService extends Service {
         public void onReceive(Context context, Intent intent) {
             String code = intent.getStringExtra("code");
 
-            mAppRunner.interp.eval(code);
+            // mAppRunner.interp.eval(code);
         }
     };
 

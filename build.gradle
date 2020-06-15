@@ -3,10 +3,9 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.6.2'
     }
 }
 
@@ -19,6 +18,7 @@ task hello {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 

@@ -45,18 +45,15 @@ public class PhonkSettingsHelper {
         // EventBus.getDefault().post(new Events.AppUiEvent("recreate", ""));
 
         Snackbar.make(view, "Close the app to see the changes", Snackbar.LENGTH_LONG)
-                .setAction("RESTART", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                .setAction("RESTART", view1 -> {
 
-                        Intent mStartActivity = new Intent(mContext, MainActivity.class);
-                        int mPendingIntentId = 123456;
-                        PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId, mStartActivity,
-                                PendingIntent.FLAG_CANCEL_CURRENT);
-                        AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-                        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 250, mPendingIntent);
-                        System.exit(0);
-                    }
+                    Intent mStartActivity = new Intent(mContext, MainActivity.class);
+                    int mPendingIntentId = 123456;
+                    PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId, mStartActivity,
+                            PendingIntent.FLAG_CANCEL_CURRENT);
+                    AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+                    mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 250, mPendingIntent);
+                    System.exit(0);
                 }).show();
     }
 
@@ -66,14 +63,11 @@ public class PhonkSettingsHelper {
 
     public static void installExamples(final Context c, final String assetsName, final InstallListener l) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File dir = new File(PhonkSettings.getBaseDir() + assetsName);
-                FileIO.deleteDir(dir);
-                FileIO.copyFileOrDir(c, assetsName);
-                l.onReady();
-            }
+        new Thread(() -> {
+            File dir = new File(PhonkSettings.getBaseDir() + assetsName);
+            FileIO.deleteDir(dir);
+            FileIO.copyFileOrDir(c, assetsName);
+            l.onReady();
         }).start();
     }
 

@@ -31,7 +31,7 @@ import android.os.IBinder;
 import io.phonk.runner.base.utils.MLog;
 import ioio.lib.api.IOIO;
 
-public class IOIOBoard extends HardwareBase {
+public class IOIOBoard {
 
     private static String TAG = IOIOBoard.class.getSimpleName();
 
@@ -39,6 +39,7 @@ public class IOIOBoard extends HardwareBase {
     private IOIOBoardService service_;
     private Intent serviceIntent_;
     private Boolean serviceBound = false;
+    protected HardwareCallback callback_;
     protected IOIO ioio;
 
     private final ServiceConnection connection_ = new ServiceConnection() {
@@ -61,7 +62,6 @@ public class IOIOBoard extends HardwareBase {
     };
 
     public IOIOBoard(Context context, HardwareCallback callback) {
-        super(callback);
         mContext = context;
     }
 
@@ -71,7 +71,6 @@ public class IOIOBoard extends HardwareBase {
      * echo 43 > /sys/class/gpio/export echo out >
      * /sys/class/gpio/gpio43/direction echo 1 > /sys/class/gpio/gpio43/value
      */
-    @Override
     public void powerOn() {
         //SysFs.write("/sys/class/gpio/export", "43");
         //SysFs.write("/sys/class/gpio/gpio43/direction", "out");
@@ -91,7 +90,6 @@ public class IOIOBoard extends HardwareBase {
      * echo 43 > /sys/class/gpio/export echo out >
      * /sys/class/gpio/gpio43/direction echo 0 > /sys/class/gpio/gpio43/value
      */
-    @Override
     public void powerOff() {
         if (serviceBound) {
             MLog.d(TAG, "Aborting thread...");
@@ -116,4 +114,13 @@ public class IOIOBoard extends HardwareBase {
         }
     }
 
+    public interface HardwareCallback {
+        void onConnect(Object obj);
+
+        void setup();
+
+        void loop();
+
+        void onComplete();
+    }
 }

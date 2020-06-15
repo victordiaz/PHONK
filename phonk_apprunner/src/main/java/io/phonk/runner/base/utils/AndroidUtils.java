@@ -23,9 +23,11 @@
 package io.phonk.runner.base.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -52,12 +54,29 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
+import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.R;
 import io.phonk.runner.apprunner.AppRunnerSettings;
+import io.phonk.runner.apprunner.permissions.FeatureNotAvailableException;
+import io.phonk.runner.apprunner.permissions.PermissionNotGrantedException;
 
 public class AndroidUtils {
 
-    private static final String TAG = "AndroidUtils";
+    private static final String TAG = AndroidUtils.class.getSimpleName();
+
+    public static boolean checkFeature(AppRunnerActivity c, String what, String feature, String permission) {
+        boolean ret = false;
+
+        PackageManager pm = c.getPackageManager();
+
+        // check if available
+        if (!pm.hasSystemFeature(feature)) throw new FeatureNotAvailableException(what);
+        if (!c.checkPermission(permission))
+            throw new PermissionNotGrantedException(what);
+        ret = true;
+
+        return ret;
+    }
 
     public static void takeScreenshot(View v) {
         // create bitmap screen capture
@@ -135,8 +154,6 @@ public class AndroidUtils {
 
         return (int) px;
     }
-
-
 
 
     /**
@@ -241,6 +258,7 @@ public class AndroidUtils {
     public static boolean isVersionLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
+
     public static boolean isVersionKitKat() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
@@ -431,13 +449,20 @@ public class AndroidUtils {
     public static String actionToString(int action) {
         switch (action) {
 
-            case MotionEvent.ACTION_DOWN: return "Down";
-            case MotionEvent.ACTION_MOVE: return "Move";
-            case MotionEvent.ACTION_POINTER_DOWN: return "Pointer Down";
-            case MotionEvent.ACTION_UP: return "Up";
-            case MotionEvent.ACTION_POINTER_UP: return "Pointer Up";
-            case MotionEvent.ACTION_OUTSIDE: return "Outside";
-            case MotionEvent.ACTION_CANCEL: return "Cancel";
+            case MotionEvent.ACTION_DOWN:
+                return "Down";
+            case MotionEvent.ACTION_MOVE:
+                return "Move";
+            case MotionEvent.ACTION_POINTER_DOWN:
+                return "Pointer Down";
+            case MotionEvent.ACTION_UP:
+                return "Up";
+            case MotionEvent.ACTION_POINTER_UP:
+                return "Pointer Up";
+            case MotionEvent.ACTION_OUTSIDE:
+                return "Outside";
+            case MotionEvent.ACTION_CANCEL:
+                return "Cancel";
         }
         return "";
     }
@@ -452,15 +477,15 @@ public class AndroidUtils {
 
     public static int darkenColor(int color, float factor) {
 
-        int a = Color.alpha( color );
-        int r = Color.red( color );
-        int g = Color.green( color );
-        int b = Color.blue( color );
+        int a = Color.alpha(color);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
 
-        return Color.argb( a,
-                Math.max( (int)(r * factor), 0 ),
-                Math.max( (int)(g * factor), 0 ),
-                Math.max( (int)(b * factor), 0 ) );
+        return Color.argb(a,
+                Math.max((int) (r * factor), 0),
+                Math.max((int) (g * factor), 0),
+                Math.max((int) (b * factor), 0));
     }
 
     public static int lighter(int color, float factor) {

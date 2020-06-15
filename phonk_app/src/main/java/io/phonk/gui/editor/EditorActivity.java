@@ -47,9 +47,8 @@ import io.phonk.gui.filepreviewer.FilePreviewerFragment;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class EditorActivity extends BaseActivity {
@@ -57,7 +56,7 @@ public class EditorActivity extends BaseActivity {
     private final String TAG = EditorActivity.class.getSimpleName();
 
     private static final String FRAGMENT_EDITOR = "11";
-    private static final String FRAGMENT_FILE_MANAGER  = "12";
+    private static final String FRAGMENT_FILE_MANAGER = "12";
     private static final String FRAGMENT_FILE_PREVIEWER = "21";
 
     private Menu mMenu;
@@ -158,7 +157,8 @@ public class EditorActivity extends BaseActivity {
         menu.clear();
         menu.add(1, MENU_RUN, 0, "Run Project").setIcon(R.drawable.ic_play_arrow_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(1, MENU_SAVE, 0, "Save File").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        if (!isTablet) menu.add(1, MENU_FILES, 0, "Show Project Files").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        if (!isTablet)
+            menu.add(1, MENU_FILES, 0, "Show Project Files").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         menu.add(1, MENU_INCREASE_FONT, 0, "Increase font").setIcon(R.drawable.ic_zoom_in_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         menu.add(1, MENU_DECREASE_FONT, 0, "Decrease font").setIcon(R.drawable.ic_zoom_out_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
@@ -276,7 +276,7 @@ public class EditorActivity extends BaseActivity {
     }
 
     /**
-     *  Toggle API drawer
+     * Toggle API drawer
      */
     public void showAPIDrawer(boolean b) {
 
@@ -312,7 +312,7 @@ public class EditorActivity extends BaseActivity {
                 bundle.putString(FileManagerFragment.ROOT_FOLDER, mCurrentProject.getFullPath());
 
                 // we pass the initial route to hide
-                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.getPathPrev());
+                bundle.putString(FileManagerFragment.PATH_HIDE_PATH_FROM, mCurrentProject.geFoldertPath());
                 fileFragment.setArguments(bundle);
 
                 if (isTablet) {
@@ -399,14 +399,12 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void setProjectTitleAndSubtitle(String projectName, String fileName) {
-        MLog.d("qq2", "project: " + projectName);
-
         mToolbar.setTitle(projectName);
         mToolbar.setSubtitle(fileName);
     }
 
     // load script
-    @Subscribe (sticky = true)
+    @Subscribe(sticky = true)
     public void onEventMainThread(Events.EditorEvent e) {
         if (e.getAction().equals(Events.EDITOR_FILE_INTENT_LOAD)) {
             ProtoFile f = e.getProtofile();
@@ -435,7 +433,7 @@ public class EditorActivity extends BaseActivity {
 
         if (extension.equals("png") || extension.equals("jpg") || extension.equals(".jpeg")) {
             type = "image";
-        } else if (extension.equals("avi") || extension.equals("mpg") || extension.equals("mpeg") || extension.equals("mp4")){
+        } else if (extension.equals("avi") || extension.equals("mpg") || extension.equals("mpeg") || extension.equals("mp4")) {
             type = "video";
         }
 

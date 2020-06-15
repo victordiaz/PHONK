@@ -22,7 +22,6 @@
 
 package io.phonk.gui.filemanager;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,28 +71,21 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         final ProtoFile protoFile = mDataSet.get(position);
         holder.mView.setProtoFile(protoFile);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MLog.d(TAG, "" + protoFile.name + " " + protoFile.getFullPath());
+        holder.mView.setOnClickListener(v -> {
+            MLog.d(TAG, "" + protoFile.name + " " + protoFile.getFullPath());
 
-                // if its a folder move to that level
-                if (protoFile.type.equals("folder")) {
-                    mFragment.setCurrentFolder(protoFile.getFullPath());
-                } else {
-                    EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_INTENT_LOAD, protoFile));
-                }
+            // if its a folder move to that level
+            if (protoFile.type.equals("folder")) {
+                mFragment.setCurrentFolder(protoFile.getFullPath());
+            } else {
+                EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_FILE_INTENT_LOAD, protoFile));
             }
-
         });
 
-        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mFragment.showMenuForItem(holder.mView, position);
+        holder.mView.setOnLongClickListener(v -> {
+            mFragment.showMenuForItem(holder.mView, position);
 
-                return false;
-            }
+            return false;
         });
 
     }

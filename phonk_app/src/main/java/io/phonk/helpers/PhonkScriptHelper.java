@@ -28,32 +28,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.widget.Toast;
+
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 
 import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import io.phonk.App;
 import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
-import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.apprunner.AppRunnerSettings;
+import io.phonk.runner.base.models.Folder;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
-import io.phonk.runner.models.Folder;
-import io.phonk.runner.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class PhonkScriptHelper {
@@ -198,26 +198,22 @@ public class PhonkScriptHelper {
             protoFiles.add(protoFile);
         }
 
-        Collections.sort(protoFiles, new Comparator<ProtoFile>(){
-            @Override
-            public int compare(ProtoFile l, ProtoFile r) {
+        Collections.sort(protoFiles, (l, r) -> {
 
-                // order by folder first and alphabetically
+            // order by folder first and alphabetically
 
-                if (l.isDir && !r.isDir){
-                    return -1;
-                } else if (!l.isDir && r.isDir){
-                    return 1;
-                } else {
-                    return l.name.compareToIgnoreCase(r.name);
-                }
-
+            if (l.isDir && !r.isDir) {
+                return -1;
+            } else if (!l.isDir && r.isDir) {
+                return 1;
+            } else {
+                return l.name.compareToIgnoreCase(r.name);
             }
+
         });
 
         return protoFiles;
     }
-
 
 
     // List folders in a tree structure
@@ -250,13 +246,10 @@ public class PhonkScriptHelper {
     }
 
     private static void fileWalker(ArrayList<ProtoFile> tree, File dir, int levels, final String extensionFilter) {
-        File[] all_projects = dir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (extensionFilter == "*") return true;
+        File[] all_projects = dir.listFiles(pathname -> {
+            if (extensionFilter == "*") return true;
 
-                return pathname.getName().endsWith(extensionFilter);
-            }
+            return pathname.getName().endsWith(extensionFilter);
         });
 
         for (File f : all_projects) {
@@ -275,7 +268,8 @@ public class PhonkScriptHelper {
             protoFile.name = f.getName();
             protoFile.path = PhonkScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
 
-            if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1, extensionFilter);
+            if (f.isDirectory() && levels > 0)
+                fileWalker(protoFile.files, f, levels - 1, extensionFilter);
 
             tree.add(protoFile);
         }
@@ -318,7 +312,7 @@ public class PhonkScriptHelper {
     }
 
     public static String exportProjectAsProtoFile(Project p) {
-        File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PROTO_FILE_EXTENSION);
+        File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PHONK_FILE_EXTENSION);
 
         MLog.d(TAG, "compress " + p.getFullPath());
         MLog.d(TAG, "to " + f.getAbsolutePath());
@@ -335,10 +329,8 @@ public class PhonkScriptHelper {
     }
 
     public static boolean importProtoFile(String folder, String zipFilePath) {
-
         // TODO: Use thread
-
-        //decompress
+        // extract files
         try {
             FileIO.extractZip(zipFilePath, getProjectFolderPath(folder));
         } catch (Exception e) {
@@ -374,13 +366,44 @@ public class PhonkScriptHelper {
         return protoFiles;
     }
 
+    public static boolean renameProject(Project p, String newName) {
+        // p.getFullPath();
+        MLog.d(TAG, "renameProject 1 -->" + p.getFullPath());
+        MLog.d(TAG, "renameProject 2 -->" + p.getParentPath());
+
+        // if new path doent exist then => rename
+        File fd = new File(p.getParentPath() + "/" + newName);
+        if (!fd.exists()) {
+            return new File(p.getFullPath()).renameTo(fd);
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean cloneProject(Project p, String newName) {
+        File fo = new File(p.getFullPath());
+        File fd = new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER) + "/User Projects/" + newName);
+
+        MLog.d(TAG, "rename_ " + fo.toString() + " - " + fd.toString());
+        if (!fd.exists()) {
+            try {
+                FileUtils.copyDirectory(fo, fd);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void listProcesses(Context context) {
         ActivityManager actvityManager = (ActivityManager)
                 context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
 
-        for(ActivityManager.RunningAppProcessInfo runningProInfo:procInfos) {
-            MLog.d("Running Processes", "()()"+runningProInfo.processName);
+        for (ActivityManager.RunningAppProcessInfo runningProInfo : procInfos) {
+            MLog.d("Running Processes", "()()" + runningProInfo.processName);
         }
     }
 
@@ -409,27 +432,21 @@ public class PhonkScriptHelper {
         Intent.ShortcutIconResource icon;
         icon = Intent.ShortcutIconResource.fromContext(c, R.drawable.app_icon);
 
-        try {
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(c)) {
             Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             shortcutIntent.putExtra(Project.NAME, p.getName());
             shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
+            shortcutIntent.setAction(Intent.ACTION_MAIN);
 
-            Map<String, Object> map = AppRunnerHelper.readProjectProperties(c, p);
-
-            final Intent putShortCutIntent = new Intent();
-            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, p.getName());
-            putShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-            putShortCutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-            c.sendBroadcast(putShortCutIntent);
-        } catch (Exception e) {
-            // TODO
+            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(c, folder + "/" + name)
+                    .setIntent(shortcutIntent) // !!! intent's action must be set on oreo
+                    .setShortLabel(name)
+                    .setIcon(IconCompat.createWithResource(c, R.drawable.app_icon))
+                    .build();
+            ShortcutManagerCompat.requestPinShortcut(c, shortcutInfo, null);
         }
-        // Show toast
-        Toast.makeText(c, "Adding shortcut for " + p.getName(), Toast.LENGTH_SHORT).show();
-
     }
 
     public static void shareMainJsDialog(Context c, String folder, String name) {

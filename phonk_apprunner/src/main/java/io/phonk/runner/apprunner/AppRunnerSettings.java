@@ -26,13 +26,14 @@ import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
 
 public class AppRunnerSettings {
 
     public static boolean DEBUG = false;
 
-    public static String MAIN_FILENAME                      = "main.js";
-    public static final String CONF_FILENAME                = "app.conf";
+    public static String MAIN_FILENAME = "main.js";
+    public static final String CONF_FILENAME = "app.conf";
     public final static String PHONK_FOLDER = "phonk_io";
     public static final String USER_PROJECTS_FOLDER = "playground";
     public static final String EXAMPLES_FOLDER = "examples";
@@ -46,8 +47,13 @@ public class AppRunnerSettings {
     public String id;
 
     public static String getBaseDir() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + PHONK_FOLDER + File.separator;
+        try {
+            return Environment.getExternalStorageDirectory().getCanonicalPath()
+                    + File.separator + PHONK_FOLDER + File.separator;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String getFolderPath(String folder) {

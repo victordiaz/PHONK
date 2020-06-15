@@ -30,9 +30,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.apidoc.annotation.ProtoMethod;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 public class ExecuteCmd {
 
@@ -49,9 +49,7 @@ public class ExecuteCmd {
     }
 
     private void initThread() {
-        mThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        mThread = new Thread(() -> {
             Looper.prepare();
 
             int count = 0;
@@ -66,16 +64,16 @@ public class ExecuteCmd {
                 mHandler = new Handler() {
                     @Override
                     public void handleMessage(Message msg) {
-                    process.destroy();
+                        process.destroy();
 
-                    mThread.interrupt();
-                    mThread = null;
+                        mThread.interrupt();
+                        mThread = null;
 
-                    try {
-                        process.waitFor();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                        try {
+                            process.waitFor();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 };
 
@@ -89,13 +87,10 @@ public class ExecuteCmd {
 
                     Handler h = new Handler(Looper.getMainLooper());
                     final int finalI = i;
-                    h.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ReturnObject o = new ReturnObject();
-                            o.put("value", finalI + " " + String.valueOf(buffer));
-                            callbackfn.event(o);
-                        }
+                    h.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("value", finalI + " " + String.valueOf(buffer));
+                        callbackfn.event(o);
                     });
 
                 }
@@ -107,8 +102,6 @@ public class ExecuteCmd {
                 e.printStackTrace();
             }
             Looper.loop();
-            }
-
         });
     }
 
@@ -119,7 +112,7 @@ public class ExecuteCmd {
         return this;
     }
 
-    @ProtoMethod(description = "stop the running command", example = "")
+    @PhonkMethod(description = "stop the running command", example = "")
     public ExecuteCmd stop() {
         Message msg = mHandler.obtainMessage();
         msg.arg1 = 0;

@@ -23,12 +23,12 @@
 package io.phonk.gui;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,16 +43,16 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.api.other.PLooper;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.other.PLooper;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class ConnectionInfoFragment extends Fragment {
 
     private final String TAG = ConnectionInfoFragment.class.getSimpleName();
 
-    private static AppRunner mAppRunner;
+    private AppRunner mAppRunner;
     private View rootView;
 
     private ToggleButton mToggleServers;
@@ -62,13 +62,18 @@ public class ConnectionInfoFragment extends Fragment {
     private ImageView mComputerimage;
     boolean stateBlinkCursor = true;
     private TextView mComputerText;
+    private String mRealIp = "";
+    private String mMaskedIp = "XXX.XXX.XXX.XXX";
+    // private PLooper mLooper;
+    private String mLastConnectionMessage;
+    private String mLastIp;
 
     public ConnectionInfoFragment() {
     }
 
-    public static ConnectionInfoFragment newInstance(AppRunner appRunner) {
-        mAppRunner = appRunner;
+    public static ConnectionInfoFragment newInstance() {
         ConnectionInfoFragment fragment = new ConnectionInfoFragment();
+
         // Bundle args = new Bundle();
         // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         // fragment.setArguments(args);
@@ -84,6 +89,16 @@ public class ConnectionInfoFragment extends Fragment {
         mTxtConnectionMessage = rootView.findViewById(R.id.connection_message);
         mTxtConnectionIp = rootView.findViewById(R.id.connection_ip);
 
+        if ((boolean) UserPreferences.getInstance().get("servers_mask_ip")) {
+            mTxtConnectionIp.setOnClickListener(view -> {
+                if (mTxtConnectionIp.getText().toString().contains("XXX")) {
+                    mTxtConnectionIp.setText("http://" + mRealIp);
+                } else {
+                    mTxtConnectionIp.setText("http://" + mMaskedIp);
+                }
+            });
+        }
+
         mConnectionButtons = rootView.findViewById(R.id.connection_buttons);
 
         mToggleServers = rootView.findViewById(R.id.webide_connection_toggle);
@@ -91,26 +106,13 @@ public class ConnectionInfoFragment extends Fragment {
         Button startHotspot = rootView.findViewById(R.id.start_hotspot);
         // Button webide_connection_help = (Button) findViewById(R.id.webide_connection_help);
 
-        connectWifi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhonkAppHelper.launchWifiSettings(getActivity());
-            }
-        });
+        connectWifi.setOnClickListener(view -> PhonkAppHelper.launchWifiSettings(getActivity()));
 
-        startHotspot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PhonkAppHelper.launchHotspotSettings(getActivity());
-            }
-        });
+        startHotspot.setOnClickListener(view -> PhonkAppHelper.launchHotspotSettings(getActivity()));
 
-        mToggleServers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               if (b) EventBus.getDefault().postSticky(new Events.AppUiEvent("startServers", ""));
-               else EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
-            }
+        mToggleServers.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) EventBus.getDefault().postSticky(new Events.AppUiEvent("startServers", ""));
+            else EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
         });
 
         if ((boolean) UserPreferences.getInstance().get("servers_enabled_on_start")) {
@@ -120,37 +122,50 @@ public class ConnectionInfoFragment extends Fragment {
         mComputerText = rootView.findViewById(R.id.computerText);
         mComputerText.setMovementMethod(new ScrollingMovementMethod());
 
-        mAppRunner.pUtil.loop(1000, new PLooper.LooperCB() {
-            @Override
-            public void event() {
-                // String prevText = (String) mComputerText.getText();
-                // if (stateBlinkCursor) mComputerText.setText(prevText + "\n> ");
-                // else mComputerText.setText(prevText + "\n >_");
-                stateBlinkCursor = !stateBlinkCursor;
-            }
-        }).start();
-
+        // TODO REENABLE
+        // startInfoPolling();
 
         return rootView;
-
     }
+
+    // TODO REENABLE
+    /*
+    public void startInfoPolling() {
+        mAppRunner = ((MainActivity) getActivity()).getAppRunner();
+
+        mLooper = this.mAppRunner.pUtil.loop(1000, new PLooper.LooperCB() {
+            @Override
+            public void event() {
+              // String prevText = (String) mComputerText.getText();
+              // if (stateBlinkCursor) mComputerText.setText(prevText + "\n> ");
+              // else mComputerText.setText(prevText + "\n >_");
+              stateBlinkCursor = !stateBlinkCursor;
+            }
+        });
+        mLooper.start();
+    }
+     */
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setConnectionMessage(mLastConnectionMessage, mLastIp);
         EventBus.getDefault().register(this);
+        // TODO REENABLE
+        // mLooper.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
+        // TODO REENABLE
+        // mLooper.stop();
     }
 
     // network notification
@@ -158,23 +173,32 @@ public class ConnectionInfoFragment extends Fragment {
     public void onEventMainThread(Events.Connection e) {
         String type = e.getType();
         String address = e.getAddress();
+        mRealIp = address;
 
-        MLog.d("qq", type);
+        boolean isMaskingIp = (boolean) UserPreferences.getInstance().get("servers_mask_ip");
+        if (isMaskingIp) {
+            address = mMaskedIp;
+        }
 
         if (type == "wifi") {
-            mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_wifi));
-            mTxtConnectionIp.setText("http://" + address);
-            mTxtConnectionIp.setVisibility(View.VISIBLE);
-            // mConnectionButtons.setVisibility(View.GONE);
+            setConnectionMessage(getResources().getString(io.phonk.R.string.connection_message_wifi), address);
         } else if (type == "tethering") {
-            mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_tethering));
-            mTxtConnectionIp.setText("http://" + address);
-            mTxtConnectionIp.setVisibility(View.VISIBLE);
-            // mConnectionButtons.setVisibility(View.GONE);
+            setConnectionMessage(getResources().getString(io.phonk.R.string.connection_message_tethering), address);
         } else {
-            mTxtConnectionMessage.setText(getResources().getString(io.phonk.R.string.connection_message_not_connected));
+            setConnectionMessage(getResources().getString(io.phonk.R.string.connection_message_not_connected), null);
+        }
+    }
+
+    private void setConnectionMessage(String connectionMessage, String ip) {
+        mLastConnectionMessage = connectionMessage;
+        mLastIp = ip;
+        mTxtConnectionMessage.setText(connectionMessage);
+        mTxtConnectionIp.setText("http://" + ip);
+
+        if (ip != null) {
+            mTxtConnectionIp.setVisibility(View.VISIBLE);
+        } else {
             mTxtConnectionIp.setVisibility(View.GONE);
-            // mConnectionButtons.setVisibility(View.VISIBLE);
         }
     }
 
@@ -182,7 +206,7 @@ public class ConnectionInfoFragment extends Fragment {
     public void onEventMainThread(Events.AppUiEvent e) {
         String action = e.getAction();
         Object value = e.getValue();
-        MLog.d("qq", "got AppUiEvent 2"  + action);
+        MLog.d(TAG, "got AppUiEvent 2" + action);
 
         switch (action) {
             case "stopServers":
@@ -194,9 +218,22 @@ public class ConnectionInfoFragment extends Fragment {
         }
     }
 
-    public void addTextToConsole(String text) {
-        mComputerText.append(text + "\n> ");
+    @Subscribe
+    public void onEventMainThread(Events.UserConnectionEvent e) {
+        String str = "";
+        String ip = e.getIp();
+        if (e.getConnected()) {
+            str = ip + " connected";
+        } else {
+            str = ip + " disconnected";
+        }
 
+        addTextToConsole(str);
+    }
+
+    public void addTextToConsole(String text) {
+        Handler handler = new Handler();
+        handler.post(() -> mComputerText.append(text + "\n> "));
     }
 
 
@@ -207,10 +244,9 @@ public class ConnectionInfoFragment extends Fragment {
         addTextToConsole("ls " + e.getFullFolder());
     }
 
-    /*
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
-        MLog.d(TAG, "event -> " + e.getAction());
+        MLog.d(TAG, "connect -> " + e.getAction());
 
         String action = e.getAction();
         Project p = e.getProject();
@@ -221,16 +257,22 @@ public class ConnectionInfoFragment extends Fragment {
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
             addTextToConsole("stop " + p.getSandboxPath());
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
+            addTextToConsole("stop all projects");
         } else if (action.equals(Events.PROJECT_SAVE)) {
             addTextToConsole("saving... " + p.getSandboxPath());
         } else if (action.equals(Events.PROJECT_NEW)) {
-            addTextToConsole("new project");
+            addTextToConsole("creating project " + p.name);
+        } else if (action.equals(Events.PROJECT_DELETE)) {
+            addTextToConsole("deleting project " + p.name);
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             //mProtocoder.protoScripts.listRefresh();
         } else if (action.equals(Events.PROJECT_EDIT)) {
             addTextToConsole("edit project" + p.getSandboxPath());
+        } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
+            addTextToConsole("refreshing list");
+        } else if (action.equals(Events.PROJECT_RUNNING)) {
+            addTextToConsole("running " + e.getProject().getSandboxPath());
         }
     }
-    */
 
 }

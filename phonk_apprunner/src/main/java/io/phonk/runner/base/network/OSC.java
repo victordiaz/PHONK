@@ -33,18 +33,17 @@ import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 import java.util.Vector;
 
-import de.sciss.net.OSCListener;
 import de.sciss.net.OSCMessage;
 import de.sciss.net.OSCReceiver;
 import de.sciss.net.OSCTransmitter;
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.PhonkNativeArray;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.MLog;
 
 public class OSC {
 
-    protected static final String TAG = "OSC";
+    protected static final String TAG = OSC.class.getSimpleName();
 
     public interface OSCServerListener {
         void onMessage(OSCMessage msg);
@@ -57,13 +56,11 @@ public class OSC {
         OSCReceiver rcv;
         OSCTransmitter trns;
         DatagramChannel dch;
-        int n = 0;
 
         SocketAddress inPort = null;
         Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
 
         public void start(String port) {
-
             rcv = null;
             dch = null;
 
@@ -75,18 +72,11 @@ public class OSC {
                 // address
                 rcv = OSCReceiver.newUsing(dch);
 
-                rcv.addOSCListener(new OSCListener() {
-
-                    @Override
-                    public void messageReceived(OSCMessage msg, SocketAddress sender, long time) {
-
-                        for (OSCServerListener l : listeners) {
-                            l.onMessage(msg);
-                        }
-
+                rcv.addOSCListener((msg, sender, time) -> {
+                    for (OSCServerListener l : listeners) {
+                        l.onMessage(msg);
                     }
                 });
-
                 rcv.startListening();
 
             } catch (IOException e2) {
@@ -95,38 +85,19 @@ public class OSC {
         }
 
         public void onNewData(final ReturnInterface callbackfn) {
-            this.addListener(new OSC.OSCServerListener() {
-
-                @Override
-                public void onMessage(final OSCMessage msg) {
-                    MLog.d(TAG, "message received " + msg);
-
-                    final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
-                    for (int i = 0; i < msg.getArgCount(); i++) {
-                        valuesArray.put(valuesArray.size(), valuesArray, msg.getArg(i));
-                    }
-
-                    /*
-                    try {
-                        MLog.d(TAG, msg.getName() + " " + array.toString(2));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    */
-
-                    mHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            // MLog.d(TAG, "receiver");
-                            ReturnObject o = new ReturnObject();
-                            o.put("name", msg.getName());
-                            o.put("data", valuesArray);
-                            callbackfn.event(o);
-                        }
-                    });
+            this.addListener(msg -> {
+                final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
+                for (int i = 0; i < msg.getArgCount(); i++) {
+                    valuesArray.put(valuesArray.size(), valuesArray, msg.getArg(i));
                 }
 
+                mHandler.post(() -> {
+                    // MLog.d(TAG, "receiver");
+                    ReturnObject o = new ReturnObject();
+                    o.put("name", msg.getName());
+                    o.put("data", valuesArray);
+                    callbackfn.event(o);
+                });
             });
         }
 
@@ -154,11 +125,9 @@ public class OSC {
         public void removeListener(OSCServerListener listener) {
             listeners.remove(listener);
         }
-
     }
 
     public class Client {
-
         // OSC client
         SocketAddress addr2;
         DatagramChannel dch2;
@@ -170,14 +139,11 @@ public class OSC {
         }
 
         public void connectOSC(String address, int port) {
-
-            MLog.d(TAG, "connecting to " + address + " in " + port);
             try {
                 addr2 = new InetSocketAddress(InetAddress.getByName(address), port);
                 dch2 = DatagramChannel.open();
                 dch2.socket().bind(null);
                 trns2 = OSCTransmitter.newUsing(dch2);
-                MLog.d(TAG, "connected to " + address + " in " + port);
                 oscConnected = true;
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -186,7 +152,6 @@ public class OSC {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
         public boolean isOSCConnected() {
@@ -196,24 +161,16 @@ public class OSC {
         public void send(final String msg, final Object[] o) {
 
             if (oscConnected == true) {
-                // send
-
-                Thread t = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // Object[] o = new Object[1];
-                        // o[0] = content;
-                        MLog.d(TAG, "sending");
-                        try {
-                            MLog.d(TAG, "sent");
-                            trns2.send(new OSCMessage(msg, o), addr2);
-                        } catch (IOException e) {
-                            MLog.d(TAG, "not sent");
-                            e.printStackTrace();
-                        }
-
+                Thread t = new Thread(() -> {
+                    MLog.d(TAG, "sending");
+                    try {
+                        MLog.d(TAG, "sent");
+                        trns2.send(new OSCMessage(msg, o), addr2);
+                    } catch (IOException e) {
+                        MLog.d(TAG, "not sent");
+                        e.printStackTrace();
                     }
+
                 });
                 t.start();
             }
@@ -226,7 +183,6 @@ public class OSC {
                 e.printStackTrace();
             }
             trns2.dispose();
-
         }
 
         public void stop() {

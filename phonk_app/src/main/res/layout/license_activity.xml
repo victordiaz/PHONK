@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:background="@color/phonk_backgroundColor_primary"
+        android:background="@color/phonk_backgroundColor"
         android:text="@string/licenses_explanation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
     <ListView
         android:id="@+id/license_list"
         android:layout_below="@id/textView"
-        android:background="@color/phonk_backgroundColor_secondary"
+        android:background="@color/phonk_backgroundColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

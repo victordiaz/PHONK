@@ -50,9 +50,9 @@ import io.phonk.events.Events;
 import io.phonk.events.Events.ProjectEvent;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
-import io.phonk.runner.models.Project;
 
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
@@ -127,27 +127,19 @@ public class ProjectListFragment extends BaseFragment {
         mFolderPath = v.findViewById(R.id.folderPath);
         mSelectFolder = v.findViewById(R.id.select_folder);
 
-        mBackToFolderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EventBus.getDefault().post(new Events.AppUiEvent("page", 1));
-                // show folderlist
-                // if (isShown)
-                // else
-            }
+        mBackToFolderButton.setOnClickListener(view -> {
+            EventBus.getDefault().post(new Events.AppUiEvent("page", 1));
+            // show folderlist
+            // if (isShown)
+            // else
         });
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         LinearLayout llFolderLocation = v.findViewById(R.id.folderLocation2);
         if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
 
-        // TODO add the bottom bar any day.....
         mBottomBar = v.findViewById(R.id.bottombar);
         mBottomBar.setVisibility(View.GONE);
-        /*
-        mBottomBar.setTranslationY(AndroidUtils.dpToPixels(mContext, 52));
-        mBottomBar.animate().translationY(AndroidUtils.dpToPixels(mContext, 0)).setDuration(5000).start();
-        */
 
         return v;
     }
@@ -161,11 +153,6 @@ public class ProjectListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-
-        //TODO reenable
-        //if (!AndroidUtils.isWear(getActivity())) {
-        //    ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        //}
     }
 
     @Override
@@ -224,7 +211,7 @@ public class ProjectListFragment extends BaseFragment {
 
     public void clear() {
         if (mListProjects != null) mListProjects.clear();
-       // mGrid.removeAllViews();
+        // mGrid.removeAllViews();
         mProjectAdapter.notifyDataSetChanged();
     }
 
@@ -311,17 +298,16 @@ public class ProjectListFragment extends BaseFragment {
                 Project p = evt.getProject();
                 projectRefresh(p.getName());
                 MLog.d(TAG, "> Event (Run project feedback)" + p.getName());
-
                 break;
-
             case Events.PROJECT_NEW:
                 MLog.d(TAG, "notify data set changed");
                 mProjectAdapter.add(evt.getProject());
-
                 break;
-
             case Events.PROJECT_DELETE:
                 mProjectAdapter.remove(evt.getProject());
+                break;
+            case Events.PROJECT_REFRESH_LIST:
+                loadFolder(mProjectFolder);
                 break;
         }
 

@@ -49,8 +49,8 @@ import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.util.Enumeration;
 
-import io.phonk.runner.api.common.ReturnObject;
-import io.phonk.runner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.base.utils.MLog;
 
 public class NetworkUtils {

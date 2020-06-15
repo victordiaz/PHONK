@@ -66,36 +66,30 @@ public class LicenseActivity extends BaseActivity {
 
         final Handler handler = new Handler();
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Thread t = new Thread(() -> {
 
-                // read mCurrentFileList
-                try {
-                     mLicenseFiles = mAssetManager.list("licenses");
-                    for (int i = 0; i < mLicenseFiles.length; i++) {
-                        mLicenseFileContent.add(new License(mLicenseFiles[i], readFile("licenses/" + mLicenseFiles[i])));
-                        // MLog.d(TAG, filecontent);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            // read mCurrentFileList
+            try {
+                mLicenseFiles = mAssetManager.list("licenses");
+                for (int i = 0; i < mLicenseFiles.length; i++) {
+                    mLicenseFileContent.add(new License(mLicenseFiles[i], readFile("licenses/" + mLicenseFiles[i])));
+                    // MLog.d(TAG, filecontent);
                 }
-
-                // show license in ui
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < mLicenseFiles.length; i++) {
-                            View v = getLayoutInflater().inflate(R.layout.license_view, null);
-                            TextView txtView = v.findViewById(R.id.license_title);
-                            txtView.setText(mLicenseFiles[i]);
-
-                            myAdapter.notifyDataSetChanged();
-                            mLicenseList.invalidateViews();
-                        }
-                    }
-                });
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            // show license in ui
+            handler.post(() -> {
+                for (int i = 0; i < mLicenseFiles.length; i++) {
+                    View v = getLayoutInflater().inflate(R.layout.license_view, null);
+                    TextView txtView = v.findViewById(R.id.license_title);
+                    txtView.setText(mLicenseFiles[i].trim());
+
+                    myAdapter.notifyDataSetChanged();
+                    mLicenseList.invalidateViews();
+                }
+            });
         });
         t.start();
 
@@ -156,20 +150,16 @@ public class LicenseActivity extends BaseActivity {
             txtTitle.setText(license.title);
             txtText.setText(license.body);
 
-            txtText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!license.showing) {
-                        txtText.setEllipsize(null);
-                        txtText.setMaxLines(Integer.MAX_VALUE);
-                    }
-                    else {
-                        txtText.setEllipsize(TextUtils.TruncateAt.END);
-                        txtText.setMaxLines(3);
-                    }
-
-                    license.showing = !license.showing;
+            txtText.setOnClickListener(view -> {
+                if (!license.showing) {
+                    txtText.setEllipsize(null);
+                    txtText.setMaxLines(Integer.MAX_VALUE);
+                } else {
+                    txtText.setEllipsize(TextUtils.TruncateAt.END);
+                    txtText.setMaxLines(3);
                 }
+
+                license.showing = !license.showing;
             });
 
             return convertView;

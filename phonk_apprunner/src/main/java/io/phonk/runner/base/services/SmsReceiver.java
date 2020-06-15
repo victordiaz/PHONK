@@ -30,7 +30,7 @@ import android.telephony.SmsMessage;
 
 /*
  * http://shreymalhotra.me/blog/tutorial/receive-sms-using-android-broadcastreceiver-inside-an-activity/
- * 
+ *
  */
 
 public class SmsReceiver extends BroadcastReceiver {

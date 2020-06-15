@@ -27,26 +27,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal">
+    android:layout_height="wrap_content">
+
 
     <TextView
-        android:id="@+id/step_num_1"
+        android:id="@+id/welcome_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="0dp"
-        android:width="50dp"
-        android:height="50dp"
-        android:background="@drawable/round_step"
-        android:gravity="center"
-        android:text="1"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"
-        android:visibility="gone" />
+        android:textColor="@color/primaryAccent"
+        android:text="@string/welcome_2_title"
+        android:layout_marginBottom="12dp">
+    </TextView>
 
+    <TextView
+        android:id="@+id/welcome_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_title"
+        android:layout_alignParentLeft="true"
+        android:maxWidth="300dp"
+        android:text="@string/welcome_2_body"
+        android:textColor="@color/white"
+        android:shadowColor="#55000000"
+        android:fontFamily="sans-serif-condensed"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:textSize="12sp" />
+    <!--
     <TextView
         android:id="@+id/step_title_1"
         android:layout_width="wrap_content"
@@ -57,7 +64,7 @@
         android:layout_marginBottom="8dp"
         android:text="Grant permissions"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/phonk_accentColor_primary" />
+        android:textColor="@color/phonk_colorPrimary" />
 
     <TextView
         android:id="@+id/step_body_1"
@@ -71,14 +78,16 @@
         android:text="In order to make cool programs we need some permissions, such as Camera, Sensors, etc. \nIn order to run all the examples and demos is recommended to grant all of them. \nRemember that you can always enable or disable them from the Settings section!"
         android:textColor="@color/phonk_textColor_primary"
         android:textSize="16sp" />
+        -->
 
     <ImageView
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/welcome_body"
         android:id="@+id/imageView3"
-        android:src="@drawable/install_2"
-        android:layout_below="@id/step_body_1"
-        android:layout_gravity="center" />
+        android:src="@drawable/f_permissions"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
 
 </RelativeLayout>

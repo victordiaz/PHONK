@@ -27,37 +27,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <TextView
+        android:id="@+id/welcome_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:srcCompat="@drawable/logo_partial" />
-
-    <ImageView
-        android:id="@+id/name"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="12dp"
-        app:srcCompat="@drawable/thingie_undertext" />
+        android:textColor="@color/primaryAccent"
+        android:text="@string/welcome_1_title"
+        android:layout_marginBottom="12dp">
+    </TextView>
 
     <TextView
         android:id="@+id/welcome_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="0dp"
-        android:maxWidth="500dp"
-        android:text="@string/welcome_body"
-        android:layout_below="@+id/name"
+        android:layout_below="@id/welcome_title"
+        android:layout_alignParentLeft="true"
+        android:maxWidth="300dp"
+        android:text="@string/welcome_1_body"
         android:textColor="@color/white"
         android:shadowColor="#55000000"
         android:shadowDx="2"
         android:shadowDy="2"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
     <ImageView
         android:layout_marginTop="15dp"
@@ -65,7 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_body"
         android:id="@+id/imageView3"
-        android:src="@drawable/install_1"
-        android:layout_gravity="center" />
+        android:src="@drawable/f_computer"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
 
 </RelativeLayout>

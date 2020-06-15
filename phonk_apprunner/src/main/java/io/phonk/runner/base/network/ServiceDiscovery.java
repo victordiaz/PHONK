@@ -32,9 +32,9 @@ import android.util.Log;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -56,7 +56,7 @@ public class ServiceDiscovery {
         return new Discover(mAppRunner.getAppContext(), serviceType);
     }
 
-    private class Create {
+    public class Create {
         private final NsdManager mNsdManager;
         private final NsdServiceInfo serviceInfo;
         private NsdManager.RegistrationListener mRegistrationListener;
@@ -74,9 +74,9 @@ public class ServiceDiscovery {
             serviceInfo.setPort(port);
 
             String ip = (String) mAppRunner.pNetwork.networkInfo().get("ip");
-            MLog.d(TAG, "ip: " + ip);
             try {
-                serviceInfo.setHost(InetAddress.getByName(ip));
+                InetAddress p = InetAddress.getByName(ip);
+                serviceInfo.setHost(p);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
@@ -96,7 +96,7 @@ public class ServiceDiscovery {
                     ret.put("port", serviceInfo.getPort());
                     ret.put("type", serviceInfo.getServiceType());
                     ret.put("name", serviceInfo.getServiceName());
-                    if (mCallback != null)  mCallback.event(ret);
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
@@ -149,7 +149,7 @@ public class ServiceDiscovery {
     }
 
 
-    private class Discover {
+    public class Discover {
         final NsdManager mNsdManager;
         private final String mServiceType;
         NsdManager.DiscoveryListener mDiscoveryListener;
@@ -241,7 +241,8 @@ public class ServiceDiscovery {
                     ret.put("name", serviceType);
                     ret.put("error", errorCode);
                     ret.put("status", "stop_discovering_failed");
-                    if (mCallback != null) mCallback.event(ret);                }
+                    if (mCallback != null) mCallback.event(ret);
+                }
             };
         }
 

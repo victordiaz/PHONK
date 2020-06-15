@@ -36,31 +36,35 @@ import android.os.FileObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
 
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import io.phonk.MainActivity;
 import io.phonk.R;
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.events.Events;
 import io.phonk.events.EventsProxy;
 import io.phonk.gui.settings.PhonkSettings;
+import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class PhonkServerService extends Service {
 
@@ -80,10 +84,12 @@ public class PhonkServerService extends Service {
     private PhonkHttpServer phonkHttpServer;
     private PhonkFtpServer phonkFtpServer;
     private PhonkWebsocketServer phonkWebsockets;
+    private ArrayList<String> mConnectedClients = new ArrayList<>();
 
     private Gson gson = new Gson();
     private int counter = 0;
     private Project mProjectRunning;
+    private NotificationCompat.Builder mNotificationBuilder;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -135,7 +141,6 @@ public class PhonkServerService extends Service {
         }
     };
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -149,17 +154,16 @@ public class PhonkServerService extends Service {
         final AppRunnerCustom appRunner = new AppRunnerCustom(this).initDefaultObjects(AppRunnerHelper.createSettings());
 
         /*
-         * Init the event proxy
+         * Init the connect proxy
          */
         mEventsProxy = new EventsProxy();
-
         EventBus.getDefault().register(this);
 
         /*
         // go back to app intent
         Intent resultIntent = new Intent(this, MainActivity.class);
 
-        // The stack builder object will contain an artificial back stack for
+        // The stack object will contain an artificial back stack for
         // navigating backward from the Activity leads out your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
@@ -171,17 +175,23 @@ public class PhonkServerService extends Service {
         // close server intent
         Intent notificationIntent = new Intent(this, PhonkServerService.class).setAction(SERVICE_CLOSE);
         PendingIntent pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
-        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
+        String ip = NetworkUtils.getLocalIpAddress(PhonkServerService.this).get("ip") + ":" + PhonkSettings.HTTP_PORT;
+        String msg = this.getString(R.string.notification_description) + " http://" + ip;
+
+        mNotificationBuilder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon_phonk_service)
+                // .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                 .setContentTitle(this.getString(R.string.app_name))
-                .setContentText(this.getString(R.string.notification_description))
+                .setContentText(msg)
                 .setOngoing(false)
-                .setColor(this.getResources().getColor(R.color.phonk_accentColor_primary))
+                .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
                 // .setContentIntent(pendingIntent)
+                // .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
-                // .setContentInfo("1 Connection");
+        // .setContentInfo("1 Connection");
+        // mNotificationBuilder.build().flags = Notification.FLAG_ONGOING_EVENT;
 
         // damm annoying android pofkjpodsjf0ewiah
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -193,17 +203,53 @@ public class PhonkServerService extends Service {
         } else {
         }
 
-        startForeground(NOTIFICATION_ID, builder.build());
+        startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
 
         phonkHttpServer = new PhonkHttpServer(this, PhonkSettings.HTTP_PORT);
 
+        // when we get a first request from the editor we can say that the editor is connected
+        phonkHttpServer.connectionCallback(ip1 -> {
+            if (!mConnectedClients.contains(ip1)) {
+                mConnectedClients.add(ip1);
+                EventBus.getDefault().postSticky(new Events.UserConnectionEvent(true, ip1, mConnectedClients));
+                updateUserSizeNotification(mConnectedClients.size());
+                vibrate();
+            }
+        });
+
         try {
             phonkWebsockets = new PhonkWebsocketServer(this, PhonkSettings.WEBSOCKET_PORT);
+            // when the websocket disconnect we can say that the editor is disconnected
+            phonkWebsockets.addConnectionCallback(new PhonkWebsocketServer.ConnectionCallback() {
+                @Override
+                public void connect(String ip) {
+                    if (!mConnectedClients.contains(ip)) {
+                        mConnectedClients.add(ip);
+                        vibrate();
+                        updateUserSizeNotification(mConnectedClients.size());
+                        EventBus.getDefault().postSticky(new Events.UserConnectionEvent(true, ip, mConnectedClients));
+                    }
+                }
+
+                @Override
+                public void disconnect(String ip) {
+                    if (mConnectedClients.contains(ip)) {
+                        mConnectedClients.remove(ip);
+                        updateUserSizeNotification(mConnectedClients.size());
+                        EventBus.getDefault().postSticky(new Events.UserConnectionEvent(false, ip, mConnectedClients));
+                    }
+                }
+            });
             phonkWebsockets.start();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
+        // MDNS advertising
+        boolean isMDNSAdvertising = (boolean) UserPreferences.getInstance().get("advertise_mdns");
+        if (isMDNSAdvertising) {
+            appRunner.pNetwork.mDNS.register("Phonk WebIDE", "_http._tcp", 8585);
+        }
         final Handler handler = new Handler();
         Runnable r = new Runnable() {
             @Override
@@ -250,6 +296,7 @@ public class PhonkServerService extends Service {
 
                 String name = "none";
                 if (mProjectRunning != null) name = mProjectRunning.getName();
+
                 script.put("running script", name);
 
                 info.put("device", device);
@@ -266,9 +313,18 @@ public class PhonkServerService extends Service {
         };
         handler.postDelayed(r, 0);
 
+        sendUpdatedProjectListToWebIDE();
+
         //phonkFtpServer = new PhonkFtpServer(this);
 
         fileObserver.startWatching();
+        File file = new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER));
+
+        try {
+            MLog.d(TAG, "--> " + file.getCanonicalPath() + " " + file.exists());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // register log broadcast
         IntentFilter filterSend = new IntentFilter();
@@ -287,12 +343,22 @@ public class PhonkServerService extends Service {
         registerReceiver(mNotificationReceiver, filter);
 
         startStopActivityBroadcastReceiver();
-
-
         EventBus.getDefault().postSticky(new Events.AppUiEvent("serversStarted", ""));
 
-
         viewsUpdate();
+    }
+
+    private void updateUserSizeNotification(int size) {
+        mNotificationBuilder.setContentTitle("Phonk (" + size + " connections)");
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    }
+
+    private void vibrate() {
+        int vWait = 20;
+        int vTime = 80;
+        long[] pattern = new long[]{vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime};
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(pattern, -1);
     }
 
     @Override
@@ -317,21 +383,53 @@ public class PhonkServerService extends Service {
     }
 
 
-
     /*
      * FileObserver to notify when projects are added or removed
      */
-    FileObserver fileObserver = new FileObserver(PhonkSettings.getBaseDir(), FileObserver.CREATE| FileObserver.DELETE) {
-
+    FileObserver fileObserver = new FileObserver(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects/"), FileObserver.CREATE | FileObserver.DELETE | FileObserver.DELETE_SELF | FileObserver.MODIFY | FileObserver.MOVED_TO | FileObserver.MOVED_FROM) {
         @Override
         public void onEvent(int event, String file) {
+            MLog.d(TAG, "qq -> " + event);
+            MLog.d(TAG, "qq2 -> " + file);
+
             if ((FileObserver.CREATE & event) != 0) {
-                MLog.d(TAG, "File created [" + PhonkSettings.getBaseDir() + "/" + file + "]");
+                MLog.d(TAG, "File created [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
             } else if ((FileObserver.DELETE & event) != 0) {
-                MLog.d(TAG, "File deleted [" + PhonkSettings.getBaseDir() + "/" + file + "]");
+                MLog.d(TAG, "File deleted [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
+            } else if ((FileObserver.MOVED_FROM & event) != 0) {
+                MLog.d(TAG, "File moved from [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
+            } else if ((FileObserver.MOVED_TO & event) != 0) {
+                MLog.d(TAG, "File moved to [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
             }
         }
     };
+
+    private void sendUpdatedProjectListToWebIDE() {
+        MLog.d(TAG, "sending");
+        MLog.d(TAG, "sending 2");
+        HashMap data = new HashMap();
+        data.put("module", "project");
+        HashMap info = new HashMap();
+        data.put("project", info);
+        info.put("updatedProjectList", true);
+        String jsonObject = gson.toJson(data);
+        phonkWebsockets.send(jsonObject);
+
+        /*
+        final Handler handler = new Handler();
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        };
+        handler.post(r);
+        */
+    }
 
     /*
      * Notification that show if the server is ON
@@ -383,36 +481,35 @@ public class PhonkServerService extends Service {
     };
 
 
-
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
-        MLog.d(TAG, "event -> " + e.getAction());
+        MLog.d(TAG, "connect -> " + e.getAction());
 
         String action = e.getAction();
         if (action.equals(Events.PROJECT_RUN)) {
             PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
-            mProjectRunning = e.getProject();
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
-            // ProtoScriptHelper.stop_all_scripts();
             Intent i = new Intent("io.phonk.runner.intent.CLOSE");
             sendBroadcast(i);
             PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
-
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
             Intent i = new Intent("io.phonk.runner.intent.CLOSE");
             sendBroadcast(i);
         } else if (action.equals(Events.PROJECT_SAVE)) {
-            //Project p = evt.getProject();
-            //mProtocoder.protoScripts.refresh(p.getFolder(), p.getName());
         } else if (action.equals(Events.PROJECT_NEW)) {
-            //MLog.d(TAG, "creating new project " + evt.getProject().getName());
-            //mProtocoder.protoScripts.createProject("projects", evt.getProject().getName());
+            sendUpdatedProjectListToWebIDE();
+        } else if (action.equals(Events.PROJECT_DELETE)) {
+            sendUpdatedProjectListToWebIDE();
+        } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
+            sendUpdatedProjectListToWebIDE();
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             //mProtocoder.protoScripts.listRefresh();
         } else if (action.equals(Events.PROJECT_EDIT)) {
             MLog.d(TAG, "edit " + e.getProject().getName());
-
             PhonkAppHelper.launchEditor(getApplicationContext(), e.getProject());
+        } else if (action.equals(Events.PROJECT_RUNNING)) {
+            MLog.d(TAG, "running " + e.getProject().getName());
+            mProjectRunning = e.getProject();
         }
     }
 
@@ -451,7 +548,7 @@ public class PhonkServerService extends Service {
      * Receiving order to execute line of code
      */
     public void viewsUpdate() {
-        MLog.d("registerreceiver", "sending event");
+        MLog.d("registerreceiver", "sending connect");
 
         IntentFilter filterSend = new IntentFilter();
         filterSend.addAction("io.phonk.intent.VIEWS_UPDATE");

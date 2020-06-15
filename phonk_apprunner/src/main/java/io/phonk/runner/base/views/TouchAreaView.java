@@ -23,9 +23,9 @@
 package io.phonk.runner.base.views;
 
 /*
- * use vectors 
- * add values to it 
- * 
+ * use vectors
+ * add values to it
+ *
  */
 
 import android.content.Context;

@@ -35,7 +35,7 @@ import ioio.lib.util.android.IOIOService;
 public class IOIOBoardService extends IOIOService {
     public static final int SET_CALLBACK = 1;
     protected static final String TAG = IOIOBoardService.class.getSimpleName();
-    private HardwareCallback callback_;
+    private IOIOBoard.HardwareCallback callback_;
     protected Boolean abort_ = false;
     // Binder given to clients
     private final IBinder mBinder = new IOIOServiceBinder();
@@ -89,7 +89,7 @@ public class IOIOBoardService extends IOIOService {
         return mBinder;
     }
 
-    public void setCallback(HardwareCallback cb) {
+    public void setCallback(IOIOBoard.HardwareCallback cb) {
         MLog.d(TAG, "setCallback");
         callback_ = cb;
     }
