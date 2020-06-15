@@ -14,7 +14,7 @@ The API is simple and quite extensive. Create UI, accessing the sensors, using B
 
 Check the Examples!
 
-# ![animation](./images/phonk_animation_white_bg.png)
+# ![animation](./images/phonk_animation_white_bg.gif)
 
 ## Features
 - Takes 1 min to setup in your phone.
