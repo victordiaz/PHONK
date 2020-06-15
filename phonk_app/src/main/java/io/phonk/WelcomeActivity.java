@@ -81,12 +81,7 @@ public class WelcomeActivity extends BaseActivity {
         viewFlipper.setOutAnimation(this, R.anim.slide_out_right);
 
         mNextStepButton = findViewById(R.id.next_step_button);
-        mNextStepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToStep(mNextStep);
-            }
-        });
+        mNextStepButton.setOnClickListener(v -> goToStep(mNextStep));
         mLoading = findViewById(R.id.loading);
 
         goToStep(STEP_WELCOME);
@@ -104,7 +99,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void setupActivity() {
         super.setupActivity();
-        mToolbar.setVisibility(View.GONE);
+        // mToolbar.setVisibility(View.GONE);
     }
 
     @Override
@@ -210,17 +205,7 @@ public class WelcomeActivity extends BaseActivity {
         new File(PhonkSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        PhonkSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, new PhonkSettingsHelper.InstallListener() {
-            @Override
-            public void onReady() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        goToStep(STEP_INSTALL_EXAMPLES_OK);
-                    }
-                });
-            }
-        });
+        PhonkSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, () -> runOnUiThread(() -> goToStep(STEP_INSTALL_EXAMPLES_OK)));
 
     }
 

@@ -38,8 +38,8 @@ import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseActivity;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class PhonkAppInstallerActivity extends BaseActivity {
 
@@ -90,26 +90,11 @@ public class PhonkAppInstallerActivity extends BaseActivity {
             txtWarning.setVisibility(View.VISIBLE);
         }
 
-        btnInstall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                install(p, urlData);
-            }
-        });
+        btnInstall.setOnClickListener(v -> install(p, urlData));
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnCancel.setOnClickListener(v -> finish());
 
-        mBtnFinish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        mBtnFinish.setOnClickListener(v -> finish());
 
 
         //check if is autoinstall and proceed

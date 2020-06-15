@@ -51,14 +51,10 @@ public class APIManagerList {
 
     APIManagerList() {
         methodAnnotationName = "JavaScriptInterface";
-
         apis = new Vector<API>();
-        // PackageUtils.getClasseNamesInPackage(jarName, packageName);
-        // MLog.d(TAG, "" + java.lang.Class.class.getClasses().toString());
     }
 
     public void addObject(Object obj) {
-
         Class cls = obj.getClass();
 
         MLog.d(TAG, " -- adding new object with Class " + cls.getName() + " " + cls.getSimpleName());

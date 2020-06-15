@@ -23,8 +23,6 @@
 package io.phonk.appinterpreter;
 
 import io.phonk.gui.settings.UserPreferences;
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
 
 
 public class Network {
@@ -38,30 +36,27 @@ public class Network {
     public void checkVersion() {
         //check if new version is available
         if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) UserPreferences.getInstance().get("notify_new_version")) {
-            mAppRunner.pNetwork.httpGet("http://www.protocoder.org/downloads/list_latest.php", new ReturnInterface() {
-                @Override
-                public void event(ReturnObject data) {
-                    //console.log(event + " " + data);
-                    String[] splitted = ((String) data.get("response")).split(":");
-                    String remoteFile = "http://www.protocoder.org/downloads/" + splitted[0];
-                    String versionName = splitted[1];
-                    int versionCode = Integer.parseInt(splitted[2]);
+            mAppRunner.pNetwork.httpGet("http://www.phonk.io/downloads/list_latest.php", data -> {
+                //console.log(event + " " + data);
+                String[] splitted = ((String) data.get("response")).split(":");
+                String remoteFile = "http://www.phonk.io/downloads/" + splitted[0];
+                String versionName = splitted[1];
+                int versionCode = Integer.parseInt(splitted[2]);
 
-                    if (versionCode > mAppRunner.pProtocoder.versionCode()) {
-                        // TODO enable this
-                        /*
-                        mAppRunner.pUi.popupInfo("New version available", "The new version " + versionName + " is available in the Protocoder.org website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
-                            @Override
-                            public void event(boolean b) {
-                                if (b) {
-                                    mAppRunner.pDevice.openWebApp("http://www.protocoder.org#download");
-                                }
+                if (versionCode > mAppRunner.pPhonk.versionCode()) {
+                    // TODO enable this
+                    /*
+                    mAppRunner.pUi.popupInfo("New version available", "The new version " + versionName + " is available in the Protocoder.org website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
+                        @Override
+                        public void event(boolean b) {
+                            if (b) {
+                                mAppRunner.pDevice.openWebApp("http://www.protocoder.org#download");
                             }
-                        });
-                        */
-                    } else {
-                        //console.log("updated");
-                    }
+                        }
+                    });
+                    */
+                } else {
+                    // console.log("updated");
                 }
             });
         }

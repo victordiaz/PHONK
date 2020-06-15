@@ -25,27 +25,28 @@ package io.phonk.events;
 import java.io.File;
 import java.util.ArrayList;
 
-import io.phonk.runner.models.Project;
+import io.phonk.runner.base.models.Project;
 import io.phonk.server.model.ProtoFile;
 
 public class Events {
-    public static final String PROJECT_RUN          = "run";
-    public static final String PROJECT_STOP         = "stop";
-    public static final String PROJECT_STOP_ALL     = "stop_all";
+    public static final String PROJECT_RUN = "run";
+    public static final String PROJECT_STOP = "stop";
+    public static final String PROJECT_STOP_ALL = "stop_all";
     public static final String PROJECT_STOP_ALL_AND_RUN = "stop_all_and_run";
-    public static final String PROJECT_SAVE         = "save";
-    public static final String PROJECT_NEW          = "new";
-    public static final String PROJECT_UPDATE       = "update";
-    public static final String PROJECT_EDIT         = "edit";
-    public static final String PROJECT_DELETE       = "delete";
+    public static final String PROJECT_SAVE = "save";
+    public static final String PROJECT_NEW = "new";
+    public static final String PROJECT_UPDATE = "update";
+    public static final String PROJECT_EDIT = "edit";
+    public static final String PROJECT_DELETE = "delete";
     public static final String PROJECT_EXECUTE_CODE = "execute_code";
     public static final String PROJECT_REFRESH_LIST = "refresh_list";
+    public static final String PROJECT_RUNNING = "running";
 
     public static final String EDITOR_FILE_INTENT_LOAD = "editor_file_intent_load";
-    public static final String EDITOR_FILE_LOAD     = "editor_file_load";
-    public static final String EDITOR_FILE_CHANGED  = "editor_file_changed";
-    public static final String EDITOR_FILE_SAVE     = "editor_file_saved";
-    public static final String EDITOR_FILE_PREVIEW  = "editor_file_preview" ;
+    public static final String EDITOR_FILE_LOAD = "editor_file_load";
+    public static final String EDITOR_FILE_CHANGED = "editor_file_changed";
+    public static final String EDITOR_FILE_SAVE = "editor_file_saved";
+    public static final String EDITOR_FILE_PREVIEW = "editor_file_preview";
     public static final String EDITOR_ALL_FILE_STATUS = "editor_all_file_status";
 
     public static final String CLOSE_APP = "close_app";
@@ -103,6 +104,7 @@ public class Events {
         public String getMessage() {
             return msg;
         }
+
         public String getTag() {
             return tag;
         }
@@ -162,7 +164,9 @@ public class Events {
             this.project = p;
         }
 
-        public String getWhat() { return what; }
+        public String getWhat() {
+            return what;
+        }
     }
 
     public static class Connection {
@@ -245,10 +249,14 @@ public class Events {
         public boolean getConnected() {
             return connected;
         }
+
         public String getIp() {
             return ip;
         }
-        public ArrayList<String> getUserrs() { return users; }
+
+        public ArrayList<String> getUserrs() {
+            return users;
+        }
     }
 
 }

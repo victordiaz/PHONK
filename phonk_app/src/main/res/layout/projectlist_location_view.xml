@@ -33,7 +33,7 @@
     android:gravity="center_vertical"
     android:visibility="visible"
     android:paddingLeft="4dp"
-    android:paddingTop="2dp"
+    android:paddingTop="15dp"
     tools:showIn="@layout/projectlist_list">
 
     <ImageButton
@@ -58,7 +58,7 @@
             android:text="folder"
             android:textStyle="bold"
             android:visibility="visible"
-            android:textColor="@color/phonk_accentColor_primary" />
+            android:textColor="@color/phonk_colorPrimary" />
 
         <TextView
             android:id="@+id/separator"
@@ -68,7 +68,7 @@
             android:text="/"
             android:textStyle="bold"
             android:visibility="visible"
-            android:textColor="@color/phonk_accentColor_primary" />
+            android:textColor="@color/phonk_colorPrimary" />
 
         <TextView
             android:id="@+id/folder"
@@ -77,7 +77,7 @@
             android:text="subfolder"
             android:textStyle="bold"
             android:visibility="visible"
-            android:textColor="@color/phonk_accentColor_primary" />
+            android:textColor="@color/phonk_colorPrimary" />
 
     </LinearLayout>
 </LinearLayout>

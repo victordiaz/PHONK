@@ -31,9 +31,9 @@ import androidx.annotation.Nullable;
 import java.util.Map;
 
 import io.phonk.runner.apprunner.AppRunnerHelper;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class AppRunnerLauncherService extends Service {
 
@@ -46,6 +46,7 @@ public class AppRunnerLauncherService extends Service {
         String projectName = intent.getStringExtra("projectName");
         int httpPort = intent.getIntExtra("httpPort", -1);
         String deviceId = intent.getStringExtra("projectName");
+        boolean wakeUpScreen = intent.getBooleanExtra("settings_wakeUpScreen", false);
 
         Project p = new Project(projectFolder, projectName);
 
@@ -57,19 +58,20 @@ public class AppRunnerLauncherService extends Service {
         if (isService) {
             newIntent = new Intent(this, AppRunnerService.class);
         } else {
-            newIntent = new Intent(this, AppRunnerActivity.class);
+            newIntent = new Intent(getApplicationContext(), AppRunnerActivity.class);
             newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (AndroidUtils.isVersionN() && multiWindowEnabled) intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+            newIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            if (AndroidUtils.isVersionN() && multiWindowEnabled)
+                intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
         }
 
         newIntent.putExtras(intent);
 
-
         newIntent.putExtra(Project.SERVER_PORT, httpPort);
         newIntent.putExtra(Project.DEVICE_ID, deviceId);
+        newIntent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, wakeUpScreen);
 
         /*
-        newIntent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, false);
         mBundle.putString(Project.PREFIX, intent.getStringExtra(Project.PREFIX));
         mBundle.putString(Project.INTENTCODE, intent.getStringExtra(Project.INTENTCODE));
         mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));

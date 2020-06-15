@@ -32,8 +32,8 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
-import io.phonk.runner.models.Project;
 
 public class AppRunnerHelper {
 
@@ -63,7 +63,8 @@ public class AppRunnerHelper {
         String json = getCode(p, "app.conf");
         if (json != null) {
             Gson gson = new Gson();
-            Type stringStringMap = new TypeToken<Map<String, Object>>() {}.getType();
+            Type stringStringMap = new TypeToken<Map<String, Object>>() {
+            }.getType();
             map = gson.fromJson(json, stringStringMap);
         } else {
             map = new HashMap<String, Object>();

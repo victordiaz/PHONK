@@ -47,7 +47,8 @@ public class UserPreferences {
     public void load() {
         String json = FileIO.loadStringFromFile(PhonkSettings.getPrefUrl());
         if (json != null) {
-            Type stringStringMap = new TypeToken<Map<String, Object>>() {}.getType();
+            Type stringStringMap = new TypeToken<Map<String, Object>>() {
+            }.getType();
             pref = gson.fromJson(json, stringStringMap);
         } else {
             pref = new HashMap<String, Object>();
@@ -59,6 +60,7 @@ public class UserPreferences {
         resetIfEmpty("device_id", "12345");
         resetIfEmpty("screen_always_on", false);
         resetIfEmpty("servers_enabled_on_start", true);
+        resetIfEmpty("device_wakeup_on_play", false);
         resetIfEmpty("advertise_mdns", false);
         resetIfEmpty("servers_mask_ip", false);
         resetIfEmpty("notify_new_version", true);

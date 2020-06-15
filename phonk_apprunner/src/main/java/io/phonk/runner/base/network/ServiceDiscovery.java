@@ -32,9 +32,9 @@ import android.util.Log;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import io.phonk.runner.api.common.ReturnInterface;
-import io.phonk.runner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -75,8 +75,8 @@ public class ServiceDiscovery {
 
             String ip = (String) mAppRunner.pNetwork.networkInfo().get("ip");
             try {
-              InetAddress p = InetAddress.getByName(ip);
-              serviceInfo.setHost(p);
+                InetAddress p = InetAddress.getByName(ip);
+                serviceInfo.setHost(p);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
@@ -96,7 +96,7 @@ public class ServiceDiscovery {
                     ret.put("port", serviceInfo.getPort());
                     ret.put("type", serviceInfo.getServiceType());
                     ret.put("name", serviceInfo.getServiceName());
-                    if (mCallback != null)  mCallback.event(ret);
+                    if (mCallback != null) mCallback.event(ret);
                 }
 
                 @Override
@@ -241,7 +241,8 @@ public class ServiceDiscovery {
                     ret.put("name", serviceType);
                     ret.put("error", errorCode);
                     ret.put("status", "stop_discovering_failed");
-                    if (mCallback != null) mCallback.event(ret);                }
+                    if (mCallback != null) mCallback.event(ret);
+                }
             };
         }
 

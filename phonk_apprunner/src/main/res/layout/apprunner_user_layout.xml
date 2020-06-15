@@ -30,17 +30,17 @@
         android:background="@color/white"
     >
 
-    <io.phonk.runner.api.widgets.PScrollView
+    <io.phonk.runner.apprunner.api.widgets.PScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scroll"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true">
 
-        <io.phonk.runner.api.widgets.PAbsoluteLayout
+        <io.phonk.runner.apprunner.api.widgets.PAbsoluteLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/absolute" />
-    </io.phonk.runner.api.widgets.PScrollView>
+    </io.phonk.runner.apprunner.api.widgets.PScrollView>
 
 </RelativeLayout>

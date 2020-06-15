@@ -38,8 +38,7 @@ import io.phonk.gui._components.ResizableRecyclerView;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
-import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Folder;
+import io.phonk.runner.base.models.Folder;
 
 @SuppressLint("NewApi")
 public class FolderListFragment extends BaseFragment {
@@ -78,7 +77,7 @@ public class FolderListFragment extends BaseFragment {
         ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
         foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
         for (Folder folder : examples) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME,  PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
         }
 
         // Attach the adapter with the folders data

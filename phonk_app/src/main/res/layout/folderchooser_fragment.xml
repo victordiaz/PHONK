@@ -31,7 +31,7 @@
     android:layout_alignParentTop="true"
     android:layout_gravity="left|top"
     android:animateLayoutChanges="true"
-    android:background="@color/phonk_backgroundColor_secondary"
+    android:background="@color/phonk_backgroundColor"
     android:gravity="center">
 
     <!-- back & folder info -->
@@ -70,14 +70,10 @@
         android:textColor="#88000000" />
     -->
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#11000000"
-        android:visibility="gone" />
-
     <io.phonk.gui._components.ResizableRecyclerView
         android:id="@+id/folderList"
+        android:paddingTop="20dp"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </io.phonk.gui._components.ResizableRecyclerView>

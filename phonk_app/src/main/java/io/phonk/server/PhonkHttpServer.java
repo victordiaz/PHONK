@@ -47,9 +47,9 @@ import fi.iki.elonen.NanoHTTPD;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 import io.phonk.server.model.ProtoFile;
 import io.phonk.server.networkexchangeobjects.NEOProject;
 
@@ -91,7 +91,8 @@ public class PhonkHttpServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        if (mConnectionCallback != null) mConnectionCallback.event(session.getHeaders().get("remote-addr"));
+        if (mConnectionCallback != null)
+            mConnectionCallback.event(session.getHeaders().get("remote-addr"));
 
         Response res = null;
 
@@ -108,7 +109,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         //adding CORS mode for WebIDE debugging from the computer
         if (PhonkSettings.DEBUG) {
             res.addHeader("Access-Control-Allow-Methods", "DELETE, GET, POST, PUT");
-            res.addHeader("Access-Control-Allow-Origin",  "*");
+            res.addHeader("Access-Control-Allow-Origin", "*");
             res.addHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Access-Control-Allow-Headers, Authorization");
         }
 
@@ -202,9 +203,9 @@ public class PhonkHttpServer extends NanoHTTPD {
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
                 res = newFixedLengthResponse("OK");
 
-            /*
-             * This is for the UI editor
-             */
+                /*
+                 * This is for the UI editor
+                 */
             } else if (uriSplitted[COMMAND].equals("views_list_types")) {
                 ArrayList<String> arrayList = new ArrayList();
                 arrayList.add("button");
@@ -223,11 +224,11 @@ public class PhonkHttpServer extends NanoHTTPD {
             }
 
 
-        /**
-         * Project dependent actions
-         *
-         * /api/project/[ff]/[sf]/[p]/action
-         */
+            /**
+             * Project dependent actions
+             *
+             * /api/project/[ff]/[sf]/[p]/action
+             */
 
         } else if (uriSplitted.length == 7) {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
@@ -242,7 +243,6 @@ public class PhonkHttpServer extends NanoHTTPD {
                     res = newFixedLengthResponse("OK");
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                 }
-
             } else if (uriSplitted[PROJECT_ACTION].equals("save")) {
                 // MLog.d(TAG, "project save");
                 String json;
@@ -251,10 +251,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 try {
                     session.parseBody(map);
                     if (map.isEmpty()) return newFixedLengthResponse("BUG");
-
                     json = map.get("postData");
-                    // MLog.d(TAG, "map " + map.toString());
-                    // MLog.d(TAG, "post data " + json);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return newFixedLengthResponse("NOP");
@@ -294,27 +291,72 @@ public class PhonkHttpServer extends NanoHTTPD {
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
-                String path = "";
-                // PhonkScriptHelper.deleteFileOrFolder(path);
+                MLog.d(TAG, "delete");
+                PhonkScriptHelper.deleteFileOrFolder(p.getFullPath());
+                res = newFixedLengthResponse("OK");
+            } else if (uriSplitted[PROJECT_ACTION].equals("rename")) {
+                MLog.d(TAG, "rename");
 
+                String json;
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
+
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+                if (PhonkScriptHelper.renameProject(p, neo.newName)) {
+                    res = newFixedLengthResponse("OK");
+                } else {
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
+            } else if (uriSplitted[PROJECT_ACTION].equals("clone")) {
+                MLog.d(TAG, "clone");
+
+                String json;
+                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+
+                try {
+                    session.parseBody(map);
+                    if (map.isEmpty()) {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
+                    json = map.get("postData");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                } catch (ResponseException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
+
+                NEOProject neo = gson.fromJson(json, NEOProject.class);
+                if (PhonkScriptHelper.cloneProject(p, neo.newName)) {
+                    res = newFixedLengthResponse("OK");
+                } else {
+                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                }
             } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
                 MLog.d(TAG, "run --> " + p.getFolder());
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
-
                 res = newFixedLengthResponse("OK");
-
             } else if (uriSplitted[PROJECT_ACTION].equals("stop_all_and_run")) {
                 MLog.d(TAG, "stop_all_and_run --> ");
-
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
-
                 res = newFixedLengthResponse("STOP_AND_RUN");
             } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
                 MLog.d(TAG, "stop --> ");
-
-                // MLog.d(TAG, "stop");
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
-
                 res = newFixedLengthResponse("OK");
             }
         } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
@@ -380,7 +422,9 @@ public class PhonkHttpServer extends NanoHTTPD {
                 String json = null;
                 try {
                     session.parseBody(map);
-                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    if (map.isEmpty()) {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
                     json = map.get("postData");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -412,7 +456,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                         res = newFixedLengthResponse("OK");
 
                     } else {
-                        res = newFixedLengthResponse("NOP");
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
                     }
                 }
 
@@ -529,10 +573,10 @@ public class PhonkHttpServer extends NanoHTTPD {
 
             */
 
-            // EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_files", p));
-            // res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), "" /* json.toString() */);
+        // EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_files", p));
+        // res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), "" /* json.toString() */);
 
-            // serve files
+        // serve files
 
         return res;
     }
@@ -546,7 +590,8 @@ public class PhonkHttpServer extends NanoHTTPD {
         uri = uri.trim().replace(File.separatorChar, '/');
         if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
         if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
-        if (uri.charAt(0) == '/') uri = uri.substring(1); // using assets, so we can't have leading '/'
+        if (uri.charAt(0) == '/')
+            uri = uri.substring(1); // using assets, so we can't have leading '/'
 
         String mime = getMimeType(uri); // Get MIME type
 
@@ -559,7 +604,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         } catch (IOException e) {
             e.printStackTrace();
             // MLog.d(TAG, e.getStackTrace().toString());
-            NanoHTTPD.newFixedLengthResponse( Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
+            NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
         }
 
         return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, fontSize);

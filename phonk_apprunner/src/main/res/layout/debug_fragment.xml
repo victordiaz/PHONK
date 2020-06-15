@@ -28,7 +28,7 @@
     app:cardUseCompatPadding="true"
     app:cardElevation="4dp"
     app:cardCornerRadius="3dp"
-    app:cardBackgroundColor="@color/phonk_accentColor_primary">
+    app:cardBackgroundColor="@color/phonk_colorPrimary">
 
     <!-- console window -->
     <androidx.recyclerview.widget.RecyclerView
@@ -75,34 +75,36 @@
             android:text="Send" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/sendblock"
-        android:layout_toEndOf="@+id/sendblock"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_toEndOf="@+id/sendblock"
+        android:layout_toRightOf="@+id/sendblock"
+        android:orientation="horizontal">
 
         <ToggleButton
             android:id="@+id/toogleLockList"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="10dp"
+            android:background="@drawable/debug_toggle_lock"
+            android:layout_alignParentLeft="true"
             android:textOff=""
-            android:textOn=""
-            android:background="@drawable/debug_toggle_lock" />
+            android:textOn="" />
 
         <Button
             android:id="@+id/close"
+            android:layout_alignParentRight="true"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_margin="10dp"
+            android:background="@drawable/debug_close"
             android:textOff=""
-            android:textOn=""
-            android:background="@drawable/debug_close" />
-    </LinearLayout>
+            android:textOn="" />
+    </RelativeLayout>
 
 
 </androidx.cardview.widget.CardView>

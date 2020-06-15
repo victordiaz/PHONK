@@ -27,7 +27,7 @@ import android.content.Context;
 import io.phonk.appinterpreter.AppRunnerCustom;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
-import io.phonk.runner.api.network.PFtpServer;
+import io.phonk.runner.apprunner.api.network.PFtpServer;
 import io.phonk.runner.base.utils.MLog;
 
 public class PhonkFtpServer extends PFtpServer {

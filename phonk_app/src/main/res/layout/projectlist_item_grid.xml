@@ -47,7 +47,7 @@
         android:text="Pr"
         android:textStyle="bold"
         android:textSize="22sp"
-        android:textColor="@color/phonk_accentColor_primary"
+        android:textColor="@color/phonk_colorPrimary"
         android:background="@drawable/project_list_item_icon"
         android:visibility="visible"/>
 

@@ -51,7 +51,7 @@
 
     <ImageView
         android:id="@+id/txtProjectIcon"
-        android:background="@drawable/project_list_item_icon_gray"
+        android:background="@drawable/gray_box_bg_transparent"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_centerVertical="true"
@@ -69,12 +69,11 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         android:layout_toRightOf="@id/txtProjectIcon"
-        android:fontFamily="sans-serif-light"
         android:gravity="left|center_vertical"
         android:lines="1"
         android:maxLines="1"
         android:paddingLeft="0dp"
         android:text="Title"
         android:textColor="@color/phonk_textColor_secondary"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 </RelativeLayout>

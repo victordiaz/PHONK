@@ -24,7 +24,6 @@ package io.phonk.gui._components;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -37,6 +36,7 @@ import android.widget.TextView.OnEditorActionListener;
 import androidx.fragment.app.DialogFragment;
 
 import io.phonk.R;
+import io.phonk.runner.base.utils.MLog;
 
 public class NewProjectDialogFragment extends DialogFragment implements OnEditorActionListener {
 
@@ -47,26 +47,14 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
     private EditText mEditText;
     private NewProjectDialogListener mListener;
 
-
     public NewProjectDialogFragment() {
-
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        doOK();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
+                .setPositiveButton("Create", (dialog, whichButton) -> doOK()).setNegativeButton("Cancel", (dialog, whichButton) -> dialog.dismiss());
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.newproject_dialog, null);
         mEditText = view.findViewById(R.id.dialog_new_project_name_input);
@@ -85,18 +73,16 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (EditorInfo.IME_ACTION_DONE == actionId) {
-            // Return input text to activity
-            doOK();
-            this.dismiss();
-            return true;
-        }
-        return false;
+        if (EditorInfo.IME_ACTION_DONE != actionId) return false;
+
+        // Return input text to activity
+        doOK();
+        this.dismiss();
+        return true;
     }
 
     public void setListener(NewProjectDialogListener listener) {
         this.mListener = listener;
-
     }
 
     public void doOK() {

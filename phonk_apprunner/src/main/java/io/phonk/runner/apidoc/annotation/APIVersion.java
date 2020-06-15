@@ -23,7 +23,5 @@
 package io.phonk.runner.apidoc.annotation;
 
 public @interface APIVersion {
-
     String minLevel();
-
 }

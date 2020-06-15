@@ -27,8 +27,8 @@
             <corners android:radius="0dp" />
             <gradient
                 android:angle="-90"
-                android:startColor="@color/phonk_backgroundColor_primary"
-                android:endColor="@color/phonk_backgroundColor_primary"/>
+                android:startColor="@color/phonk_backgroundColor"
+                android:endColor="@color/phonk_backgroundColor"/>
         </shape>
     </item>
 </layer-list>

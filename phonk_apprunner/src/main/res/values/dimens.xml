@@ -21,8 +21,6 @@
   -->
 
 <resources>
-
     <dimen name="apprunner_console">150dp</dimen>
     <dimen name="apprunner_console_text_padding">15dp</dimen>
-
 </resources>

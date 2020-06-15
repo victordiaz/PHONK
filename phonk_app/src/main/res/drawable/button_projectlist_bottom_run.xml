@@ -34,5 +34,5 @@
         android:top="1dp"
         android:bottom="1dp"/>
 
-    <solid android:color="@color/phonk_accentColor_secondary"/>
+    <solid android:color="@color/phonk_colorSecondary"/>
 </shape>

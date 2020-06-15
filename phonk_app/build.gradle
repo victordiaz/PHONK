@@ -10,7 +10,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    // flavorDimensions "phonk_normal", "phonk_extended"
+    // flavorDimensions "normal", "extended"
+    flavorDimensions "default"
 
     compileSdkVersion 29
 
@@ -19,8 +20,8 @@ android {
         minSdkVersion 17
         targetSdkVersion 29
 
-        versionCode 37
-        versionName "1.1.0"
+        versionCode 40
+        versionName "1.1.12"
         multiDexEnabled true
         setProperty("archivesBaseName", "phonk-$versionName")
 
@@ -58,23 +59,21 @@ android {
         }
     }
 
-    /*
     productFlavors {
         normal {
-            dimension 'phonk_normal'
-            applicationId "io.phonk.beta"
-            versionName "0.19.0_normal"
-            resValue "string", "releaseMode", "normal"
+            // dimension 'normal'
+            applicationId "io.phonk"
+            versionName "1.12.0_normal"
+            // resValue "string", "releaseMode", "normal"
         }
 
         extended {
-            dimension 'phonk_extended'
-            applicationId "io.phonk.extended.beta"
-            versionName "0.19.0_extended"
-            resValue "string", "releaseMode", "all_features"
+            // dimension 'extended'
+            applicationId "io.phonk.extended"
+            versionName "1.12.0_extended"
+            // resValue "string", "releaseMode", "all_features"
         }
     }
-    */
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -123,9 +122,10 @@ configurations {
 dependencies {
     implementation project(path: ':phonk_apprunner')
     // extendedCompile project(path: ':phonk_apprunner')
-    implementation 'androidx.multidex:multidex:2.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.preference:preference:1.1.1'
     // implementation 'jp.kshoji:midi-driver:0.1.4:@aar'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }

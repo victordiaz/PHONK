@@ -45,25 +45,21 @@ import io.phonk.gui.settings.SettingsActivity;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.runner.AppRunnerLauncherService;
 import io.phonk.runner.apprunner.AppRunnerSettings;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 public class PhonkAppHelper {
-
     private static final String TAG = PhonkAppHelper.class.getSimpleName();
 
     public static void launchScript(Context context, Project p) {
-
-        /*
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentId("launched script"));
-        */
-
         Intent intent = new Intent(context, AppRunnerLauncherService.class);
         intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
         intent.putExtra(Project.FOLDER, p.getFolder());
         intent.putExtra(Project.NAME, p.getName());
         intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
+        intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUNNING, p));
+        MLog.d(TAG, "--------------------->");
         context.startService(intent);
     }
 
@@ -135,7 +131,6 @@ public class PhonkAppHelper {
     }
 
     public static void newProjectDialog(final MainActivity c) {
-
         FragmentManager fm = c.getSupportFragmentManager();
         NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
         newProjectDialog.show(fm, "fragment_edit_name");
@@ -145,9 +140,10 @@ public class PhonkAppHelper {
             MLog.d(TAG, "template " + template);
         }
 
-        newProjectDialog.setListener(new NewProjectDialogFragment.NewProjectDialogListener() {
-            @Override
-            public void onFinishEditDialog(String inputText) {
+        newProjectDialog.setListener(inputText -> {
+            if (inputText.isEmpty()) {
+                Toast.makeText(c, "Project cannot be created " + inputText, Toast.LENGTH_SHORT).show();
+            } else {
                 String template = "default";
                 Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
                 Project p = PhonkScriptHelper.createNewProject(c, template, AppRunnerSettings.USER_PROJECTS_FOLDER + "/User Projects/", inputText);
@@ -159,7 +155,6 @@ public class PhonkAppHelper {
 
     public static void openInWebEditor(final Context c, Project p) {
         Intent i = new Intent("io.phonk.intent.WEBEDITOR_SEND");
-        MLog.d("qq22", "openInWebEditor " + c);
 
         String[] splitted = p.getFolder().split("/"); // separating type and folder
         i.putExtra("action", "load_project");

@@ -29,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.phonk.R;
-import io.phonk.runner.models.Folder;
+import io.phonk.runner.base.models.Folder;
 
 public class ProjectFolderViewItem extends LinearLayout {
 

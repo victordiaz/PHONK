@@ -26,7 +26,6 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -117,6 +116,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
         prefStartServers.setChecked((Boolean) mUserPreferences.get("servers_enabled_on_start"));
+
+        // Wake up device on play
+        final TwoStatePreference prefWakeUpOnPlay = (TwoStatePreference) findPreference("device_wakeup_on_play");
+        prefWakeUpOnPlay.setOnPreferenceChangeListener((preference, o) -> {
+            boolean isChecked = (Boolean) o;
+            mUserPreferences.set("device_wakeup_on_play", isChecked).save();
+            return true;
+        });
+        prefWakeUpOnPlay.setChecked((Boolean) mUserPreferences.get("device_wakeup_on_play"));
+
 
         // Start servers on launch
         final TwoStatePreference prefMaskIp = (TwoStatePreference) findPreference("servers_mask_ip");
@@ -251,18 +260,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
                     .setCancelable(false).setPositiveButton("Yes", (dialog, which) -> {
-                        progress.show();
+                progress.show();
 
-                        PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
-                                new PhonkSettingsHelper.InstallListener() {
-
-                                    @Override
-                                    public void onReady() {
-                                        progress.dismiss();
-                                    }
-                                });
-                        dialog.cancel();
-                    }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
+                PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
+                        () -> progress.dismiss());
+                dialog.cancel();
+            }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
 
             return true;
         });

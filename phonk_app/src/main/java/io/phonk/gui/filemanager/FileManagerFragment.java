@@ -138,26 +138,23 @@ public class FileManagerFragment extends BaseFragment {
 
         // bind up button
         Button btnDirUp = v.findViewById(R.id.dir_up);
-        btnDirUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File currentFolder = new File(mCurrentFolder);
-                String toFolder = currentFolder.getParent() + File.separator;
+        btnDirUp.setOnClickListener(v1 -> {
+            File currentFolder = new File(mCurrentFolder);
+            String toFolder = currentFolder.getParent() + File.separator;
 
-                // MLog.d(TAG, toFolder + " " + mRootFolder);
-                // MLog.d(TAG, "boolean " + toFolder.startsWith(mRootFolder));
-                // check if where are in the top allowed level
-                if (toFolder.startsWith(mRootFolder)) {
-                    mCurrentFolder = toFolder;
+            // MLog.d(TAG, toFolder + " " + mRootFolder);
+            // MLog.d(TAG, "boolean " + toFolder.startsWith(mRootFolder));
+            // check if where are in the top allowed level
+            if (toFolder.startsWith(mRootFolder)) {
+                mCurrentFolder = toFolder;
 
-                    getFileList();
+                getFileList();
 
-                    // MLog.d(TAG, mCurrentFolder);
-                    mProjectAdapter.setData(mCurrentFileList);
-                    mProjectAdapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(getContext(), "You reached the top of the project folder", Toast.LENGTH_LONG).show();
-                }
+                // MLog.d(TAG, mCurrentFolder);
+                mProjectAdapter.setData(mCurrentFileList);
+                mProjectAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getContext(), "You reached the top of the project folder", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -215,52 +212,46 @@ public class FileManagerFragment extends BaseFragment {
 
         PopupMenu myPopup = new PopupMenu(getContext(), fromView);
         myPopup.inflate(R.menu.filemanager_actions);
-        myPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem menuItem) {
+        myPopup.setOnMenuItemClickListener(menuItem -> {
 
-                switch (menuItem.getItemId()) {
-                    case R.id.filemanager_action_open:
+            switch (menuItem.getItemId()) {
+                case R.id.filemanager_action_open:
 
-                        return true;
+                    return true;
 
-                    case R.id.filemanager_action_open_with:
-                        viewFile(index);
+                case R.id.filemanager_action_open_with:
+                    viewFile(index);
 
-                        return true;
+                    return true;
 
-                    case R.id.filemanager_action_copy:
+                case R.id.filemanager_action_copy:
 
-                        return true;
+                    return true;
 
-                    case R.id.filemanager_action_cut:
+                case R.id.filemanager_action_cut:
 
-                        return true;
+                    return true;
 
-                    case R.id.filemanager_action_delete:
-                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case DialogInterface.BUTTON_POSITIVE:
-                                        deleteFile(index);
-                                        break;
+                case R.id.filemanager_action_delete:
+                    DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                deleteFile(index);
+                                break;
 
-                                    case DialogInterface.BUTTON_NEGATIVE:
-                                        break;
-                                }
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                                .setNegativeButton("No", dialogClickListener).show();
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
 
-                        return true;
+                    return true;
 
-                    default:
-                        return false;
+                default:
+                    return false;
 
-                   }
             }
         });
         myPopup.show();

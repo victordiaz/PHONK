@@ -35,7 +35,6 @@
 
     <FrameLayout
         android:layout_below="@id/header"
-        android:background="@color/white"
         android:id="@+id/pref_container"
         android:layout_alignParentLeft="true"
         android:layout_width="fill_parent"

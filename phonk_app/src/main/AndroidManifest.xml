@@ -67,7 +67,6 @@
         <!--android:stateNotNeeded="true"-->
         <activity
             android:name="io.phonk.MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:icon="@drawable/phonk_icon"
             android:label="@string/activity_name"
             android:logo="@drawable/phonk_icon"

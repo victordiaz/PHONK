@@ -46,11 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.phonk.runner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.AppRunnerInterpreter;
+import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
-import io.phonk.runner.models.Project;
 
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
@@ -64,17 +64,17 @@ public class AppRunnerFragment extends Fragment {
     private FileObserver fileObserver;
 
     // Layout stuff
-    public  RelativeLayout mainLayout;
+    public RelativeLayout mainLayout;
     private RelativeLayout parentScriptedLayout;
     private RelativeLayout infoLayout;
 
-    public  PLiveCodingFeedback liveCoding;
+    public PLiveCodingFeedback liveCoding;
     private View mMainView;
     private TextView txtTitle;
     private TextView txtSubtitle;
 
-    String name = "defaultName";
-    String folder = "defaulFolder";
+    private String name = "defaultName";
+    private String folder = "defaulFolder";
 
     @Override
     public void onAttach(Context context) {
@@ -131,12 +131,7 @@ public class AppRunnerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // catch errors and send them to the WebIDE or the app console
-        AppRunnerInterpreter.InterpreterInfo appRunnerCb = new AppRunnerInterpreter.InterpreterInfo() {
-            @Override
-            public void onError(int resultType, Object message) {
-                mAppRunner.pConsole.p_error(resultType, message);
-            }
-        };
+        AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
         mAppRunner.interp.addListener(appRunnerCb);
 
         mAppRunner.initProject();
@@ -148,7 +143,8 @@ public class AppRunnerFragment extends Fragment {
         startFileObserver();
 
         // Call the onCreate JavaScript function.
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onCreate", savedInstanceState);
+        if (mAppRunner.interp != null)
+            mAppRunner.interp.callJsFunction("onCreate"); // , savedInstanceState);
     }
 
     public static AppRunnerFragment newInstance(Bundle bundle, Map<String, Object> scriptSettings) {
@@ -169,7 +165,6 @@ public class AppRunnerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         MLog.d(TAG, "onPause");
-
         if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onPause");
     }
 
@@ -186,7 +181,7 @@ public class AppRunnerFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
     }
 
-    public void addScriptedLayout(RelativeLayout scriptedUILayout) {
+    public void addScriptedLayout(View scriptedUILayout) {
         parentScriptedLayout.addView(scriptedUILayout);
     }
 
@@ -273,10 +268,10 @@ public class AppRunnerFragment extends Fragment {
 
     public TextView changeTitle(String title) {
         txtTitle.setText(title);
+        txtTitle.setVisibility(View.VISIBLE);
         txtTitle.setAlpha(0.0f);
         txtTitle.setX(-100f);
-        txtTitle.setVisibility(View.VISIBLE);
-        txtTitle.animate().x(50).alpha(1.0f).setStartDelay(300);
+        txtTitle.animate().translationX(0f).alpha(1.0f).setStartDelay(300);
         txtTitle.setEnabled(false);
 
         return txtTitle;
@@ -287,9 +282,10 @@ public class AppRunnerFragment extends Fragment {
         txtSubtitle.setX(-100f);
         txtSubtitle.setAlpha(0.0f);
         txtSubtitle.setVisibility(View.VISIBLE);
+        txtSubtitle.setEnabled(false);
 
         // invalidating the text because sometimes when overlaying OpenGL surfaces the view is not fully rendered
-        txtSubtitle.animate().x(50).alpha(1.0f).setStartDelay(500).setListener(new Animator.AnimatorListener() {
+        txtSubtitle.animate().translationX(0f).alpha(1.0f).setStartDelay(500).setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
 
