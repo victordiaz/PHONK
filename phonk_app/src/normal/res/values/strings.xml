@@ -22,6 +22,5 @@
   -->
 
 <resources>
-    <string name="app_name">PHONKn</string>
     <string name="phonk_variant">PHONK Normal</string>
 </resources>
