@@ -137,7 +137,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             c.stroke(styler.knobBorderColor);
             c.ellipse(posX, posY, diameter - styler.knobBorderWidth, diameter - styler.knobBorderWidth);
 
-            c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 5)); //styler.sliderBorderSize);
+            c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), (int) styler.knobProgressWidth));
             c.stroke(styler.knobProgressColor); // styler.sliderBorderColor);
 
             float d = diameter - styler.knobBorderWidth - styler.knobProgressWidth - styler.knobProgressSeparation;

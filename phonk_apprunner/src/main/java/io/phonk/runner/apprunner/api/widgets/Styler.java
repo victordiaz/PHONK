@@ -85,9 +85,9 @@ public class Styler {
     int padColor;
     int padBorderColor;
     float padBorderSize;
-    public int knobProgressWidth;
     public float knobProgressSeparation;
     public float knobBorderWidth;
+    public float knobProgressWidth;
     public int knobBorderColor;
     public int knobProgressColor;
     public int matrixCellColor;
@@ -246,6 +246,7 @@ public class Styler {
 
         knobProgressSeparation = toFloat(props.get("knobProgressSeparation"));
         knobBorderWidth = toFloat(props.get("knobBorderWidth"));
+        knobProgressWidth = toFloat(props.get("knobProgressWidth"));
         knobBorderColor = Color.parseColor(props.get("knobBorderColor").toString());
         knobProgressColor = Color.parseColor(props.get("knobProgressColor").toString());
 
