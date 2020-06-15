@@ -60,8 +60,8 @@ public class PUI extends PViewsArea {
     public StyleProperties style;
     public StyleProperties theme;
     private boolean isMainLayoutSetup = false;
-    private int screenWidth;
-    private int screenHeight;
+    public int screenWidth;
+    public int screenHeight;
 
     public PUI(AppRunner appRunner) {
         super(appRunner);
@@ -191,8 +191,9 @@ public class PUI extends PViewsArea {
         style.put("padBorderColor", style, colorPrimary);
         style.put("padBorderSize", style, AndroidUtils.dpToPixels(mContext, 2));
 
-        // knob
+        // knobf
         style.put("knobBorderWidth", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 1));
+        style.put("knobProgressWidth", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
         style.put("knobProgressSeparation", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 15));
         style.put("knobBorderColor", style, colorSecondary);
         style.put("knobProgressColor", style, colorPrimary);

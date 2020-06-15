@@ -63,6 +63,8 @@ public class PAbsoluteLayout extends FixedLayout {
 
         int statusBar = getStatusBarHeight();
 
+        MLog.d("qqq", appRunner.pApp.settings.get("orientation") + " " + w + " " + h);
+
         if (appRunner.pApp.settings.get("orientation").equals("landscape")) {
             if (w > h) {
                 mWidth = w;
@@ -73,8 +75,8 @@ public class PAbsoluteLayout extends FixedLayout {
             }
 
             if (appRunner.pApp.settings.get("screen_mode").equals("fullscreen")) {
-                int navigationBar = getNavigationBarSize(getContext()).x;
-                mWidth += navigationBar;
+                // int navigationBar = 0;getNavigationBarSize(getContext()).x;
+                // mWidth += navigationBar;
             }
         } else {
             mWidth = w;
@@ -86,6 +88,8 @@ public class PAbsoluteLayout extends FixedLayout {
                 mHeight += statusBar + navigationBar;
             }
         }
+        MLog.d("qqq2", appRunner.pApp.settings.get("orientation") + " " + w + " " + h);
+        MLog.d("qqq3", appRunner.pApp.settings.get("orientation") + " " + mWidth + " " + mHeight + " " + getNavigationBarSize(getContext()).x);
     }
 
     @Override
