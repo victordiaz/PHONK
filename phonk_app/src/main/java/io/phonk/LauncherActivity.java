@@ -40,11 +40,11 @@ public class LauncherActivity extends Activity {
         // this Activity chooses between launching the welcome installer
         // or the app it self
 
-        SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+        SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
         boolean firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
         // uncomment to reset (true) first launch
-        userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), true).commit();
+        // userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), true).commit();
 
         Intent i = getIntent();
         boolean wasCrash = i.getBooleanExtra("wasCrash", false);

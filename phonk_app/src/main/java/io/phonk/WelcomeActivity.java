@@ -299,7 +299,7 @@ public class WelcomeActivity extends BaseActivity {
 
             case STEP_READY:
                 // Write a shared pref to never come back here
-                SharedPreferences userDetails = getSharedPreferences("org.protocoder", MODE_PRIVATE);
+                SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
                 userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
 
                 // first time id
