@@ -1,5 +1,5 @@
 # PHONK
-**Phonk is a self-contained, creative coding environment for Android Devices.**
+**Phonk is a self-contained creative coding scripting toolbox for Android Devices.**
 
 [![github version](https://img.shields.io/github/license/victordiaz/phonk.svg)](https//github.com/victordiaz/phonk)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/victordiaz/phonk/issues)
