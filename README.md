@@ -1,13 +1,12 @@
 # PHONK
-**Phonk is a self-contained creative coding scripting toolbox for Android Devices.**
 
 [![github version](https://img.shields.io/github/license/victordiaz/phonk.svg)](https//github.com/victordiaz/phonk)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/victordiaz/phonk/issues)
 
 :tada: Hello! I'm happy to see you here reading about PHONK!!
 
-PHONK is a **self-contained creative coding toolbox** for your **Android** devices.
-Create scripts rapidly from your phone or using the **remote Web Editor** on your computer. The API is simple an extensive GUI; audio, graphics, bluetooth ble, arduino, OSC, midi, and much more.
+**PHONK is a self-contained creative scripting toolbox for new and old Android devices.**
+Create scripts rapidly from your phone or using the *remote Web Editor* on your computer. The API is simple an extensive GUI; audio, graphics, bluetooth ble, arduino, OSC, midi, and much more.
 
 Have a look in the [PHONK website](http://www.phonk.io) for more info
 
