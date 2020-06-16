@@ -271,7 +271,7 @@ public class ConnectionInfoFragment extends Fragment {
         } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
             addTextToConsole("refreshing list");
         } else if (action.equals(Events.PROJECT_RUNNING)) {
-            addTextToConsole("running " + e.getProject().getSandboxPath());
+            addTextToConsole("run " + e.getProject().getSandboxPath());
         }
     }
 
