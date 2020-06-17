@@ -24,13 +24,10 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-
     <item android:left="0dp" android:right="0dp">
         <shape android:shape="rectangle">
             <corners android:radius="0dp" />
             <stroke android:width="1dp" android:color="@color/phonk_colorSecondary_shade_1"/>
-            <size android:width="45dp"></size>
-            <size android:height="45dp"></size>
         </shape>
     </item>
 

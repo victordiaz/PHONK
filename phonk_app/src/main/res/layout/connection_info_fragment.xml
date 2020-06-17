@@ -20,157 +20,138 @@
   ~
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:gravity="center_horizontal"
+    android:gravity="bottom"
     android:orientation="horizontal"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:visibility="visible">
+    android:visibility="visible"
+    android:weightSum="100">
 
-    <FrameLayout
-        android:id="@+id/computer_image"
-        android:layout_width="180dp"
-        android:layout_height="120dp">
+    <TextView
+        android:id="@+id/computerText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/device_box"
+        android:elevation="1dp"
+        android:gravity="top"
+        android:lineHeight="10sp"
+        android:maxHeight="55dp"
+        android:padding="6dp"
+        android:text="> "
+        android:textColor="@color/phonk_textColor_secondary_shade"
+        android:textSize="5sp"
+        android:textStyle="normal"
+        android:typeface="monospace"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/webide_connection_toggle"
+        app:layout_constraintEnd_toEndOf="@+id/phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="bnvbnbv" />
 
-        <TextView
-            android:id="@+id/computerText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/device_box"
-            android:elevation="1dp"
-            android:gravity="top"
-            android:lineHeight="10sp"
-            android:maxHeight="55dp"
-            android:padding="6dp"
-            android:text="> "
-            android:textColor="@color/phonk_textColor_secondary_shade"
-            android:textSize="5sp"
-            android:textStyle="normal"
-            android:typeface="monospace"
-            android:visibility="visible"
-            tools:text="bnvbnbv" />
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="35dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/device_box"
+        android:elevation="1dp"
+        android:gravity="top"
+        android:maxHeight="25dp"
+        android:text="> "
+        android:textColor="@color/phonk_textColor_secondary"
+        android:textSize="3sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/webide_connection_toggle"
+        app:layout_constraintEnd_toStartOf="@+id/connection_message"
+        tools:text="hola que tal" />
 
-        <TextView
-            android:id="@+id/phone"
-            android:layout_width="30dp"
-            android:layout_height="60dp"
-            android:layout_gravity="right|bottom"
-            android:background="@drawable/device_box"
-            android:elevation="1dp"
-            android:gravity="top"
-            android:maxHeight="25dp"
-            android:text="> "
-            android:textColor="@color/phonk_textColor_secondary"
-            android:textSize="3sp"
-            android:textStyle="bold"
-            android:typeface="monospace"
-            android:visibility="visible"
-            tools:text="hola que tal" />
 
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/connection_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:maxWidth="200dp"
-            android:text="@string/connection_message_not_connected"
-            android:textColor="@color/phonk_textColor_secondary"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/connection_ip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="left"
-            android:text="http://1.2.3.4.5:8585"
-            android:textColor="@color/phonk_textColor_primary"
-            android:textSize="12sp"
-            android:textStyle="italic|bold"
-            android:visibility="visible" />
-
-        <ToggleButton
-            android:id="@+id/webide_connection_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="25dp"
-            android:layout_weight="1"
-            android:minHeight="50dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textAllCaps="true"
-            android:textOff="Start Web Editor"
-            android:textOn="Stop Web Editor"
-            android:textStyle="normal|bold"
-            android:visibility="visible" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/connection_message"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="0dp"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:visibility="gone">
+        android:gravity="left"
+        android:maxWidth="200dp"
+        android:text="@string/connection_message_not_connected"
+        android:textColor="@color/phonk_textColor_secondary"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- android:background="?attr/selectableItemBackgroundBorderless" -->
+    <TextView
+        android:id="@+id/connection_ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="left"
+        android:text="http://1.2.3.4.5:8585"
+        android:textColor="@color/phonk_textColor_primary"
+        android:textSize="12sp"
+        android:textStyle="italic|bold"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/connection_message"
+        app:layout_constraintTop_toBottomOf="@+id/connection_message" />
 
-        <LinearLayout
-            android:id="@+id/connection_buttons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <Button
-                android:id="@+id/connect_to_wifi"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:minHeight="12dp"
-                android:text="Connect to WIFI"
-                android:textAllCaps="true"
-                android:textColor="@color/phonk_colorPrimary"
-                android:textSize="10sp"
-                android:textStyle="normal|bold" />
-
-            <Button
-                android:id="@+id/start_hotspot"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="0dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:minHeight="12dp"
-                android:text="Start HOTSPOT"
-                android:textAllCaps="true"
-                android:textColor="@color/phonk_colorPrimary"
-                android:textSize="10sp"
-                android:textStyle="normal|bold" />
-        </LinearLayout>
-
-    </LinearLayout>
+    <ToggleButton
+        android:id="@+id/webide_connection_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:height="28dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="2dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="2dp"
+        android:textAllCaps="true"
+        android:textOff="Start Web Editor"
+        android:textOn="Stop Web Editor"
+        android:textSize="10sp"
+        android:textStyle="normal|bold"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/connection_message"
+        app:layout_constraintTop_toBottomOf="@+id/connection_ip" />
 
 
-</LinearLayout>
+    <!-- android:background="?attr/selectableItemBackgroundBorderless" -->
+
+    <Button
+        android:id="@+id/connect_to_wifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:minHeight="12dp"
+        android:text="Connect to WIFI"
+        android:textAllCaps="true"
+        android:textColor="@color/phonk_colorPrimary"
+        android:textSize="10sp"
+        android:textStyle="normal|bold"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/start_hotspot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:minHeight="12dp"
+        android:text="Start HOTSPOT"
+        android:textAllCaps="true"
+        android:textColor="@color/phonk_colorPrimary"
+        android:textSize="10sp"
+        android:textStyle="normal|bold"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
