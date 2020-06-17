@@ -55,6 +55,8 @@ import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
@@ -546,6 +548,7 @@ public class PMap extends MapView {
         public PMapMarker position(double lon, double lat) {
             setPosition(new GeoPoint(lon, lat));
             invalidate();
+
             return this;
         }
 
@@ -579,10 +582,23 @@ public class PMap extends MapView {
             return this;
         }
 
-
         public PMapMarker description(String description) {
             setSnippet(description);
             invalidate();
+            return this;
+        }
+
+        public PMapMarker onClick(final ReturnInterface callbackfn) {
+            this.setOnMarkerClickListener(new OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    ReturnObject o = new ReturnObject();
+                    o.put("marker", PMapMarker.this);
+                    callbackfn.event(o);
+                    return false;
+                }
+            });
+
             return this;
         }
     }
