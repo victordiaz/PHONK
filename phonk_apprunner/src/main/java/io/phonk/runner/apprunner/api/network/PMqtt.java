@@ -6,7 +6,7 @@
  * Copyright (C) 2017 - Victor Diaz Barrales @victordiaz (Phonk)
  *
  * Phonk is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -15,25 +15,21 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with Phonk. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 package io.phonk.runner.apprunner.api.network;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import org.fusesource.hawtbuf.Buffer;
-import org.fusesource.hawtbuf.UTF8Buffer;
-import org.fusesource.mqtt.client.Callback;
-import org.fusesource.mqtt.client.CallbackConnection;
-import org.fusesource.mqtt.client.Listener;
-import org.fusesource.mqtt.client.MQTT;
-import org.fusesource.mqtt.client.QoS;
-import org.fusesource.mqtt.client.Topic;
-
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
@@ -46,209 +42,136 @@ import io.phonk.runner.base.utils.MLog;
 public class PMqtt extends ProtoBase {
     private final String TAG = PMqtt.class.getSimpleName();
 
-    private MQTT mMqtt;
-    private CallbackConnection mConnection;
-    private boolean mConnected = false;
+    private MqttClient client;
     private ReturnInterface mCallback;
-    HashMap<String, ReturnInterface> mSubscriptions = new HashMap<>();
 
     public PMqtt(AppRunner appRunner) {
         super(appRunner);
-
         appRunner.whatIsRunning.add(this);
     }
 
-    public PMqtt connect(String clientId, String host, int port, String username, String password) {
-        MLog.d(TAG, "connect 1");
-        mMqtt = new MQTT();
+    public PMqtt connect(Map connectionSettings) {
+        MemoryPersistence persistence = new MemoryPersistence();
+
+        MLog.d(TAG, "qq -> " + connectionSettings.get("broker"));
 
         try {
-            mMqtt.setHost(host, port);
-            mMqtt.setClientId(clientId);
-            mMqtt.setCleanSession(true);
+            client = new MqttClient((String) connectionSettings.get("broker"), (String) connectionSettings.get("clientId"), persistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
 
-            if (username != null && password != null) {
-                mMqtt.setUserName(username);
-                mMqtt.setPassword(password);
+            if (connectionSettings.containsKey("user") && connectionSettings.containsKey("password")) {
+                connOpts.setUserName((String) connectionSettings.get("user"));
+                connOpts.setPassword((char[]) connectionSettings.get("password"));
             }
 
-            mConnection = mMqtt.callbackConnection();
-            mConnection.listener(new Listener() {
+            connOpts.setCleanSession(true);
+            client.connect(connOpts);
+
+            client.setCallback(new MqttCallbackExtended() {
                 @Override
-                public void onConnected() {
-                    MLog.d(TAG, "mconnection onConnected");
+                public void connectComplete(boolean reconnect, String serverURI) {
                     ReturnObject ret = new ReturnObject();
-                    ret.put("status", "connected");
-                    mCallback.event(ret);
+                    ret.put("status", "connectComplete");
+                    ret.put("broker", serverURI);
+
+                    mHandler.post(() -> {
+                        mCallback.event(ret);
+                    });
+                    MLog.d(TAG, "connectComplete");
                 }
 
                 @Override
-                public void onDisconnected() {
-                    MLog.d(TAG, "mconnection onDisconnected");
+                public void connectionLost(Throwable cause) {
+                    MLog.d(TAG, "connectionLost");
                     ReturnObject ret = new ReturnObject();
-                    ret.put("status", "disconnected");
-                    mCallback.event(ret);
+                    ret.put("status", "connectionLost");
+                    mHandler.post(() -> {
+                        mCallback.event(ret);
+                    });
                 }
 
                 @Override
-                public void onPublish(UTF8Buffer utf8Buffer, Buffer buffer, Runnable runnable) {
-                    String topic = utf8Buffer.toString();
-                    String data = buffer.toString();
-
-                    MLog.d(TAG, "mconnection onPublish " + topic + " " + data);
-                    // if(mCallback != null) mCallback.event(utf8Buffer.toString(), buffer.toString());
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    MLog.d(TAG, "messageArrived");
                     ReturnObject ret = new ReturnObject();
-                    ret.put("status", "publish");
+                    ret.put("status", "messageArrived");
+                    ret.put("data", new String(message.getPayload()));
+                    ret.put("isDuplicate", message.isDuplicate());
+                    ret.put("isRetained", message.isRetained());
+                    ret.put("qos", message.getQos());
+                    ret.put("id", message.getId());
                     ret.put("topic", topic);
-                    ret.put("data", data);
-                    mCallback.event(ret);
+                    mHandler.post(() -> {
+                        mCallback.event(ret);
+                    });
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
-                    MLog.d(TAG, "mconnection onFailure");
-                    //callback.event(false);
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                    MLog.d(TAG, "deliveryComplete");
                     ReturnObject ret = new ReturnObject();
-                    ret.put("status", "connection_failure");
-                    mCallback.event(ret);
+                    ret.put("status", "deliveryComplete");
+                    mHandler.post(() -> {
+                        mCallback.event(ret);
+                    });
                 }
             });
-
-            mConnection.connect(new Callback<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    mConnected = true;
-                    MLog.d(TAG, "mconnection onSuccess");
-                    // callback.event(mConnected);
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-                    mConnected = false;
-                    MLog.d(TAG, "mconnection onFailure");
-                    // callback.event(mConnected);
-                }
-            });
-
-            MLog.d(TAG, "connect 2");
-
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            MLog.d(TAG, "connect :( 1");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            MLog.d(TAG, "connect :( 2");
+        } catch(MqttException me) {
+            System.out.println("reason "+me.getReasonCode());
+            System.out.println("msg "+me.getMessage());
+            System.out.println("loc "+me.getLocalizedMessage());
+            System.out.println("cause "+me.getCause());
+            System.out.println("excep "+me);
+            me.printStackTrace();
         }
 
         return this;
     }
 
 
-    public PMqtt subscribe(final String topicStr) {
-
-        Topic topic = new Topic(topicStr, QoS.AT_MOST_ONCE);
-        Topic[] topics = new Topic[]{topic};
-
-        mConnection.subscribe(topics, new Callback<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                String dataString = Arrays.toString(bytes);
-                MLog.d(TAG, "subscribe onSuccess byte " + dataString);
-                // callback.event(dataString);
-                ReturnObject ret = new ReturnObject();
-                ret.put("status", "subscribed");
-                ret.put("topic", topicStr);
-                mCallback.event(ret);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                MLog.d(TAG, "subscribe onFailure");
-                ReturnObject ret = new ReturnObject();
-                ret.put("status", "subscribe_fail");
-                ret.put("topic", topicStr);
-                mCallback.event(ret);
-            }
-        });
+    public PMqtt subscribe(final String topic) {
+        try {
+            client.subscribe(topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
 
         return this;
     }
 
     public PMqtt unsubscribe(final String topic) {
-        UTF8Buffer[] topics = new UTF8Buffer[1];
-        topics[0] = new UTF8Buffer(topic);
-
-        mConnection.unsubscribe(topics, new Callback<Void>() {
-            @Override
-            public void onSuccess(Void value) {
-                ReturnObject ret = new ReturnObject();
-                ret.put("status", "unsubscribed");
-                ret.put("topic", topic);
-                mCallback.event(ret);
-            }
-
-            @Override
-            public void onFailure(Throwable value) {
-                ReturnObject ret = new ReturnObject();
-                ret.put("status", "unsubscribed_failed");
-                ret.put("topic", topic);
-                mCallback.event(ret);
-            }
-        });
+        try {
+            client.unsubscribe(topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 
 
     public PMqtt onNewData(ReturnInterface callback) {
         mCallback = callback;
-
         return this;
     }
 
-    public PMqtt publish(final String topic, final String data) {
-        boolean retain = false;
-
-        mConnection.publish(topic, data.getBytes(), QoS.AT_MOST_ONCE, retain, new Callback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                MLog.d(TAG, "publish onSuccess");
-                ReturnObject ret = new ReturnObject();
-                ret.put("status", "published");
-                ret.put("topic", topic);
-                ret.put("data", data);
-                mCallback.event(ret);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                MLog.d(TAG, "publish onFailure");
-                ReturnObject ret = new ReturnObject();
-                ret.put("status", "publish_fail");
-                ret.put("topic", topic);
-                ret.put("data", data);
-                mCallback.event(ret);
-            }
-        });
-
+    public PMqtt publish(final String topic, final String data, int qos, boolean retain) {
+        MqttMessage message = new MqttMessage(data.getBytes());
+        message.setQos(qos);
+        try {
+            client.publish(topic, message);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 
     public PMqtt disconnect() {
-        MLog.d(TAG, "disconnect");
-        mConnection.disconnect(new Callback<Void>() {
-            @Override
-            public void onSuccess(Void value) {
-                MLog.d(TAG, "disconnect onSuccess");
-            }
-
-            @Override
-            public void onFailure(Throwable value) {
-                MLog.d(TAG, "failure onFailure");
-            }
-        });
-
+        try {
+            client.disconnect();
+            client.close();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 

@@ -15,8 +15,8 @@ android {
         minSdkVersion 17
         targetSdkVersion 29
 
-        versionCode 120
-        versionName "1.2.0"
+        versionCode 121
+        versionName "1.2.1"
     }
 
     compileOptions {
@@ -64,6 +64,8 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
     maven { url 'http://maven.google.com'}
+    // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
+    maven { url "https://repo.eclipse.org/content/repositories/paho-snapshots/" }
 
     mavenCentral()
     jcenter()
@@ -110,6 +112,8 @@ dependencies {
     api files('libs/additionnal.jar') //part of mail
     api 'de.sciss:netutil:1.0.0'                            //
     api 'org.fusesource.mqtt-client:mqtt-client:1.12'       //
+    api 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+
     api 'org.nanohttpd:nanohttpd:2.3.1'
     api group: 'com.jcraft', name: 'jsch', version: '0.1.54'
     implementation 'com.github.weliem:blessed-android:1.18'
