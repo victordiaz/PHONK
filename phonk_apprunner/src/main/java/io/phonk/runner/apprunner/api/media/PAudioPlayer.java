@@ -184,7 +184,6 @@ public class PAudioPlayer extends ProtoBase {
         return this;
     }
 
-
     public PAudioPlayer speed(float speed) {
         PlaybackParams params = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
