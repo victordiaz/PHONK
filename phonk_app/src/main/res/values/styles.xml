@@ -131,7 +131,7 @@
     <style name = "ToggleButton" parent = "Widget.AppCompat.Button">
         <item name = "android:textColor">@color/phonk_colorSecondary</item>
         <item name = "android:background">@drawable/gray_box_bg_transparent</item>
-        <item name = "android:textSize">30sp</item>
+        <item name = "android:textSize">10sp</item>
         <item name = "android:gravity">center</item>
     </style>
 

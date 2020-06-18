@@ -36,7 +36,7 @@
     <!--
     <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
     -->
-    <string name="connection_message_not_connected">Use the Web Editor connecting this device and your computer to same network</string>
+    <string name="connection_message_not_connected">To use the Web Editor connect this device and your computer to the same WIFI</string>
     <string name="menu_settings">Settings</string>
     <string name="BT_Home">Connect</string>
     <string name="title_activity_launcher">LauncherActivity</string>

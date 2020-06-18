@@ -31,21 +31,29 @@ import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 
 import io.phonk.R;
+import io.phonk.events.Events;
 import io.phonk.gui._components.ResizableRecyclerView;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.BaseFragment;
 import io.phonk.runner.base.models.Folder;
+import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 @SuppressLint("NewApi")
 public class FolderListFragment extends BaseFragment {
 
     private String TAG = FolderListFragment.class.getSimpleName();
 
+    ArrayList<FolderAdapterData> foldersForAdapter;
     private ResizableRecyclerView mFolderRecyclerView;
+    private FolderChooserAdapter folderChooserAdapter;
     private String currentParentFolder;
     private String currentFolder;
 
@@ -62,30 +70,16 @@ public class FolderListFragment extends BaseFragment {
 
         final View v = inflater.inflate(R.layout.folderchooser_fragment, container, false);
 
-        //this goes to the adapter
-        ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
-
-        //get the user folder
-        ArrayList<Folder> folders = PhonkScriptHelper.listFolders(PhonkSettings.USER_PROJECTS_FOLDER, true);
-        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.USER_PROJECTS_FOLDER, "Playground"));
-
-        for (Folder folder : folders) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.USER_PROJECTS_FOLDER, folder.getName()));
-        }
-
-        //get the examples folder
-        ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
-        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
-        for (Folder folder : examples) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
-        }
+        // this goes to the adapter
+        foldersForAdapter = new ArrayList<FolderAdapterData>();
+        listFolders();
 
         // Attach the adapter with the folders data
         mFolderRecyclerView = v.findViewById(R.id.folderList);
         mFolderRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mFolderRecyclerView.setLayoutManager(linearLayoutManager);
-        FolderChooserAdapter folderChooserAdapter = new FolderChooserAdapter(foldersForAdapter);
+        folderChooserAdapter = new FolderChooserAdapter(foldersForAdapter);
         mFolderRecyclerView.setAdapter(folderChooserAdapter);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
@@ -93,6 +87,27 @@ public class FolderListFragment extends BaseFragment {
         if (mIsTablet) llChooseFolder.setVisibility(View.GONE);
 
         return v;
+    }
+
+    public void listFolders() {
+        foldersForAdapter.clear();
+
+        // get the user folder
+        ArrayList<Folder> folders = PhonkScriptHelper.listFolders(PhonkSettings.USER_PROJECTS_FOLDER, true);
+
+        if (!folders.isEmpty()) {
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.USER_PROJECTS_FOLDER, "Playground"));
+            for (Folder folder : folders) {
+                foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.USER_PROJECTS_FOLDER, folder.getName()));
+            }
+        }
+
+        // get the examples folder
+        ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
+        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
+        for (Folder folder : examples) {
+            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
+        }
     }
 
     @Override
@@ -103,11 +118,13 @@ public class FolderListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     public static FolderListFragment newInstance(String folderName, boolean orderByName) {
@@ -122,4 +139,20 @@ public class FolderListFragment extends BaseFragment {
     }
 
 
+
+    @Subscribe
+    public void onEventMainThread(Events.ProjectEvent e) {
+        MLog.d(TAG, "connect -> " + e.getAction());
+
+        String action = e.getAction();
+        Project p = e.getProject();
+
+        if (action.equals(Events.PROJECT_NEW)) {
+            listFolders();
+            folderChooserAdapter.notifyDataSetChanged();
+        } else if (action.equals(Events.PROJECT_DELETE)) {
+            listFolders();
+            folderChooserAdapter.notifyDataSetChanged();
+        }
+    }
 }
