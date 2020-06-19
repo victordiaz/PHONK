@@ -28,7 +28,7 @@ Have a look in the [PHONK website](http://www.phonk.io) for more info
 Get it from
 - [APK](https://github.com/victordiaz/phonk/releases)
 - ~~[F-droid](https://github.com/victordiaz/phonk/issues/6)~~ (Need help)
-- [Play Store]() (Waiting for approval)
+- [Play Store](https://play.google.com/store/apps/details?id=io.phonk)
 - ~~or just [compile it your self]().~~
 
 If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](https://github.com/victordiaz/phonk/issues/new).
