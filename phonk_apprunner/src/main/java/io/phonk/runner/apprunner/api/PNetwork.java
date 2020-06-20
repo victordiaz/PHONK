@@ -54,20 +54,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.activation.DataHandler;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
-
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
@@ -82,7 +68,6 @@ import io.phonk.runner.apprunner.api.network.PFtpServer;
 import io.phonk.runner.apprunner.api.network.PMqtt;
 import io.phonk.runner.apprunner.api.network.PNfc;
 import io.phonk.runner.apprunner.api.network.PSimpleHttpServer;
-import io.phonk.runner.apprunner.api.network.PSocketIOClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketServer;
 import io.phonk.runner.base.network.NetworkUtils;
@@ -314,106 +299,6 @@ public class PNetwork extends ProtoBase {
 
         return pWebSocketClient;
     }
-
-    @PhonkMethod(description = "Connect to a SocketIO server", example = "")
-    @PhonkMethodParam(params = {"uri", "function(status, message, data)"})
-    public PSocketIOClient connectSocketIO(String uri) {
-        PSocketIOClient socketIOClient = new PSocketIOClient(getAppRunner(), uri);
-
-        return socketIOClient;
-    }
-
-
-    // http://stackoverflow.com/questions/3303805/are-there-any-good-short-code-examples-that-simply-read-a-new-gmail-message
-    public void getEmail() throws MessagingException, IOException {
-        Session session = Session.getDefaultInstance(System.getProperties(), null);
-        Store store = null;
-        store = session.getStore("imaps");
-
-        // store.connect(this.host, this.userName, this.password);
-
-        // Get default folder
-        Folder folder = store.getDefaultFolder();
-        folder.getMessages();
-        folder.getNewMessageCount();
-        Message m = folder.getMessage(0);
-        m.getMessageNumber();
-        m.getAllRecipients();
-        m.getReceivedDate();
-        m.getFrom();
-        m.getSubject();
-        m.getReplyTo();
-        m.getContent();
-        m.getSize();
-
-        // Get any folder by name
-        Folder[] folderList = folder.list();
-    }
-
-    // http://mrbool.com/how-to-work-with-java-mail-api-in-android/27800#ixzz2tulYAG00
-    @PhonkMethod(description = "Send an E-mail. It requires passing a configuration object with (host, user, password, port, auth, ttl) parameters", example = "")
-    @PhonkMethodParam(params = {"url", "function(data)"})
-    public void sendEmail(String from, String to, String subject, String text, final HashMap<String, String> emailSettings)
-            throws MessagingException {
-
-        if (emailSettings == null) {
-            return;
-        }
-
-        // final String host = "smtp.gmail.com";
-        // final String address = "@gmail.com";
-        // final String pass = "";
-
-        Multipart multiPart;
-        String finalString = "";
-
-        Properties props = System.getProperties();
-        props.put("mail.smtp.starttls.enable", emailSettings.get("ttl"));
-        props.put("mail.smtp.host", emailSettings.get("host"));
-        props.put("mail.smtp.user", emailSettings.get("user"));
-        props.put("mail.smtp.password", emailSettings.get("password"));
-        props.put("mail.smtp.port", emailSettings.get("port"));
-        props.put("mail.smtp.auth", emailSettings.get("auth"));
-
-        Log.i("Check", "done pops");
-        final Session session = Session.getDefaultInstance(props, null);
-        DataHandler handler = new DataHandler(new ByteArrayDataSource(finalString.getBytes(), "text/plain"));
-        final MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
-        message.setDataHandler(handler);
-        Log.i("Check", "done sessions");
-
-        multiPart = new MimeMultipart();
-
-        InternetAddress toAddress;
-        toAddress = new InternetAddress(to);
-        message.addRecipient(Message.RecipientType.TO, toAddress);
-        Log.i("Check", "added recipient");
-        message.setSubject(subject);
-        message.setContent(multiPart);
-        message.setText(text);
-
-        Thread t = new Thread(() -> {
-            try {
-                //MLog.i("check", "transport");
-                Transport transport = session.getTransport("smtp");
-                //MLog.i("check", "connecting");
-                transport.connect(emailSettings.get("host"), emailSettings.get("user"), emailSettings.get("password"));
-                //MLog.i("check", "wana send");
-                transport.sendMessage(message, message.getAllRecipients());
-                transport.close();
-                //MLog.i("check", "sent");
-            } catch (AddressException e) {
-                e.printStackTrace();
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-
-        });
-        t.start();
-
-    }
-
 
     @PhonkMethod(description = "Simple http get. It returns the data using the callback", example = "")
     @PhonkMethodParam(params = {"url", "function(eventType, responseString)"})
