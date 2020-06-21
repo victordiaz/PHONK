@@ -61,15 +61,10 @@ android {
 
 repositories {
     maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://jitpack.io' }
-    maven { url 'http://maven.google.com'}
-    // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
 
+    google()
     mavenCentral()
     jcenter()
-
-    flatDir { dirs 'libs' }
 }
 
 
@@ -125,15 +120,6 @@ dependencies {
     // tensorflow
     implementation project(path: ':transfer_api')
     implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
-
-    // https://developer.android.com/jetpack/androidx/releases/lifecycle
-    def lifecycle_version = '2.2.0'
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-
-    def camerax_version = "1.0.0-beta02"
-    implementation "androidx.camera:camera-core:$camerax_version"
-    implementation "androidx.camera:camera-camera2:$camerax_version"
 }
 
 
