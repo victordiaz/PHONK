@@ -27,7 +27,6 @@ import android.annotation.SuppressLint;
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import processing.android.PFragment;
-import processing.cardboard.PCardboard;
 import processing.core.PApplet;
 
 
@@ -67,24 +66,18 @@ public class PProcessing extends PFragment {
         p.pfnDraw = pIface;
     }
 
-
     public void __stop() {
         p.noLoop();
         p.onPause();
         p.onDestroy();
         p.pfnDraw = null;
     }
-
 }
 
-
 class PSketch extends PApplet {
-
     protected PProcessing.PInterfaceDraw pfnDraw;
     protected PProcessing.PInterfaceSetup pfnSetup;
     protected PProcessing.PInterfaceSettings pfnSettings;
-    String CARDBOARD_STEREO = PCardboard.STEREO;
-
 
     @Override
     public void settings() {
@@ -106,5 +99,4 @@ class PSketch extends PApplet {
             pfnDraw.draw(this);
         }
     }
-
 }

@@ -8,7 +8,6 @@ android {
     compileSdkVersion 29
 
     defaultPublishConfig "normalrunnerDebug"
-    // defaultPublishConfig "extendedrunnerDebug"
     publishNonDefault true
 
     defaultConfig {
@@ -34,7 +33,7 @@ android {
 
     buildTypes {
         release {
- 			minifyEnabled false
+ 			      minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -97,7 +96,7 @@ dependencies {
     // media
     api 'org.puredata.android:pd-core:1.1.0'
     api files('libs/processing_core.jar')
-    api files('libs/processing_cardboard.jar')
+
     api 'com.github.japgolly.android:svg-android:2.0.6' //'files('libs/androidsvg-1.2.1.jar')
 
     // osmdroid

@@ -55,23 +55,18 @@ android {
 
         debug {
             debuggable true
-            //applicationIdSuffix ".nineteen";
         }
     }
 
     productFlavors {
         normal {
-            // dimension 'normal'
             applicationId "io.phonk"
             versionName "1.12.0_normal"
-            // resValue "string", "releaseMode", "normal"
         }
 
         extended {
-            // dimension 'extended'
             applicationId "io.phonk.extended"
             versionName "1.12.0_extended"
-            // resValue "string", "releaseMode", "all_features"
         }
     }
 
@@ -86,16 +81,13 @@ android {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
-//        exclude 'META-INF/inputList.txt'
     }
 
     dexOptions {
         jumboMode true
-        // javaMaxHeapSize "2g"
     }
 
     lintOptions {
-        // abortOnError false
         disable 'InvalidPackage'
     }
 }
@@ -106,13 +98,6 @@ repositories {
     mavenCentral()
     google()
 }
-
-/*
-configurations {
-    //all*.exclude group: 'com.android.support', module: 'support-v4'
-   // all*.exclude group: 'com.google.android.gms', module: 'play-services'
-}
-*/
 
 dependencies {
     implementation project(path: ':phonk_apprunner')
