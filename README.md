@@ -6,7 +6,7 @@
 :tada: Hello! I'm happy to see you here reading about PHONK!!
 
 **PHONK is a self-contained creative scripting toolbox for new and old Android devices.**
-Create scripts rapidly from your phone or using the *remote Web Editor* on your computer. The API is simple an extensive GUI; audio, graphics, bluetooth ble, arduino, OSC, midi, and much more.
+Create scripts rapidly from your phone or using the *remote Web Editor* on your computer. The API is simple and extensive. GUI, audio, graphics, bluetooth ble, arduino, OSC, midi, and much more.
 
 Have a look in the [PHONK website](http://www.phonk.io) for more info
 
@@ -29,12 +29,12 @@ Get it from
 - [APK](https://github.com/victordiaz/phonk/releases)
 - ~~[F-droid](https://github.com/victordiaz/phonk/issues/6)~~ (Need help)
 - [Play Store](https://play.google.com/store/apps/details?id=io.phonk)
-- ~~or just [compile it your self]().~~
+- or just [compile it your self]()
 
 If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](https://github.com/victordiaz/phonk/issues/new).
 
 During the first install, the app will
-1. Ask you for a bunch of permissions. I recommend to accept all of them to be able to run the examples. You can always revoke them :)
+1. Ask you for a bunch of permissions. I recommend accepting all of them to be able to run the examples. You can always revoke them :)
 2. Install the examples in the device "sdcard" folder. Doing this we can easily access the examples and self-made scripts from any other app.
 
 ## How to create your first script
@@ -64,7 +64,7 @@ You can explore the variety of examples included in PHONK and modify them in ord
 
 ## Get Involved
 - Write about it
-- Make something with PHONK.io and tell me about. I would love to know how you use it. (Github, e-mail, etc)
+- Make something with PHONK.io and tell me about it. I would love to know how you use it. (Github, e-mail, etc)
 - Have a look at the [issues](https://github.com/victordiaz/phonk/issues)
 
 ## Roadmap
