@@ -62,6 +62,32 @@ Now run the project. :tada:
 You can explore the variety of examples included in PHONK and modify them in order to explore its capabilities.
 
 
+## Compile it yourself
+PHONK depends on 3 subprojects. Each of them is on a different repository so things are a bit easy to manage.
+1. The main PHONK Android project. (this repo)
+2. The Web Editor [https://github.com/victordiaz/phonk-editor](https://github.com/victordiaz/phonk-editor)
+3. The examples [https://github.com/victordiaz/phonk-examples](https://github.com/victordiaz/phonk-examples)
+
+In order to compile PHONK you should fetch the 3 repos so they follow the following folder structure.
+``` bash
+phonk_project
+ ├ phonk # the Android project
+ ├ phonk-editor
+ └ phonk-examples
+```
+
+Once you fetched all projects, you should 
+1. Copy the examples to the assets android assets folder. Go to the phonk-examples folder and run ```npm run cleanAndDeploy```
+2. Add the Web Editor to the Android app asset folder. Go to the phonk-editor folder, ```npm install``` to install the Web Editor dependencies and finally run ```npm run buildAndDeploy``` to build the Web Editor and copy 
+3. In Android Studio import the phonk folder and build the project.
+
+Once you've done that, there is not neccessity to do the first steps anymore unless you want to update the Web Editor or the examples.
+
+### Project structure
+The PHONK app is divided into two modules phonk_app and phonk_apprunner.
+- *phonk_app* is the app that you see when you start PHONK and manages all the stuff to let you makes projects.
+- *phonk_apprunner* is the part in charge of running the scripts and contains all the API. If you want to add or improve the API you can go to the folder [phonk/phonk_apprunner/src/main/java/io/phonk/runner/apprunner/api](https://github.com/victordiaz/phonk/tree/master/phonk_apprunner/src/main/java/io/phonk/runner/apprunner/api). All the methods you include there will automatically be exposed to Javascript.
+
 ## Get Involved
 - Write about it
 - Make something with PHONK.app and tell me about it. I would love to know how you use it. (Github, e-mail, etc)
