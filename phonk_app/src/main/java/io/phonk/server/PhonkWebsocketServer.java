@@ -106,6 +106,11 @@ public class PhonkWebsocketServer extends WebSocketServer {
         ex.printStackTrace();
     }
 
+    @Override
+    public void onStart() {
+
+    }
+
     public void send(String json) {
         for (WebSocket sock : connections) {
             if (sock.isOpen()) {

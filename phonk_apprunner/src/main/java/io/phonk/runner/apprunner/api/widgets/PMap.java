@@ -79,7 +79,7 @@ public class PMap extends MapView {
         mAppRunner = appRunner;
         this.mContext = appRunner.getAppContext();
         // super(appRunner, pixelTileSize);
-        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+        Configuration.getInstance().setUserAgentValue(this.mContext.getApplicationContext().getPackageName());
 
         // Create the mapview with the custom tile provider array
         this.mapView = this;

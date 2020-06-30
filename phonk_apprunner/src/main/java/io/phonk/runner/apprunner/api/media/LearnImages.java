@@ -34,8 +34,6 @@ import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.camera.core.ImageProxy;
-
 import org.tensorflow.lite.examples.transfer.api.TransferLearningModel;
 
 import java.io.ByteArrayOutputStream;
@@ -256,42 +254,6 @@ public class LearnImages {
         canvas.drawBitmap(source, paddingX, paddingY, null);
         return paddedBitmap;
     }
-
-
-    private static Bitmap yuvCameraImageToBitmap(ImageProxy imageProxy) {
-        if (imageProxy.getFormat() != ImageFormat.YUV_420_888) {
-            throw new IllegalArgumentException(
-                    "Expected a YUV420 image, but got " + imageProxy.getFormat());
-        }
-
-        ImageProxy.PlaneProxy yPlane = imageProxy.getPlanes()[0];
-        ImageProxy.PlaneProxy uPlane = imageProxy.getPlanes()[1];
-
-        int width = imageProxy.getWidth();
-        int height = imageProxy.getHeight();
-
-        byte[][] yuvBytes = new byte[3][];
-        int[] argbArray = new int[width * height];
-        for (int i = 0; i < imageProxy.getPlanes().length; i++) {
-            final ByteBuffer buffer = imageProxy.getPlanes()[i].getBuffer();
-            yuvBytes[i] = new byte[buffer.capacity()];
-            buffer.get(yuvBytes[i]);
-        }
-
-        ImageUtils.convertYUV420ToARGB8888(
-                yuvBytes[0],
-                yuvBytes[1],
-                yuvBytes[2],
-                width,
-                height,
-                yPlane.getRowStride(),
-                uPlane.getRowStride(),
-                uPlane.getPixelStride(),
-                argbArray);
-
-        return Bitmap.createBitmap(argbArray, width, height, Bitmap.Config.ARGB_8888);
-    }
-
 
     private Bitmap cameraDataToBmp(byte[] data, Camera camera) {
         // transform camera data to bmp

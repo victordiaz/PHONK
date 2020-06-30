@@ -57,23 +57,14 @@ android {
 
 
 repositories {
-
-    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://jitpack.io' }
-    maven { url 'http://maven.google.com'}
-
     mavenCentral()
     jcenter()
+    google()
 
     flatDir { dirs 'libs' }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-
     // This dependency is compileOnly so that the user of this library can select between
     // different TFLite distributions (e.g. with or without Flex).
     compileOnly 'org.tensorflow:tensorflow-lite:0.0.0-nightly'

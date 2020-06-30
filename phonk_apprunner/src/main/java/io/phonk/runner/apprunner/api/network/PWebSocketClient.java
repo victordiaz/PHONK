@@ -28,7 +28,7 @@ import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -52,10 +52,8 @@ public class PWebSocketClient extends ProtoBase {
     public PWebSocketClient(AppRunner appRunner, String uri) {
         super(appRunner);
 
-        Draft d = new Draft_17();
-
         try {
-            mWebSocketClient = new WebSocketClient(new URI(uri), d) {
+            mWebSocketClient = new WebSocketClient(new URI(uri)) {
 
                 @Override
                 public void onOpen(ServerHandshake arg0) {

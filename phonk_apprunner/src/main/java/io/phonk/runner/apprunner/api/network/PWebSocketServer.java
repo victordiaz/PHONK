@@ -27,8 +27,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import org.java_websocket.WebSocket;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -52,9 +50,7 @@ public class PWebSocketServer extends ProtoBase {
         super(appRunner);
 
         InetSocketAddress inetSocket = new InetSocketAddress(port);
-        Draft d = new Draft_17();
-
-        websocketServer = new WebSocketServer(inetSocket, Collections.singletonList(d)) {
+        websocketServer = new WebSocketServer(inetSocket) {
 
             @Override
             public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
@@ -80,6 +76,15 @@ public class PWebSocketServer extends ProtoBase {
                     mCallbackfn.event(o);
                 });
                 //MLog.d(TAG, "onError");
+            }
+
+            @Override
+            public void onStart() {
+                mHandler.post(() -> {
+                   ReturnObject o = new ReturnObject();
+                   o.put("status", "started");
+                   mCallbackfn.event(o);
+                });
             }
 
             @Override
