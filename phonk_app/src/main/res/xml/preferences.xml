@@ -160,6 +160,12 @@
 
     <PreferenceCategory android:title="@string/setting_about_title" >
         <Preference
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:key="phonkVersionName"
+            android:title="PHONK version"
+        />
+
+        <Preference
             android:icon="@drawable/ic_notifications_24dp"
             android:key="licenses_detail"
             android:summary="@string/setting_opensource_description"

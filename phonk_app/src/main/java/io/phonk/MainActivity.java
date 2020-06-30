@@ -42,6 +42,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -217,6 +218,10 @@ public class MainActivity extends BaseActivity {
     private void loadUI(int toPage) {
         // load UI
         setContentView(R.layout.main_activity);
+
+        // Show PHONK version on load
+        TextView txtPhonkVersion = findViewById(R.id.phonkVersion);
+        txtPhonkVersion.setText(BuildConfig.VERSION_NAME);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         mIsLandscapeBig = getResources().getBoolean(R.bool.isLandscapeBig);

@@ -155,11 +155,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:padding="40dp"
+        android:padding="0dp"
         android:visibility="visible">
 
         <include layout="@layout/appintro" />
-
     </RelativeLayout>
 
     <androidx.viewpager.widget.ViewPager

@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.BuildConfig;
 import io.phonk.runner.R;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
@@ -441,6 +442,13 @@ public class PApp extends ProtoBase {
         */
     }
 
+    /**
+     * Returns PHONK version
+     */
+    @PhonkMethod
+    public String version() {
+        return BuildConfig.VERSION_NAME;
+    }
 
     /**
      * Start an activity

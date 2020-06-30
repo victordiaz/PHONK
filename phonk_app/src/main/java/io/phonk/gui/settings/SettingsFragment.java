@@ -38,6 +38,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.TwoStatePreference;
 
+import io.phonk.BuildConfig;
 import io.phonk.R;
 import io.phonk.gui.LicenseActivity;
 import io.phonk.helpers.PhonkSettingsHelper;
@@ -74,18 +75,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // View mParentView = super.onCreateView(inflater, container, savedInstanceState);
         mParentView = super.onCreateView(inflater, container, savedInstanceState);
 
-        /*
-        View mParentView = inflater.inflate(R.layout.prueba_fragment_preferences, container , false);
-
-        final ViewGroup innerContainer = (ViewGroup) mParentView.findViewById(R.id.card);
-        final View innerView = super.onCreateView(inflater, innerContainer, savedInstanceState);
-        if (innerView != null) {
-            innerContainer.addView(innerView);
-        }
-        */
-
         mContext = getActivity();
-
         mUserPreferences = UserPreferences.getInstance();
 
         // Load the preferences from an XML resource
@@ -232,6 +222,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
         appColor.setText((String) UserPreferences.getInstance().get("app_color"));
         */
+
+        Preference phonkVersionName = findPreference("phonkVersionName");
+        phonkVersionName.setSummary(BuildConfig.VERSION_NAME);
 
         Preference btnShowLicenses = findPreference("licenses_detail");
         btnShowLicenses.setOnPreferenceClickListener(arg0 -> {

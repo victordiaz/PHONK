@@ -9,6 +9,11 @@ buildscript {
     }
 }
 
+project.ext {
+    versionCode = 123
+    versionName = "1.2.3"
+}
+
 task hello {
     doLast {
         println 'Hello world!'
