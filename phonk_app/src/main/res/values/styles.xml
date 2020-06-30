@@ -135,4 +135,11 @@
         <item name = "android:gravity">center</item>
     </style>
 
+    <style name = "YellowButton" parent = "Widget.AppCompat.Button">
+        <item name = "android:textColor">@color/phonk_colorSecondary</item>
+        <item name = "android:background">@color/phonk_colorPrimary</item>
+        <item name = "android:textSize">10sp</item>
+        <item name = "android:gravity">center</item>
+    </style>
+
 </resources>

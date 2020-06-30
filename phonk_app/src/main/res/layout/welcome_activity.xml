@@ -111,10 +111,10 @@
             android:textAlignment="gravity"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            style="@style/ToggleButton"
+            style="@style/YellowButton"
             android:text="@string/welcome_accept"
             android:textColor="@color/phonk_backgroundColor"
-            android:backgroundTint="@color/phonk_colorPrimary"
+            android:foreground="?attr/selectableItemBackground"
             />
 
     </LinearLayout>
