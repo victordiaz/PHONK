@@ -127,9 +127,9 @@ public class MainActivity extends BaseActivity {
 
         mAppRunner = new AppRunnerCustom(this);
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
-        PhonkApp phonkApp = new PhonkApp(mAppRunner);
+        // PhonkApp phonkApp = new PhonkApp(mAppRunner);
         // phonkApp.network.checkVersion();
-        mAppRunner.interp.eval("device.vibrate(100);");
+        // mAppRunner.interp.eval("device.vibrate(100);");
 
         // startServers if conf specifies. In webidemode always have to start it
         MLog.d(TAG, "isWebIdeMode " + isWebIdeMode);
@@ -290,7 +290,7 @@ public class MainActivity extends BaseActivity {
                 }
 
                 if (position == 0) {
-                    MLog.d(TAG, position + " " + positionOffset + " " + positionOffsetPixels);
+                    // MLog.d(TAG, position + " " + positionOffset + " " + positionOffsetPixels);
                     mLaunchScreenLogo.setAlpha(1 - positionOffset);
 
                     float scale = positionOffset / 5.0f;
@@ -308,7 +308,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                MLog.d("selected", "state " + state + " " + mCurrentPagerPosition);
+                // MLog.d("selected", "state " + state + " " + mCurrentPagerPosition);
             }
         });
         mViewPager.setCurrentItem(toPage);
