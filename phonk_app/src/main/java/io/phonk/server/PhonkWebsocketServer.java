@@ -71,7 +71,7 @@ public class PhonkWebsocketServer extends WebSocketServer {
 
     public void start() {
         super.start();
-        MLog.d(TAG, "Launched websocket server at on port " + mPort);
+        // MLog.d(TAG, "Start websocket server at on port " + mPort);
     }
 
     public void stop() {
@@ -101,14 +101,17 @@ public class PhonkWebsocketServer extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        MLog.d(TAG, "Error:");
-        mConnectionCallback.disconnect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
+        // MLog.d(TAG, "Error:");
         ex.printStackTrace();
+
+        if (conn != null) {
+            mConnectionCallback.disconnect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
+        }
     }
 
     @Override
     public void onStart() {
-
+        // MLog.d(TAG, "Start websocket server at on port " + mPort);
     }
 
     public void send(String json) {
