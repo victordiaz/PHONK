@@ -142,7 +142,7 @@ public class FileIO {
 
     // Write mContext string to mContext file
     public static String writeStringToFile(String url, String name, String code) {
-        MLog.d(TAG, "Writing string to file name: " + name + " code: " + code);
+        // MLog.d(TAG, "Writing string to file name: " + name + " code: " + code);
         String filename = name.replaceAll("[^a-zA-Z0-9-_\\. ]", "_");
         String baseDir = url + File.separator + filename;
         File dir = new File(baseDir);
@@ -282,7 +282,7 @@ public class FileIO {
     }
 
     public static void deleteFileDir(String path) {
-        MLog.d(TAG, "deleting directory " + path);
+        // MLog.d(TAG, "deleting directory " + path);
         File dir = new File(path);
 
         if (dir.isDirectory()) {
@@ -305,19 +305,19 @@ public class FileIO {
     }
 
     public static void deleteDir(File dir) {
-        MLog.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
+        // MLog.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
         if (dir.isDirectory()) {
             String[] children = dir.list();
             for (String element : children) {
                 File temp = new File(dir, element);
                 if (temp.isDirectory()) {
-                    MLog.d("DeleteRecursive", "Recursive Call" + temp.getPath());
+                    // MLog.d("DeleteRecursive", "Recursive Call" + temp.getPath());
                     deleteDir(temp);
                 } else {
-                    MLog.d("DeleteRecursive", "Delete File" + temp.getPath());
+                    // MLog.d("DeleteRecursive", "Delete File" + temp.getPath());
                     boolean b = temp.delete();
                     if (b == false) {
-                        MLog.d("DeleteRecursive", "DELETE FAIL");
+                        // MLog.d("DeleteRecursive", "DELETE FAIL");
                     }
                 }
             }
@@ -346,7 +346,7 @@ public class FileIO {
             }
             out = buf.toString();
         } catch (IOException e) {
-            MLog.d(TAG, "no file in " + path);
+            // MLog.d(TAG, "no file in " + path);
             // e.printStackTrace();
         }
         return out;

@@ -152,14 +152,14 @@ public class PhonkScriptHelper {
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
         ArrayList<Folder> folders = new ArrayList<Folder>();
         File dir = new File(PhonkSettings.getFolderPath(folder));
-        MLog.d(TAG, "nn1 path ->" + folder + " " + dir.getAbsolutePath() + " " + dir.exists());
+        // MLog.d(TAG, "nn1 path ->" + folder + " " + dir.getAbsolutePath() + " " + dir.exists());
 
         if (!dir.exists()) {
             dir.mkdir();
         }
 
         File[] all_projects = dir.listFiles();
-        MLog.d(TAG, "nn1 1" + all_projects);
+        // MLog.d(TAG, "nn1 1" + all_projects);
 
         // if folder or not existing is empty return
         if (all_projects == null) return folders;
@@ -169,13 +169,12 @@ public class PhonkScriptHelper {
             Arrays.sort(all_projects);
         }
 
-        MLog.d(TAG, "nn1 2");
         // create returning structure
         for (File file : all_projects) {
             String folderUrl = file.getAbsolutePath();
             String projectName = file.getName();
 
-            MLog.d("nn1 3", folderUrl + " " + " " + folder + " " + projectName);
+            // MLog.d("nn1 3", folderUrl + " " + " " + folder + " " + projectName);
             folders.add(new Folder(folderUrl, folder, projectName));
         }
 

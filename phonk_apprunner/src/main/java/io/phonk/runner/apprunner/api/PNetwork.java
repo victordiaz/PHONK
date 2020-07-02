@@ -109,9 +109,7 @@ public class PNetwork extends ProtoBase {
     public void initForParentFragment(AppRunnerFragment fragment) {
         super.initForParentFragment(fragment);
 
-        //prevent crashing in protocoder app
-        MLog.d(TAG, "is getActivity() " + getActivity());
-
+        // prevent crashing in phonk app
         if (getFragment() != null) {
             bluetooth.initForParentFragment(getFragment());
         }

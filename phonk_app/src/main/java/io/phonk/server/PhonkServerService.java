@@ -389,8 +389,8 @@ public class PhonkServerService extends Service {
     FileObserver fileObserver = new FileObserver(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects/"), FileObserver.CREATE | FileObserver.DELETE | FileObserver.DELETE_SELF | FileObserver.MODIFY | FileObserver.MOVED_TO | FileObserver.MOVED_FROM) {
         @Override
         public void onEvent(int event, String file) {
-            MLog.d(TAG, "qq -> " + event);
-            MLog.d(TAG, "qq2 -> " + file);
+            // MLog.d(TAG, "event: " + event);
+            // MLog.d(TAG, "file: " + file);
 
             if ((FileObserver.CREATE & event) != 0) {
                 MLog.d(TAG, "File created [" + PhonkSettings.getBaseDir() + file + "]");
