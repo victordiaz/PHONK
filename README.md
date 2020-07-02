@@ -46,7 +46,7 @@ Instead, connect your computer and Android to the same Wifi network. On your com
 
 You can create a new project and copy and paste this into the editor.
 
-```
+``` js
 // ui elements need x, y, w, h normalized paramaters
 ui.addButton('Start accelerometer', 0.1, 0.45, 0.8, 0.1).onClick(function () {
   sensors.accelerometer.start()
