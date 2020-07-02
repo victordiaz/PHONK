@@ -27,6 +27,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
@@ -266,7 +267,8 @@ public class AppRunnerFragment extends Fragment {
 
     }
 
-    public TextView changeTitle(String title) {
+    public TextView changeTitle(String title, String color) {
+        txtTitle.setTextColor(Color.parseColor(color));
         txtTitle.setText(title);
         txtTitle.setVisibility(View.VISIBLE);
         txtTitle.setAlpha(0.0f);

@@ -41,7 +41,7 @@ public interface PViewMethodsInterface {
 
     void set(float x, float y, float w, float h);
 
-    void setStyle(Map style);
+    void setProps(Map style);
 
-    Map getStyle();
+    Map getProps();
 }

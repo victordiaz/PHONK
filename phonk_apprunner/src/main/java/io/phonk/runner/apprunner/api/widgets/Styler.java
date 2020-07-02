@@ -73,9 +73,9 @@ public class Styler {
     private String textAlign;
     public float padding;
     public int hintColor;
-    String animInBefore;
-    String animIn;
-    String animOut;
+    // String animInBefore;
+    // String animIn;
+    // String animOut;
     int slider;
     int sliderPressed;
     float sliderHeight;
@@ -145,6 +145,8 @@ public class Styler {
                     break;
             }
 
+            MLog.d("qqq", "onChange " + name + " " + value);
+
             apply();
         });
     }
@@ -156,13 +158,13 @@ public class Styler {
 
         StyleProperties p = styles.get(viewName);
         if (p != null) {
-            MLog.d(TAG, "" + p.size());
-            MLog.d(TAG, "applying view specific style for " + viewName);
+            // MLog.d(TAG, "" + p.size());
+            // MLog.d(TAG, "applying view specific style for " + viewName);
             fromTo(p, props);
         }
     }
 
-    public void setStyle(Map o) {
+    public void setProps(Map o) {
         props.eventOnChange = false;
         fromTo(o, props);
         apply();
@@ -171,26 +173,13 @@ public class Styler {
 
     private void fromTo(Map<String, Object> styleFrom, StyleProperties styleTo) {
         for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
-            MLog.d(TAG, "" + entry.getKey() + " " + entry.getValue());
+            // MLog.d(TAG, "" + entry.getKey() + " " + entry.getValue());
 
             styleTo.put(entry.getKey(), styleTo, entry.getValue());
         }
     }
 
     public void apply() {
-        /*
-        for (Map.Entry<String, Object> entry : mComputedStyle.entrySet()) {
-            MLog.d(TAG, entry.getKey() + " " + entry.getValue());
-        }
-        */
-
-        /*
-        if (props.containsKey("x")) setX(props.get("x"));
-        if (props.containsKey("y")) setY(props.get("y"));
-        if (props.containsKey("width")) setWidth(props.get("width"));
-        if (props.containsKey("height")) setHeight(props.get("height"));
-        */
-
         visibility = props.get("visibility").toString();
         opacity = toFloat(props.get("opacity"));
         enabled = (boolean) props.get("enabled");
@@ -230,9 +219,10 @@ public class Styler {
         srcPressed = props.get("srcPressed").toString();
         srcTintPressed = Color.parseColor(props.get("srcTintPressed").toString());
 
-        animInBefore = props.get("animInBefore").toString();
-        animIn = props.get("animIn").toString();
-        animOut = props.get("animOut").toString();
+        // animInBefore = props.get("animInBefore").toString();
+        // animIn = props.get("animIn").toString();
+        // animOut = props.get("animOut").toString();
+
         slider = Color.parseColor(props.get("slider").toString());
         sliderPressed = Color.parseColor(props.get("sliderPressed").toString());
         sliderHeight = toFloat(props.get("sliderHeight"));

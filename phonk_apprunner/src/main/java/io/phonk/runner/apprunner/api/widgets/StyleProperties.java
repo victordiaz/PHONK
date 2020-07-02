@@ -30,6 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.phonk.runner.base.utils.GSONUtil;
+import io.phonk.runner.base.utils.MLog;
+
 public class StyleProperties implements Scriptable, Map<String, Object> {
 
     private static final java.lang.String TAG = StyleProperties.class.getSimpleName();
@@ -55,7 +58,7 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
 
     @Override
     public void put(String name, Scriptable start, Object value) {
-        // MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
+        MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
         values.put(name, value);
 
         if (changeListener != null && eventOnChange) changeListener.event(name, value);
@@ -82,7 +85,7 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
     @Override
     public void put(int index, Scriptable start, Object value) {
         // TODO Auto-generated method stub
-
+        // MLog.d(TAG, "put 3: " + index + " : " + value + " " + changeListener);
     }
 
     @Override
@@ -94,7 +97,6 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
     @Override
     public void delete(int index) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -167,7 +169,7 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
 
     @Override
     public Object put(String key, Object value) {
-        // MLog.d(TAG, "put 2: " + key + " " + values.get(key));
+        MLog.d(TAG, "put 3: " + key + " " + values.get(key));
         values.put(key, value);
 
         return value;
@@ -180,6 +182,8 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
 
     @Override
     public void putAll(Map<? extends String, ? extends Object> m) {
+        MLog.d(TAG, "putAll: ");
+
         values.putAll(m);
     }
 
@@ -203,18 +207,23 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
         return values.entrySet();
     }
 
-    private static Scriptable globalPrototype;
-
-    public static void finishInit(Scriptable scope, FunctionObject constructor, Scriptable prototype) {
-        System.out.println("finishInit is called.");
-        globalPrototype = prototype;
-    }
-
     public void onChange(OnChangeListener listener) {
         changeListener = listener;
     }
 
     public interface OnChangeListener {
         void event(String name, Object value);
+    }
+
+    public String apply(HashMap<String, Object> styleProps) {
+        for (Map.Entry<String, Object> entry : styleProps.entrySet()) {
+            this.put(entry.getKey(), entry.getValue());
+        }
+
+        return "qq";
+    }
+
+    public String toString() {
+        return GSONUtil.getInstance().getGson().toJson(this);
     }
 }

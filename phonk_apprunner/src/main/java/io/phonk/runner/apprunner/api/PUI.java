@@ -37,6 +37,7 @@ import androidx.fragment.app.FragmentManager;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.R;
@@ -102,7 +103,6 @@ public class PUI extends PViewsArea {
         setTheme();
         setStyle();
         background((String) theme.get("background"));
-        // background("#cccccc");
     }
 
     @PhonkMethod
@@ -125,12 +125,15 @@ public class PUI extends PViewsArea {
 
         theme.put("background", getContext().getResources().getString(R.color.phonk_backgroundColor));
         theme.put("primary", getContext().getResources().getString(R.color.phonk_colorPrimary));
-        theme.put("primaryShade", "#11FFFFFF");
+        theme.put("primaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
         theme.put("secondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
-        theme.put("secondaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary));
-        theme.put("secondaryShade", "#11FFFFFF");
+        theme.put("secondaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
         theme.put("textPrimary", getContext().getResources().getString(R.color.phonk_colorPrimary));
         theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
+
+        theme.onChange((name, value) -> {
+            setStyle();
+        });
     }
 
     private void setStyle() {
@@ -173,9 +176,9 @@ public class PUI extends PViewsArea {
 
         style.put("hintColor", style, colorSecondaryShade);
 
-        style.put("animInBefore", style, "this.x(0).y(100)");
-        style.put("animIn", style, "this.animate().x(100)");
-        style.put("animOut", style, "this.animate().x(0)");
+        // style.put("animInBefore", style, "this.x(0).y(100)");
+        // style.put("animIn", style, "this.animate().x(100)");
+        // style.put("animOut", style, "this.animate().x(0)");
 
         // slider
         style.put("slider", style, colorPrimary);
@@ -330,13 +333,38 @@ public class PUI extends PViewsArea {
     }
 
     /**
+     * Set a global theme
+     *
+     * @param properties
+     */
+    @PhonkMethod
+    public void setTheme(Map<String, Object> properties) {
+        theme.eventOnChange = false;
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            theme.put(entry.getKey(), theme, entry.getValue());
+        }
+        setStyle();
+        theme.eventOnChange = true;
+    }
+
+    /**
+     * Get the current global theme
+     *
+     * @return theme
+     */
+    @PhonkMethod
+    public Map getTheme() {
+        return theme;
+    }
+
+    /**
      * Adds an overlay title to the script
      *
      * @param title
      */
     @PhonkMethod
     public void addTitle(String title) {
-        getFragment().changeTitle(title);
+        getFragment().changeTitle(title, (String) theme.get("primary"));
     }
 
     /**

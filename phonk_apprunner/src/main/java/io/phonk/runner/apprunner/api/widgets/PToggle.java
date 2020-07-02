@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
-import android.widget.ToggleButton;
 
 import java.util.Map;
 
@@ -130,12 +129,12 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     }
 
     @Override
-    public void setStyle(Map style) {
-        styler.setStyle(style);
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 

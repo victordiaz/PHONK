@@ -31,7 +31,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.TextViewCompat;
 
 import java.util.Map;
@@ -40,7 +39,6 @@ import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PText extends TextView implements PViewMethodsInterface, PTextInterface {
@@ -223,12 +221,12 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
     }
 
     @Override
-    public void setStyle(Map style) {
-        styler.setStyle(style);
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 

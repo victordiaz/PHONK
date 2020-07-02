@@ -24,8 +24,10 @@
 <resources>
 
     <color name="phonk_colorPrimary">#FFC700</color>
+    <color name="phonk_colorPrimary_shade">#33FFC700</color>
     <color name="phonk_colorPrimary_shade_1">#33FFC700</color>
     <color name="phonk_colorSecondary">#FFFFFF</color>
+    <color name="phonk_colorSecondary_shade">#11FFFFFF</color>
     <color name="phonk_colorSecondary_shade_1">#33FFFFFF</color>
     <color name="phonk_backgroundColor">#272822</color>
 

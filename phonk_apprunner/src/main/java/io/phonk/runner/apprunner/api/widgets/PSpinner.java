@@ -141,12 +141,12 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
     }
 
     @Override
-    public void setStyle(Map style) {
+    public void setProps(Map style) {
         // styler.setStyle(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 

@@ -174,12 +174,12 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
     }
 
     @Override
-    public void setStyle(Map style) {
-        styler.setStyle(style);
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 

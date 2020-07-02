@@ -140,7 +140,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     public PSlider onChange(final ReturnInterface callbackfn) {
         this.callback = callbackfn;
-
         return this;
     }
 
@@ -169,12 +168,12 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setStyle(Map style) {
-        styler.setStyle(style);
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 

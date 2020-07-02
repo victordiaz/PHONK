@@ -221,12 +221,12 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     }
 
     @Override
-    public void setStyle(Map style) {
-        styler.setStyle(style);
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 

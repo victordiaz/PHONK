@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.View;
@@ -33,7 +32,6 @@ import java.util.Map;
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
-import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -176,12 +174,12 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     @Override
-    public void setStyle(Map style) {
-        styler.setStyle(style);
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     @Override
-    public Map getStyle() {
+    public Map getProps() {
         return props;
     }
 
@@ -190,7 +188,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     public void styleq(Map style) {
-        styler.setStyle(style);
+        styler.setProps(style);
     }
 
 }

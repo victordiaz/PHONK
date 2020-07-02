@@ -85,6 +85,7 @@ public class AppRunnerInterpreter {
     public void eval(String jscode, String origin) {
         try {
             Object result = rhino.evaluateString(scope, jscode, origin, 1, null);
+            MLog.d("result", "" + result);
             processResult(RESULT_OK, "");
         } catch (org.mozilla.javascript.EvaluatorException e) {
             processResult(RESULT_ERROR, e.getMessage());
@@ -131,7 +132,7 @@ public class AppRunnerInterpreter {
     }
 
     public void processResult(int resultType, String message) {
-
+        MLog.d(TAG, "processResult: " + resultType + " " + message);
         String resultClean = "";
         switch (resultType) {
             case RESULT_OK:
