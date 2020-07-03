@@ -39,6 +39,7 @@
     <!-- theme -->
     <color name="console_background">#A6000000</color>
     <color name="console_textcolor">#FFFFFF</color>
+    <color name="console_textcolorerror">#ff3e35</color>
 
 
     <color name="red">#ff0000</color>

@@ -181,7 +181,7 @@ public class DebugFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            String txt = mLogArray.get(position).data;
+            String txt = mLogArray.get(position).data.trim();
             holder.consoleText.setText(txt);
 
             if (holder.viewType == AppRunnerInterpreter.RESULT_PERMISSION_ERROR) {
