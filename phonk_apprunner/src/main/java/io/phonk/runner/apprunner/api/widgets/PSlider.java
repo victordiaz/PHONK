@@ -178,8 +178,10 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         executeCallback();
     }
 
-    public void mode(String mode) {
+    public PSlider mode(String mode) {
         this.mode = mode;
+
+        return this;
     }
 
     @Override

@@ -291,7 +291,6 @@ public class PUI extends PViewsArea {
         }
     }
 
-
     public LinkedHashMap<String, StyleProperties> getStyles() {
         return styles;
     }
