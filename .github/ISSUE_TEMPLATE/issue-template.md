@@ -7,11 +7,12 @@ assignees: ''
 
 ---
 
-Try to add information such as (not compulsory)
-** Problem description **
+*Try to add information such as (if possible)*
 
-** Device model **
+**Problem description**
 
-** Android version **
+**Device model**
 
-** Steps to reproduce the bug **
+**Android version**
+
+**Steps to reproduce the bug**
