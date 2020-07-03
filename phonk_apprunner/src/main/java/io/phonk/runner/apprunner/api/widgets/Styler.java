@@ -45,6 +45,7 @@ public class Styler {
     public StyleProperties props;
 
     MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
+    // MyRoundCornerDrawable mActiveDrawable = new MyRoundCornerDrawable();
     MyRoundCornerDrawable mPressedDrawable = new MyRoundCornerDrawable();
     MyRoundCornerDrawable mSelectedDrawable = new MyRoundCornerDrawable();
     MyRoundCornerDrawable mCheckedDrawable = new MyRoundCornerDrawable();
@@ -113,8 +114,10 @@ public class Styler {
         MLog.d(TAG, "Applying style to " + viewName);
         this.props = props;
 
-        mStateListDrawable.addState(new int[]{android.R.attr.state_checked}, mCheckedDrawable);
+        // mStateListDrawable.addState(new int[]{android.R.attr.state_checked}, mCheckedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_pressed}, mPressedDrawable);
+        // mStateListDrawable.addState(new int[]{}, mActiveDrawable);
+
         mStateListDrawable.addState(new int[]{android.R.attr.state_enabled}, mBackgroundDrawable);
 
         mStateListDrawable.addState(new int[]{android.R.attr.state_selected}, mSelectedDrawable);
@@ -122,7 +125,6 @@ public class Styler {
 
         mStateListDrawable.addState(new int[]{}, mCheckedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_checkable}, mCheckedDrawable);
-
         mView.setBackground(mStateListDrawable);
 
         // get default styles
@@ -144,8 +146,6 @@ public class Styler {
                     setHeight(value);
                     break;
             }
-
-            MLog.d("qqq", "onChange " + name + " " + value);
 
             apply();
         });
@@ -257,12 +257,15 @@ public class Styler {
 
         // set background
         mBackgroundDrawable.setBackground(background);
+        // mActiveDrawable.setBackground(0x0000FF00);
         mPressedDrawable.setBackground(backgroundPressed);
         mSelectedDrawable.setBackground(backgroundSelected);
         mCheckedDrawable.setBackground(backgroundChecked);
         mHoveredDrawable.setBackground(backgroundHover);
 
         mBackgroundDrawable.setBorderRadius((int) borderRadius);
+        // mActiveDrawable.setBorderRadius((int) borderRadius);
+
         mPressedDrawable.setBorderRadius((int) borderRadius);
         mSelectedDrawable.setBorderRadius((int) borderRadius);
         mCheckedDrawable.setBorderRadius((int) borderRadius);

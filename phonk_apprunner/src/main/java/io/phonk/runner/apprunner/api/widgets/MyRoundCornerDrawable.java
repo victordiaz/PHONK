@@ -32,6 +32,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+
+import io.phonk.runner.base.utils.AndroidUtils;
 
 public class MyRoundCornerDrawable extends Drawable {
 
@@ -100,8 +103,13 @@ public class MyRoundCornerDrawable extends Drawable {
 
         int c1 = Color.argb(100, 0, 252, 0);
         int c2 = Color.argb(100, 0, 252, 0);
-        //     mPaintBg.setAntiAlias(true);
-        // mPaintBg.setShader(new LinearGradient(0, 0, 0, 150, c, c, Shader.TileMode.CLAMP));
+        // mPaintBg.setAntiAlias(true);
+
+        // Android < Lollipop doesnt like so transparency in the background
+        // a shader makes the trick
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mPaintBg.setShader(new LinearGradient(0, 0, 0, 150, c, c, Shader.TileMode.CLAMP));
+        }
 
         invalidateSelf();
     }

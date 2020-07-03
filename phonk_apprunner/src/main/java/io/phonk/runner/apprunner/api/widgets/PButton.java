@@ -186,9 +186,4 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public PAnimation anim() {
         return new PAnimation(this);
     }
-
-    public void styleq(Map style) {
-        styler.setProps(style);
-    }
-
 }
