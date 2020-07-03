@@ -61,7 +61,7 @@ public class PMqtt extends ProtoBase {
 
             if (connectionSettings.containsKey("user") && connectionSettings.containsKey("password")) {
                 connOpts.setUserName((String) connectionSettings.get("user"));
-                connOpts.setPassword(connectionSettings.get("password").toCharArray());
+                connOpts.setPassword(((String)connectionSettings.get("password")).toCharArray());
             }
 
             connOpts.setCleanSession(true);
