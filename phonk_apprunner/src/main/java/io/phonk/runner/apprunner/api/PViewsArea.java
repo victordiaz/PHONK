@@ -68,7 +68,9 @@ import io.phonk.runner.apprunner.api.widgets.PToolbar;
 import io.phonk.runner.apprunner.api.widgets.PTouchPad;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
+import io.phonk.runner.apprunner.api.widgets.StyleProperties;
 import io.phonk.runner.base.gui.CameraTexture;
+import io.phonk.runner.base.utils.GSONUtil;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
@@ -80,6 +82,7 @@ public class PViewsArea extends ProtoBase {
     private ArrayList<View> viewArray = new ArrayList<>();
 
     // UI
+    private StyleProperties mTheme;
     private boolean isScrollEnabled = false;
     protected PAbsoluteLayout uiAbsoluteLayout;
     private RelativeLayout uiHolderLayout;
@@ -155,11 +158,16 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     protected View addViewAbsolute(View v, Object x, Object y, Object w, Object h) {
-        v.setAlpha(0);
-        viewArray.add(v);
+        boolean isAnimated = (boolean) mAppRunner.pUi.theme.get("animationOnViewAdd");
 
+        if (isAnimated) {
+            v.setAlpha(0);
+            v.animate().alpha(1).setDuration(300).setStartDelay(100 * (1 + viewArray.size())).start();
+        }
+
+        viewArray.add(v);
         uiAbsoluteLayout.addView(v, x, y, w, h);
-        v.animate().alpha(1).setDuration(300).setStartDelay(100 * (1 + viewArray.size())).start();
+
         return v;
     }
 

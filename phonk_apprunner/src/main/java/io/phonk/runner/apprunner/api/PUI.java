@@ -60,6 +60,7 @@ public class PUI extends PViewsArea {
 
     public StyleProperties style;
     public StyleProperties theme;
+
     private boolean isMainLayoutSetup = false;
     public int screenWidth;
     public int screenHeight;
@@ -128,8 +129,9 @@ public class PUI extends PViewsArea {
         theme.put("primaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
         theme.put("secondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
         theme.put("secondaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
-        theme.put("textPrimary", getContext().getResources().getString(R.color.phonk_colorPrimary));
-        theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
+        theme.put("textPrimary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
+        theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
+        theme.put("animationOnViewAdd", false);
 
         theme.onChange((name, value) -> {
             setStyle();
@@ -339,12 +341,16 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void setTheme(Map<String, Object> properties) {
+        MLog.d("qqq", "setTheme");
+
         theme.eventOnChange = false;
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             theme.put(entry.getKey(), theme, entry.getValue());
         }
         setStyle();
+        background((String) theme.get("background"));
         theme.eventOnChange = true;
+        MLog.d("qqq", "setTheme 2");
     }
 
     /**
