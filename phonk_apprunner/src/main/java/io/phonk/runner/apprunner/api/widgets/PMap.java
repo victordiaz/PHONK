@@ -280,7 +280,7 @@ public class PMap extends MapView {
         PMapMarker m = new PMapMarker(mapView);
 
         // location
-        GeoPoint loc = new GeoPoint((double) params.get("lon"), (double) params.get("lat"));
+        GeoPoint loc = new GeoPoint((double) params.get("lat"), (double) params.get("lon"));
         m.setPosition(loc);
 
         // icon
