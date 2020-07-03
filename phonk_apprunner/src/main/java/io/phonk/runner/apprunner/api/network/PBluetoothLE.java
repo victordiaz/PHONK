@@ -59,7 +59,6 @@ public class PBluetoothLE extends ProtoBase {
         mAppRunner = appRunner;
 
         mContext = appRunner.getAppContext();
-        MLog.d(TAG, "Initializated");
     }
 
     public PBluetoothLE start() {
