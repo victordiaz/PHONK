@@ -19,22 +19,22 @@ p.addGeoPoint(80 * Math.random(), 80 * Math.random())
 p.addGeoPoint(80 * Math.random(), 80 * Math.random())
 
 var m1 = map.addMarker({
-  lon: 80 * Math.random(),
   lat: 80 * Math.random(),
+  lon: 80 * Math.random(),
   icon: 'marker1.png',
   title: 'Marker 1',
   description: 'Marker 1 description'
 })
 
 var m2 = map.addMarker({
-  lon: 80 * Math.random(),
   lat: 80 * Math.random(),
+  lon: 80 * Math.random(),
   icon: 'marker2.png',
   title: 'Marker 2',
   description: 'Marker 2 description'
 })
 
 var m3 = map.addMarker({
-  lon: 80 * Math.random(),
-  lat: 80 * Math.random()
+  lat: 80 * Math.random(),
+  lon: 80 * Math.random()
 })
