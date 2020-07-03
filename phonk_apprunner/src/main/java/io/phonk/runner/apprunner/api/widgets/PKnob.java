@@ -100,7 +100,6 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         }
 
         executeCallback();
-
         invalidate();
 
         return true;

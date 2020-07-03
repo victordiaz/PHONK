@@ -57,6 +57,11 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private float rangeFrom = 0;
     private float rangeTo = 1;
 
+    private String mode = "direct";
+    private float firstX;
+    private float prevVal = 0;
+    private float val = 0;
+
     private DecimalFormat df;
     private String formatString = "#.##";
     private int numDecimals = 1;
@@ -79,23 +84,34 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         x = event.getX();
         y = event.getY();
 
-        if (x < 0) x = 0;
-        if (x > mWidth) x = mWidth;
-        if (y < 0) y = 0;
-        if (y > mHeight) y = mHeight;
+        if (mode.equals("direct")) {
+            if (x < 0) x = 0;
+            if (x > mWidth) x = mWidth;
+            if (y < 0) y = 0;
+            if (y > mHeight) y = mHeight;
+            unmappedVal = x;
+            mappedVal = CanvasUtils.map(x, 0, mWidth, rangeFrom, rangeTo);
+        } else if (mode.equals("drag")){
 
-        unmappedVal = x;
-        mappedVal = CanvasUtils.map(x, 0, mWidth, rangeFrom, rangeTo);
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    firstX = x;
+                    prevVal = val;
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    float delta = x - firstX;
+                    val = prevVal + delta;
+                    if (val < 0) val = 0;
+                    if (val > mWidth) val = mWidth;
+                    unmappedVal = val; // CanvasUtils.map(val, 0, mWidth, 0, 360);
+                    mappedVal = CanvasUtils.map(val, 0, mWidth, rangeFrom, rangeTo);
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-            default:
-                return false;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                default:
+                    return false;
+            }
         }
 
         executeCallback();
@@ -160,6 +176,10 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     public void valueAndTriggerEvent(float val) {
         this.value(val);
         executeCallback();
+    }
+
+    public void mode(String mode) {
+        this.mode = mode;
     }
 
     @Override
