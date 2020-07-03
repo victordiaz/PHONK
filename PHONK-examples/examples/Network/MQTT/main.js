@@ -8,7 +8,7 @@ ui.addSubtitle('MQTT client example. Edit the values to connect to your server.'
 var connectionData = {
   clientId: 'phonk',
   broker: 'tcp://192.168.10.100:1883',
-  username: null,
+  user: null,
   password: null
 }
 
