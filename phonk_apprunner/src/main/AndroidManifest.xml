@@ -168,5 +168,5 @@
         </receiver>
     </application>
 
-    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core, com.welie.blessed" />
+    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core, com.welie.blessed, org.puredata.android.service, org.tensorflow.lite.examples.transfer.api " />
 </manifest>
