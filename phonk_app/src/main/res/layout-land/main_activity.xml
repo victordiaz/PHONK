@@ -33,7 +33,7 @@
 
     <RelativeLayout
         android:id="@+id/header"
-        android:layout_width="250dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -98,21 +98,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/logo_area"
-            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:gravity="center|center_horizontal|center_vertical"
             android:minWidth="200dp">
-
-            <!--
-            <include
-                layout="@layout/connection_info_view"
-                android:layout_width="500dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp" />
-            -->
 
             <FrameLayout
                 android:id="@+id/infoLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"></FrameLayout>
+                android:layout_height="wrap_content"></FrameLayout>
 
         </RelativeLayout>
 

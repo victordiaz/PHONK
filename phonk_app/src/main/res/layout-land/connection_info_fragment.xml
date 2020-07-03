@@ -107,17 +107,23 @@
             android:id="@+id/webide_connection_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="12dp"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="12dp"
-            android:layout_weight="1"
+            android:layout_marginTop="24dp"
+            android:height="28dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
             android:paddingLeft="10dp"
+            android:paddingTop="2dp"
             android:paddingRight="10dp"
+            android:paddingBottom="2dp"
             android:textAllCaps="true"
             android:textOff="Start Web Editor"
             android:textOn="Stop Web Editor"
+            android:textSize="10sp"
             android:textStyle="normal|bold"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="@+id/connection_message"
+            app:layout_constraintTop_toBottomOf="@+id/connection_ip" />
     </LinearLayout>
 
     <LinearLayout

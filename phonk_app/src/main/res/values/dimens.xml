@@ -47,4 +47,7 @@
     <dimen name="editor_cardview_horizontal_margin">0dp</dimen>
     <dimen name="editor_filemanager_width">200dp</dimen>
 
+
+    <dimen name="connection_info_fragment_margin_horizontal">8dp</dimen>
+    <dimen name="connection_info_fragment_margin_vertical">0dp</dimen>
 </resources>

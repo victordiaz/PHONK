@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_title"
         android:layout_alignParentLeft="true"
-        android:maxWidth="300dp"
+        android:maxWidth="400dp"
         android:text="@string/welcome_3_body"
         android:textColor="@color/white"
         android:shadowColor="#55000000"
@@ -51,13 +51,14 @@
         android:textSize="12sp" />
 
     <ImageView
-        android:layout_marginTop="15dp"
+        android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_body"
-        android:id="@+id/imageView3"
-        android:src="@drawable/f_libraries"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:visibility="visible"/>
+        android:layout_marginTop="15dp"
+        android:src="@drawable/f_libraries"
+        android:visibility="visible" />
 
 </RelativeLayout>

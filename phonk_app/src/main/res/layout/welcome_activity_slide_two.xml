@@ -45,13 +45,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_title"
         android:layout_alignParentLeft="true"
-        android:maxWidth="300dp"
-        android:text="@string/welcome_2_body"
-        android:textColor="@color/white"
-        android:shadowColor="#55000000"
         android:fontFamily="sans-serif-condensed"
+        android:maxWidth="400dp"
+        android:shadowColor="#55000000"
         android:shadowDx="2"
         android:shadowDy="2"
+        android:text="@string/welcome_2_body"
+        android:textColor="@color/white"
         android:textSize="12sp" />
     <!--
     <TextView
@@ -81,13 +81,14 @@
         -->
 
     <ImageView
-        android:layout_marginTop="15dp"
+        android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_body"
-        android:id="@+id/imageView3"
-        android:src="@drawable/f_permissions"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:visibility="visible"/>
+        android:layout_marginTop="15dp"
+        android:src="@drawable/f_permissions"
+        android:visibility="visible" />
 
 </RelativeLayout>
