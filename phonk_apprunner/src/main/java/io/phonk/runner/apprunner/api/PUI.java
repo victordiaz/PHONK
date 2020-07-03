@@ -60,6 +60,7 @@ public class PUI extends PViewsArea {
 
     public StyleProperties style;
     public StyleProperties theme;
+
     private boolean isMainLayoutSetup = false;
     public int screenWidth;
     public int screenHeight;
@@ -128,8 +129,9 @@ public class PUI extends PViewsArea {
         theme.put("primaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
         theme.put("secondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
         theme.put("secondaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
-        theme.put("textPrimary", getContext().getResources().getString(R.color.phonk_colorPrimary));
-        theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
+        theme.put("textPrimary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
+        theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
+        theme.put("animationOnViewAdd", false);
 
         theme.onChange((name, value) -> {
             setStyle();
@@ -141,9 +143,9 @@ public class PUI extends PViewsArea {
         String colorPrimaryShade = (String) theme.get("primaryShade");
         String colorSecondary = (String) theme.get("secondary");
         String colorSecondaryShade = (String) theme.get("secondaryShade");
+        String colorTextPrimary = (String) theme.get("textPrimary");
         String colorBackground = (String) theme.get("background");
         String colorTransparent = "#00FFFFFF";
-        String textSecondary = getContext().getResources().getString(R.color.phonk_colorSecondary);
         int borderSize = 5;
 
         style = new StyleProperties();
@@ -162,7 +164,7 @@ public class PUI extends PViewsArea {
         style.put("src", style, "");
         style.put("srcPressed", style, "");
 
-        style.put("textColor", style, textSecondary);
+        style.put("textColor", style, colorTextPrimary);
         style.put("textSize", style, 16);
         style.put("textFont", style, "monospace");
         style.put("textStyle", style, "normal");
@@ -242,7 +244,7 @@ public class PUI extends PViewsArea {
 
         StyleProperties textStyle = new StyleProperties();
         textStyle.put("background", textStyle, colorTransparent);
-        textStyle.put("textColor", textStyle, textSecondary);
+        textStyle.put("textColor", textStyle, colorTextPrimary);
         // textStyle.put("textSize", textStyle, 12);
         textStyle.put("textAlign", textStyle, "left");
         styles.put("text", textStyle);
@@ -263,7 +265,7 @@ public class PUI extends PViewsArea {
         inputStyle.put("borderColor", inputStyle, colorSecondary);
         inputStyle.put("borderWidth", inputStyle, borderSize);
         // inputStyle.put("textAlign", inputStyle, "center");
-        inputStyle.put("textColor", inputStyle, textSecondary);
+        inputStyle.put("textColor", inputStyle, colorTextPrimary);
         styles.put("input", inputStyle);
 
         StyleProperties matrixStyle = new StyleProperties();
@@ -339,12 +341,16 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void setTheme(Map<String, Object> properties) {
+        MLog.d("qqq", "setTheme");
+
         theme.eventOnChange = false;
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             theme.put(entry.getKey(), theme, entry.getValue());
         }
         setStyle();
+        background((String) theme.get("background"));
         theme.eventOnChange = true;
+        MLog.d("qqq", "setTheme 2");
     }
 
     /**
