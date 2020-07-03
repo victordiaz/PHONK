@@ -222,7 +222,6 @@ public class PConsole extends ProtoBase {
         for (Object output : outputs) {
             // format the objects to json output if the object is a ReturnObject
             String out = "";
-            Gson gson = GSONUtil.getInstance().getGson();
 
             out = output.toString();
             builder.append(" ").append(out);
