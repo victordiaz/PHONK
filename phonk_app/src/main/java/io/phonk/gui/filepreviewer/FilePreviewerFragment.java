@@ -45,7 +45,6 @@ import io.phonk.server.model.ProtoFile;
 
 @SuppressLint("NewApi")
 public class FilePreviewerFragment extends BaseFragment {
-
     protected static final String TAG = FilePreviewerFragment.class.getSimpleName();
 
     private Context mContext;
@@ -55,7 +54,7 @@ public class FilePreviewerFragment extends BaseFragment {
     private RelativeLayout mImageContainer;
     private RelativeLayout mVideoContainer;
     private RelativeLayout mTextContainer;
-    private WebView mWebContainer;
+    // private WebView mWebContainer;
 
     @Override
     public void onAttach(Context context) {
@@ -70,7 +69,6 @@ public class FilePreviewerFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         v = inflater.inflate(R.layout.filepreviewer_fragment, container, false);
 
         bindUI();
@@ -118,7 +116,7 @@ public class FilePreviewerFragment extends BaseFragment {
         mImageContainer = v.findViewById(R.id.preview_image);
         mVideoContainer = v.findViewById(R.id.preview_video);
         mTextContainer = v.findViewById(R.id.preview_text);
-        mWebContainer = v.findViewById(R.id.preview_web);
+        // mWebContainer = v.findViewById(R.id.preview_web);
     }
 
 
@@ -137,7 +135,7 @@ public class FilePreviewerFragment extends BaseFragment {
         mVideoContainer.setVisibility(View.GONE);
         mImageContainer.setVisibility(View.GONE);
         mTextContainer.setVisibility(View.GONE);
-        mWebContainer.setVisibility(View.GONE);
+        // mWebContainer.setVisibility(View.GONE);
     }
 
     private void loadSound(String name) {
