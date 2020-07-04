@@ -171,7 +171,7 @@ public class AppRunnerFragment extends Fragment {
         super.onDestroy();
         MLog.d(TAG, "onDestroy");
         if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
-        fileObserver.stopWatching();
+        // fileObserver.stopWatching();
         mAppRunner.byebye();
     }
 
