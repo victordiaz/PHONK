@@ -11,7 +11,7 @@ buildscript {
 
 project.ext {
     versionCode = 126
-    versionName = "1.2.6-alpha"
+    versionName = "1.2.6-alpha-2"
 }
 
 task hello {

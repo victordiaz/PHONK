@@ -138,7 +138,7 @@ public class AppRunnerFragment extends Fragment {
         mAppRunner.initProject();
 
         // file observer will notify project file changes
-        startFileObserver();
+        // startFileObserver();
 
         // Call the onCreate JavaScript function.
         if (mAppRunner.interp != null)
@@ -231,8 +231,6 @@ public class AppRunnerFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             };
         }
