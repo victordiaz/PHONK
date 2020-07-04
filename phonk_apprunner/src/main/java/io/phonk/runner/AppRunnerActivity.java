@@ -204,7 +204,7 @@ public class AppRunnerActivity extends BaseActivity {
         super.onResume();
 
         // NFC
-        if (nfcSupported) mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
+        if (isNFCInitialized) mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
 
         // broadcast to start/stop the activity
         startStopActivityBroadcastReceiver();
@@ -215,16 +215,16 @@ public class AppRunnerActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
 
-        MLog.d(TAG, "onPause 1");
+        MLog.d(TAG, "onPause");
 
-        if (nfcSupported) mAdapter.disableForegroundDispatch(this);
+        if (isNFCInitialized) mAdapter.disableForegroundDispatch(this);
         unregisterReceiver(stopActivitiyBroadcastReceiver);
         unregisterReceiver(executeCodeActivitiyBroadcastReceiver);
     }
 
     @Override
     public void onStop() {
-        MLog.d(TAG, "onStop 1");
+        MLog.d(TAG, "onStop");
         super.onStop();
     }
 
@@ -294,18 +294,16 @@ public class AppRunnerActivity extends BaseActivity {
     private IntentFilter[] mFilters;
     private String[][] mTechLists;
     private boolean nfcSupported;
-    private boolean nfcInit = false;
+    private boolean isNFCInitialized = false;
     public boolean isCodeExecutedShown;
 
     public void initializeNFC() {
 
-        if (nfcInit == false) {
+        if (isNFCInitialized == false) {
             PackageManager pm = getPackageManager();
             nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
 
-            if (nfcSupported == false) {
-                return;
-            }
+            if (!nfcSupported) return;
 
             // when is in foreground
             MLog.d(TAG, "starting NFC");
@@ -325,7 +323,7 @@ public class AppRunnerActivity extends BaseActivity {
 
             // Setup a tech list for all NfcF tags
             mTechLists = new String[][]{new String[]{NfcF.class.getName()}};
-            nfcInit = true;
+            isNFCInitialized = true;
         }
     }
 
@@ -442,7 +440,6 @@ public class AppRunnerActivity extends BaseActivity {
         }
         return super.onKeyShortcut(keyCode, event);
     }
-
 
     /**
      * Menu

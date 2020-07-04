@@ -83,7 +83,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
 @PhonkObject
 public class PNetwork extends ProtoBase {
 
@@ -115,6 +114,10 @@ public class PNetwork extends ProtoBase {
         }
     }
 
+    /**
+     * Initializes NFC
+     */
+    @PhonkMethod
     public PNfc startNFC() {
         PNfc nfc = new PNfc(getAppRunner());
         nfc.initForParentFragment(getFragment());

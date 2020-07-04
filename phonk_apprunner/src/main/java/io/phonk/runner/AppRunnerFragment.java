@@ -137,9 +137,6 @@ public class AppRunnerFragment extends Fragment {
 
         mAppRunner.initProject();
 
-        // nfc
-        mActivity.initializeNFC();
-
         // file observer will notify project file changes
         startFileObserver();
 
@@ -174,6 +171,7 @@ public class AppRunnerFragment extends Fragment {
         super.onDestroy();
         MLog.d(TAG, "onDestroy");
         if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
+        fileObserver.stopWatching();
         mAppRunner.byebye();
     }
 
