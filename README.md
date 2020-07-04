@@ -8,7 +8,7 @@
 **PHONK is a self-contained creative scripting toolbox for new and old Android devices.**
 Create scripts rapidly from your phone or using the *remote Web Editor* on your computer. The API is simple and extensive. GUI, audio, graphics, bluetooth ble, arduino, OSC, midi, and much more.
 
-Have a look in the [PHONK website](http://www.phonk.app) for more info
+Have a look in the [PHONK website](https://www.phonk.app) for more info
 
 # ![animation](./images/phonk_animation_white_bg.gif)
 
