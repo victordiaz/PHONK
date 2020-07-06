@@ -64,6 +64,7 @@ import io.phonk.runner.apprunner.api.PDevice;
 import io.phonk.runner.apprunner.api.PMedia;
 import io.phonk.runner.apprunner.api.network.PBluetooth;
 import io.phonk.runner.apprunner.api.network.PNfc;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.events.Events;
 import io.phonk.runner.base.gui.DebugFragment;
@@ -303,7 +304,11 @@ public class AppRunnerActivity extends BaseActivity {
             PackageManager pm = getPackageManager();
             nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
 
-            if (!nfcSupported) return;
+            if (!nfcSupported) {
+                mAppRunnerFragment.getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, "NFC");
+
+                return;
+            }
 
             // when is in foreground
             MLog.d(TAG, "starting NFC");

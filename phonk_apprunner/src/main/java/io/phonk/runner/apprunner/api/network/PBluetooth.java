@@ -45,6 +45,7 @@ import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.MLog;
 
@@ -68,9 +69,13 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
     @PhonkMethod(description = "Start the bluetooth adapter", example = "")
     @PhonkMethodParam(params = {""})
     public PBluetooth start() {
-        MLog.d(TAG, "Bluetooth is started: " + mBtStarted);
+        // MLog.d(TAG, "Bluetooth is started: " + mBtStarted);
 
         mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mAdapter == null) {
+            getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, "Bluetooth");
+            return null;
+        }
 
         // try to start the bluetooth if not enabled
         if (!mAdapter.isEnabled()) {

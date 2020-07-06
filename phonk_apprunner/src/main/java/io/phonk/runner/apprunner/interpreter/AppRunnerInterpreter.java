@@ -44,6 +44,7 @@ public class AppRunnerInterpreter {
     public static final int RESULT_OK = 1;
     public static final int RESULT_ERROR = 2;
     public static final int RESULT_PERMISSION_ERROR = 3;
+    public static final int RESULT_NOT_CAPABLE = 4;
 
     //rhino stuff
     private static ScriptContextFactory mScriptContextFactory;
@@ -136,9 +137,6 @@ public class AppRunnerInterpreter {
         String resultClean = "";
         switch (resultType) {
             case RESULT_OK:
-                // String msg = Context.toString(result);
-                // MLog.i(TAG, msg);
-                //if (mInterpreterListener != null) mInterpreterListener.onError(msg);
                 break;
             //basically we throw here the exception errors
             case RESULT_ERROR:
@@ -146,7 +144,6 @@ public class AppRunnerInterpreter {
                 break;
             case RESULT_PERMISSION_ERROR:
                 if (mInterpreterListener != null) mInterpreterListener.onError(resultType, message);
-
                 break;
         }
     }
