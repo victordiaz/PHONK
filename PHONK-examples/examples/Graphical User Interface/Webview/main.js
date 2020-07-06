@@ -24,4 +24,4 @@ webview2.loadFile('hello.html')
 
 // load Url
 var webview3 = ui.addWebView(0.1, 0.7, 0.8, 0.25)
-webview3.loadUrl('http://www.phonk.io')
+webview3.loadUrl('http://www.phonk.app')
