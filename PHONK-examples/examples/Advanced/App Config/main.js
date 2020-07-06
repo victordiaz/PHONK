@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Arrays
+ * Phonk Example: App Config
  */
 
 ui.addTitle(app.name)
