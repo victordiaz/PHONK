@@ -16,7 +16,7 @@ dataList.props.background = "#000000"
 dataList.props.textColor = "#FFFFFF"
 
 // start serial connection
-var serial = boards.createSerial(19200)
+var serial = boards.createSerial(9600)
 
 serial.onConnected(function (e) {
 	dataList.add('connected ' + e.status)
