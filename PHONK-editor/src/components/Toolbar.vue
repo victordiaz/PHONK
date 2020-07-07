@@ -46,8 +46,8 @@
 
     <div class="right_side">
       <div class = "app_info_msg_wrapper">
-        <transition-group name="info-anim" mode="out-in">
-          <div v-for = "infoMsg in infoQueue" class="app_info_msg info-anim-item" :key="infoMsg.id">
+        <transition-group name="info-anim" mode="out-in" tag="div">
+          <div v-for = "infoMsg in infoQueue" class="app_info_msg info-anim-item" :class = "{ 'progress': infoMsg['status'] === 'progress', 'done': infoMsg['status'] === 'done', 'error': infoMsg['status'] === 'error' }" :key="infoMsg.id">
             <span class="icon_left material-icons">{{ infoMsg.icon }}</span>
             <span class = "msg">{{ infoMsg.text }}</span>
           </div>
@@ -113,7 +113,6 @@ export default {
       saveAsShortcut: false,
       sharedState: Store.state,
       infoQueue: [],
-      infoQueueCount: 0,
       // infoMsg: { text: 'message...', icon: null, isShowing: false },
       isProjectRunning: false,
       device_properties: {}
@@ -133,7 +132,6 @@ export default {
       // this.show_info({ icon: 'save', text: 'Saved' })
     },
     project_action: function (state) {
-      console.log('-->', state)
       if (state === '/stop_all_and_run') {
         this.show_info({ icon: 'play_arrow', text: 'Running...' })
       } else {
@@ -143,17 +141,40 @@ export default {
     show_info (msg) {
       // this.infoQueue.shift()
 
-      let infoMsg = {
-        id: this.infoQueueCount++,
-        icon: msg.icon,
-        text: msg.text
-      }
-      this.infoQueue.push(infoMsg)
+      // check if id exists
+      let obj = this.infoQueue.find(o => o.id === msg.id)
 
-      setTimeout(() => {
-        // infoMsg.isShowing = false
-        this.infoQueue.shift()
-      }, 2000)
+      if (obj) {
+        setTimeout(() => {
+          obj.text = msg.text
+          obj.status = msg.status
+        }, 500)
+        setTimeout(() => {
+          this.infoQueue = this.infoQueue.filter(el => {
+            return el.id !== obj.id
+          })
+        }, 2000)
+      } else {
+        let infoMsg = {
+          id: msg.id,
+          icon: msg.icon,
+          text: msg.text,
+          status: msg.status
+        }
+        this.infoQueue.push(infoMsg)
+
+        // if timesout => show error => remove
+        setTimeout(() => {
+          infoMsg.isShowing = false
+          infoMsg.status = 'error'
+
+          setTimeout(() => {
+            this.infoQueue = this.infoQueue.filter(el => {
+              return el.id !== infoMsg.id
+            })
+          }, 2000)
+        }, 10000)
+      }
     },
     device_update: function (data) {
       if (typeof data.info !== 'undefined') {
@@ -242,6 +263,12 @@ export default {
     flex-direction: column;
     align-items: end;
     top: 9px;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
   }
 
   .app_info_msg {
@@ -253,13 +280,25 @@ export default {
     padding: 5px 15px;
     // background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     // width: 125px;
 
-    background: #ffc709;
-    color: #272822;
     font-size: 0.8rem;
+
+    &.progress {
+      background: white;
+      color: #272822;
+    }
+
+    &.done {
+      background: #ffc709;
+      color: #272822;
+    }
+
+    &.error {
+      background: @error;
+    }
 
     .icon_left,
     .icon_right {

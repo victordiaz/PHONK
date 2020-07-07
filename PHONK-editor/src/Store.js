@@ -57,7 +57,8 @@ var state = {
     'editor_width': '300px',
     'docs_height': '200px',
     'files_height': '100px'
-  }
+  },
+  lastNotificationId: 0
 }
 
 var vm = new Vue({
@@ -91,7 +92,8 @@ store.project_list_all = function () {
 store.project_load = function (uri) {
   var query = {}
 
-  store.emit('show_info', { icon: 'description', text: 'Loading Project' })
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'description', text: 'Loading Project...', status: 'progress' })
 
   Vue.axios.get(getUrlWebapp('/api/project' + uri + '/load'), query).then(function (response) {
     // console.log(TAG + ': project_load(status) > ' + response.status)
@@ -99,11 +101,11 @@ store.project_load = function (uri) {
     store.emit('project_loaded', true)
     store.emit('project_files_list')
     store.load_project_preferences()
-    store.emit('show_info', { icon: 'description', text: 'Loaded' })
+    store.emit('show_info', { id: id, icon: 'description', text: 'Project Loaded', status: 'done' })
     // store.list_files_in_path('')
   }, function (response) {
     store.emit('project_loaded', false)
-    store.emit('show_info', { icon: 'error', text: 'Error loading' })
+    store.emit('show_info', { id: id, icon: 'error', text: 'Loading project error', status: 'error' })
 
     // console.log(TAG + ': project_load(status) > ' + response.status)
   })
@@ -215,13 +217,16 @@ store.create_file = function (filetype, filename) {
  * Create a project
  */
 store.project_create = function (projectName) {
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'description', text: 'Creating project...', status: 'progress' })
+
   Vue.axios.get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), {}).then(function (response) {
     var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName }
     store.emit('project_created', true, data)
     store.project_list_all()
-    store.emit('show_info', { icon: 'description', text: 'Created' })
+    store.emit('show_info', { id: id, icon: 'description', text: 'Project created', status: 'done' })
   }, function (response) {
-    store.emit('show_info', { icon: 'error', text: 'Error creating' })
+    store.emit('show_info', { id: id, icon: 'error', text: 'Creating project error', status: 'error' })
     store.emit('project_created', false)
     console.log('project_create(status) > ' + response.status)
   })
@@ -229,15 +234,17 @@ store.project_create = function (projectName) {
 
 store.project_clone = function (uri, newName) {
   let query = { newName: newName }
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'description', text: 'Cloning project...', status: 'progress' })
 
   Vue.axios.post(getUrlWebapp('/api/project' + '/' + uri + '/clone'), query).then(function (response) {
     var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': newName }
     store.emit('project_cloned', true, data)
     store.project_list_all()
-    store.emit('show_info', { icon: 'description', text: 'Cloned in User Projects' })
+    store.emit('show_info', { id: id, icon: 'description', text: 'Cloned in User Projects', status: 'done' })
   }, function (response) {
     store.emit('project_created', false)
-    store.emit('show_info', { icon: 'error', text: 'Error cloning' })
+    store.emit('show_info', { id: id, icon: 'error', text: 'Cloning project error', status: 'error' })
     console.log('project_create(status) > ' + response.status)
   })
 }
@@ -245,27 +252,34 @@ store.project_clone = function (uri, newName) {
 store.project_rename = function (uri, newName) {
   console.log('rename', uri, newName)
 
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'description', text: 'Renaming project...', status: 'progress' })
+
   let query = { newName: newName }
   Vue.axios.post(getUrlWebapp('/api/project' + '/' + uri + '/rename'), query).then(function (response) {
     // var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': newName }
     store.emit('project_renamed')
     store.project_list_all()
-    store.emit('show_info', { icon: 'description', text: 'Renamed' })
+    store.emit('show_info', { id: id, icon: 'description', text: 'Renamed', status: 'done' })
   }, function (response) {
     store.emit('project_created', false)
-    store.emit('show_info', { icon: 'error', text: 'Error renamming' })
-    console.log('project_create(status) > ' + response.status)
+    store.emit('show_info', { id: id, icon: 'error', text: 'Renamming project error', status: 'error' })
+    // console.log('project_create(status) > ' + response.status)
   })
 }
 
 store.project_delete = function (uri) {
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'description', text: 'Deleting project...', status: 'progress' })
+
   Vue.axios.get(getUrlWebapp('/api/project' + '/' + uri + '/delete'), {}).then(function (response) {
     store.emit('project_deleted')
     store.project_list_all()
-    store.emit('show_info', { icon: 'description', text: 'Deleted' })
+    store.emit('show_info', { id: id, icon: 'description', text: 'Project Deleted', status: 'done' })
   }, function (response) {
     store.emit('project_created', false)
     console.log('project_create(status) > ' + response.status)
+    store.emit('show_info', { id: id, icon: 'description', text: 'Deleting project error', status: 'error' })
   })
 }
 
@@ -281,11 +295,12 @@ store.project_save = function (files) {
   query.files = []
   query.files = Object.assign([], files)
 
-  store.emit('show_info', { icon: 'save', text: 'Saving...' })
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'save', text: 'Saving...', status: 'progress' })
 
   Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/save'), query).then(function (response) {
     // console.log('project_save(status) OK > ' + response.status)
-    store.emit('show_info', { icon: 'save', text: 'Saved' })
+    store.emit('show_info', { id: id, icon: 'save', text: 'Saved', status: 'done' })
 
     store.emit('project_saved')
     store.list_files_in_path(store.state.current_project.current_folder)
@@ -299,7 +314,7 @@ store.project_save = function (files) {
   }, function (response) {
     console.log('project_save(status) NOP > ' + response.status)
     if (!response.status) {
-      store.emit('show_info', { icon: 'error', text: 'Cannot save! Check the connection' })
+      store.emit('show_info', { id: id, icon: 'error', text: 'Cannot save! Check the connection', status: 'error' })
     }
   })
 }
@@ -323,12 +338,15 @@ store.project_action = function (action) {
 store.project_run = function (project) {
   var query = {}
 
-  store.emit('show_info', { icon: 'play', text: 'Playing...' })
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: 'play', text: 'Running...', status: 'progress' })
 
   Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), query).then(function (response) {
     console.log('project_run', response.status)
+    store.emit('show_info', { id: id, icon: 'play', text: 'Running...', status: 'done' })
   }, function (response) {
     console.log('project_run', response.status)
+    store.emit('show_info', { id: id, icon: 'play', text: 'Error Running', status: 'error' })
   })
 }
 
@@ -350,12 +368,16 @@ store.project_stop_all_and_run = function (project) {
  */
 store.execute_code = function (code) {
   // console.log('execute_code ' + code)
+  let id = store.state.lastNotificationId++
+
   var query = { code: code }
-  store.emit('show_info', { icon: 'autorenew', text: 'Live...' })
+  store.emit('show_info', { id: id, icon: 'autorenew', text: 'Live...', status: 'progress' })
 
   Vue.axios.post(getUrlWebapp('/api/project/execute_code'), query).then(function (response) {
     // console.log(response.status)
+    store.emit('show_info', { id: id, icon: 'autorenew', text: 'Live...', status: 'done' })
   }, function (response) {
+    store.emit('show_info', { id: id, icon: 'autorenew', text: 'Live...', status: 'error' })
     // console.log(response.status)
   })
 }
