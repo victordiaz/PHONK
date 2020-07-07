@@ -116,9 +116,7 @@ public class PApp extends ProtoBase {
      * @param data
      * @status TODO
      */
-    @PhonkMethod
     public void getSharedData(String type, String data) {
-
     }
 
     /**
@@ -129,6 +127,14 @@ public class PApp extends ProtoBase {
     @PhonkMethod
     public void close() {
         getActivity().finish();
+    }
+
+    /**
+     * Finish the script and the PHONK app
+     */
+    @PhonkMethod
+    public void finish() {
+        getActivity().finishAffinity();
     }
 
     /**
