@@ -1,7 +1,6 @@
-# PHONK Web Editor
-This repository is part of the [PHONK project](https://github.com/victordiaz/phonk)
+# phonk-editor2
 
-It contains the Web Editor which is built using Vue.js.
+> A Vue.js project
 
 ## Build Setup
 
@@ -14,4 +13,9 @@ npm run dev
 
 # build for production with minification
 npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
 ```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
