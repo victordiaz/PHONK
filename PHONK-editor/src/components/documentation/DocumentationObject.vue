@@ -43,23 +43,29 @@ export default {
     sortedObject () {
       let doc = {}
       doc.name = this.object.name
+
+      // sorting
       doc.methods = _.sortBy(
         this.object.methods,
         'name'
       )
+
       doc.fields = _.sortBy(
         this.object.fields,
         'name'
       )
 
+      // filtering
       doc.methods = doc.methods.filter(o => {
-        if (o.name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1) {
+        if (doc.name.toLowerCase().includes(this.search.toLowerCase())) return o
+        else if (o.name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1) {
           return o
         }
       })
 
       doc.fields = doc.fields.filter(o => {
-        if (o.name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1) {
+        if (doc.name.toLowerCase().includes(this.search.toLowerCase())) return o
+        else if (o.name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1) {
           return o
         }
       })

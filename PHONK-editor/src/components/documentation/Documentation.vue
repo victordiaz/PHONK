@@ -9,6 +9,7 @@
       <div class="actionbar">
         <h1 class="title" v-on:click="expanded = !expanded">Docs</h1>
         <input type="text" v-model="search" placeholder="type to filter..." />
+        <button v-on:click = "clearSearch">x</button>
         <ul>
           <li title="Switch view" class="material-icons" v-on:click="switch_view">reorder</li>
         </ul>
@@ -90,9 +91,12 @@ export default {
     performSearch: function (objs) {
       var that = this
       console.log('qq', objs)
-      return objs.filter(function (o) {
+      return objs.filter(o => {
         return o.name.indexOf(that.search) !== -1
       })
+    },
+    clearSearch: function () {
+      this.search = ''
     },
     switch_view: function () {
       console.log('switching view')
@@ -112,7 +116,7 @@ export default {
       this.show_card = false
     },
     goToClass: function (e) {
-      console.log('parent', e)
+      this.clearSearch()
       this.close_card()
 
       VueScrollTo.scrollTo('#' + e.method.returning.type,
