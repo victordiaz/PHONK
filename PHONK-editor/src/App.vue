@@ -171,6 +171,13 @@ export default {
           .replace(/"/g, '') === 'mobile'
       // console.log(this.isMobile)
       this.top_container = !this.isMobile
+    },
+    shortcutsHandler: function () {
+
+    },
+    toggle_sidepanel: function () {
+      console.log('qq')
+      this.sharedState.preferences['other']['show sidebar'] = !this.sharedState.preferences['other']['show sidebar']
     }
   },
   created () {
@@ -184,6 +191,8 @@ export default {
     window.addEventListener('resize', function () {
       that.resize()
     })
+
+    window.addEventListener('keydown', this.shortcutsHandler)
 
     // show popup when trying to exit app
     window.onbeforeunload = function (e) {
@@ -211,7 +220,7 @@ export default {
         alt: false,
         meta: false,
         key: 'KeyL',
-        execute: ['toggle', 'load_project']
+        execute: ['toggle_load_project', '']
       },
       {
         ctrl: true,
@@ -244,16 +253,24 @@ export default {
         shift: false,
         alt: false,
         meta: false,
-        key: 'KeyH',
-        execute: 'qq21'
+        key: 'KeyO',
+        execute: ['toggle_sidepanel', '']
       },
       {
         ctrl: true,
         shift: false,
         alt: false,
         meta: false,
-        key: 'KeyF',
-        execute: 'qq21'
+        key: 'Enter',
+        execute: ['live_execute', '']
+      },
+      {
+        ctrl: false,
+        shift: false,
+        alt: false,
+        meta: true,
+        key: 'Enter',
+        execute: ['live_execute', '']
       },
       {
         ctrl: true,
@@ -265,17 +282,21 @@ export default {
       }
     ]
     // load            ctrl + shift + l
-    // run / stop      ctrl + r // cmd + r
-    // save            ctrl + s // cmd + s
+    // OK run / stop      ctrl + r // cmd + r
+    // OK save            ctrl + s // cmd + s
     // save as
     // execute code    ctrl + shift + x // cmd + shift + x
+    // toggle_device_info
+    // live execution linux + windows
+    // live execution mac
+    // live execution generic
     // documentation   ctrl + d // cmd + d
     // dashboard       ctrl + d // cmd + d
     // fullscreen editor ctrl + f // cmd + f
     window.addEventListener('keydown', function (e) {
-      // console.log('key pressed', e)
+      console.log('key pressed', e)
 
-      for (var i in keyShortcuts) {
+      for (let i in keyShortcuts) {
         if (
           keyShortcuts[i].ctrl === e.ctrlKey &&
           keyShortcuts[i].shift === e.shiftKey &&
@@ -284,7 +305,7 @@ export default {
           keyShortcuts[i].key === e.code
         ) {
           Store.emit(keyShortcuts[i].execute[0], keyShortcuts[i].execute[1])
-          // console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
+          console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
           e.preventDefault()
           e.stopPropagation()
           window.event.cancelBubble = true
@@ -295,60 +316,13 @@ export default {
     Store.loadSettings()
   },
   mounted () {
-    /*
-    var canvas = document.getElementById('myCanvas')
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    var c = canvas.getContext('2d')
-    c.scale(1, 1)
-
-    Math.easeInOutQuad = function (t, b, c, d) {
-      t /= d / 2
-      if (t < 1) return c / 2 * t * t + b
-      t--
-
-      return -c / 2 * (t * (t - 2) - 1) + b
-    }
-
-    var w = canvas.width
-    var h = canvas.height
-    var dots = []
-    var NUM_DOTS = 45
-
-    // update
-    for (var i = 0; i < NUM_DOTS; i++) {
-      dots.push({ 'cx': 0, 'x': w * Math.random(), 'y': h * Math.random(), 'r': 80 * Math.random(), 'o': 0 })
-    }
-
-    function draw (t) {
-      c.clearRect(0, 0, w, h)
-
-      c.lineWidth = 1 // 2 * Math.random()
-      c.fillStyle = 'rgba(255, 87, 34, 0)' // + Math.random() + ')'
-      c.strokeStyle = 'rgba(255, 255, 255, 0.1)'
-
-      // draw
-      for (var i = 0; i < NUM_DOTS; i++) {
-        var d = dots[i]
-        c.beginPath()
-        // var mx = Math.easeInOutQuad(t, d.cx, d.cx - d.x, 2000)
-        // if (i === 0) console.log(d.cx, d.x, mx)
-        // console.log(d.cx)
-        c.arc(d.x, d.y, d.r, 0, 2 * Math.PI)
-        c.stroke()
-        c.fill()
-      }
-      window.requestAnimationFrame(draw)
-    }
-
-    console.log(draw)
-    window.requestAnimationFrame(draw)
-    */
+    Store.on('toggle_sidepanel', this.toggle_sidepanel)
   },
   destroyed () {
     Store.removeListener('toggle', this.toggle_section)
     Store.removeListener('project_created', this.project_created)
+    Store.removeListener('toggle_sidepanel', this.toggle_sidepanel)
+    window.removeEventListener('keydown', this.shortcutsHandler)
   },
   events: {
     run: function (msg) {
@@ -752,7 +726,7 @@ button {
         // overflow-y: hidden;
         overflow: hidden;
         height: 100%;
-        
+
 
         & > * {
           // padding: 10px;

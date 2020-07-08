@@ -93,6 +93,7 @@ export default {
     store.on('project_run', this.run)
     store.on('project_editor_save', this.save)
     store.on('font_changed', this.changeFontSize)
+    store.on('live_execute', this.live_execute)
   },
   destroyed () {
     // console.log('editor destroyed')
@@ -102,6 +103,7 @@ export default {
     store.removeListener('project_created', this.project_created)
     store.removeListener('font_changed', this.changeFontSize)
     store.removeListener('project_saved', this.project_saved)
+    store.removeListener('live_execute', this.live_execute)
 
     this.editor.remove()
   },
@@ -162,97 +164,9 @@ export default {
       // this.editor.session.setUseWorker(false)
       // this.editor.getSession().setUseSoftTabs(false)
 
-      /*
-       * Commands
-       */
-      var that = this
-      // run
-      /*
-      this.editor.commands.addCommand({
-        name: 'run_command',
-        bindKey: {
-          win: 'Ctrl-R',
-          mac: 'Command-R',
-          sender: 'editor|cli'
-        },
-        exec: function (env, args, request) {
-          that.run()
-        }
-      })
-      */
-
-      // save
-      /*
-      this.editor.commands.addCommand({
-        name: 'save_command',
-        bindKey: {
-          win: 'Ctrl-S',
-          mac: 'Command-S',
-          sender: 'editor|cli'
-        },
-        exec: function (env, args, request) {
-          that.saveShortcut = true
-          setTimeout(function () {
-            that.saveShortcut = false
-          }, 200)
-          // console.log('shortcut save')
-          that.save()
-        }
-      })
-      */
-
-      // live execution
-      this.editor.commands.addCommand({
-        name: 'liveExecution',
-        bindKey: {
-          win: 'Ctrl-Shift-X',
-          mac: 'Command-Shift-X',
-          sender: 'editor'
-        },
-        exec: function (env, args, request) {
-          var range = that.editor.getSelection().getRange()
-          var selectedText = that.sessions[that.currentTab].getTextRange(range)
-
-          var liveExec = {}
-
-          // get the code selected or the whole row
-          if (selectedText.length > 0) {
-            liveExec.text = selectedText
-            liveExec.range = range
-            // console.log('tiny select')
-          } else {
-            // console.log('line select')
-            var cursorPosition = that.editor.getCursorPosition()
-            var numLine = cursorPosition['row']
-            liveExec.numLine = numLine
-            liveExec.text = that.sessions[that.currentTab].getDocument().$lines[liveExec.numLine]
-            liveExec.range = new that.Range(
-              liveExec.numLine,
-              0,
-              liveExec.numLine,
-              liveExec.text.length
-            )
-          }
-
-          // highlight text
-          var marker = that.sessions[that.currentTab].addMarker(
-            liveExec.range,
-            'execute_code_highlight',
-            'line',
-            true
-          )
-          setTimeout(function () {
-            that.sessions[that.currentTab].removeMarker(marker)
-          }, 500)
-
-          // console.log(liveExec)
-
-          store.execute_code(liveExec.text)
-        }
-      })
       // console.log('qq', that.editor.session)
-      if (that.editor.session.$worker) {
-        that.editor.session.$worker.send('changeOptions', [{ asi: true }])
+      if (this.editor.session.$worker) {
+        this.editor.session.$worker.send('changeOptions', [{ asi: true }])
       }
     },
     run: function () {
@@ -286,6 +200,46 @@ export default {
     },
     saveas: function () {
       // console.log('saveas project')
+    },
+    live_execute: function () {
+      var range = this.editor.getSelection().getRange()
+      var selectedText = this.sessions[this.currentTab].getTextRange(range)
+
+      var liveExec = {}
+
+      // get the code selected or the whole row
+      if (selectedText.length > 0) {
+        liveExec.text = selectedText
+        liveExec.range = range
+        // console.log('tiny select')
+      } else {
+        // console.log('line select')
+        var cursorPosition = this.editor.getCursorPosition()
+        var numLine = cursorPosition['row']
+        liveExec.numLine = numLine
+        liveExec.text = this.sessions[this.currentTab].getDocument().$lines[liveExec.numLine]
+        liveExec.range = new this.Range(
+          liveExec.numLine,
+          0,
+          liveExec.numLine,
+          liveExec.text.length
+        )
+      }
+
+      // highlight text
+      var marker = this.sessions[this.currentTab].addMarker(
+        liveExec.range,
+        'execute_code_highlight',
+        'line',
+        true
+      )
+      setTimeout(() => {
+        this.sessions[this.currentTab].removeMarker(marker)
+      }, 500)
+
+      // console.log(liveExec)
+
+      store.execute_code(liveExec.text)
     },
     load_project: function (status) {
       if (status === true) {

@@ -64,9 +64,7 @@
           enabled: sharedState.show_device_info,
           device_disabled: !sharedState.device_properties.connected,
         }"
-        v-on:click="
-          sharedState.show_device_info = !sharedState.show_device_info
-        "
+        v-on:click="toggle_device_info"
       >phone_android</button>
       <button
         class="material-icons icon"
@@ -127,6 +125,9 @@ export default {
       // Store.emit('toggle_dashboard')
       this.sharedState.show_dashboard = !this.sharedState.show_dashboard
       // console.log('toggling dashboard')
+    },
+    toggle_device_info: function () {
+      this.sharedState.show_device_info = !this.sharedState.show_device_info
     },
     project_saved: function () {
       // this.show_info({ icon: 'save', text: 'Saved' })
@@ -202,12 +203,16 @@ export default {
     Store.on('project_action', this.project_action)
     Store.on('device', this.device_update)
     Store.on('show_info', this.show_info)
+    Store.on('toggle_load_project', this.toggle_load_project)
+    Store.on('toggle_device_info', this.toggle_device_info)
   },
   destroyed () {
     Store.removeListener('project_saved', this.project_saved)
     Store.removeListener('project_action', this.project_action)
     Store.removeListener('device', this.device_update)
     Store.removeListener('show_info', this.showInfo)
+    Store.removeListener('toggle_load_project', this.toggle_load_project)
+    Store.removeListener('toggle_device_info', this.toggle_device_info)
   }
 }
 </script>
