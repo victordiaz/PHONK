@@ -325,30 +325,41 @@ store.project_save = function (files) {
 store.project_action = function (action) {
   var query = {}
 
+  let msg = 'Running...'
+  let icon = 'play_arrow'
+
+  if (action === '/stop') {
+    msg = 'Stopping'
+    icon = 'stop'
+  }
+
+  let id = store.state.lastNotificationId++
+  store.emit('show_info', { id: id, icon: icon, text: msg, status: 'progress' })
+
   Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + action), query).then(function (response) {
-    console.log('project_action', response.status)
+    // console.log('project_action', response.status)
+    store.emit('show_info', { id: id, icon: icon, text: msg, status: 'done' })
   }, function (response) {
-    console.log('project_action error', response.status)
+    // console.log('project_action error', response.status)
+    store.emit('show_info', { id: id, icon: icon, text: 'Error ' + msg + '...', status: 'error' })
   })
 }
 
 /*
  * Run a project
  */
+/*
+
 store.project_run = function (project) {
   var query = {}
 
-  let id = store.state.lastNotificationId++
-  store.emit('show_info', { id: id, icon: 'play', text: 'Running...', status: 'progress' })
-
   Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), query).then(function (response) {
     console.log('project_run', response.status)
-    store.emit('show_info', { id: id, icon: 'play', text: 'Running...', status: 'done' })
   }, function (response) {
     console.log('project_run', response.status)
-    store.emit('show_info', { id: id, icon: 'play', text: 'Error Running', status: 'error' })
   })
 }
+*/
 
 /*
  * Project stop all and run
@@ -580,7 +591,6 @@ store.websockets_init = function () {
         break
       // getting device data
       case 'device':
-        // console.log('qq', store.state.device_properties)
         data.connected = true
         Vue.set(store.state, 'device_properties', data)
         store.emit('device', data)
@@ -697,7 +707,6 @@ store.saveSettings = function () {
 
   // console.log('settingsFromAndroid', settingsFromAndroid)
   if (settingsFromAndroid != null) {
-    console.log('qq', store.state.preferences['other']['WebIDE as default editor'])
     settingsFromAndroid.setWebIde(store.state.preferences['other']['WebIDE as default editor'])
   }
 }

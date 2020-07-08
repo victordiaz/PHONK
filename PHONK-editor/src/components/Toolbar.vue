@@ -132,15 +132,16 @@ export default {
       // this.show_info({ icon: 'save', text: 'Saved' })
     },
     project_action: function (state) {
+      /*
       if (state === '/stop_all_and_run') {
         this.show_info({ icon: 'play_arrow', text: 'Running...' })
       } else {
         this.show_info({ icon: 'stop', text: 'Stopping...' })
       }
+      */
     },
     show_info (msg) {
-      // this.infoQueue.shift()
-
+      console.log('msg', msg)
       // check if id exists
       let obj = this.infoQueue.find(o => o.id === msg.id)
 

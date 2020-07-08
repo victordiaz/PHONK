@@ -116,7 +116,6 @@ export default {
   created () {
     Store.on('console', this.console_log)
     Store.on('project_action', this.project_action)
-    console.log('qq', this.$options.logsq)
 
     /*
     var that = this
