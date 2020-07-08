@@ -41,7 +41,7 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void takePicture(String file, ReturnInterface callbackfn) {
+    public void takePicture(String file) {
 
     }
 
@@ -76,7 +76,7 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void turnOnFlash(boolean b) {
+    public void startFlash(boolean b) {
 
     }
 

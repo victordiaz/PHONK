@@ -35,6 +35,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -45,6 +48,7 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 
@@ -858,6 +862,57 @@ public class PDevice extends ProtoBase {
 
         return mApplications;
     }
+
+    CameraManager mCamManager;
+    Camera mCamera;
+
+    @PhonkMethod
+    public void startFlash(boolean b) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                mCamManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
+                String cameraId = null;
+                if (mCamManager != null) {
+                    cameraId = mCamManager.getCameraIdList()[0];
+                    mCamManager.setTorchMode(cameraId, b);
+                }
+            } catch (CameraAccessException e) {
+                Log.e(TAG, e.toString());
+            }
+        } else {
+            mCamera = Camera.open();
+            Camera.Parameters parameters = mCamera.getParameters();
+            if (b) parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            else parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            mCamera.setParameters(parameters);
+            mCamera.startPreview();
+        }
+    }
+
+
+    /*
+    private void turnFlashlightOff() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                String cameraId;
+                camManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+                if (camManager != null) {
+                    cameraId = camManager.getCameraIdList()[0]; // Usually front camera is at 0 position.
+                    camManager.setTorchMode(cameraId, false);
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mCamera = Camera.open();
+            parameters = mCamera.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            mCamera.setParameters(parameters);
+            mCamera.stopPreview();
+        }
+    }
+    }
+*/
 
     @Override
     public void __stop() {
