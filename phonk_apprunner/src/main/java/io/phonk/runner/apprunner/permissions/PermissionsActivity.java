@@ -94,32 +94,45 @@ public class PermissionsActivity extends BaseActivity {
     }
 
     private void checkAllPermissions(boolean request) {
-        checkPermission(request,
-                Manifest.permission.INTERNET,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_MULTICAST_STATE,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.VIBRATE,
-                Manifest.permission.WAKE_LOCK,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.WRITE_SETTINGS,
-                Manifest.permission.NFC,
-                Manifest.permission.RECEIVE_SMS,
-                Manifest.permission.INSTALL_SHORTCUT,
-                Manifest.permission.CAMERA,
+        List<String> requiredPermissions = new ArrayList<String>();
 
-                // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
+        requiredPermissions.add(Manifest.permission.INTERNET);
+        requiredPermissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+        requiredPermissions.add(Manifest.permission.CHANGE_WIFI_STATE);
+        requiredPermissions.add(Manifest.permission.CHANGE_WIFI_MULTICAST_STATE);
+        requiredPermissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+        requiredPermissions.add(Manifest.permission.VIBRATE);
+        requiredPermissions.add(Manifest.permission.WAKE_LOCK);
+        requiredPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        requiredPermissions.add(Manifest.permission.READ_PHONE_STATE);
+        requiredPermissions.add(Manifest.permission.BLUETOOTH);
+        requiredPermissions.add(Manifest.permission.BLUETOOTH_ADMIN);
+        requiredPermissions.add(Manifest.permission.WRITE_SETTINGS);
+        requiredPermissions.add(Manifest.permission.NFC);
+        requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
+        requiredPermissions.add(Manifest.permission.SEND_SMS);
+        requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
+        requiredPermissions.add(Manifest.permission.CAMERA);
+        // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
+        requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
+        requiredPermissions.add(Manifest.permission.RECORD_AUDIO);
+        requiredPermissions.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
 
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.SYSTEM_ALERT_WINDOW);
+        // check if permission is already granted
+        for (int i = 0; i < requiredPermissions.size(); i++) {
+            String permissionName = requiredPermissions.get(i);
+            int isGranted1 = checkSelfPermission(permissionName);
+            int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
 
+            MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
+        }
+
+        // request the permissions
+        if (!requiredPermissions.isEmpty()) {
+            requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+        }
     }
 
     @Override

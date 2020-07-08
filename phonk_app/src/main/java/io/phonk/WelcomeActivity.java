@@ -139,11 +139,10 @@ public class WelcomeActivity extends BaseActivity {
         requiredPermissions.add(Manifest.permission.WRITE_SETTINGS);
         requiredPermissions.add(Manifest.permission.NFC);
         requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
+        requiredPermissions.add(Manifest.permission.SEND_SMS);
         requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
         requiredPermissions.add(Manifest.permission.CAMERA);
-
         // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
-
         requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
