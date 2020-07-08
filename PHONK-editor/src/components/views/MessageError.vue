@@ -49,7 +49,7 @@ export default {
     margin: 20px;
     color: @primaryTextColor;
     line-height: 1.5em;;
-    border: 1px solid @accentColor;
+    border: 1px solid #4c4f4b;
     // font-weight: 300;
   }
 
