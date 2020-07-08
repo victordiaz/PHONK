@@ -141,7 +141,7 @@ export default {
       */
     },
     show_info (msg) {
-      console.log('msg', msg)
+      // console.log('msg', msg)
       // check if id exists
       let obj = this.infoQueue.find(o => o.id === msg.id)
 

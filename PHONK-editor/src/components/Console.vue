@@ -52,13 +52,13 @@ export default {
   },
   methods: {
     console_log: function (data) {
-      console.log('log', data, this.consoleIsStarted, this.consoleCanStart)
+      // console.log('log', data, this.consoleIsStarted, this.consoleCanStart)
       if (!this.consoleIsStarted && this.consoleCanStart) {
-        console.log('qq1')
+        // console.log('qq1')
         this.consoleIsStarted = true
         this.updateInterval = setInterval(() => {
           this.slicedLogs = this.$options.logsq.slice(this.limitOffset, this.limitOffset + this.limitNum)
-          console.log('qq2')
+          // console.log('qq2')
         }, 100)
       }
 
@@ -70,12 +70,10 @@ export default {
       }
 
       if (this.lock) return
-      console.log('qq3')
 
       // wait until vue rerenders and scroll down console log
       this.$nextTick(function () {
         setTimeout(() => {
-          console.log('qq4')
           var ul = this.$refs.log
           // console.log('ul', ul, this.i++)
           ul.scrollTop = ul.scrollHeight
@@ -83,7 +81,6 @@ export default {
       })
     },
     clear: function () {
-      // console.log('clear')
       this.$options.logsq = []
       this.slicedLogs = []
       this.limitOffset = 0
@@ -95,7 +92,6 @@ export default {
       this.showingTime = !this.showingTime
     },
     project_action (action) {
-      console.log('action', action)
       if (action === '/stop_all_and_run') {
         this.consoleCanStart = true
         this.clear()
