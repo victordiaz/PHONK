@@ -8,16 +8,18 @@
 ui.addTitle(app.name)
 
 // add camera
-var camera = ui.addCameraView('back', 0, 0, 1, 1)
+var camera = media.useCamera('back')
+ui.addView(camera, 0, 0, 1, 1)
 
 // take a picture and save it
 ui.addButton('Take pic', 0.2, 0.8, 0.2, 0.1).onClick(function () {
-    camera.takePicture('picture.png', function () {
-      console.logImage(app.fullPath() + 'picture.png')
-    })
+  camera.takePicture('picture.png', function () {
+    console.logImage(app.fullPath() + 'picture.png')
+  })
 })
 
 // toggle flash on and off
 ui.addToggle('Flash', 0.6, 0.8, 0.2, 0.1).onChange(function (e) {
   camera.turnOnFlash(e.checked)
+  // or media.turnOnFlash(true)
 })
