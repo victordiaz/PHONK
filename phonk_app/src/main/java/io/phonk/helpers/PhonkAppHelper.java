@@ -59,7 +59,6 @@ public class PhonkAppHelper {
         intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
         intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
         EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUNNING, p));
-        MLog.d(TAG, "--------------------->");
         context.startService(intent);
     }
 
