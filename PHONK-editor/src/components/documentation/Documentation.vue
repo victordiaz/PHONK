@@ -9,7 +9,7 @@
       <div class="actionbar">
         <h1 class="title" v-on:click="expanded = !expanded">Docs</h1>
         <input type="text" v-model="search" placeholder="type to filter..." />
-        <button v-on:click = "clearSearch">x</button>
+        <button id = "clearSearch" v-on:click = "clearSearch" v-if = "search !== ''"><i data-v-15cdbf56="" class="material-icons">close</i></button>
         <ul>
           <li title="Switch view" class="material-icons" v-on:click="switch_view">reorder</li>
         </ul>
@@ -176,6 +176,20 @@ export default {
   box-sizing: border-box;
   padding: 0px;
   z-index: 1;
+
+  #clearSearch {
+    font-size: 0.5em;
+    color: #828282;
+
+    i {
+      font-size: 16.2px;
+    }
+
+    &:hover {
+      color: white;
+      background: transparent;
+    }
+  }
 
   .actionbar {
     align-items: center;
