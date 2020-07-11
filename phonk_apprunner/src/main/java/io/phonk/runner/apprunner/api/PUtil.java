@@ -45,6 +45,8 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -145,7 +147,6 @@ public class PUtil extends ProtoBase {
     }
 
     // http://stackoverflow.com/questions/4605527/converting-pixels-to-dp
-
     @PhonkMethod(description = "Convert given dp to pixels", example = "")
     @PhonkMethodParam(params = {""})
     public float dpToPixels(float dp) {
@@ -155,7 +156,6 @@ public class PUtil extends ProtoBase {
         return px;
     }
 
-
     @PhonkMethod(description = "Convert given px to dp", example = "")
     @PhonkMethodParam(params = {""})
     public float pixelsToDp(float px) {
@@ -164,7 +164,6 @@ public class PUtil extends ProtoBase {
         float dp = px / (metrics.densityDpi / 160f);
         return dp;
     }
-
 
     @PhonkMethod(description = "Convert given mm to pixels", example = "")
     @PhonkMethodParam(params = {""})
@@ -184,14 +183,33 @@ public class PUtil extends ProtoBase {
         return px * onepx;
     }
 
+    @PhonkMethod
     public Object parseBytes(byte[] bytes, String type) {
         BluetoothBytesParser parser = new BluetoothBytesParser(bytes);
 
         switch (type) {
-            case "uint8":
-                return parser.getIntValue(BluetoothBytesParser.FORMAT_UINT8);
             case "string":
                 return parser.getStringValue(0);
+            case "float":
+                return parser.getFloatValue(BluetoothBytesParser.FORMAT_FLOAT);
+            case "sfloat":
+                return parser.getFloatValue(BluetoothBytesParser.FORMAT_SFLOAT);
+            case "long":
+                return parser.getLongValue();
+            case "sint8":
+                return parser.getIntValue(BluetoothBytesParser.FORMAT_SINT8);
+            case "sint16":
+                return parser.getIntValue(BluetoothBytesParser.FORMAT_SINT16);
+            case "sint32":
+                return parser.getIntValue(BluetoothBytesParser.FORMAT_SINT32);
+            case "uint8":
+                return parser.getIntValue(BluetoothBytesParser.FORMAT_UINT8);
+            case "uint16":
+                parser.getIntValue(BluetoothBytesParser.FORMAT_UINT16);
+            case "uint32":
+                return parser.getIntValue(BluetoothBytesParser.FORMAT_UINT32);
+            case "date":
+                return parser.getDateTime();
             default:
                 return null;
         }
@@ -200,7 +218,6 @@ public class PUtil extends ProtoBase {
     public interface AnimCB {
         void event(float data);
     }
-
 
     //TODO include the new support lib v22 interpolations
     @PhonkMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
