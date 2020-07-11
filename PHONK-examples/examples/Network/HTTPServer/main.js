@@ -20,8 +20,8 @@ server.onNewRequest(function (e) {
       console.log('got helloworld GET petition!')
 
       // if you want to do some UI call you must use as follows
-      app.runOnUiThread(function() {
-        ui.toast('this shows on the ui!', 200)
+      app.runOnUiThread(function () {
+        ui.toast('this shows on the ui!')
       })
 
       return server.response('hello world back!')
