@@ -57,7 +57,6 @@ var send = ui.addButton('Send', 0.7, 0.85, 0.2, 0.1).onClick(function () {
 })
 
 bleClient.onNewDeviceStatus(function (e) {
-  // console.log('onNewDeviceStatus', e)
   // double check if is the device we want to connect
   if (e.deviceMac === deviceMacAddress && e.status === 'connected') {
     bleClient.readFromCharacteristic(deviceMacAddress, serviceUUID, characteristicUUID_RX)
