@@ -32,6 +32,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
@@ -50,10 +51,20 @@ public class PMqtt extends ProtoBase {
         appRunner.whatIsRunning.add(this);
     }
 
+    /**
+     * Connect to a broker. I needs an object as follows
+     * {
+     *     broker: 'tcp://192.168.1.10',
+     *     clientId: 'phonk',
+     *     user: 'myuser',
+     *     password: 'mypassword'
+     * }
+     * @param connectionSettings
+     * @return
+     */
+    @PhonkMethod
     public PMqtt connect(Map connectionSettings) {
         MemoryPersistence persistence = new MemoryPersistence();
-
-        MLog.d(TAG, "qq -> " + connectionSettings.get("broker"));
 
         try {
             client = new MqttClient((String) connectionSettings.get("broker"), (String) connectionSettings.get("clientId"), persistence);
@@ -129,6 +140,13 @@ public class PMqtt extends ProtoBase {
     }
 
 
+    /**
+     * Subscribes to a certain topic. The data will arrive in the onNewData callback
+     *
+     * @param topic
+     * @return
+     */
+    @PhonkMethod
     public PMqtt subscribe(final String topic) {
         try {
             client.subscribe(topic);
@@ -139,6 +157,13 @@ public class PMqtt extends ProtoBase {
         return this;
     }
 
+    /**
+     * Unsubscribe from a topic
+     *
+     * @param topic
+     * @return
+     */
+    @PhonkMethod
     public PMqtt unsubscribe(final String topic) {
         try {
             client.unsubscribe(topic);
@@ -149,11 +174,25 @@ public class PMqtt extends ProtoBase {
     }
 
 
+    /**
+     * Callback that returns data from a subscribed topic
+     * @param callback
+     * @return
+     */
     public PMqtt onNewData(ReturnInterface callback) {
         mCallback = callback;
         return this;
     }
 
+    /**
+     * Publish to a given topic
+     *
+     * @param topic
+     * @param data
+     * @param qos
+     * @param retain
+     * @return
+     */
     public PMqtt publish(final String topic, final String data, int qos, boolean retain) {
         MqttMessage message = new MqttMessage(data.getBytes());
         message.setQos(qos);
@@ -165,6 +204,11 @@ public class PMqtt extends ProtoBase {
         return this;
     }
 
+    /**
+     * Disconnect from the broker
+     * 
+     * @return
+     */
     public PMqtt disconnect() {
         try {
             client.disconnect();
