@@ -331,7 +331,7 @@ public class MainActivity extends BaseActivity {
                     PhonkAppHelper.launchHelp(MainActivity.this);
                     return true;
                 } else if (itemId == R.id.more_options_about) {
-                    PhonkAppHelper.launchHelp(MainActivity.this);
+                    PhonkAppHelper.launchAbout(MainActivity.this);
                     return true;
                 }
 
