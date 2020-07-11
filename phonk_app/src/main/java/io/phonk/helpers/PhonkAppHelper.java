@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import io.phonk.MainActivity;
 import io.phonk.events.Events;
+import io.phonk.gui.AboutActivity;
 import io.phonk.gui.HelpActivity;
 import io.phonk.gui.InfoScriptActivity;
 import io.phonk.gui.LicenseActivity;
@@ -98,9 +99,14 @@ public class PhonkAppHelper {
         context.startActivity(intent);
     }
 
-
     public static void launchHelp(Context context) {
         Intent intent = new Intent(context, HelpActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void launchAbout(Context context) {
+        Intent intent = new Intent(context, AboutActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
