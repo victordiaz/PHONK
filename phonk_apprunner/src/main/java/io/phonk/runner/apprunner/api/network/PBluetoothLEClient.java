@@ -26,12 +26,10 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.Handler;
 
-import com.welie.blessed.BluetoothBytesParser;
 import com.welie.blessed.BluetoothCentral;
 import com.welie.blessed.BluetoothCentralCallback;
 import com.welie.blessed.BluetoothPeripheral;
@@ -66,6 +64,7 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
     private BluetoothGatt mGatt;
 
     // private Boolean connected = false;
+    public boolean autoConnect = false;
     private ReturnInterface mCallbackDevice;
     private ReturnInterface mCallbackCharacteristic;
 
@@ -73,10 +72,6 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
 
     private BluetoothCentral central;
     private Handler handler = new Handler();
-
-    private static final String T1_MAC_ADDRESS = "24:6F:28:25:02:62";
-    private static final UUID T1_SERVICE_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
-    private UUID T1_CHARACTERISTIC_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
 
     public PBluetoothLEClient(AppRunner appRunner, BluetoothAdapter bleAdapter) {
         super(appRunner);
@@ -95,6 +90,12 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
         peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
         central.connectPeripheral(peripheral, peripheralCallback);
+        return this;
+    }
+
+    public PBluetoothLEClient autoConnect(boolean autoConnect) {
+        this.autoConnect = autoConnect;
+
         return this;
     }
 
@@ -130,14 +131,13 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
 
     public PBluetoothLEClient write(String value, String macAddress, String serviceUUID, String charUUID) {
         BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
+
         UUID sUUID = UUID.fromString(serviceUUID);
-        MLog.d(TAG, "qq1->");
         UUID cUUID = UUID.fromString(charUUID);
-        MLog.d(TAG, "qq2->");
         BluetoothGattCharacteristic btChar = peripheral.getCharacteristic(sUUID, cUUID);
+
         // peripheral.writeCharacteristic(btChar, value, type);
         peripheral.writeCharacteristic(btChar, value.getBytes(), WRITE_TYPE_DEFAULT);
-
 
         return this;
     }
@@ -186,14 +186,6 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         @Override
         public void onCharacteristicWrite(BluetoothPeripheral peripheral, byte[] value, BluetoothGattCharacteristic characteristic, int status) {
             MLog.d(TAG, "onCharWrite");
-
-            /*
-            if( status == GATT_SUCCESS) {
-                MLog.d(TAG, "SUCCESS: Writing <%s> to <%s>", bytes2String(value), characteristic.getUuid().toString());
-            } else {
-                MLog.d(TAG, "ERROR: Failed writing <%s> to <%s>", bytes2String(value), characteristic.getUuid().toString());
-            }
-             */
         }
 
         @Override
@@ -263,7 +255,6 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
                 String modelNumber = parser.getStringValue(0);
                 MLog.d(TAG, "Received modelnumber: %s", modelNumber);
             }
-
              */
         }
     };
@@ -292,7 +283,9 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         public void onDisconnectedPeripheral(final BluetoothPeripheral peripheral, final int status) {
             MLog.d(TAG, "disconnected '%s' with status %d" + " " + peripheral.getName() + " " + status);
 
-            // Reconnect to this device when it becomes available again
+            // Reconnect to this device when it becomes available again if autoConnect is true
+            if (!autoConnect) return;
+
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -305,12 +298,13 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         public void onDiscoveredPeripheral(BluetoothPeripheral peripheral, ScanResult scanResult) {
             MLog.d(TAG, "Found peripheral " + peripheral.getName() + " " + peripheral.getAddress());
 
+            /*
             if (peripheral.getAddress().equals(T1_MAC_ADDRESS)) {
                 MLog.d(TAG, "found mac");
                 central.connectPeripheral(peripheral, peripheralCallback);
                 central.stopScan();
             }
-
+             */
         }
 
         @Override
