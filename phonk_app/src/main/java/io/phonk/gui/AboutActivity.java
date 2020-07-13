@@ -44,6 +44,7 @@ import io.phonk.runner.base.utils.MLog;
 public class AboutActivity extends BaseActivity {
 
     private static final String TAG = AboutActivity.class.getSimpleName();
+    private VideoView videoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class AboutActivity extends BaseActivity {
         TextView phonkVersionName = findViewById(R.id.versionName);
         phonkVersionName.setText(BuildConfig.VERSION_NAME);
 
-        VideoView videoView = findViewById(R.id.videoView);
+        videoView = findViewById(R.id.videoView);
         String videoURI = "android.resource://" + getPackageName() + "/" + R.raw.phonk;
         videoView.setVideoURI(Uri.parse(videoURI));
         // videoView.setBackgroundColor(Color.WHITE);
@@ -88,5 +89,11 @@ public class AboutActivity extends BaseActivity {
         super.setupActivity();
 
         enableBackOnToolbar();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.start();
     }
 }
