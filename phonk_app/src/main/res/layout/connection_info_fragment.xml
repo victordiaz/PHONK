@@ -39,11 +39,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/connection_info_fragment_margin_horizontal"
-        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="@dimen/connection_info_fragment_margin_horizontal"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+
         android:background="@drawable/device_box"
         android:elevation="1dp"
         android:gravity="top"
         android:lineHeight="9sp"
+        android:maxWidth="300dp"
         android:maxHeight="55dp"
         android:padding="6dp"
         android:text="> "
@@ -54,8 +58,13 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/webide_connection_toggle"
         app:layout_constraintEnd_toEndOf="@+id/phone"
+        app:layout_constraintEnd_toStartOf="@+id/connection_message"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/connection_message"
+        app:layout_constraintWidth_max="200dp"
+        app:layout_constraintWidth_min="120dp"
         tools:text="bnvbnbv" />
 
     <TextView
@@ -63,6 +72,7 @@
         android:layout_width="35dp"
         android:layout_height="60dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/device_box"
         android:elevation="1dp"
         android:gravity="top"
@@ -80,20 +90,25 @@
 
     <TextView
         android:id="@+id/connection_message"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/connection_info_fragment_margin_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:gravity="left"
         android:maxWidth="200dp"
         android:text="@string/connection_message_not_connected"
         android:textColor="@color/phonk_textColor_secondary"
         android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/connection_ip"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/computerText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/connection_ip"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="left"
@@ -102,6 +117,8 @@
         android:textSize="12sp"
         android:textStyle="italic|bold"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/webide_connection_toggle"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/connection_message"
         app:layout_constraintTop_toBottomOf="@+id/connection_message" />
 
@@ -111,6 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:height="28dp"
+        android:foreground="?attr/selectableItemBackground"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:paddingLeft="10dp"
@@ -123,7 +141,6 @@
         android:textSize="10sp"
         android:textStyle="normal|bold"
         android:visibility="visible"
-        android:foreground="?attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="@+id/connection_message"
         app:layout_constraintTop_toBottomOf="@+id/connection_ip" />
 

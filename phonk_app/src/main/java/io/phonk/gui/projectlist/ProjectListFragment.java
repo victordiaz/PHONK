@@ -136,7 +136,8 @@ public class ProjectListFragment extends BaseFragment {
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         LinearLayout llFolderLocation = v.findViewById(R.id.folderLocation2);
-        if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
+
+        // if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
 
         mBottomBar = v.findViewById(R.id.bottombar);
         mBottomBar.setVisibility(View.GONE);

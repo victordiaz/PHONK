@@ -134,15 +134,15 @@
                 android:layout_height="wrap_content"></FrameLayout>
 
             <View
-                android:layout_below="@id/infoLayout"
-                android:background="@color/phonk_colorSecondary_shade_1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="50dp"
+                android:layout_below="@id/infoLayout"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="100dp"
+                android:background="@color/phonk_colorSecondary_shade_1" />
 
         </RelativeLayout>
 
