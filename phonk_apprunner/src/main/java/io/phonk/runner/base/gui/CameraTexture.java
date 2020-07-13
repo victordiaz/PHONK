@@ -491,7 +491,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         return b;
     }
 
-    public void startFlash(boolean b) {
+    public void flash(boolean b) {
         if (isFlashAvailable()) {
             if (b) mParameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
             else mParameters.setFlashMode(Parameters.FLASH_MODE_OFF);

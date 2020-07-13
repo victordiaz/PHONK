@@ -42,7 +42,7 @@ public interface PCameraInterface {
 
     boolean isFlashAvailable();
 
-    void startFlash(boolean b);
+    void flash(boolean b);
 
     void setColorEffect(String effect);
 

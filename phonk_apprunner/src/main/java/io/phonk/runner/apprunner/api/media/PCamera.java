@@ -206,8 +206,8 @@ public class PCamera extends CameraTexture implements PCameraInterface {
 
     @PhonkMethod(description = "Turns on/off the flash", example = "")
     @PhonkMethodParam(params = {""})
-    public void startFlash(boolean b) {
-        super.startFlash(b);
+    public void flash(boolean b) {
+        super.flash(b);
     }
 
     @PhonkMethod(description = "Focus", example = "")

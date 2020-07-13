@@ -52,6 +52,7 @@ import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -65,11 +66,13 @@ import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.media.PCamera2;
 import io.phonk.runner.apprunner.api.other.ApplicationInfo;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.Intents;
 import io.phonk.runner.base.utils.MLog;
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @PhonkObject
 public class PDevice extends ProtoBase {
 
@@ -863,23 +866,12 @@ public class PDevice extends ProtoBase {
         return mApplications;
     }
 
-    CameraManager mCamManager;
-    Camera mCamera;
-
     @PhonkMethod
-    public void startFlash(boolean b) {
+    public void flashLight(boolean b) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                mCamManager = (CameraManager) getContext().getSystemService(Context.CAMERA_SERVICE);
-                String cameraId = null;
-                if (mCamManager != null) {
-                    cameraId = mCamManager.getCameraIdList()[0];
-                    mCamManager.setTorchMode(cameraId, b);
-                }
-            } catch (CameraAccessException e) {
-                Log.e(TAG, e.toString());
-            }
+            PCamera2.startFlash(getAppRunner().getAppContext(), b);
         } else {
+            Camera mCamera;
             mCamera = Camera.open();
             Camera.Parameters parameters = mCamera.getParameters();
             if (b) parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -888,7 +880,6 @@ public class PDevice extends ProtoBase {
             mCamera.startPreview();
         }
     }
-
 
     /*
     private void turnFlashlightOff() {
