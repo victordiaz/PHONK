@@ -39,6 +39,7 @@ import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
@@ -85,7 +86,8 @@ public class PMap extends MapView {
         this.mapView = this;
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setTilesScaledToDpi(true);
-        mapView.setBuiltInZoomControls(false);
+        // mapView.setBuiltInZoomControls(false);
+        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         mapView.setMultiTouchControls(true);
         mapView.setUseDataConnection(true);
         mapView.setClickable(true);
@@ -144,19 +146,14 @@ public class PMap extends MapView {
         mapView.setMapListener(new DelayedMapListener(new MapListener() {
             @Override
             public boolean onScroll(ScrollEvent event) {
-                //Log.d(TAG, "qqqqqq");
-
-                //mapView.getBoundingBox().getCenter();
+                // mapView.getBoundingBox().getCenter();
 
                 return true;
             }
 
             @Override
             public boolean onZoom(ZoomEvent event) {
-                //Log.d(TAG, "qqqqqq");
-
-                //mapView.getBoundingBox().getCenter();
-
+                // mapView.getBoundingBox().getCenter();
 
                 return true;
             }
@@ -165,7 +162,6 @@ public class PMap extends MapView {
 
         // myLocationOverlay.enableMyLocation();
         // myLocationOverlay.setDrawAccuracyEnabled(true);
-
     }
 
     /**
