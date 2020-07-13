@@ -136,6 +136,11 @@
             android:label="About" >
         </activity>
         <activity
+            android:name="io.phonk.gui.UpdateActivity"
+            android:theme="@style/PhonkAppTheme"
+            android:label="PHONK Update" >
+        </activity>
+        <activity
             android:name="io.phonk.gui.InfoScriptActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="InfoScript" >

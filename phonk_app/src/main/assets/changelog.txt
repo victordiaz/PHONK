@@ -1,0 +1,42 @@
+1.2.7
+- Better notifications in WebEditor
+- Better NFC handling
+- Bluetooth LE can disconnect properly
+- About section included
+- Update screen (this!) included
+- HTTP server can serve images to Web editor console
+- Sending SMS works again
+- Add app.finish() method
+- Check bluetooth and sensors availability
+- Remove unused desktop widget
+- Updated some examples that did not work correctly
+
+1.2.5
+- This should fix a problem on devices Android < 5.0 where views such Buttons, Texts, etc don't appear correctly
+- Fix lat/lon swap when adding marker in maps
+- Fix user input in MQTT
+- Removed staggered animation on UI load
+- Better theming
+- Min requirement is 4.1 now
+
+1.2.3
+- Fix buttons not appearing on installation
+- Better alignment in tablets
+- Fix crash on Edit
+- Added better way for customizing views (there is not example yet)
+- Remove vibration on app load
+- APK is now half the size
+- Updated some dependencies
+- Slider has a way to change only on drag
+
+1.2.2
+- Update MQTT library with Eclipse Paho
+- Improved connection info layout
+- Added onClick event on map markers
+- User projects not visible is folder is empty
+
+1.2.0
+- Lot's of cosmetic changes in PHONK
+- API tweaks and improvements
+- New website
+- Now released as well in Google Play Store

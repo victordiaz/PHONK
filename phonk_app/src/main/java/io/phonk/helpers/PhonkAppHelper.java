@@ -32,6 +32,10 @@ import androidx.fragment.app.FragmentManager;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import io.phonk.MainActivity;
 import io.phonk.events.Events;
 import io.phonk.gui.AboutActivity;
@@ -167,5 +171,31 @@ public class PhonkAppHelper {
         i.putExtra("folder", splitted[1]);
         i.putExtra("name", p.getName());
         c.sendBroadcast(i);
+    }
+
+
+    public static String readFile(Context c, String path) {
+        InputStream is = null;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try {
+            is = c.getAssets().open(path);
+
+            int i;
+            try {
+                i = is.read();
+                while (i != -1) {
+                    byteArrayOutputStream.write(i);
+                    i = is.read();
+                }
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return byteArrayOutputStream.toString();
     }
 }

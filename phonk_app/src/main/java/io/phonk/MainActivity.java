@@ -26,6 +26,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -127,6 +128,7 @@ public class MainActivity extends BaseActivity {
 
         mAppRunner = new AppRunnerCustom(this);
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
+
         // PhonkApp phonkApp = new PhonkApp(mAppRunner);
         // phonkApp.network.checkVersion();
         // mAppRunner.interp.eval("device.vibrate(100);");
