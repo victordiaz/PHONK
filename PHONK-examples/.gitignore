@@ -1,4 +1,4 @@
 node_modules
-.vscode
-excludes_examples
-other
+/.vscode
+/excluded_examples
+/other
