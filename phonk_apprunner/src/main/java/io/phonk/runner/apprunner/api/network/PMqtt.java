@@ -206,7 +206,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Disconnect from the broker
-     * 
+     *
      * @return
      */
     public PMqtt disconnect() {
