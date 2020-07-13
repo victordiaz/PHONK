@@ -208,8 +208,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefAppsInColumnMode.setChecked((Boolean) mUserPreferences.get("apps_in_list_mode"));
         */
 
-
-
         /*
         final EditTextPreference appColor = (EditTextPreference) findPreference("app_color");
         appColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -282,19 +280,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         //load webIDE
         // TODO enable again
         /*
-        final ListPreference loadEditorPreference = (ListPreference) findPreference("pref_change_editor");
-        String[] editors = WebEditorManager.getInstance().listEditors();
-        loadEditorPreference.setEntries(editors);
-        loadEditorPreference.setEntryValues(editors);
-        loadEditorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                MLog.d(TAG, "" + newValue);
-                mPrefs.edit().putString("pref_change_editor", (String) newValue).commit();
-                return true;
-            }
-        });
-
 
         // Notify and download
         final TwoStatePreference notifyNewVersionPreference = (TwoStatePreference) findPreference("pref_notify_new_version");

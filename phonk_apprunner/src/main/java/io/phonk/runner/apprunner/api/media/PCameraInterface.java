@@ -28,7 +28,7 @@ import io.phonk.runner.base.gui.CameraTexture;
 
 public interface PCameraInterface {
 
-    void takePicture(String file, final ReturnInterface callbackfn);
+    void takePicture(String file);
 
     void recordVideo(String file);
 
@@ -42,7 +42,7 @@ public interface PCameraInterface {
 
     boolean isFlashAvailable();
 
-    void turnOnFlash(boolean b);
+    void flash(boolean b);
 
     void setColorEffect(String effect);
 

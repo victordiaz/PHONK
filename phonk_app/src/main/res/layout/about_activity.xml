@@ -23,89 +23,147 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar2"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentTop="true"
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent">
-    </include>
+    <include
+        android:id="@+id/header"
+        layout="@layout/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"></include>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar2"
-        android:background="@color/transparent" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:background="@color/phonk_backgroundColor">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content">
 
-            <!--<ImageView-->
-                <!--android:layout_width="120dp"-->
-                <!--android:layout_height="120dp"-->
-                <!--android:layout_marginBottom="16dp"-->
-                <!--android:layout_marginLeft="16dp"-->
-                <!--android:layout_marginRight="16dp"-->
-                <!--android:layout_marginTop="25dp"-->
-                <!--android:gravity="center"-->
-                <!--android:src="@drawable/protocoder_help" />-->
-
-
-
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="393dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <TextView
-                android:id="@+id/help_title"
-                android:layout_width="match_parent"
+                android:id="@+id/PHONK"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/about_how_to_title"
-                android:textColor="@color/phonk_colorPrimary"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/help_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="230dp"
+                android:fontFamily="monospace"
+                android:maxWidth="600dp"
                 android:shadowColor="#ffffff"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:text="@string/about_how_to_contents"
-                android:textColor="@color/phonk_colorPrimary"
-                android:textSize="18sp" />
+                android:text="PHONK"
+                android:textColor="@color/phonk_colorSecondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <TextView
-                android:id="@+id/about_credits_title"
-                android:layout_width="match_parent"
+                android:id="@+id/versionName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/about_credits"
-                android:textColor="@color/phonk_colorPrimary"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/about_special_thanks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:fontFamily="monospace"
+                android:maxWidth="600dp"
                 android:shadowColor="#ffffff"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:text="@string/about_special_thanks"
+                android:text="vX.Y.Z"
                 android:textColor="@color/phonk_colorPrimary"
-                android:textSize="18sp" />
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/PHONK"
+                app:layout_constraintStart_toStartOf="@+id/PHONK"
+                app:layout_constraintTop_toBottomOf="@+id/PHONK" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/phonk_backgroundColor"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/versionName">
+
+                <TextView
+                    android:id="@+id/about_special_thanks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="sans-serif"
+                    android:maxWidth="300dp"
+                    android:text="Hello! This is Víctor, I hope you are enjoying PHONK!\n\nIf you want to support its development, feel free to send some donations using any of the following platforms.\nHaving some support will give me more time to create tutorials and improve the app 🙂"
+                    android:textColor="@color/console_textcolor"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+                <ImageButton
+                    android:id="@+id/btnPatreon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="48dp"
+                    android:adjustViewBounds="true"
+                    android:padding="0dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/become_a_patron_button"
+                    app:layout_constraintBottom_toTopOf="@+id/btnBuyMeACoffee"
+                    app:layout_constraintEnd_toEndOf="@+id/about_special_thanks"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="@+id/about_special_thanks"
+                    app:layout_constraintTop_toBottomOf="@+id/about_special_thanks"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <ImageButton
+                    android:id="@+id/btnBuyMeACoffee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:adjustViewBounds="true"
+                    android:padding="0dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/buy_me_a_coffee_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/btnPatreon"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="@+id/btnPatreon"
+                    app:layout_constraintTop_toBottomOf="@+id/btnPatreon" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="32dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/victor" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 </RelativeLayout>

@@ -11,7 +11,8 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     // flavorDimensions "normal", "extended"
-    flavorDimensions "default"
+    // flavorDimensions "default"
+    flavorDimensions "version"
 
     compileSdkVersion 29
 
@@ -61,11 +62,13 @@ android {
     productFlavors {
         normal {
             applicationId "io.phonk"
+            dimension "version"
             versionName project.versionName + "_normal"
         }
 
         extended {
             applicationId "io.phonk.extended"
+            dimension "version"
             versionName project.versionName + "_extended"
         }
     }

@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:textColor="@color/console_textcolor"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:fontFamily="monospace"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"

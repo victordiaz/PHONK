@@ -47,6 +47,8 @@ import fi.iki.elonen.NanoHTTPD;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
+import io.phonk.runner.apprunner.AppRunner;
+import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
 import io.phonk.runner.base.utils.MLog;
@@ -77,12 +79,9 @@ public class PhonkHttpServer extends NanoHTTPD {
         super(port);
 
         mContext = new WeakReference<Context>(context);
-
         gson = new GsonBuilder().setPrettyPrinting().create();
-        //addMappings();
 
         try {
-            // start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
             start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,6 +103,7 @@ public class PhonkHttpServer extends NanoHTTPD {
         String uri = session.getUri();
 
         if (uri.startsWith("/api")) res = serveAPI(session);
+        else if (uri.startsWith("/playground") || uri.startsWith("/examples")) res = serveFileFromStorage(session);
         else res = serveWebIDE(session);
 
         //adding CORS mode for WebIDE debugging from the computer
@@ -402,11 +402,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 File file = new File(path);
 
                 ProtoFile pFile = new ProtoFile(file.getName(), path);
-
-                // MLog.d("qqqq1",  pFile.path);
-                // MLog.d("qqqq1", pFile.name);
                 pFile.code = PhonkScriptHelper.getCode(p, pFile.path);
-                // MLog.d("qqqq1", pFile.code);
 
                 NEOProject neo = new NEOProject();
                 neo.files.add(pFile);
@@ -493,10 +489,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                     e.printStackTrace();
                 }
 
-
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("txt"), fileName);
-
-                // res = NanoHTTPD.newFixedLengthResponse("OK");
 
             } else if (uriSplitted[FILE_ACTION].equals("delete")) {
                 final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
@@ -512,19 +505,14 @@ public class PhonkHttpServer extends NanoHTTPD {
                     e.printStackTrace();
                 }
 
-                // MLog.d(TAG, json);
-
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
 
                 for (ProtoFile file : neo.files) {
                     PhonkScriptHelper.deleteFileInProject(p, file.path);
                 }
 
-                // File fileDst = new File(p.getFullPathForFile(fileName));
-                // PhonkScriptHelper.deleteFileOrFolder(fileDst.getAbsolutePath());
                 res = NanoHTTPD.newFixedLengthResponse("OK");
             } else if (uriSplitted[FILE_ACTION].equals("move")) {
-                // MLog.d(TAG, "move");
                 final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
 
                 String json = null;
@@ -538,45 +526,15 @@ public class PhonkHttpServer extends NanoHTTPD {
                     e.printStackTrace();
                 }
 
-                // MLog.d(TAG, json);
-
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
-
                 for (ProtoFile file : neo.files) {
                     PhonkScriptHelper.moveFileFromTo(p, file.formerPath, file.path);
                 }
-
-                // File fileDst = new File(p.getFullPathForFile(fileName));
-                // PhonkScriptHelper.deleteFileOrFolder(fileDst.getAbsolutePath());
                 res = NanoHTTPD.newFixedLengthResponse("OK");
             } else {
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
             }
         }
-
-        /*
-
-            // get files
-            ArrayList<ProtoFile> files = PhonkScriptHelper.listProjectsInFolder(p.getSandboxPath(), 0);
-
-            for (int i = 0; i < files.size(); i++) {
-                ProtoFile f = files.get(i);
-                f.code = PhonkScriptHelper.getCode(p);
-            }
-
-            NEOProject neo = new NEOProject();
-            neo.files = files;
-            neo.project = p;
-
-            String json = gson.toJson(neo);
-            // MLog.d(TAG, json);
-
-            */
-
-        // EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_files", p));
-        // res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), "" /* json.toString() */);
-
-        // serve files
 
         return res;
     }
@@ -584,30 +542,46 @@ public class PhonkHttpServer extends NanoHTTPD {
     private Response serveWebIDE(IHTTPSession session) {
         Response res = null;
 
-        String uri = session.getUri();
-
-        // Clean up uri
-        uri = uri.trim().replace(File.separatorChar, '/');
-        if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
-        if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
-        if (uri.charAt(0) == '/')
-            uri = uri.substring(1); // using assets, so we can't have leading '/'
-
+        String uri = cleanUpUri(session.getUri());
         String mime = getMimeType(uri); // Get MIME type
 
         // Read file and return it, otherwise NOT_FOUND is returned
         AssetManager am = mContext.get().getAssets();
         try {
-            // MLog.d(TAG, WEBAPP_DIR + uri);
             InputStream fi = am.open(WEBAPP_DIR + uri);
             res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
         } catch (IOException e) {
             e.printStackTrace();
-            // MLog.d(TAG, e.getStackTrace().toString());
             NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
         }
 
         return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, fontSize);
+    }
+
+    private String cleanUpUri(String uri_) {
+        String uri = uri_.trim().replace(File.separatorChar, '/');
+        if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
+        if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
+        if (uri.charAt(0) == '/') uri = uri.substring(1); // using assets, so we can't have leading '/'
+
+        return uri;
+    }
+
+    private Response serveFileFromStorage(IHTTPSession session) {
+        Response res = null;
+
+        String uri = cleanUpUri(session.getUri());
+        FileInputStream fi = null;
+        try {
+            fi = new FileInputStream(AppRunnerSettings.getBaseDir() + uri);
+            res = newFixedLengthResponse(Response.Status.OK, getMimeType(uri), fi, fi.available());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return res;
     }
 
     /*

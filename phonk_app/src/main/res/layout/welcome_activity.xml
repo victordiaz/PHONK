@@ -98,8 +98,8 @@
             android:textAlignment="gravity"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            style="@style/YellowButton"
             android:text="@string/welcome_accept"
+            style="@style/YellowButton"
             android:textColor="@color/phonk_backgroundColor"
             android:foreground="?attr/selectableItemBackground"
             />

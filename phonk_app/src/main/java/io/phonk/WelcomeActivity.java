@@ -139,11 +139,10 @@ public class WelcomeActivity extends BaseActivity {
         requiredPermissions.add(Manifest.permission.WRITE_SETTINGS);
         requiredPermissions.add(Manifest.permission.NFC);
         requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
+        requiredPermissions.add(Manifest.permission.SEND_SMS);
         requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
         requiredPermissions.add(Manifest.permission.CAMERA);
-
         // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
-
         requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
@@ -206,7 +205,6 @@ public class WelcomeActivity extends BaseActivity {
 
         // install examples
         PhonkSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, () -> runOnUiThread(() -> goToStep(STEP_INSTALL_EXAMPLES_OK)));
-
     }
 
     public void ready() {
@@ -244,8 +242,6 @@ public class WelcomeActivity extends BaseActivity {
 
                 checkPermissions();
 
-                // show some feedback
-
                 break;
 
             case STEP_ASK_PERMISSIONS_ERROR:
@@ -253,17 +249,9 @@ public class WelcomeActivity extends BaseActivity {
                 mNextStepButton.setText("ask permissions");
                 mNextStep = STEP_ASK_PERMISSIONS_PROMPT;
 
-                // hide feedback process
-
-                // show feedback error
-
                 break;
 
             case STEP_ASK_PERMISSIONS_OK:
-                // hide feedback process
-                // show feedback OK
-
-                // after some time go to next
                 goToStep(STEP_INSTALL_EXAMPLES_PROMPT);
 
                 break;

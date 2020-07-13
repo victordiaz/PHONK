@@ -40,9 +40,10 @@ public class PCamera extends CameraTexture implements PCameraInterface {
 
     private LearnImages learnImages = null;
     private DetectImage detectImage = null;
+    private ReturnInterface mOnPictureTakenCallback;
 
-    public PCamera(AppRunner appRunner, int camera) {
-        super(appRunner, camera, PCamera.MODE_COLOR_COLOR);
+    public PCamera(AppRunner appRunner, String camera) {
+        super(appRunner, camera, "color");
         this.mAppRunner = appRunner;
         cam = this;
 
@@ -52,24 +53,27 @@ public class PCamera extends CameraTexture implements PCameraInterface {
         });
     }
 
-    @PhonkMethodParam(params = {"fileName", "function()"})
+    public PCamera onPictureTaken(final ReturnInterface callbackfn) {
+        mOnPictureTakenCallback = callbackfn;
+        return this;
+    }
+
+    @PhonkMethodParam(params = {"fileName"})
     @PhonkMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
     // @APIRequires()
-    public void takePicture(String file, final ReturnInterface callbackfn) {
-
+    public void takePicture(String file) {
         takePic(mAppRunner.getProject().getFullPathForFile(file));
         addListener(new CameraListener() {
-
             @Override
-            public void onVideoRecorded() {
-            }
+            public void onVideoRecorded() {}
 
             @Override
             public void onPicTaken() {
-                callbackfn.event(null);
+                mOnPictureTakenCallback.event(null);
                 cam.removeListener(this);
             }
         });
+
     }
 
     public List<Camera.Size> getSizes() {
@@ -202,8 +206,8 @@ public class PCamera extends CameraTexture implements PCameraInterface {
 
     @PhonkMethod(description = "Turns on/off the flash", example = "")
     @PhonkMethodParam(params = {""})
-    public void turnOnFlash(boolean b) {
-        super.turnOnFlash(b);
+    public void flash(boolean b) {
+        super.flash(b);
     }
 
     @PhonkMethod(description = "Focus", example = "")

@@ -26,7 +26,11 @@
     android:layout_height="match_parent"
     android:background="@color/phonk_backgroundColor" >
 
-    <include layout="@layout/projectlist_location_view"
+    <include
+        layout="@layout/projectlist_location_view"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/folderLocation2"/>
 
     <io.phonk.runner.base.views.FitRecyclerView

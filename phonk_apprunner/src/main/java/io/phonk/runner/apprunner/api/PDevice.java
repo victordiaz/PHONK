@@ -35,6 +35,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -45,9 +48,11 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -61,11 +66,13 @@ import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.media.PCamera2;
 import io.phonk.runner.apprunner.api.other.ApplicationInfo;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.Intents;
 import io.phonk.runner.base.utils.MLog;
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @PhonkObject
 public class PDevice extends ProtoBase {
 
@@ -858,6 +865,45 @@ public class PDevice extends ProtoBase {
 
         return mApplications;
     }
+
+    @PhonkMethod
+    public void flashLight(boolean b) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PCamera2.startFlash(getAppRunner().getAppContext(), b);
+        } else {
+            Camera mCamera;
+            mCamera = Camera.open();
+            Camera.Parameters parameters = mCamera.getParameters();
+            if (b) parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            else parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            mCamera.setParameters(parameters);
+            mCamera.startPreview();
+        }
+    }
+
+    /*
+    private void turnFlashlightOff() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                String cameraId;
+                camManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+                if (camManager != null) {
+                    cameraId = camManager.getCameraIdList()[0]; // Usually front camera is at 0 position.
+                    camManager.setTorchMode(cameraId, false);
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mCamera = Camera.open();
+            parameters = mCamera.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            mCamera.setParameters(parameters);
+            mCamera.stopPreview();
+        }
+    }
+    }
+*/
 
     @Override
     public void __stop() {

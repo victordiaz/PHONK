@@ -64,6 +64,7 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.media.PAudioPlayer;
 import io.phonk.runner.apprunner.api.media.PAudioRecorder;
+import io.phonk.runner.apprunner.api.media.PCamera;
 import io.phonk.runner.apprunner.api.media.PMidi;
 import io.phonk.runner.apprunner.api.media.PPureData;
 import io.phonk.runner.apprunner.api.media.PTextToSpeech;
@@ -371,6 +372,19 @@ public class PMedia extends ProtoBase {
         }
     }
 
+    /**
+     * Creates a new camera view
+     *
+     * @param camera "front" or "back"
+     * @return
+     * @advanced
+     */
+    public PCamera useCamera(String camera) {
+        PCamera pCamera = new PCamera(getAppRunner(), camera);
+
+        return pCamera;
+    }
+    
     @Override
     public void __stop() {
         getContext().unregisterReceiver(headsetPluggedReceiver);

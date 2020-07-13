@@ -91,18 +91,17 @@ public class PNetwork extends ProtoBase {
     public PBluetooth bluetooth = null;
     public PBluetoothLE bluetoothLE;
     public ServiceDiscovery mDNS = null;
+    public PNfc nfc = null;
+
     private PWebSocketServer PWebsockerServer;
 
     public PNetwork(AppRunner appRunner) {
         super(appRunner);
 
         bluetooth = new PBluetooth(appRunner);
-
-        if (AndroidUtils.isVersionLollipop()) {
-            bluetoothLE = new PBluetoothLE(appRunner);
-        }
-
+        if (AndroidUtils.isVersionLollipop()) bluetoothLE = new PBluetoothLE(appRunner);
         mDNS = new ServiceDiscovery(appRunner);
+        nfc = new PNfc(appRunner);
     }
 
     public void initForParentFragment(AppRunnerFragment fragment) {
@@ -111,17 +110,8 @@ public class PNetwork extends ProtoBase {
         // prevent crashing in phonk app
         if (getFragment() != null) {
             bluetooth.initForParentFragment(getFragment());
+            nfc.initForParentFragment(getFragment());
         }
-    }
-
-    /**
-     * Initializes NFC
-     */
-    @PhonkMethod
-    public PNfc startNFC() {
-        PNfc nfc = new PNfc(getAppRunner());
-        nfc.initForParentFragment(getFragment());
-        return nfc;
     }
 
     @PhonkMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")

@@ -22,6 +22,14 @@
 
 package io.phonk.runner.apprunner.api.media;
 
+import android.content.Context;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.base.gui.CameraTexture;
@@ -41,7 +49,7 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void takePicture(String file, ReturnInterface callbackfn) {
+    public void takePicture(String file) {
 
     }
 
@@ -76,8 +84,22 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void turnOnFlash(boolean b) {
+    public void flash(boolean b) {
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public static void startFlash(Context c, boolean b) {
+        try {
+            CameraManager mCamManager = (CameraManager) c.getSystemService(Context.CAMERA_SERVICE);
+            String cameraId = null;
+            if (mCamManager != null) {
+                cameraId = mCamManager.getCameraIdList()[0];
+                mCamManager.setTorchMode(cameraId, b);
+            }
+        } catch (CameraAccessException e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     @Override

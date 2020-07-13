@@ -33,6 +33,7 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 
 @PhonkClass
 public abstract class PCustomSensorManager implements WhatIsRunningInterface {
@@ -59,7 +60,9 @@ public abstract class PCustomSensorManager implements WhatIsRunningInterface {
 
     @PhonkMethod(description = "Start the sensor", example = "")
     public void start() {
-        if (isEnabled) {
+        if (isEnabled) return;
+        if (!isAvailable()) {
+            mAppRunner.pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, this.getClass().getSimpleName().substring(1));
             return;
         }
         mAppRunner.whatIsRunning.add(this);
@@ -104,7 +107,7 @@ public abstract class PCustomSensorManager implements WhatIsRunningInterface {
         return sensor.getResolution();
     }
 
-    @PhonkMethod(description = "Check if the device has accelerometer", example = "")
+    @PhonkMethod(description = "Check if the device has the sensor", example = "")
     public boolean isAvailable() {
         return mSensormanager.getDefaultSensor(type) != null;
     }

@@ -27,6 +27,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -35,6 +37,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
 
 
@@ -62,7 +65,11 @@ public class PBluetoothLE extends ProtoBase {
     }
 
     public PBluetoothLE start() {
-        // mDevices = new ArrayList<BluetoothDevice>();
+        if (!getAppRunner().getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, "Bluetooth Low Energy");
+            return null;
+        }
+
         mBleAdapter = ((BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         mAppRunner.whatIsRunning.add(this);
         mHandler = new Handler(Looper.getMainLooper());

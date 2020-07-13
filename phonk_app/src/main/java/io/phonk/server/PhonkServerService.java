@@ -409,8 +409,6 @@ public class PhonkServerService extends Service {
     };
 
     private void sendUpdatedProjectListToWebIDE() {
-        MLog.d(TAG, "sending");
-        MLog.d(TAG, "sending 2");
         HashMap data = new HashMap();
         data.put("module", "project");
         HashMap info = new HashMap();

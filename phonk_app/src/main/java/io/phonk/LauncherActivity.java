@@ -28,6 +28,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import io.phonk.gui.AboutActivity;
+import io.phonk.gui.UpdateActivity;
+
 public class LauncherActivity extends Activity {
 
     Intent intent = null;
@@ -39,12 +42,12 @@ public class LauncherActivity extends Activity {
 
         // this Activity chooses between launching the welcome installer
         // or the app it self
-
         SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
         boolean firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
 
         // uncomment to reset (true) first launch
         // userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), true).commit();
+        // userDetails.edit().putInt("last_version_reinstalled", 126).commit();
 
         Intent i = getIntent();
         boolean wasCrash = i.getBooleanExtra("wasCrash", false);
@@ -52,8 +55,16 @@ public class LauncherActivity extends Activity {
             Toast.makeText(this, "The script crashed :(", Toast.LENGTH_LONG).show();
         }
 
+        /*
+         * Launch WelcomeActivity if first time
+         * Launch Update if there is a higher version code
+         * or Launch the MainApp
+         */
         if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
+        } else if (BuildConfig.VERSION_CODE > userDetails.getInt("last_version_reinstalled", 125)) {
+            // Toast.makeText(this, "this needs to update", Toast.LENGTH_LONG).show();
+            intent = new Intent(this, UpdateActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
             // intent.putExtras();

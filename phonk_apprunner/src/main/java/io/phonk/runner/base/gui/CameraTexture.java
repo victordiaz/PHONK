@@ -69,14 +69,11 @@ import io.phonk.runner.base.utils.TimeUtils;
 @SuppressLint("NewApi")
 public class CameraTexture extends AutoFitTextureView implements TextureView.SurfaceTextureListener {
 
-    public static final int MODE_CAMERA_FRONT = 0;
-    public static final int MODE_CAMERA_BACK = 1;
-    public static final int MODE_COLOR_BW = 2;
     public static final int MODE_COLOR_COLOR = 3;
     private static int mCameraRotation = 0;
 
-    int modeColor;
-    int modeCamera;
+    String modeColor;
+    String modeCamera;
     private int cameraId;
 
     protected String TAG = CameraTexture.class.getSimpleName();
@@ -84,7 +81,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     AppRunner mAppRunner;
 
     // camera
-    //TextureView mTextureView;
     protected Camera mCamera;
 
     // saving info
@@ -103,11 +99,10 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     public interface CameraListener {
         void onPicTaken();
-
         void onVideoRecorded();
     }
 
-    public CameraTexture(AppRunner appRunner, int camera, int colorMode) {
+    public CameraTexture(AppRunner appRunner, String camera, String colorMode) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
         this.modeColor = colorMode;
@@ -121,21 +116,16 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         stopCamera();
     }
 
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
     }
 
     @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-    }
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {}
 
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        //set shadow
-        //AndroidUtils.setViewGenericShadow(this, width, height);
-    }
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {}
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -146,14 +136,14 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        if (modeCamera == MODE_CAMERA_FRONT) {
+        if (modeCamera.equals("front")) {
             cameraId = getCameraId(CameraInfo.CAMERA_FACING_FRONT);
             MLog.d(TAG, "" + cameraId);
             if (cameraId == -1) {
                 MLog.d(TAG, "there is no camera");
             }
             mCamera = Camera.open(cameraId);
-        } else {
+        } else if (modeCamera.equals("back")){
             cameraId = 0;
             mCamera = Camera.open();
         }
@@ -175,7 +165,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         mCamera.startPreview();
         mOnReadyCallback.event();
     }
-
 
     public interface CallbackData {
         void event(byte[] data, Camera camera);
@@ -231,7 +220,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("exposure"));
     }
 
-
     public void startOnFrameProcessing() {
         if (frameProcessing == false) {
             frameProcessing = true;
@@ -239,8 +227,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
             int format = parameters.getPreviewFormat();
 
             mCamera.setPreviewCallback((data, camera) -> {
-                // MLog.d(TAG, "onNewFrame");
-
                 if (callbackData != null) {
                     callbackData.event(data, camera);
                 }
@@ -303,9 +289,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         }
     }
 
-    public void addFaceDetector() {
-    }
-
     protected void stopCamera() {
         if (mCamera != null) {
             mCamera.stopPreview();
@@ -360,17 +343,9 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
             MLog.d(TAG, "onPictureTaken - jpeg");
 
             camera.startPreview();
-            // latch.countDown();
-
         });
 
-        /*
-         * try { latch.await(); } catch (InterruptedException e1) { // TODO
-         * Auto-generated catch block e1.printStackTrace(); }
-         */
-
         return fileName;
-
     }
 
     private MediaRecorder recorder;
@@ -516,7 +491,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         return b;
     }
 
-    public void turnOnFlash(boolean b) {
+    public void flash(boolean b) {
         if (isFlashAvailable()) {
             if (b) mParameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
             else mParameters.setFlashMode(Parameters.FLASH_MODE_OFF);

@@ -58,8 +58,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST" />
-                <category android:name="android.intent.category.DEFAULT" >
-                </category>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -137,6 +136,11 @@
             android:label="About" >
         </activity>
         <activity
+            android:name="io.phonk.gui.UpdateActivity"
+            android:theme="@style/PhonkAppTheme"
+            android:label="PHONK Update" >
+        </activity>
+        <activity
             android:name="io.phonk.gui.InfoScriptActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="InfoScript" >
@@ -202,7 +206,7 @@
         -->
 
     </application>
+    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
 </manifest>

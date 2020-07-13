@@ -39,6 +39,7 @@
         android:layout_centerVertical="true"
         android:visibility="gone"
         />
+
     <TextView
         android:id="@+id/txtProjectIcon"
         android:layout_width="55dp"

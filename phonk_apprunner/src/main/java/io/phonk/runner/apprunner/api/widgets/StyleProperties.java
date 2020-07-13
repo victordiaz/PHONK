@@ -58,7 +58,7 @@ public class StyleProperties implements Scriptable, Map<String, Object> {
 
     @Override
     public void put(String name, Scriptable start, Object value) {
-        MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
+        // MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
         values.put(name, value);
 
         if (changeListener != null && eventOnChange) changeListener.event(name, value);

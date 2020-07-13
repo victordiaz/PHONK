@@ -62,8 +62,10 @@ import io.phonk.runner.apprunner.AppRunnerHelper;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.apprunner.api.PDevice;
 import io.phonk.runner.apprunner.api.PMedia;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.network.PBluetooth;
 import io.phonk.runner.apprunner.api.network.PNfc;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.events.Events;
 import io.phonk.runner.base.gui.DebugFragment;
@@ -303,7 +305,10 @@ public class AppRunnerActivity extends BaseActivity {
             PackageManager pm = getPackageManager();
             nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
 
-            if (!nfcSupported) return;
+            if (!nfcSupported) {
+                mAppRunnerFragment.getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, "NFC");
+                return;
+            }
 
             // when is in foreground
             MLog.d(TAG, "starting NFC");
@@ -333,52 +338,55 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Override
     public void onNewIntent(Intent intent) {
-        MLog.d(TAG, "New intent " + intent);
-
         if (intent.getAction() != null) {
             MLog.d(TAG, "Discovered tag with intent: " + intent);
 
+            // read the nfc tag info
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             String nfcID = StrUtils.bytetostring(tag.getId());
+
+            // get NDEF tag details
+            Ndef ndefTag = Ndef.get(tag);
+            if (ndefTag == null) return;
+
+            int size = ndefTag.getMaxSize(); // tag size
+            boolean writable = ndefTag.isWritable(); // is tag writable?
+            String type = ndefTag.getType(); // tag type
+
+            String nfcMessage = "";
+
+            // get NDEF message details
+            NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
+            if (ndefMesg != null) {
+                NdefRecord[] ndefRecords = ndefMesg.getRecords();
+                int len = ndefRecords.length;
+                String[] recTypes = new String[len]; // will contain the
+                // NDEF record types
+                String[] recPayloads = new String[len]; // will contain the
+                // NDEF record types
+                for (int i = 0; i < len; i++) {
+                    recTypes[i] = new String(ndefRecords[i].getType());
+                    recPayloads[i] = new String(ndefRecords[i].getPayload());
+                }
+                nfcMessage = recPayloads[0];
+            }
+            ReturnObject o = new ReturnObject();
+            o.put("id", nfcID);
+            o.put("data", nfcMessage);
+            o.put("isWrittable", writable);
+            o.put("size", size);
+            o.put("type", type);
 
             // if there is a message waiting to be written
             if (PNfc.nfcMsg != null) {
                 MLog.d(TAG, "->" + PNfc.nfcMsg);
                 PNfc.writeTag(this, tag, PNfc.nfcMsg);
-                if (onNFCWrittenListener != null) onNFCWrittenListener.onNewTag();
+                if (onNFCWrittenListener != null) onNFCWrittenListener.onDataWritten(o);
                 onNFCWrittenListener = null;
                 PNfc.nfcMsg = null;
 
-                // read the nfc tag info
             } else {
-                // get NDEF tag details
-                Ndef ndefTag = Ndef.get(tag);
-                if (ndefTag == null) {
-                    return;
-                }
-
-                int size = ndefTag.getMaxSize(); // tag size
-                boolean writable = ndefTag.isWritable(); // is tag writable?
-                String type = ndefTag.getType(); // tag type
-
-                String nfcMessage = "";
-
-                // get NDEF message details
-                NdefMessage ndefMesg = ndefTag.getCachedNdefMessage();
-                if (ndefMesg != null) {
-                    NdefRecord[] ndefRecords = ndefMesg.getRecords();
-                    int len = ndefRecords.length;
-                    String[] recTypes = new String[len]; // will contain the
-                    // NDEF record types
-                    String[] recPayloads = new String[len]; // will contain the
-                    // NDEF record types
-                    for (int i = 0; i < len; i++) {
-                        recTypes[i] = new String(ndefRecords[i].getType());
-                        recPayloads[i] = new String(ndefRecords[i].getPayload());
-                    }
-                    nfcMessage = recPayloads[0];
-                }
-                if (onNFCListener != null) onNFCListener.onNewTag(nfcID, nfcMessage);
+                if (onNFCListener != null) onNFCListener.onNewTag(o);
             }
         }
     }
@@ -576,7 +584,6 @@ public class AppRunnerActivity extends BaseActivity {
             if (mAppRunnerFragment.liveCoding != null) {
                 mAppRunnerFragment.liveCoding.write(code);
             }
-
         }
     };
 

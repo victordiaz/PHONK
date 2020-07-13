@@ -36,10 +36,10 @@ public class Network {
     public void checkVersion() {
         //check if new version is available
         if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) UserPreferences.getInstance().get("notify_new_version")) {
-            mAppRunner.pNetwork.httpGet("http://www.phonk.io/downloads/list_latest.php", data -> {
+            mAppRunner.pNetwork.httpGet("http://www.phonk.app/downloads/list_latest.php", data -> {
                 //console.log(event + " " + data);
                 String[] splitted = ((String) data.get("response")).split(":");
-                String remoteFile = "http://www.phonk.io/downloads/" + splitted[0];
+                String remoteFile = "http://www.phonk.app/downloads/" + splitted[0];
                 String versionName = splitted[1];
                 int versionCode = Integer.parseInt(splitted[2]);
 

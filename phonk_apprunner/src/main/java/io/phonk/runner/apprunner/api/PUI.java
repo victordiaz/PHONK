@@ -110,7 +110,7 @@ public class PUI extends PViewsArea {
     public PViewsArea newArea(Object x, Object y, Object w, Object h) {
         PViewsArea pViewsArea = new PViewsArea(mAppRunner);
         View v = pViewsArea.initMainLayout();
-        addViewAbsolute(v, x, y, w, h);
+        addView(v, x, y, w, h);
         return pViewsArea;
     }
 

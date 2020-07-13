@@ -32,9 +32,7 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
@@ -43,6 +41,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PNfc extends ProtoBase {
@@ -53,70 +52,53 @@ public class PNfc extends ProtoBase {
         super(appRunner);
     }
 
+    /**
+     * Starts NFC
+     */
+    @PhonkMethod
+    public PNfc start() {
+        getActivity().initializeNFC();
+        return this;
+    }
+
     @PhonkMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
     @PhonkMethodParam(params = {"function(id, data)"})
     public void onNewData(final ReturnInterface callback) {
-
-        getActivity().addNFCReadListener((id, data) -> {
-            ReturnObject o = new ReturnObject();
-            o.put("id", id);
-            o.put("data", data);
+        getActivity().addNFCReadListener(o -> {
             callback.event(o);
         });
 
-        getActivity().initializeNFC();
-    }
-
-    // --------- nfc ---------//
-    interface writeNFCCB {
-        void event(boolean b);
-    }
-
-    @PhonkMethod(description = "Write text into a NFC tag", example = "")
-    @PhonkMethodParam(params = {"function()"})
-    public void write(String data, final writeNFCCB fn) {
-        PNfc.nfcMsg = data;
-        getActivity().initializeNFC();
-
-        getActivity().addNFCWrittenListener(() -> fn.event(true));
-
-        // Construct the data to write to the tag
-        // Should be of the form [relay/group]-[rid/gid]-[cmd]
-        // String nfcMessage = data;
-
-        // When an NFC tag comes into range, call the main activity which
-        // handles writing the data to the tag
-        // NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(mContext);
-
-        // Intent nfcIntent = new Intent(mContext,
-        // AppRunnerActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        // nfcIntent.putExtra("nfcMessage", nfcMessage);
-        // PendingIntent pi = PendingIntent.getActivity(mContext, 0, nfcIntent,
-        // PendingIntent.FLAG_UPDATE_CURRENT);
-        // IntentFilter tagDetected = new
-        // IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-
-        // nfcAdapter.enableForegroundDispatch((Activity) mContext, pi, new
-        // IntentFilter[] {tagDetected}, null);
     }
 
     public interface onNFCWrittenListener {
-        void onNewTag();
+        void onDataWritten(ReturnObject o);
     }
 
     public interface onNFCListener {
-        void onNewTag(String id, String nfcMessage);
+        void onNewTag(ReturnObject o);
     }
-
 
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {"function(msg)"})
     public void onDataWritten(ReturnInterface callback) {
-        getActivity().initializeNFC();
-
-        callback.event(null);
+        getActivity().addNFCWrittenListener(new onNFCWrittenListener() {
+            @Override
+            public void onDataWritten(ReturnObject o) {
+                MLog.d(TAG, "data written");
+                callback.event(o);
+            }
+        });
     }
 
+    /**
+     * Write text to a tag
+     *
+     * @param textToWrite the text to write
+     */
+    public PNfc write(String textToWrite) {
+        nfcMsg = textToWrite;
+        return this;
+    }
 
     public static boolean writeTag(Context context, Tag tag, String data) {
         // Record to launch Play Store if app is not installed
@@ -180,30 +162,6 @@ public class PNfc extends ProtoBase {
         }
 
         return false;
-    }
-
-    /**
-     * Write text to a tag
-     *
-     * @param textToWrite the text to write
-     */
-    public void write(String textToWrite) {
-
-        Locale locale = Locale.US;
-        final byte[] langBytes = locale.getLanguage().getBytes(StandardCharsets.UTF_8);
-        final byte[] textBytes = textToWrite.getBytes(StandardCharsets.UTF_8);
-
-        final int utfBit = 0;
-        final char status = (char) (utfBit + langBytes.length);
-        final byte[] data = new byte[1 + langBytes.length + textBytes.length];
-
-        data[0] = (byte) status;
-        System.arraycopy(langBytes, 0, data, 1, langBytes.length);
-        System.arraycopy(textBytes, 0, data, 1 + langBytes.length, textBytes.length);
-
-        NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], data);
-        NdefRecord[] records = {record};
-        messageToWrite = new NdefMessage(records);
     }
 
     @Override

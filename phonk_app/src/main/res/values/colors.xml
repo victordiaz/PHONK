@@ -40,9 +40,7 @@
     <color name="transparent_normal">#22FFFFFF</color>
     <color name="light_grey">#ffeeeeee</color>
 
-    
     <drawable name="actionbar_highlight">#00777777</drawable>
-
 
     <!-- Common drawable color values -->
     <drawable name="drawable_transparent">#00000000</drawable>

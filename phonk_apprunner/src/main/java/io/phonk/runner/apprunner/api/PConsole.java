@@ -90,12 +90,14 @@ public class PConsole extends ProtoBase {
         switch (type) {
             case AppRunnerInterpreter.RESULT_ERROR:
                 base_log("log_error", outputs);
-
                 break;
+
             case AppRunnerInterpreter.RESULT_PERMISSION_ERROR:
                 base_log("log_permission_error", outputs);
-
                 break;
+
+            case AppRunnerInterpreter.RESULT_NOT_CAPABLE:
+                base_log("log_error", "This device does not support " + outputs);
         }
 
         return this;

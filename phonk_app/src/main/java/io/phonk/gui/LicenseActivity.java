@@ -40,12 +40,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.phonk.R;
+import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
 
 public class LicenseActivity extends BaseActivity {
 
     private static final java.lang.String TAG = LicenseActivity.class.getSimpleName();
-    private AssetManager mAssetManager;
     private String[] mLicenseFiles;
     private ArrayList<License> mLicenseFileContent = new ArrayList<>();
 
@@ -62,17 +62,15 @@ public class LicenseActivity extends BaseActivity {
 
         setupActivity();
 
-        mAssetManager = getAssets();
-
         final Handler handler = new Handler();
 
         Thread t = new Thread(() -> {
 
             // read mCurrentFileList
             try {
-                mLicenseFiles = mAssetManager.list("licenses");
+                mLicenseFiles = getAssets().list("licenses");
                 for (int i = 0; i < mLicenseFiles.length; i++) {
-                    mLicenseFileContent.add(new License(mLicenseFiles[i], readFile("licenses/" + mLicenseFiles[i])));
+                    mLicenseFileContent.add(new License(mLicenseFiles[i], PhonkAppHelper.readFile(this, "licenses/" + mLicenseFiles[i])));
                     // MLog.d(TAG, filecontent);
                 }
             } catch (IOException e) {
@@ -100,24 +98,6 @@ public class LicenseActivity extends BaseActivity {
         super.setupActivity();
 
         enableBackOnToolbar();
-    }
-
-    private String readFile(String path) throws IOException {
-        InputStream is = mAssetManager.open(path);
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        int i;
-        try {
-            i = is.read();
-            while (i != -1) {
-                byteArrayOutputStream.write(i);
-                i = is.read();
-            }
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return byteArrayOutputStream.toString();
     }
 
     class License {
