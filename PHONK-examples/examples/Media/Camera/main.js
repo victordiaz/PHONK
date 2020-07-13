@@ -20,6 +20,5 @@ ui.addButton('Take pic', 0.2, 0.8, 0.2, 0.1).onClick(function () {
 
 // toggle flash on and off
 ui.addToggle('Flash', 0.6, 0.8, 0.2, 0.1).onChange(function (e) {
-  camera.turnOnFlash(e.checked)
-  // or media.turnOnFlash(true)
+  camera.flash(e.checked)
 })
