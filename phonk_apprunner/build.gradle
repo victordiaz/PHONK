@@ -87,7 +87,7 @@ dependencies {
     api group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.4'
     api 'org.nanohttpd:nanohttpd:2.3.1'
     api group: 'com.jcraft', name: 'jsch', version: '0.1.54'
-    implementation 'com.github.weliem:blessed-android:1.18'
+    implementation 'com.github.weliem:blessed-android:1.20'
     api group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
     api group: 'commons-net', name: 'commons-net', version: '3.6'
     api group: 'org.apache.ftpserver', name: 'ftpserver-core', version: '1.1.1'
