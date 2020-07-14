@@ -17,7 +17,7 @@ Have a look in the [PHONK website](https://www.phonk.app) for more info
 - No need to install anything on your computer
 - PHONK uses JavaScript but it calls native Java functions, getting close to native speed
 - Simplified API. Create custom interfaces and access on-device sensors in a couple of lines of code
-- Pseudo Live Coding (select your code and Control (or Cmd) + Shift + X to live execute)
+- Pseudo Live Coding (select your code and Control (or Cmd) + Enter to live execute)
 - Bluetooth and Arduino in a few lines of code
 - MQTT, HTTP requests, WebSockets, OSC, MIDI
 - Access to Processing.org API
