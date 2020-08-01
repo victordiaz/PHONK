@@ -100,7 +100,7 @@ dependencies {
     api 'com.github.japgolly.android:svg-android:2.0.6' //'files('libs/androidsvg-1.2.1.jar')
 
     // osmdroid
-    api 'org.osmdroid:osmdroid-android:6.1.6'
+    api 'org.osmdroid:osmdroid-android:6.1.8'
     // api 'com.github.MKergall.osmbonuspack:OSMBonusPack:v5.7'
 
     // hardware stuff
