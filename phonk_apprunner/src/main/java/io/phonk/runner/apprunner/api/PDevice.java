@@ -340,7 +340,7 @@ public class PDevice extends ProtoBase {
 
                 ReturnObject ret = new ReturnObject();
                 ret.put("from", pNumber);
-                ret.put("message", "body");
+                ret.put("message", body);
 
                 callback.event(ret);
             }
@@ -732,8 +732,8 @@ public class PDevice extends ProtoBase {
         ret.put("maxMem", Runtime.getRuntime().maxMemory());
 
         PackageManager pm = getContext().getPackageManager();
-        ret.put("backCamera", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA));
-        ret.put("frontCamera", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT));
+        ret.put("cameraBack", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA));
+        ret.put("cameraFront", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT));
         ret.put("cameraFlash", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH));
         ret.put("bluetooth", pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH));
         ret.put("bluetoothLE", pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE));
