@@ -289,6 +289,7 @@ public class WelcomeActivity extends BaseActivity {
                 // Write a shared pref to never come back here
                 SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
                 userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), false).commit();
+                userDetails.edit().putInt("last_version_reinstalled", BuildConfig.VERSION_CODE).commit();
 
                 // first time id
                 UserPreferences.getInstance().set("user_id", StrUtils.generateUUID()).save();
