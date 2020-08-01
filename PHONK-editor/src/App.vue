@@ -148,7 +148,7 @@ export default {
   methods: {
     changeTitle (vm) {
       // console.log(vm)
-      document.title = 'Protocoder // ' + vm.title
+      document.title = 'PHONK // ' + vm.title
     },
     handleDragEnter: function () {
       this.dndState = 'enter'
@@ -724,7 +724,7 @@ button {
       .content {
         color: black;
         // overflow-y: hidden;
-        overflow: hidden;
+        overflow: auto;
         height: 100%;
 
 
