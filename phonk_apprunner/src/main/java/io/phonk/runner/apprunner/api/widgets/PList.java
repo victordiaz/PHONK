@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import org.mozilla.javascript.NativeArray;
 
+import java.util.Map;
+
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
@@ -45,10 +47,14 @@ public class PList extends FitRecyclerView {
     public Styler styler;
     private int nNumCols = 1;
 
-    public PList(AppRunner appRunner) {
+    public PList(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
+
         mAppRunner = appRunner;
         mContext = appRunner.getAppContext();
+
+        styler = new Styler(appRunner, this, props);
+        styler.fromTo(initProps, props);
     }
 
     public void init(NativeArray data, ReturnInterfaceWithReturn createCallback, ReturnInterfaceWithReturn bindingCallback) {

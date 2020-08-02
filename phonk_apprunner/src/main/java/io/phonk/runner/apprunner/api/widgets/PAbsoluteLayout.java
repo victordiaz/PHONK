@@ -122,76 +122,15 @@ public class PAbsoluteLayout extends FixedLayout {
         this.setBackgroundColor(Color.parseColor(c));
     }
 
-
-    private int sizeToPixels(Object val, int toValue) {
-        int returnVal = -1;
-
-        if (val instanceof String) {
-            // MLog.d(TAG, "oo is string");
-            String str = (String) val;
-            String[] splitted = str.split("(?<=\\d)(?=[a-zA-Z%])|(?<=[a-zA-Z%])(?=\\d)");
-
-            double value = Double.parseDouble(splitted[0]);
-            String type = splitted[1];
-
-            returnVal = transform(type, value, toValue);
-        } else if (val instanceof Double) {
-            // MLog.d(TAG, "oo is double " + val);
-
-            returnVal = transform("", (Double) val, toValue);
-        }
-
-        return returnVal;
-
-    }
-
-    private int transform(String type, Double value, int toValue) {
-        // MLog.d(TAG, "oo transform");
-
-        int retValue = -1;
-
-        switch (type) {
-            case "px":
-                retValue = value.intValue();
-                break;
-            case "dp":
-                // MLog.d(TAG, "retValue dp " + value + " " + retValue);
-                retValue = AndroidUtils.dpToPixels(mContext, value.intValue());
-                MLog.d(TAG, "retValue dp " + value + " " + retValue);
-                break;
-            case "":
-                retValue = (int) (value * toValue);
-                // MLog.d(TAG, "retValue ''" + value + " " + retValue);
-                break;
-            /*
-            case "%":
-                retValue = (int) (value / 100.0f * toValue);
-                break;
-            */
-            case "w":
-                retValue = (int) (value * mWidth);
-                break;
-            case "h":
-                retValue = (int) (value * mHeight);
-                break;
-            default:
-                break;
-        }
-
-        // MLog.d(TAG, "oo --> " + retValue);
-        return retValue;
-    }
-
-
     @PhonkMethod(description = "Adds a view", example = "")
     @PhonkMethodParam(params = {"view", "x", "y", "w", "h"})
     public void addView(View v, Object x, Object y, Object w, Object h) {
         // MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " " + h);
 
-        int mx = sizeToPixels(x, mWidth);
-        int my = sizeToPixels(y, mHeight);
-        int mw = sizeToPixels(w, mWidth);
-        int mh = sizeToPixels(h, mHeight);
+        int mx = mAppRunner.pUtil.sizeToPixels(x, mWidth);
+        int my = mAppRunner.pUtil.sizeToPixels(y, mHeight);
+        int mw = mAppRunner.pUtil.sizeToPixels(w, mWidth);
+        int mh = mAppRunner.pUtil.sizeToPixels(h, mHeight);
 
         if (mw < 0) mw = LayoutParams.WRAP_CONTENT;
         if (mh < 0) mh = LayoutParams.WRAP_CONTENT;

@@ -59,10 +59,11 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     private int mWidth;
     private int mHeight;
 
-    public PPlot(AppRunner appRunner) {
+    public PPlot(AppRunner appRunner, Map initProps) {
         super(appRunner);
 
         draw = mydraw;
+
         styler = new PlotStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("plotColor", props, (String) appRunner.pUi.theme.get("primary"));
@@ -70,6 +71,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         props.put("textColor", props, "#ffffff");
         // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
         props.put("background", props, (String) appRunner.pUi.theme.get("secondaryShade"));
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 

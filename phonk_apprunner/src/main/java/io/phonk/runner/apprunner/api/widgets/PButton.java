@@ -50,14 +50,18 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     private Typeface mFont;
 
-    public PButton(AppRunner appRunner) {
+    public PButton(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
         styler = new ButtonStyler(appRunner, this, props);
+        props.eventOnChange = false;
         props.put("textStyle", props, "bold");
         props.put("textAlign", props, "center");
         props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
+        props.put("text", props, "hola");
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
         styler.apply();
 
         setTypeface(mFont);
@@ -196,6 +200,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         @Override
         public void apply() {
             super.apply();
+
+            text(mProps.get("text").toString());
         }
     }
 }

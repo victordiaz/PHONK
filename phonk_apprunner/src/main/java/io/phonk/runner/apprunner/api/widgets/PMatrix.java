@@ -62,11 +62,12 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     private ReturnInterface callback;
     private float selectedColumn = -1;
 
-    public PMatrix(AppRunner appRunner) {
+    public PMatrix(AppRunner appRunner, Map initProps) {
         super(appRunner);
         MLog.d(TAG, "create matrix");
 
         draw = mydraw;
+
         styler = new MatrixStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("matrixCellColor", props, "#00FFFFFF");
@@ -76,6 +77,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         props.put("matrixCellBorderRadius", props, 0);
         props.put("background", props, "#00FFFFFF");
         props.put("backgroundPressed", props, "#00FFFFFF");
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 

@@ -58,6 +58,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.api.other.SignalUtils;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
@@ -245,6 +246,66 @@ public class PUtil extends ProtoBase {
     public SignalUtils signal(int n) {
         return new SignalUtils(getAppRunner(), n);
     }
+
+    public int sizeToPixels(Object val, int toValue) {
+        int returnVal = -1;
+
+        if (val instanceof String) {
+            // MLog.d(TAG, "oo is string");
+            String str = (String) val;
+            String[] splitted = str.split("(?<=\\d)(?=[a-zA-Z%])|(?<=[a-zA-Z%])(?=\\d)");
+
+            double value = Double.parseDouble(splitted[0]);
+            String type = splitted[1];
+
+            returnVal = transform(type, value, toValue);
+        } else if (val instanceof Double) {
+            // MLog.d(TAG, "oo is double " + val);
+
+            returnVal = transform("", (Double) val, toValue);
+        }
+
+        return returnVal;
+
+    }
+
+    private int transform(String type, Double value, int toValue) {
+        // MLog.d(TAG, "oo transform");
+
+        int retValue = -1;
+
+        switch (type) {
+            case "px":
+                retValue = value.intValue();
+                break;
+            case "dp":
+                // MLog.d(TAG, "retValue dp " + value + " " + retValue);
+                retValue = AndroidUtils.dpToPixels(getAppRunner().getAppContext(), value.intValue());
+                MLog.d(TAG, "retValue dp " + value + " " + retValue);
+                break;
+            case "":
+                retValue = (int) (value * toValue);
+                // MLog.d(TAG, "retValue ''" + value + " " + retValue);
+                break;
+            /*
+            case "%":
+                retValue = (int) (value / 100.0f * toValue);
+                break;
+            */
+            case "w":
+                retValue = (int) (value * getAppRunner().pUi.screenWidth);
+                break;
+            case "h":
+                retValue = (int) (value * getAppRunner().pUi.screenHeight);
+                break;
+            default:
+                break;
+        }
+
+        // MLog.d(TAG, "oo --> " + retValue);
+        return retValue;
+    }
+
 
     @Override
     public void __stop() {

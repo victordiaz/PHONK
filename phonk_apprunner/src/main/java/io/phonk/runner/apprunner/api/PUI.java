@@ -155,12 +155,10 @@ public class PUI extends PViewsArea {
         String colorBackground = (String) theme.get("background");
         String colorTransparent = "#00FFFFFF";
 
-        /*
-        style.put("x", style, 0f);
-        style.put("y", style, 0f);
-        style.put("width", style, 0f);
-        style.put("height", style, 0f);
-         */
+        rootStyle.put("x", rootStyle, 0f);
+        rootStyle.put("y", rootStyle, 0f);
+        rootStyle.put("w", rootStyle, 0f);
+        rootStyle.put("h", rootStyle, 0f);
 
         rootStyle.put("enabled", rootStyle, true);
         rootStyle.put("opacity", rootStyle, 1.0f);
@@ -184,10 +182,12 @@ public class PUI extends PViewsArea {
         rootStyle.put("textAlign", rootStyle, "center");
         rootStyle.put("textTransform", rootStyle, "none");
         rootStyle.put("padding", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+        /*
         rootStyle.put("paddingLeft", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
         rootStyle.put("paddingTop", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
         rootStyle.put("paddingRight", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
         rootStyle.put("paddingBottom", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+         */
         rootStyle.put("background", rootStyle, colorSecondaryShade);
 
         // style.put("animInBefore", style, "this.x(0).y(100)");

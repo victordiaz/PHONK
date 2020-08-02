@@ -51,7 +51,7 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
     public InputStyler styler;
     private Typeface mFont;
 
-    public PInput(AppRunner appRunner) {
+    public PInput(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
         mAppRunner = appRunner;
@@ -65,10 +65,13 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
         props.put("backgroundPressed", props, appRunner.pUi.theme.get("secondaryShade"));
         props.put("borderColor", props, appRunner.pUi.theme.get("secondary"));
         props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
-        props.put("padding", props, appRunner.pUtil.dpToPixels(25));
+        props.put("padding", props, appRunner.pUtil.dpToPixels(0));
+        props.put("paddingLeft", props, appRunner.pUtil.dpToPixels(10));
+        props.put("paddingRight", props, appRunner.pUtil.dpToPixels(10));
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("hintColor", props, appRunner.pUi.theme.get("secondaryShade"));
         props.put("hint", props, "");
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 

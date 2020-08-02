@@ -68,10 +68,11 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private String formatString = "#.##";
     private int numDecimals = 1;
 
-    public PSlider(AppRunner appRunner) {
+    public PSlider(AppRunner appRunner, Map initProps) {
         super(appRunner);
 
         draw = mydraw;
+        
         styler = new SliderStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("slider", props, (String) appRunner.pUi.theme.get("primary"));
@@ -79,6 +80,7 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         props.put("sliderHeight", props, 20);
         props.put("sliderBorderSize", props, 0);
         props.put("sliderBorderColor", props, "#00FFFFFF");
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 

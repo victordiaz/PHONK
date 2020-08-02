@@ -44,7 +44,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     private ToggleStyler styler;
     private Typeface mFont;
 
-    public PToggle(AppRunner appRunner) {
+    public PToggle(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
         styler = new ToggleStyler(appRunner, this, props);
@@ -56,6 +56,10 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         props.put("borderColor", props, appRunner.pUi.theme.get("secondary"));
         props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
         props.put("checked", props, false);
+        props.put("text", props, "Toggle");
+        props.put("textOn", props, "ON");
+        props.put("textOff", props, "OFF");
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -150,6 +154,10 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     }
 
     class ToggleStyler extends Styler {
+        private String textOn;
+        private String textOff;
+        private String text;
+
         ToggleStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
         }
@@ -159,6 +167,13 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
             super.apply();
 
             checked((boolean) mProps.get("checked"));
+            textOn = mProps.get("textOn").toString();
+            textOff = mProps.get("textOff").toString();
+            text = mProps.get("text").toString();
+
+            setText(text);
+            setTextOn(textOn);
+            setTextOff(textOff);
         }
     }
 }

@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
@@ -42,11 +43,12 @@ public class PLinearLayout extends LinearLayout {
     public Styler styler;
     private HashMap<String, View> mViews = new HashMap<>();
 
-    public PLinearLayout(AppRunner appRunner) {
+    public PLinearLayout(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
         styler = new Styler(appRunner, this, props);
+        styler.fromTo(initProps, props);
         styler.apply();
 
         mLp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);

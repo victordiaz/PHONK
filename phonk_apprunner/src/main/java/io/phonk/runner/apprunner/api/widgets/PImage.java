@@ -47,7 +47,7 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     public StylePropertiesProxy props = new StylePropertiesProxy();
     protected ImageStyler styler;
 
-    public PImage(AppRunner appRunner) {
+    public PImage(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
 
@@ -55,6 +55,7 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         props.eventOnChange = false;
         props.put("background", props, "#00FFFFFF");
         props.put("srcMode", props, "fit");
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
     }

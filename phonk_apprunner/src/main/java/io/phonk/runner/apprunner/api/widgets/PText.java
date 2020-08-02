@@ -46,7 +46,7 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
     public TextStyler styler;
     private Typeface currentFont;
 
-    public PText(AppRunner appRunner) {
+    public PText(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
         styler = new TextStyler(appRunner, this, props);
@@ -55,6 +55,7 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         // textStyle.put("textSize", textStyle, 12);
         props.put("textAlign", props, "left");
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
     }

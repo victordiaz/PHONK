@@ -51,10 +51,11 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     private float rangeYFrom = 0;
     private float rangeYTo = 1.0f;
 
-    public PTouchPad(AppRunner appRunner) {
+    public PTouchPad(AppRunner appRunner, Map initProps) {
         super(appRunner);
 
         draw = mydraw;
+
         styler = new TouchPadStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("padSize", props, appRunner.pUtil.dpToPixels(50));
@@ -62,6 +63,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         props.put("padColor", props, appRunner.pUi.theme.get("primary"));
         props.put("padBorderColor", props, appRunner.pUi.theme.get("primary"));
         props.put("padBorderSize", props, appRunner.pUtil.dpToPixels(2));
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 

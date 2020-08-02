@@ -90,7 +90,9 @@ public class Styler {
     String srcPressed;
     */
 
-    private boolean mViewIsSet;
+    private int mWidth;
+    private int mHeight;
+    private boolean mViewIsSet = false;
 
     Styler(AppRunner appRunner, View view, StylePropertiesProxy props) {
         mAppRunner = appRunner;
@@ -123,10 +125,10 @@ public class Styler {
                 case "y":
                     setY(value);
                     break;
-                case "width":
+                case "w":
                     setWidth(value);
                     break;
-                case "height":
+                case "h":
                     setHeight(value);
                     break;
             }
@@ -139,20 +141,24 @@ public class Styler {
         fromTo(style, mProps);
     }
 
-    private void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {
+    public static void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {
+        if (styleFrom == null) return;
+
         for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
             styleTo.put(entry.getKey(), styleTo, entry.getValue());
-            MLog.d("qq", entry.getKey());
         }
     }
 
     public void apply() {
-        /*
-        x = toFloat(props.get("x"));
-        y = toFloat(props.get("y"));
-        width = toFloat(props.get("width"));
-        height = toFloat(props.get("height"));
-         */
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+
+        if (mViewIsSet) {
+            setX(mProps.get("x"));
+            setY(mProps.get("y"));
+            setWidth(mProps.get("w"));
+            setHeight(mProps.get("h"));
+        }
+        mViewIsSet = true;
 
         enabled = (boolean) mProps.get("enabled");
         visibility = mProps.get("visibility").toString();
@@ -175,19 +181,16 @@ public class Styler {
         textAlign = mProps.get("textAlign").toString();
         padding = toFloat(mProps.get("padding"));
 
+        // individual paddings have preference over general
         float paddingLeft = padding;
         float paddingTop = padding;
         float paddingRight = padding;
         float paddingBottom = padding;
 
-        try {
-            paddingLeft = toFloat(mProps.get("paddingLeft"));
-            paddingTop = toFloat(mProps.get("paddingTop"));
-            paddingRight = toFloat(mProps.get("paddingRight"));
-            paddingBottom = toFloat(mProps.get("paddingBottom"));
-        } catch (Exception e) {
-
-        }
+        try { paddingLeft = toFloat(mProps.get("paddingLeft")); } catch (Exception e) { }
+        try { paddingTop = toFloat(mProps.get("paddingTop")); } catch (Exception e) { }
+        try { paddingRight = toFloat(mProps.get("paddingRight")); } catch (Exception e) { }
+        try { paddingBottom = toFloat(mProps.get("paddingBottom")); } catch (Exception e) { }
 
         /*
         src = props.get("src").toString();
@@ -302,38 +305,45 @@ public class Styler {
         mProps.eventOnChange = false;
         mProps.put("x", mProps, x);
         mProps.put("y", mProps, y);
-        mProps.put("width", mProps, width);
-        mProps.put("height", mProps, height);
+        mProps.put("w", mProps, width);
+        mProps.put("h", mProps, height);
         mProps.eventOnChange = true;
-        mViewIsSet = true;
+    }
+
+    void getScreenSize() {
+        mWidth = mAppRunner.pUi.screenWidth;
+        mHeight = mAppRunner.pUi.screenHeight;
     }
 
     public void setX(Object value) {
-        mView.setX(toFloat(value));
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
+        mView.setX(val);
     }
 
     public void setY(Object value) {
-        mView.setY(toFloat(value));
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
+        MLog.d(TAG, "val: " + val);
+        mView.setY(val);
     }
 
     private void setWidth(Object value) {
-        ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
 
-        if (mViewIsSet) {
-            int w = ((Number) value).intValue();
-            lp.width = w;
-            mView.setLayoutParams(lp);
-        }
+        ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        lp.width = val;
+        mView.setLayoutParams(lp);
     }
 
     private void setHeight(Object value) {
-        ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
 
-        if (mViewIsSet) {
-            int h = ((Number) value).intValue();
-            lp.height = h;
-            mView.setLayoutParams(lp);
-        }
+        ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        lp.height = val;
+        mView.setLayoutParams(lp);
     }
 
 }

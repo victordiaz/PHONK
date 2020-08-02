@@ -66,10 +66,11 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     private String formatString = "#.##";
     private int numDecimals = 1;
 
-    public PKnob(AppRunner appRunner) {
+    public PKnob(AppRunner appRunner, Map initProps) {
         super(appRunner);
 
         draw = mydraw;
+
         styler = new KnobStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
@@ -81,6 +82,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
         props.put("textFont", props, "monospace");
         props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
+        styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
         df = new DecimalFormat(formatString);
