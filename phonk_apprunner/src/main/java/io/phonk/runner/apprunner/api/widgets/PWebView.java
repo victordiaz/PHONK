@@ -37,7 +37,7 @@ import io.phonk.runner.apprunner.AppRunner;
 public class PWebView extends WebView implements PViewMethodsInterface {
     private final AppRunner mAppRunner;
 
-    public StyleProperties props = new StyleProperties();
+    public StylePropertiesProxy props = new StylePropertiesProxy();
     private Styler styler;
 
     public PWebView(AppRunner appRunner) {

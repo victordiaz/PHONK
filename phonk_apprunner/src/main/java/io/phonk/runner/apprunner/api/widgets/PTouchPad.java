@@ -22,6 +22,9 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import android.graphics.Color;
+import android.view.View;
+
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -37,8 +40,8 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PTouchPad.class.getSimpleName();
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public TouchPadStyler styler;
     private PhonkNativeArray touches;
     private ReturnInterface onTouchCallback;
     private int mWidth;
@@ -52,7 +55,14 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         super(appRunner);
 
         draw = mydraw;
-        styler = new Styler(appRunner, this, props);
+        styler = new TouchPadStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("padSize", props, appRunner.pUtil.dpToPixels(50));
+        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("padColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("padBorderColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("padBorderSize", props, appRunner.pUtil.dpToPixels(2));
+        props.eventOnChange = true;
         styler.apply();
 
         appRunner.pUi.onTouches(this, r -> {
@@ -183,6 +193,28 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+
+    class TouchPadStyler extends Styler {
+        float padSize;
+        int padColor;
+        int padBorderColor;
+        float padBorderSize;
+
+        TouchPadStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            padSize = toFloat(mProps.get("padSize"));
+            padColor = Color.parseColor(mProps.get("padColor").toString());
+            padBorderColor = Color.parseColor(mProps.get("padBorderColor").toString());
+            padBorderSize = toFloat(mProps.get("padBorderSize"));
+        }
     }
 
 }

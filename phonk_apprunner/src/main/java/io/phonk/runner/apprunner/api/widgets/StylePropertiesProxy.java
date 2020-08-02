@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import org.mozilla.javascript.FunctionObject;
 import org.mozilla.javascript.Scriptable;
 
 import java.util.Collection;
@@ -33,14 +32,14 @@ import java.util.Set;
 import io.phonk.runner.base.utils.GSONUtil;
 import io.phonk.runner.base.utils.MLog;
 
-public class StyleProperties implements Scriptable, Map<String, Object> {
+public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
-    private static final java.lang.String TAG = StyleProperties.class.getSimpleName();
+    private static final java.lang.String TAG = StylePropertiesProxy.class.getSimpleName();
     private HashMap<String, Object> values = new HashMap<>();
     private OnChangeListener changeListener;
     public boolean eventOnChange = true;
 
-    public StyleProperties() {
+    public StylePropertiesProxy() {
 
     }
 

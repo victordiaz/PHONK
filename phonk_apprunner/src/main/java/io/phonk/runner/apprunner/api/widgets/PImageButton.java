@@ -42,6 +42,9 @@ public class PImageButton extends PImage {
 
     public PImageButton(AppRunner appRunner) {
         super(appRunner);
+
+        // imageButtonStyle.put("srcMode", imageButtonStyle, "resize");
+        // rootStyle.put("srcTintPressed", imageButtonStyle, colorSecondary);
     }
 
     // Set on click behavior

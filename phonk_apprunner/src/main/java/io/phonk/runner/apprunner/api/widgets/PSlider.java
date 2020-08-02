@@ -22,7 +22,9 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import android.graphics.Color;
 import android.view.MotionEvent;
+import android.view.View;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -42,8 +44,8 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PSlider extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PSlider.class.getSimpleName();
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public SliderStyler styler;
 
     private ArrayList touches;
     private float x;
@@ -70,7 +72,14 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         super(appRunner);
 
         draw = mydraw;
-        styler = new Styler(appRunner, this, props);
+        styler = new SliderStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("slider", props, (String) appRunner.pUi.theme.get("primary"));
+        props.put("sliderPressed", props, (String) appRunner.pUi.theme.get("primary"));
+        props.put("sliderHeight", props, 20);
+        props.put("sliderBorderSize", props, 0);
+        props.put("sliderBorderColor", props, "#00FFFFFF");
+        props.eventOnChange = true;
         styler.apply();
 
         DecimalFormatSymbols symbol = new DecimalFormatSymbols(Locale.FRANCE);
@@ -197,6 +206,30 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+
+    class SliderStyler extends Styler {
+        int slider;
+        int sliderPressed;
+        float sliderHeight;
+        float sliderBorderSize;
+        int sliderBorderColor;
+
+        SliderStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            slider = Color.parseColor(mProps.get("slider").toString());
+            sliderPressed = Color.parseColor(mProps.get("sliderPressed").toString());
+            sliderHeight = toFloat(mProps.get("sliderHeight"));
+            sliderBorderSize = toFloat(mProps.get("sliderBorderSize"));
+            sliderBorderColor = Color.parseColor(mProps.get("sliderBorderColor").toString());
+        }
     }
 
 }

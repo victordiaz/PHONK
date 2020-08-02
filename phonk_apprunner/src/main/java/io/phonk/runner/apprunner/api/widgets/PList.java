@@ -41,7 +41,7 @@ public class PList extends FitRecyclerView {
     private GridLayoutManager mGridLayoutManager;
     private PViewItemAdapter mViewAdapter;
 
-    public StyleProperties props = new StyleProperties();
+    public StylePropertiesProxy props = new StylePropertiesProxy();
     public Styler styler;
     private int nNumCols = 1;
 

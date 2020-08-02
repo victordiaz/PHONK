@@ -68,62 +68,6 @@ public class PUtil extends ProtoBase {
         super(appRunner);
     }
 
-    // --------- getRequest ---------//
-    interface getRequestCB {
-        void event(int eventType, String responseString);
-    }
-
-    public void setAnObject(NativeObject obj) {
-        for (Map.Entry<Object, Object> entry : obj.entrySet()) {
-            String key = (String) entry.getKey();
-            Object o = entry.getValue();
-
-            MLog.d(TAG, "setAnObject -> " + key + " " + o);
-        }
-
-        MLog.d(TAG, "q --> " + obj.get("q"));
-    }
-
-    public ReturnObject getAnObject() {
-        // HashMap map = new HashMap();
-
-        ReturnObject ret = new ReturnObject();
-        ret.put("qq", 1);
-        ret.put("qq 2", 2);
-
-        /*
-        NativeObject ret = (NativeObject) getAppRunner().interp.newNativeObject();
-        ret.defineProperty("q", 2, NativeObject.READONLY);
-
-        ReturnObject ret1 = new ReturnObject();
-        ret1.put();
-
-        */
-
-        return ret;
-    }
-
-    /*
-     * 1. get arraylist to native array
-     * 2. set native array to arraylist
-     */
-    public NativeArray getAnArray() {
-        ArrayList array = new ArrayList();
-        array.add("1");
-        array.add("2");
-
-        // NativeArray ret = (NativeArray) getAppRunner().interp.newNativeArrayFrom(array.toArray());
-
-        // return ret;
-        return null;
-    }
-
-    public void setAnArray(NativeArray array) {
-        for (int i = 0; i < array.size(); i++) {
-            MLog.d(TAG, "setArrayList -> " + array.get(i));
-        }
-    }
-
     public String getCharFromUnicode(int unicode) {
         return new String(Character.toChars(unicode));
     }
@@ -258,7 +202,6 @@ public class PUtil extends ProtoBase {
         return Color.parseColor(c);
     }
 
-
     @PhonkMethod(description = "Detect faces in a bitmap", example = "")
     @PhonkMethodParam(params = {"Bitmap", "numFaces"})
     public int detectFaces(Bitmap bmp, int num_faces) {
@@ -269,9 +212,9 @@ public class PUtil extends ProtoBase {
         return face_count;
     }
 
-    public String bitmapToBase64String(Bitmap bmp) {
+    public String bitmapToBase64String(Bitmap bmp, int quality) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        bmp.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);

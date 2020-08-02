@@ -23,8 +23,10 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
@@ -42,14 +44,18 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
 
     protected final AppRunner mAppRunner;
 
-    public StyleProperties props = new StyleProperties();
-    protected Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    protected ImageStyler styler;
 
     public PImage(AppRunner appRunner) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
 
-        styler = new Styler(appRunner, this, props);
+        styler = new ImageStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("background", props, "#00FFFFFF");
+        props.put("srcMode", props, "fit");
+        props.eventOnChange = true;
         styler.apply();
     }
 
@@ -87,9 +93,6 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     }
 
     public PImage mode(String mode) {
-        if (mode == null) mode = (String) this.props.get("srcMode");
-        else this.props.put("srcMode", this.props, mode);
-
         switch (mode) {
             case "tiled":
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
@@ -116,8 +119,6 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
                 this.setScaleType(ScaleType.FIT_XY);
                 break;
         }
-
-
         return this;
     }
 
@@ -134,5 +135,21 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     @Override
     public Map getProps() {
         return props;
+    }
+
+    class ImageStyler extends Styler {
+        private String srcMode;
+
+        ImageStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            srcMode = mProps.get("srcMode").toString();
+            mode(srcMode);
+        }
     }
 }

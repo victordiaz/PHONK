@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,8 +43,8 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PKnob extends PCustomView implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PKnob.class.getSimpleName();
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public KnobStyler styler;
 
     private Typeface textStyle = Typeface.DEFAULT;
     private Typeface textFont;
@@ -69,7 +70,18 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         super(appRunner);
 
         draw = mydraw;
-        styler = new Styler(appRunner, this, props);
+        styler = new KnobStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
+        props.put("knobProgressWidth", props, appRunner.pUtil.dpToPixels(2));
+        props.put("knobProgressSeparation", props, appRunner.pUtil.dpToPixels(15));
+        props.put("knobBorderColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("knobProgressColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("background", props, "#00FFFFFF");
+        props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("textFont", props, "monospace");
+        props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
+        props.eventOnChange = true;
         styler.apply();
         df = new DecimalFormat(formatString);
     }
@@ -229,7 +241,6 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         return props;
     }
 
-
     @Override
     public View textFont(Typeface font) {
         this.textFont = font;
@@ -259,12 +270,34 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     @Override
     public View textStyle(int textStyle) {
-        // this.textStyle = textStyle;
         return this;
     }
 
     @Override
     public View textAlign(int alignment) {
         return this;
+    }
+
+    class KnobStyler extends Styler {
+        public float knobProgressSeparation;
+        public float knobBorderWidth;
+        public float knobProgressWidth;
+        public int knobBorderColor;
+        public int knobProgressColor;
+
+        KnobStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            knobProgressSeparation = toFloat(mProps.get("knobProgressSeparation"));
+            knobBorderWidth = toFloat(mProps.get("knobBorderWidth"));
+            knobProgressWidth = toFloat(mProps.get("knobProgressWidth"));
+            knobBorderColor = Color.parseColor(mProps.get("knobBorderColor").toString());
+            knobProgressColor = Color.parseColor(mProps.get("knobProgressColor").toString());
+        }
     }
 }

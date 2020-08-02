@@ -173,7 +173,6 @@ public class PMqtt extends ProtoBase {
         return this;
     }
 
-
     /**
      * Callback that returns data from a subscribed topic
      * @param callback
@@ -196,6 +195,7 @@ public class PMqtt extends ProtoBase {
     public PMqtt publish(final String topic, final String data, int qos, boolean retain) {
         MqttMessage message = new MqttMessage(data.getBytes());
         message.setQos(qos);
+        // message.setRetained(retain);
         try {
             client.publish(topic, message);
         } catch (MqttException e) {

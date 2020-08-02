@@ -42,16 +42,24 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     private static final String TAG = PButton.class.getSimpleName();
     private final AppRunner mAppRunner;
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    // this is a props proxy for the user
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+
+    // the props are transformed / accessed using the styler object
+    public ButtonStyler styler;
+
     private Typeface mFont;
 
     public PButton(AppRunner appRunner) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
-        styler = new Styler(appRunner, this, props);
+        styler = new ButtonStyler(appRunner, this, props);
+        props.put("textStyle", props, "bold");
+        props.put("textAlign", props, "center");
+        props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
         styler.apply();
+
         setTypeface(mFont);
     }
 
@@ -76,7 +84,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
-
     @PhonkMethod(description = "Changes the font type to the button", example = "")
     @PhonkMethodParam(params = {"Typeface"})
     public PButton textFont(Typeface f) {
@@ -95,10 +102,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     @Override
     public View textAlign(int alignment) {
-        MLog.d("qq", "button align " + alignment);
-
         this.setGravity(alignment);
-
         return this;
     }
 
@@ -107,7 +111,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         this.textSize(size);
         return this;
     }
-
 
     @Override
     @PhonkMethod(description = "Changes the font text color", example = "")
@@ -132,7 +135,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
-
     @PhonkMethod(description = "Sets html text", example = "")
     @PhonkMethodParam(params = {"htmlText"})
     public PButton html(String htmlText) {
@@ -140,7 +142,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
         return this;
     }
-
 
     @PhonkMethod(description = "Changes the button size", example = "")
     @PhonkMethodParam(params = {"w", "h"})
@@ -185,5 +186,16 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     public PAnimation anim() {
         return new PAnimation(this);
+    }
+
+    class ButtonStyler extends Styler {
+        ButtonStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+        }
     }
 }

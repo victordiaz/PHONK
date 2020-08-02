@@ -24,6 +24,7 @@ package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Color;
 import android.view.MotionEvent;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,8 +39,8 @@ import io.phonk.runner.base.utils.MLog;
 public class PMatrix extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PMatrix.class.getSimpleName();
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public MatrixStyler styler;
 
     private ArrayList touches;
     private float x;
@@ -66,7 +67,16 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         MLog.d(TAG, "create matrix");
 
         draw = mydraw;
-        styler = new Styler(appRunner, this, props);
+        styler = new MatrixStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("matrixCellColor", props, "#00FFFFFF");
+        props.put("matrixCellSelectedColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("matrixCellBorderSize", props, appRunner.pUtil.dpToPixels(1));
+        props.put("matrixCellBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("matrixCellBorderRadius", props, 0);
+        props.put("background", props, "#00FFFFFF");
+        props.put("backgroundPressed", props, "#00FFFFFF");
+        props.eventOnChange = true;
         styler.apply();
 
         colorUnselected = styler.matrixCellColor;
@@ -288,4 +298,27 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         return props;
     }
 
+
+    class MatrixStyler extends Styler {
+        int matrixCellColor;
+        int matrixCellSelectedColor;
+        float matrixCellBorderSize;
+        int matrixCellBorderColor;
+        float matrixCellBorderRadius;
+
+        MatrixStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            matrixCellColor = Color.parseColor(mProps.get("matrixCellColor").toString());
+            matrixCellSelectedColor = Color.parseColor(mProps.get("matrixCellSelectedColor").toString());
+            matrixCellBorderSize = toFloat(mProps.get("matrixCellBorderSize"));
+            matrixCellBorderColor = Color.parseColor(mProps.get("matrixCellBorderColor").toString());
+            matrixCellBorderRadius = toFloat(mProps.get("matrixCellBorderRadius"));
+        }
+    }
 }

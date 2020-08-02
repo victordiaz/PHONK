@@ -186,7 +186,7 @@ public class PAbsoluteLayout extends FixedLayout {
     @PhonkMethod(description = "Adds a view", example = "")
     @PhonkMethodParam(params = {"view", "x", "y", "w", "h"})
     public void addView(View v, Object x, Object y, Object w, Object h) {
-        MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " " + h);
+        // MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " " + h);
 
         int mx = sizeToPixels(x, mWidth);
         int my = sizeToPixels(y, mHeight);
@@ -196,9 +196,8 @@ public class PAbsoluteLayout extends FixedLayout {
         if (mw < 0) mw = LayoutParams.WRAP_CONTENT;
         if (mh < 0) mh = LayoutParams.WRAP_CONTENT;
 
-        MLog.d(TAG, "adding a view (denormalized) -> " + v + " in " + mx + " " + my + " " + mw + " " + mh);
+        // MLog.d(TAG, "adding a view (denormalized) -> " + v + " in " + mx + " " + my + " " + mw + " " + mh);
         addView(v, new LayoutParams(mw, mh, mx, my));
-
     }
 
     public void mode(String type) {

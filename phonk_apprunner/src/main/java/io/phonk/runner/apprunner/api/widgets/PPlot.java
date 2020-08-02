@@ -25,6 +25,7 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -42,8 +43,8 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     private final Runnable r;
     private final int mStrokeWeight;
 
-    StyleProperties props = new StyleProperties();
-    private Styler styler;
+    StylePropertiesProxy props = new StylePropertiesProxy();
+    private PlotStyler styler;
 
     private ArrayList<PlotPoint> arrayData = new ArrayList<>();
     public ArrayList<PlotPoint> arrayViz = new ArrayList<>();
@@ -62,7 +63,14 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         super(appRunner);
 
         draw = mydraw;
-        styler = new Styler(appRunner, this, props);
+        styler = new PlotStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("plotColor", props, (String) appRunner.pUi.theme.get("primary"));
+        props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
+        props.put("textColor", props, "#ffffff");
+        // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
+        props.put("background", props, (String) appRunner.pUi.theme.get("secondaryShade"));
+        props.eventOnChange = true;
         styler.apply();
 
         mAppRunner.whatIsRunning.add(this);
@@ -276,6 +284,26 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         public PlotPoint(float x, float y) {
             this.x = x;
             this.y = y;
+        }
+    }
+
+
+    class PlotStyler extends Styler {
+        int plotBackground = Color.parseColor("#22000000");
+        int plotColor = Color.parseColor("#222222");
+        int plotBorderColor = Color.parseColor("#222222");
+        float plotWidth = 2;
+
+        PlotStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            plotColor = Color.parseColor(mProps.get("plotColor").toString());
+            plotWidth = toFloat(mProps.get("plotWidth"));
         }
     }
 }

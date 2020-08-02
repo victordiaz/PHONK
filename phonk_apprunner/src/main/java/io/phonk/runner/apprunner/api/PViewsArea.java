@@ -34,13 +34,13 @@ import android.widget.RelativeLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.api.media.PCamera;
 import io.phonk.runner.apprunner.api.other.PProcessing;
 import io.phonk.runner.apprunner.api.widgets.PAbsoluteLayout;
 import io.phonk.runner.apprunner.api.widgets.PButton;
@@ -65,9 +65,11 @@ import io.phonk.runner.apprunner.api.widgets.PTextList;
 import io.phonk.runner.apprunner.api.widgets.PToggle;
 import io.phonk.runner.apprunner.api.widgets.PToolbar;
 import io.phonk.runner.apprunner.api.widgets.PTouchPad;
+import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
-import io.phonk.runner.apprunner.api.widgets.StyleProperties;
+import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PViewsArea extends ProtoBase {
@@ -78,7 +80,7 @@ public class PViewsArea extends ProtoBase {
     private ArrayList<View> viewArray = new ArrayList<>();
 
     // UI
-    private StyleProperties mTheme;
+    private StylePropertiesProxy mTheme;
     private boolean isScrollEnabled = false;
     protected PAbsoluteLayout uiAbsoluteLayout;
     private RelativeLayout uiHolderLayout;
@@ -165,6 +167,26 @@ public class PViewsArea extends ProtoBase {
         uiAbsoluteLayout.addView(v, x, y, w, h);
 
         return v;
+    }
+
+    public View addBtnView(Map props) {
+        PViewMethodsInterface btn = (PViewMethodsInterface) newView("button");
+        btn.setProps(props);
+
+        float x1 = ((Number) btn.getProps().get("x")).floatValue();
+
+        /*
+        float y = ((Number) btn.getProps().get("y")).floatValue();
+        float w = ((Number) btn.getProps().get("w")).floatValue();
+        float h = ((Number) btn.getProps().get("h")).floatValue();
+        */
+
+        float x2 = (float) btn.getProps().get("x");
+        MLog.d(TAG, "x1x2" + x1 + " " + x2);
+
+        // this.addView((View) btn, x, y, w, h);
+
+        return (View) btn;
     }
 
     /**

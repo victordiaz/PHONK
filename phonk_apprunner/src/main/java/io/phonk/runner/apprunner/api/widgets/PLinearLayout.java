@@ -38,7 +38,7 @@ public class PLinearLayout extends LinearLayout {
     private final AppRunner mAppRunner;
     private final LayoutParams mLp;
 
-    public StyleProperties props = new StyleProperties();
+    public StylePropertiesProxy props = new StylePropertiesProxy();
     public Styler styler;
     private HashMap<String, View> mViews = new HashMap<>();
 

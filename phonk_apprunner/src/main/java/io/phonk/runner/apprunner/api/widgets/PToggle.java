@@ -40,17 +40,26 @@ import io.phonk.runner.base.utils.MLog;
 public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PToggle.class.getSimpleName();
 
-    public StyleProperties props = new StyleProperties();
-    private Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    private ToggleStyler styler;
     private Typeface mFont;
 
     public PToggle(AppRunner appRunner) {
         super(appRunner.getAppContext());
 
-        styler = new Styler(appRunner, this, props);
+        styler = new ToggleStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("textColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("background", props, "#00FFFFFF");
+        props.put("backgroundChecked", props, appRunner.pUi.theme.get("secondaryShade"));
+        // props.put("backgroundPressed", props, appRunner.pUi.theme.get("textPrimary"));
+        props.put("borderColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
+        props.put("checked", props, false);
+        props.eventOnChange = true;
         styler.apply();
+
         textFont(mFont);
-        checked(false);
     }
 
     public PToggle onChange(final ReturnInterface callbackfn) {
@@ -72,7 +81,9 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     }
 
     public void checked(boolean b) {
+        this.props.eventOnChange = false;
         this.props.put("checked", this.props, b);
+        this.props.eventOnChange = true;
         setChecked(b);
     }
 
@@ -138,4 +149,16 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return props;
     }
 
+    class ToggleStyler extends Styler {
+        ToggleStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            checked((boolean) mProps.get("checked"));
+        }
+    }
 }
