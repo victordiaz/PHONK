@@ -188,13 +188,10 @@ public class PLocation extends ProtoBase {
                 r.put("longitude", location.getLongitude());
                 r.put("altitude", location.getAltitude());
                 r.put("speed", location.getSpeed());
-                r.put("accuracy", location.getAccuracy());
-                r.put("speed", location.getSpeed());
+                r.put("speedUnit", "m/s");
                 r.put("accuracy", location.getAccuracy());
                 r.put("bearing", location.getBearing());
                 r.put("provider", location.getProvider());
-                // r.put("satelliteInView", i);
-                // r.put("satelliteInUse", satelliteInUse);
                 r.put("time", location.getTime());
                 mLocationCallback.event(r);
 
@@ -204,7 +201,6 @@ public class PLocation extends ProtoBase {
 
                 mLastLocationMillis = SystemClock.elapsedRealtime();
                 mLastLocation = location;
-
             }
         };
 
@@ -246,7 +242,6 @@ public class PLocation extends ProtoBase {
     @PhonkMethodParam(params = {"function(x, y, z)"})
     public PLocation onChange(final ReturnInterface callbackfn) {
         mLocationCallback = callbackfn;
-
         return this;
     }
 
@@ -254,18 +249,14 @@ public class PLocation extends ProtoBase {
     @PhonkMethodParam(params = {"function(x, y, z)"})
     public PLocation onSatellitesChange(final ReturnInterface callbackfn) {
         mSatellitesCallback = callbackfn;
-
         return this;
     }
-
 
     @PhonkMethod(description = "Get the last known location", example = "")
     @PhonkMethodParam(params = {""})
     public Location getLastKnownLocation() {
         return locationManager.getLastKnownLocation(provider);
-
     }
-
 
     @PhonkMethod(description = "Get the location name of a given latitude and longitude", example = "")
     @PhonkMethodParam(params = {"latitude", "longitude"})
