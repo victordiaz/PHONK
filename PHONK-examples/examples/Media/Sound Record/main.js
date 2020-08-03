@@ -6,7 +6,7 @@ ui.addTitle(app.name)
 
 var recorder = media.createRecorder()
 
-var btnRecord = ui.addToggle(['Record', 'Stop Recording'], 0.1, 0.15, 0.8, 0.35).onChange(function (o) {
+var btnRecord = ui.addToggle(['Recording...', 'Stop Recording'], 0.1, 0.15, 0.8, 0.35).onChange(function (o) {
   if (o.checked) recorder.record('recording.mp4')
   else recorder.stop()
 })
