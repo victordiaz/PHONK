@@ -15,7 +15,7 @@ ui.addSubtitle('Code can be "live executed" from the Web Editor. Select a line a
 // adding this we can overlay the lines executed in the app
 var l = app.liveCodingOverlay()
           .autoHide(true)
-          .textSize(8)
+          .textSize(12)
           .write('hello')
           .backgroundColor('#33FFC700')
           .show(false)
