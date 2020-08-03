@@ -23,7 +23,7 @@ var LED = function (x, y, w, h) {
     c.cornerMode(false)
 
     c.stroke(255, 255, 255, 255)
-    c.strokeWidth(10)
+    c.strokeWidth(util.dpToPixels(2))
 
     if (that.isOn) c.fill(0, 255, 0, 255)
     else c.fill(255, 0, 0, 255)
