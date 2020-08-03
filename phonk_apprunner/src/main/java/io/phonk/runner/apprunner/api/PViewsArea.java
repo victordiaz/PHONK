@@ -24,10 +24,13 @@ package io.phonk.runner.apprunner.api;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -224,15 +227,18 @@ public class PViewsArea extends ProtoBase {
     @PhonkField
     public PToolbar toolbar;
 
+    public void statusBarColor(int color) { }
+
     /**
      * Changes the background color using grayscale
      *
-     * @param gray
+     * @param color
      * @status TODO_EXAMPLE
      */
     @PhonkMethod
-    public void background(int gray) {
-        uiHolderLayout.setBackgroundColor(Color.rgb(gray, gray, gray));
+    public void background(int color) {
+        uiHolderLayout.setBackgroundColor(color);
+        this.statusBarColor(color);
     }
 
     /**
@@ -245,7 +251,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public void background(int red, int green, int blue) {
-        uiHolderLayout.setBackgroundColor(Color.rgb(red, green, blue));
+        background(Color.rgb(red, green, blue));
     }
 
     /**
@@ -259,7 +265,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public void background(int red, int green, int blue, int alpha) {
-        uiHolderLayout.setBackgroundColor(Color.argb(alpha, red, green, blue));
+        background(Color.argb(alpha, red, green, blue));
     }
 
     /**
@@ -270,9 +276,8 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public void background(String c) {
-        uiHolderLayout.setBackgroundColor(Color.parseColor(c));
+        background(Color.parseColor(c));
     }
-
 
     /**
      * Adds a button to the main screen

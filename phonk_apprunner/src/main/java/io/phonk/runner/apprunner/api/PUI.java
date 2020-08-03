@@ -27,8 +27,11 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -82,7 +85,17 @@ public class PUI extends PViewsArea {
         if (fragment != null) {
             toolbar = new PToolbar(getAppRunner(), getActivity().getSupportActionBar());
         }
+
         initializeLayout();
+    }
+
+    @Override
+    public void statusBarColor(int color) {
+        if (mActivity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.mActivity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
     }
 
     /**
