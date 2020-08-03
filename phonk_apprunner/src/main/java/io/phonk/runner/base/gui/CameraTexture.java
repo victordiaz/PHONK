@@ -156,7 +156,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         // SizePair siz = generateValidPreviewSize(camera, 480, 640);
         // width = siz.mPicture.getWidth();
         // height = siz.mPicture.getHeight();
-        mParameters.setPreviewSize(640, 480);
+        // mParameters.setPreviewSize(640, 480);
 
         try {
             applyParameters();
@@ -244,12 +244,12 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
                     List<Integer> formats = camera.getParameters().getSupportedPreviewFormats();
                     for (Integer integer : formats) {
-                        MLog.d("wewe", "formats " + integer);
+                        MLog.d(TAG, "formats " + integer);
                     }
 
                     int width = parameters1.getPreviewSize().width;
                     int height = parameters1.getPreviewSize().height;
-                    MLog.d("wewe", "-> " + width + " " + height);
+                    // MLog.d("wewe", "-> " + width + " " + height);
 
                     // get support preview format
                     YuvImage yuv = new YuvImage(data, parameters1.getPreviewFormat(), width, height, null);
@@ -270,8 +270,8 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
                     final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
                     Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0, 0, 300, 300, matrix, true);
 
-                    MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
-                    MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
+                    // MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
+                    // MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
                     callbackBmp.event(fbitmap);
                 }
                 if (callbackStream != null) {
@@ -279,7 +279,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
                     int width = parameters1.getPreviewSize().width;
                     int height = parameters1.getPreviewSize().height;
 
-                    CameraTexture.this.setAspectRatio(height, width);
+                    // CameraTexture.this.setAspectRatio(height, width);
 
 
                     // get support preview format
