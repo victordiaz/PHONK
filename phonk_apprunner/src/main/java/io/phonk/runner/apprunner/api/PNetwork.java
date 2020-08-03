@@ -677,6 +677,7 @@ public class PNetwork extends ProtoBase {
 
                     HashMap<String, Object> result = new HashMap<>();
 
+                    result.put("SSID", results.get(i).SSID);
                     result.put("BSSID", results.get(i).BSSID);
                     result.put("frequency", results.get(i).frequency);
                     result.put("level", results.get(i).level);
@@ -695,14 +696,14 @@ public class PNetwork extends ProtoBase {
                 ReturnObject ret = new ReturnObject();
                 ret.put("networks", valuesArray);
                 callback.event(ret);
+
+                if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
             }
         };
 
         wifi.startScan();
         getAppRunner().getAppContext().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
-
-
 
     // --------- RegisterServiceCB ---------//
     public interface RegisterServiceCB {
