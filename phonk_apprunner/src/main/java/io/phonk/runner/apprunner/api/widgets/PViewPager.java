@@ -32,17 +32,31 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.PViewsArea;
 
 @PhonkClass
-public class PViewPager extends ViewPager {
+public class PViewPager extends ViewPager implements PViewMethodsInterface {
     MyAdapter mAdapter;
 
-    public PViewPager(AppRunner appRunner) {
+    // this is a props proxy for the user
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+
+    // the props are transformed / accessed using the styler object
+    public Styler styler;
+
+    public PViewPager(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
+
+        styler = new Styler(appRunner, this, props);
+        props.eventOnChange = false;
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
+        styler.apply();
+
         mAdapter = new MyAdapter();
         this.setAdapter(mAdapter);
     }
@@ -90,5 +104,18 @@ public class PViewPager extends ViewPager {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+
+    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
+    }
+
+    @Override
+    public Map getProps() {
+        return props;
     }
 }

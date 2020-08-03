@@ -118,6 +118,7 @@ public class Styler {
 
         // when property changes then reapply them
         props.onChange((name, value) -> {
+            /*
             switch (name) {
                 case "x":
                     setX(value);
@@ -132,6 +133,7 @@ public class Styler {
                     setHeight(value);
                     break;
             }
+            */
             apply();
         });
     }
@@ -301,7 +303,7 @@ public class Styler {
         return ((Number) o).floatValue();
     }
 
-    void setLayoutProps(float x, float y, float width, float height) {
+    public void setLayoutProps(float x, float y, float width, float height) {
         mProps.eventOnChange = false;
         mProps.put("x", mProps, x);
         mProps.put("y", mProps, y);
@@ -318,14 +320,17 @@ public class Styler {
     public void setX(Object value) {
         getScreenSize();
         int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
-        mView.setX(val);
+
+        FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
+        lp.x = val;
     }
 
     public void setY(Object value) {
         getScreenSize();
         int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
-        MLog.d(TAG, "val: " + val);
-        mView.setY(val);
+
+        FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
+        lp.y = val;
     }
 
     private void setWidth(Object value) {
@@ -339,7 +344,7 @@ public class Styler {
 
     private void setHeight(Object value) {
         getScreenSize();
-        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
+        int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
 
         ViewGroup.LayoutParams lp = mView.getLayoutParams();
         lp.height = val;

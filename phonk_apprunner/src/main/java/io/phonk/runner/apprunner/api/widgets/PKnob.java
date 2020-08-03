@@ -67,7 +67,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     private int numDecimals = 1;
 
     public PKnob(AppRunner appRunner, Map initProps) {
-        super(appRunner);
+        super(appRunner, initProps);
 
         draw = mydraw;
 

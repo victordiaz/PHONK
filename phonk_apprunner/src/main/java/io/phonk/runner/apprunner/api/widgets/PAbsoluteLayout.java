@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
@@ -63,7 +64,7 @@ public class PAbsoluteLayout extends FixedLayout {
 
         int statusBar = getStatusBarHeight();
 
-        MLog.d("qqq", appRunner.pApp.settings.get("orientation") + " " + w + " " + h);
+        // MLog.d("qqq", appRunner.pApp.settings.get("orientation") + " " + w + " " + h);
 
         if (appRunner.pApp.settings.get("orientation").equals("landscape")) {
             if (w > h) {
@@ -88,8 +89,8 @@ public class PAbsoluteLayout extends FixedLayout {
                 mHeight += statusBar + navigationBar;
             }
         }
-        MLog.d("qqq2", appRunner.pApp.settings.get("orientation") + " " + w + " " + h);
-        MLog.d("qqq3", appRunner.pApp.settings.get("orientation") + " " + mWidth + " " + mHeight + " " + getNavigationBarSize(getContext()).x);
+        // MLog.d("qqq2", appRunner.pApp.settings.get("orientation") + " " + w + " " + h);
+        // MLog.d("qqq3", appRunner.pApp.settings.get("orientation") + " " + mWidth + " " + mHeight + " " + getNavigationBarSize(getContext()).x);
     }
 
     @Override
@@ -127,6 +128,16 @@ public class PAbsoluteLayout extends FixedLayout {
     public void addView(View v, Object x, Object y, Object w, Object h) {
         // MLog.d(TAG, "adding view (normalized) -> " + x + " " + y + " " + w + " " + h);
 
+        if (v instanceof PViewMethodsInterface) {
+            StylePropertiesProxy map = (StylePropertiesProxy) ((PViewMethodsInterface) v).getProps();
+            map.eventOnChange = false;
+            map.put("x", x);
+            map.put("y", y);
+            map.put("w", w);
+            map.put("h", h);
+            map.eventOnChange = true;
+        }
+        
         int mx = mAppRunner.pUtil.sizeToPixels(x, mWidth);
         int my = mAppRunner.pUtil.sizeToPixels(y, mHeight);
         int mw = mAppRunner.pUtil.sizeToPixels(w, mWidth);

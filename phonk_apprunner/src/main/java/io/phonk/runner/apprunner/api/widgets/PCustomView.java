@@ -26,6 +26,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
 
+import java.util.Map;
+
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
@@ -33,16 +35,24 @@ import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PCustomView extends View {
+public class PCustomView extends View implements PViewMethodsInterface {
     private static final String TAG = PCustomView.class.getSimpleName();
 
     protected final AppRunner mAppRunner;
     private PCanvas mPCanvas;
 
+    // this is a props proxy for the user
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+
+    // the props are transformed / accessed using the styler object
+    public Styler styler;
+
     @PhonkField(description = "Time interval between draws", example = "")
     private int drawInterval = 35;
     protected boolean mAutoDraw = false;
     private PLooper loop;
+    protected int mWidth;
+    protected int mHeight;
 
     public interface OnSetupCallback {
         void event(PCustomView c);
@@ -55,10 +65,18 @@ public class PCustomView extends View {
     public OnSetupCallback setup;
     public OnDrawCallback draw;
 
-    public PCustomView(AppRunner appRunner) {
+    public PCustomView(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
         this.setBackgroundColor(Color.TRANSPARENT);
+
+        styler = new Styler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("background", "#00FFFFFF");
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
+        styler.apply();
+
         // this.setZOrderOnTop(true); //necessary
         // getHolder().setFormat(PixelFormat.TRANSPARENT);
         // prepareLooper();
@@ -70,6 +88,12 @@ public class PCustomView extends View {
         // mTransparentPaint.setStyle(Paint.Style.FILL);
         // mTransparentPaint.setColor(Color.BLUE);
         mPCanvas = new PCanvas(mAppRunner);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        invalidate();
     }
 
     /*
@@ -154,13 +178,17 @@ public class PCustomView extends View {
     }
     */
 
-    /**
-     * refresh the canvas after painting if the flag is true
-     */
-    /*
-    private PCustomView refresh() {
-        if (mAutoDraw) invalidate();
-        return this;
+
+    @Override
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+
+    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
-    */
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
 }

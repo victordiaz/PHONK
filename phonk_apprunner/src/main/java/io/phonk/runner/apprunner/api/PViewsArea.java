@@ -109,14 +109,14 @@ public class PViewsArea extends ProtoBase {
         // We need to let the view scroll, so we're creating a scrollview
         uiScrollView = new PScrollView(getContext(), false);
         uiScrollView.setLayoutParams(layoutParams);
-        // uiHolderLayout.setBackgroundColor(0xbb0000);
+        uiHolderLayout.setBackgroundColor(Color.parseColor("#2200bb00"));
         uiScrollView.setFillViewport(true);
         allowScroll(isScrollEnabled);
 
         // Create the main layout. This is where all the items actually go
         uiAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
         uiAbsoluteLayout.setLayoutParams(layoutParams);
-        // uiAbsoluteLayout.backgroundColor("#220000bb");
+        uiAbsoluteLayout.setBackgroundColor(Color.parseColor("#220000bb"));
         uiScrollView.addView(uiAbsoluteLayout);
         uiHolderLayout.addView(uiScrollView);
 
@@ -446,9 +446,6 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PToggle addToggle(final String[] text, Object x, Object y, Object w, Object h) {
         HashMap<String, String> map = new HashMap();
-
-        MLog.d("qqq ->", "" + text);
-        MLog.d("qqq ->", "" + text.length);
 
         if (text.length == 1) {
             map.put("text", text[0]);
@@ -913,9 +910,9 @@ public class PViewsArea extends ProtoBase {
             case "list":
                 return new PList(mAppRunner, props);
             case "map":
-                return new PMap(mAppRunner);
+                return new PMap(mAppRunner, props);
             case "canvas":
-                return new PCustomView(mAppRunner);
+                return new PCustomView(mAppRunner, props);
             case "touchPad":
                 return new PTouchPad(mAppRunner, props);
             case "plot":
@@ -939,7 +936,7 @@ public class PViewsArea extends ProtoBase {
             case "slider":
                 return new PSlider(mAppRunner, props);
             case "pager":
-                return new PViewPager(mAppRunner);
+                return new PViewPager(mAppRunner, props);
             case "toggle":
                 return new PToggle(mAppRunner, props);
             case "input":
@@ -954,7 +951,7 @@ public class PViewsArea extends ProtoBase {
             case "text":
                 return new PText(mAppRunner, props);
             case "textList":
-                return new PTextList(mAppRunner, null);
+                return new PTextList(mAppRunner, props);
             case "button":
                 return new PButton(mAppRunner, props);
             case "imageButton":

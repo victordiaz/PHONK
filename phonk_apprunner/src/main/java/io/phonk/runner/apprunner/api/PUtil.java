@@ -260,8 +260,6 @@ public class PUtil extends ProtoBase {
 
             returnVal = transform(type, value, toValue);
         } else if (val instanceof Double) {
-            // MLog.d(TAG, "oo is double " + val);
-
             returnVal = transform("", (Double) val, toValue);
         }
 
@@ -281,7 +279,6 @@ public class PUtil extends ProtoBase {
             case "dp":
                 // MLog.d(TAG, "retValue dp " + value + " " + retValue);
                 retValue = AndroidUtils.dpToPixels(getAppRunner().getAppContext(), value.intValue());
-                MLog.d(TAG, "retValue dp " + value + " " + retValue);
                 break;
             case "":
                 retValue = (int) (value * toValue);
@@ -294,6 +291,7 @@ public class PUtil extends ProtoBase {
             */
             case "w":
                 retValue = (int) (value * getAppRunner().pUi.screenWidth);
+
                 break;
             case "h":
                 retValue = (int) (value * getAppRunner().pUi.screenHeight);

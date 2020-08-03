@@ -60,7 +60,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     private int mHeight;
 
     public PPlot(AppRunner appRunner, Map initProps) {
-        super(appRunner);
+        super(appRunner, initProps);
 
         draw = mydraw;
 

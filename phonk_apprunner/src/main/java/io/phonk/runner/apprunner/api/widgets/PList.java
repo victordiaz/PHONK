@@ -23,6 +23,7 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -36,7 +37,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.base.views.FitRecyclerView;
 
-public class PList extends FitRecyclerView {
+public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
     private final Context mContext;
     protected final AppRunner mAppRunner;
@@ -44,26 +45,30 @@ public class PList extends FitRecyclerView {
     private PViewItemAdapter mViewAdapter;
 
     public StylePropertiesProxy props = new StylePropertiesProxy();
-    public Styler styler;
+    public ListStyler styler;
     private int nNumCols = 1;
 
     public PList(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
-
         mAppRunner = appRunner;
         mContext = appRunner.getAppContext();
 
-        styler = new Styler(appRunner, this, props);
+        styler = new ListStyler(appRunner, this, props);
+        props.eventOnChange = false;
+
+        addFromChild(props);
         styler.fromTo(initProps, props);
+        props.eventOnChange = true;
+        styler.apply();
+    }
+
+
+    protected void addFromChild(StylePropertiesProxy props) {
     }
 
     public void init(NativeArray data, ReturnInterfaceWithReturn createCallback, ReturnInterfaceWithReturn bindingCallback) {
-        styler = new Styler(mAppRunner, this, props);
-        styler.apply();
-
         mGridLayoutManager = new GridLayoutManager(mContext, nNumCols);
         setLayoutManager(mGridLayoutManager);
-        // setLayoutManager(new StaggeredGridLayoutManager(2, VERTICAL));
         mViewAdapter = new PViewItemAdapter(mContext, data, createCallback, bindingCallback);
 
         // Get GridView and set adapter
@@ -107,4 +112,28 @@ public class PList extends FitRecyclerView {
         mViewAdapter.notifyDataSetChanged();
     }
 
+
+    class ListStyler extends Styler {
+        ListStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+        }
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+
+    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
+    }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
 }

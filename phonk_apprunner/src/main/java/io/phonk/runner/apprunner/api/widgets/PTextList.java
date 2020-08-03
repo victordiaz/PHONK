@@ -33,6 +33,7 @@ import java.util.Map;
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
+import io.phonk.runner.base.utils.AndroidUtils;
 
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
@@ -50,27 +51,21 @@ public class PTextList extends PList implements PTextInterface {
     public PTextList(AppRunner appRunner, Map initProps) {
         super(appRunner, null);
 
-        styler.fromTo(initProps, props);
-
         init();
-        // props.put("background", "#000000");
-        // styler.apply();
         super.numColumns(numCol);
         super.init(data, mCreateCallback, mUpdateCallback);
     }
 
     private void init() {
         mCreateCallback = r -> {
-            // int defaultTextSize = AndroidUtils.pixelsToSp(getContext(), 16);
             PText t = new PText(mAppRunner, null);
-            // tv.setTextSize((float) defaultTextSize);
-            t.setTextSize(22);
+            t.setTextSize(AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6));
             t.setTextColor(Color.argb(255, 255, 255, 255));
 
             if (mTextColor != -1)
-                t.textColor(mTextColor); //.props.put("textColor", t.props, mTextColor);
+                t.textColor(mTextColor);
             if (mTextSize != -1)
-                t.textSize(mTextSize); // t.props.put("textSize", t.props, mTextSize);
+                t.textSize(mTextSize);
 
             styler.apply();
             return t;

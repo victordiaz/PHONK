@@ -59,6 +59,8 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         props.put("text", props, "Toggle");
         props.put("textOn", props, "ON");
         props.put("textOff", props, "OFF");
+        props.put("textOnColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("textOffColor", props, appRunner.pUi.theme.get("textPrimary"));
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
@@ -69,6 +71,13 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     public PToggle onChange(final ReturnInterface callbackfn) {
         // Add change listener
         this.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            if (isChecked) {
+                setTextColor(styler.textOnColor);
+            } else {
+                setTextColor(styler.textOffColor);
+            }
+
             ReturnObject r = new ReturnObject(PToggle.this);
             r.put("checked", isChecked);
             callbackfn.event(r);
@@ -157,6 +166,8 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         private String textOn;
         private String textOff;
         private String text;
+        private int textOnColor;
+        private int textOffColor;
 
         ToggleStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
@@ -174,6 +185,11 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
             setText(text);
             setTextOn(textOn);
             setTextOff(textOff);
+
+            setTextColor(Color.parseColor(mProps.get("textOffColor").toString()));
+
+            textOnColor = Color.parseColor(mProps.get("textOnColor").toString());
+            textOffColor = Color.parseColor(mProps.get("textOffColor").toString());
         }
     }
 }

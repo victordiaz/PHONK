@@ -163,9 +163,8 @@ public class PUI extends PViewsArea {
         rootStyle.put("enabled", rootStyle, true);
         rootStyle.put("opacity", rootStyle, 1.0f);
         rootStyle.put("visibility", rootStyle, "visible");
-        rootStyle.put("background", rootStyle, colorTransparent);
         rootStyle.put("backgroundHover", rootStyle, "#88000000");
-        rootStyle.put("backgroundPressed", rootStyle, "#88FFFFFF");
+        rootStyle.put("backgroundPressed", rootStyle, "#33FFFFFF");
         rootStyle.put("backgroundSelected", rootStyle, "#88000000");
         rootStyle.put("backgroundChecked", rootStyle, "#88000000");
         rootStyle.put("borderColor", rootStyle, colorTransparent);

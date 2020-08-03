@@ -50,6 +50,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.mozilla.javascript.EvaluatorException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,6 +64,7 @@ import java.util.Vector;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.media.AutoFitTextureView;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
 
@@ -107,6 +110,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         this.mAppRunner = appRunner;
         this.modeColor = colorMode;
         this.modeCamera = camera;
+
         this.setSurfaceTextureListener(this);
     }
 

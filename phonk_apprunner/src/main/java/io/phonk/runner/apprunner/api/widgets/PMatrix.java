@@ -63,7 +63,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     private float selectedColumn = -1;
 
     public PMatrix(AppRunner appRunner, Map initProps) {
-        super(appRunner);
+        super(appRunner, initProps);
         MLog.d(TAG, "create matrix");
 
         draw = mydraw;

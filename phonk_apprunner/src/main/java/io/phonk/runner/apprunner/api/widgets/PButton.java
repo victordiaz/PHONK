@@ -174,9 +174,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
 
     @Override
     public void setProps(Map style) {

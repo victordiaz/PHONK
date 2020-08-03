@@ -44,10 +44,14 @@ public class PImageButton extends PImage {
 
     public PImageButton(AppRunner appRunner, Map initProps) {
         super(appRunner, initProps);
+    }
 
-        styler.fromTo(initProps, props);
-        // imageButtonStyle.put("srcMode", imageButtonStyle, "resize");
-        // rootStyle.put("srcTintPressed", imageButtonStyle, colorSecondary);
+    @Override
+    protected void addFromChild(StylePropertiesProxy props) {
+        super.addFromChild(props);
+        props.put("background", props, mAppRunner.pUi.theme.get("secondaryShade"));
+        props.put("srcTintPressed", props, mAppRunner.pUi.theme.get("secondary"));
+        props.put("padding", props, mAppRunner.pUtil.dpToPixels(10));
     }
 
     // Set on click behavior

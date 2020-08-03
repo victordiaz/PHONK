@@ -38,6 +38,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.AndroidUtils;
+import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
 @PhonkClass
@@ -52,8 +53,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private float y;
     private boolean touching;
     private ReturnInterface callback;
-    private int mWidth;
-    private int mHeight;
     private float unmappedVal;
     private float mappedVal;
     private float rangeFrom = 0;
@@ -69,7 +68,7 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private int numDecimals = 1;
 
     public PSlider(AppRunner appRunner, Map initProps) {
-        super(appRunner);
+        super(appRunner, initProps);
 
         draw = mydraw;
         
@@ -145,13 +144,17 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             mWidth = c.width;
             mHeight = c.height;
 
+            PSlider.this.unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, mWidth);
+
             c.clear();
             c.cornerMode(true);
 
             if (!touching) c.fill(styler.slider);
             else c.fill(styler.sliderPressed);
+
             c.strokeWidth(styler.sliderBorderSize);
             c.stroke(styler.sliderBorderColor);
+
             c.rect(0, 0, unmappedVal, c.height);
 
             df.setRoundingMode(RoundingMode.DOWN);
@@ -179,8 +182,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     public void value(float val) {
         this.mappedVal = val;
-        this.unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, mWidth);
-
         this.invalidate();
     }
 

@@ -55,9 +55,15 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         props.eventOnChange = false;
         props.put("background", props, "#00FFFFFF");
         props.put("srcMode", props, "fit");
+
+        addFromChild(props);
+
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
+    }
+
+    protected void addFromChild(StylePropertiesProxy props) {
     }
 
     @PhonkMethod(description = "Sets an image", example = "")
