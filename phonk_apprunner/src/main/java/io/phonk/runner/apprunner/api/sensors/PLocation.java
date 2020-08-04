@@ -231,9 +231,10 @@ public class PLocation extends ProtoBase {
                     ret.put("satellites", sats);
                     ret.put("satellitesInView", satellitesCount);
                     ret.put("satellitesInFix", satellitesInFix);
-                    mSatellitesCallback.event(ret);
+
+                    if (mSatellitesCallback != null) mSatellitesCallback.event(ret);
                 }
-                MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
+                // MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
             }
         });
     }
