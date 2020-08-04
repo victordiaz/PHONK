@@ -340,7 +340,7 @@ public class PDevice extends ProtoBase {
 
                 ReturnObject ret = new ReturnObject();
                 ret.put("from", pNumber);
-                ret.put("message", "body");
+                ret.put("message", body);
 
                 callback.event(ret);
             }
