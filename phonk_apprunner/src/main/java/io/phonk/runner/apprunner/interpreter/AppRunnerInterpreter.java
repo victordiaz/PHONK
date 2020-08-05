@@ -69,6 +69,7 @@ public class AppRunnerInterpreter {
         mScriptContextFactory.setInterpreter(this);
 
         rhino = Context.enter();
+
         // observingDebugger = new ObservingDebugger();
         // rhino.setDebugger(observingDebugger, new Integer(0));
         // rhino.setGeneratingDebug(true);
@@ -178,7 +179,6 @@ public class AppRunnerInterpreter {
     public void stop() {
         Context.exit();
     }
-
 
     public class ScriptContextFactory extends ContextFactory {
         private AppRunnerInterpreter mAppRunnerInterpretter;

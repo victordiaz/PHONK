@@ -34,15 +34,15 @@
 
     <RelativeLayout
         android:id="@+id/header"
-        android:background="@color/phonk_backgroundColor"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:alpha="1"
-        android:padding="5dp"
-        android:paddingBottom="100dp"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:background="@color/phonk_backgroundColor"
+        android:padding="0dp"
+        android:paddingBottom="0dp">
 
         <!--
         <ImageView
@@ -103,9 +103,9 @@
                 android:id="@+id/more_options"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:padding="12dp"
                 android:layout_marginLeft="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
                 android:src="@drawable/ic_more_vert_white_24dp"
                 android:text=""
                 android:textOff=""
@@ -118,7 +118,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/logo_area"
             android:gravity="center_horizontal"
-            android:minWidth="200dp">
+            android:minWidth="200dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp">
 
             <!--
             <include
@@ -135,12 +138,12 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0dp"
                 android:layout_below="@id/infoLayout"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="100dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="100dp"
                 android:background="@color/phonk_colorSecondary_shade_1" />
 

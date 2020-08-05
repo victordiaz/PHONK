@@ -154,6 +154,7 @@ public class MainActivity extends BaseActivity {
 
         // PhonkAppHelper.launchScript(this, new Project("playground/User Projects/grid"));
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Basic Views"));
+        // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Styling & Theming"));
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Extra Views"));
     }
 

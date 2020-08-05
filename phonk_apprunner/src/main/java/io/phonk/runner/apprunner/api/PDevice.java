@@ -36,8 +36,6 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
 import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -48,14 +46,11 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

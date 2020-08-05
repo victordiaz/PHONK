@@ -112,14 +112,14 @@ public class PViewsArea extends ProtoBase {
         // We need to let the view scroll, so we're creating a scrollview
         uiScrollView = new PScrollView(getContext(), false);
         uiScrollView.setLayoutParams(layoutParams);
-        uiHolderLayout.setBackgroundColor(Color.parseColor("#2200bb00"));
+        // uiHolderLayout.setBackgroundColor(Color.parseColor("#2200bb00"));
         uiScrollView.setFillViewport(true);
         allowScroll(isScrollEnabled);
 
         // Create the main layout. This is where all the items actually go
         uiAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
         uiAbsoluteLayout.setLayoutParams(layoutParams);
-        uiAbsoluteLayout.setBackgroundColor(Color.parseColor("#220000bb"));
+        // uiAbsoluteLayout.setBackgroundColor(Color.parseColor("#220000bb"));
         uiScrollView.addView(uiAbsoluteLayout);
         uiHolderLayout.addView(uiScrollView);
 

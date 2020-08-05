@@ -23,8 +23,12 @@
 package io.phonk.runner.apprunner.api;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Window;
+import android.view.WindowManager;
 
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.AppRunnerFragment;
@@ -40,7 +44,7 @@ public abstract class ProtoBase {
     private Context mContext;
     private AppRunnerFragment mFragment;
     private AppRunnerService mService;
-    private AppRunnerActivity mActivity;
+    protected AppRunnerActivity mActivity;
 
     public ProtoBase(AppRunner appRunner) {
         super();

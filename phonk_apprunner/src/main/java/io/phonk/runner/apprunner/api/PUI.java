@@ -255,8 +255,6 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void setTheme(Map<String, Object> properties) {
-        MLog.d("qqq", "setTheme");
-
         theme.eventOnChange = false;
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             theme.put(entry.getKey(), theme, entry.getValue());
@@ -264,7 +262,6 @@ public class PUI extends PViewsArea {
         setStyle();
         background((String) theme.get("background"));
         theme.eventOnChange = true;
-        MLog.d("qqq", "setTheme 2");
     }
 
     /**
