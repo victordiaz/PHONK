@@ -56,6 +56,8 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
+        setPageMargin(0);
+        setPadding(0, 0, 0, 0);
 
         mAdapter = new MyAdapter();
         this.setAdapter(mAdapter);
