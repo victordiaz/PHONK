@@ -364,7 +364,7 @@ export default {
       padding: 5px 10px;
       font-weight: 400;
       display: flex;
-      line-height: 1.2em;
+      line-height: 1.4em;
       align-items: center;
 
       .icon {
