@@ -321,34 +321,42 @@ public class Styler {
         getScreenSize();
         int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
 
-        FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
-        lp.x = val;
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
+            lp.x = val;
+        }
     }
 
     public void setY(Object value) {
         getScreenSize();
         int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
 
-        FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
-        lp.y = val;
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
+            lp.y = val;
+        }
     }
 
     private void setWidth(Object value) {
         getScreenSize();
         int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
 
-        ViewGroup.LayoutParams lp = mView.getLayoutParams();
-        lp.width = val;
-        mView.setLayoutParams(lp);
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            ViewGroup.LayoutParams lp = mView.getLayoutParams();
+            lp.width = val;
+            mView.setLayoutParams(lp);
+        }
     }
 
     private void setHeight(Object value) {
         getScreenSize();
         int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
 
-        ViewGroup.LayoutParams lp = mView.getLayoutParams();
-        lp.height = val;
-        mView.setLayoutParams(lp);
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            ViewGroup.LayoutParams lp = mView.getLayoutParams();
+            lp.height = val;
+            mView.setLayoutParams(lp);
+        }
     }
 
 }
