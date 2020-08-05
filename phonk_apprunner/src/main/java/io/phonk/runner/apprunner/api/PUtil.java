@@ -58,6 +58,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.api.other.SignalUtils;
+import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
@@ -66,62 +67,6 @@ public class PUtil extends ProtoBase {
 
     public PUtil(AppRunner appRunner) {
         super(appRunner);
-    }
-
-    // --------- getRequest ---------//
-    interface getRequestCB {
-        void event(int eventType, String responseString);
-    }
-
-    public void setAnObject(NativeObject obj) {
-        for (Map.Entry<Object, Object> entry : obj.entrySet()) {
-            String key = (String) entry.getKey();
-            Object o = entry.getValue();
-
-            MLog.d(TAG, "setAnObject -> " + key + " " + o);
-        }
-
-        MLog.d(TAG, "q --> " + obj.get("q"));
-    }
-
-    public ReturnObject getAnObject() {
-        // HashMap map = new HashMap();
-
-        ReturnObject ret = new ReturnObject();
-        ret.put("qq", 1);
-        ret.put("qq 2", 2);
-
-        /*
-        NativeObject ret = (NativeObject) getAppRunner().interp.newNativeObject();
-        ret.defineProperty("q", 2, NativeObject.READONLY);
-
-        ReturnObject ret1 = new ReturnObject();
-        ret1.put();
-
-        */
-
-        return ret;
-    }
-
-    /*
-     * 1. get arraylist to native array
-     * 2. set native array to arraylist
-     */
-    public NativeArray getAnArray() {
-        ArrayList array = new ArrayList();
-        array.add("1");
-        array.add("2");
-
-        // NativeArray ret = (NativeArray) getAppRunner().interp.newNativeArrayFrom(array.toArray());
-
-        // return ret;
-        return null;
-    }
-
-    public void setAnArray(NativeArray array) {
-        for (int i = 0; i < array.size(); i++) {
-            MLog.d(TAG, "setArrayList -> " + array.get(i));
-        }
     }
 
     public String getCharFromUnicode(int unicode) {
@@ -258,7 +203,6 @@ public class PUtil extends ProtoBase {
         return Color.parseColor(c);
     }
 
-
     @PhonkMethod(description = "Detect faces in a bitmap", example = "")
     @PhonkMethodParam(params = {"Bitmap", "numFaces"})
     public int detectFaces(Bitmap bmp, int num_faces) {
@@ -269,9 +213,9 @@ public class PUtil extends ProtoBase {
         return face_count;
     }
 
-    public String bitmapToBase64String(Bitmap bmp) {
+    public String bitmapToBase64String(Bitmap bmp, int quality) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        bmp.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -302,6 +246,64 @@ public class PUtil extends ProtoBase {
     public SignalUtils signal(int n) {
         return new SignalUtils(getAppRunner(), n);
     }
+
+    public int sizeToPixels(Object val, int toValue) {
+        int returnVal = -1;
+
+        if (val instanceof String) {
+            // MLog.d(TAG, "oo is string");
+            String str = (String) val;
+            String[] splitted = str.split("(?<=\\d)(?=[a-zA-Z%])|(?<=[a-zA-Z%])(?=\\d)");
+
+            double value = Double.parseDouble(splitted[0]);
+            String type = splitted[1];
+
+            returnVal = transform(type, value, toValue);
+        } else if (val instanceof Double) {
+            returnVal = transform("", (Double) val, toValue);
+        }
+
+        return returnVal;
+
+    }
+
+    private int transform(String type, Double value, int toValue) {
+        // MLog.d(TAG, "oo transform");
+
+        int retValue = -1;
+
+        switch (type) {
+            case "px":
+                retValue = value.intValue();
+                break;
+            case "dp":
+                // MLog.d(TAG, "retValue dp " + value + " " + retValue);
+                retValue = AndroidUtils.dpToPixels(getAppRunner().getAppContext(), value.intValue());
+                break;
+            case "":
+                retValue = (int) (value * toValue);
+                // MLog.d(TAG, "retValue ''" + value + " " + retValue);
+                break;
+            /*
+            case "%":
+                retValue = (int) (value / 100.0f * toValue);
+                break;
+            */
+            case "w":
+                retValue = (int) (value * getAppRunner().pUi.screenWidth);
+
+                break;
+            case "h":
+                retValue = (int) (value * getAppRunner().pUi.screenHeight);
+                break;
+            default:
+                break;
+        }
+
+        // MLog.d(TAG, "oo --> " + retValue);
+        return retValue;
+    }
+
 
     @Override
     public void __stop() {

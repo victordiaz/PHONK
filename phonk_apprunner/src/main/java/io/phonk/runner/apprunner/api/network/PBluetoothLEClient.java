@@ -93,6 +93,15 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         return this;
     }
 
+    public PBluetoothLEClient connectDevice(String macAddress, int mtuSize) {
+        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
+        peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
+        peripheral.requestMtu(mtuSize);
+        central.connectPeripheral(peripheral, peripheralCallback);
+
+        return this;
+    }
+
     public PBluetoothLEClient autoConnect(boolean autoConnect) {
         this.autoConnect = autoConnect;
 
@@ -264,6 +273,8 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
 
         @Override
         public void onConnectedPeripheral(BluetoothPeripheral peripheral) {
+            peripheral.requestMtu(500);
+
             MLog.d(TAG, "connected to '%s' " + peripheral.getName());
             ReturnObject ret = new ReturnObject();
             ret.put("deviceMac", peripheral.getAddress());

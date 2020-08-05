@@ -31,9 +31,11 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -70,6 +72,7 @@ import io.phonk.runner.apprunner.api.network.PNfc;
 import io.phonk.runner.apprunner.api.network.PSimpleHttpServer;
 import io.phonk.runner.apprunner.api.network.PWebSocketClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketServer;
+import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.network.OSC;
 import io.phonk.runner.base.network.ServiceDiscovery;
@@ -273,7 +276,6 @@ public class PNetwork extends ProtoBase {
         }
 
     }
-
 
     @PhonkMethod(description = "Start a websocket server", example = "")
     @PhonkMethodParam(params = {"port", "function(status, socket, data)"})
@@ -586,7 +588,7 @@ public class PNetwork extends ProtoBase {
 
     // http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
 
-    @PhonkMethod(description = "Connect to mContext given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+    @PhonkMethod(description = "Connect to a given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
     @PhonkMethodParam(params = {"ssidName", "type", "password"})
     public void connectWifi(String networkSSID, String type, String networkPass) {
 
@@ -627,9 +629,9 @@ public class PNetwork extends ProtoBase {
     private Object mIsWifiAPEnabled = true;
 
 
-    @PhonkMethod(description = "Enable/Disable mContext Wifi access point", example = "")
-    @PhonkMethodParam(params = {"boolean, apName"})
-    public void wifiAP(boolean enabled, String wifiName) {
+    @PhonkMethod(description = "Enable/Disable a Wifi access point", example = "")
+    @PhonkMethodParam(params = {"AP name, enabled"})
+    public void wifiAP(String wifiName, boolean enabled) {
 
         WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
@@ -660,6 +662,48 @@ public class PNetwork extends ProtoBase {
         }
     }
 
+    BroadcastReceiver wifiReceiver;
+    public void wifiScan(ReturnInterface callback) {
+        if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
+
+        WifiManager wifi = (WifiManager) getAppRunner().getAppContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent intent) {
+                List<ScanResult> results = wifi.getScanResults();
+
+                final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
+                for (int i = 0; i < results.size(); i++) {
+
+                    HashMap<String, Object> result = new HashMap<>();
+
+                    result.put("SSID", results.get(i).SSID);
+                    result.put("BSSID", results.get(i).BSSID);
+                    result.put("frequency", results.get(i).frequency);
+                    result.put("level", results.get(i).level);
+                    result.put("capabilities", results.get(i).capabilities);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        result.put("centerFreq0", results.get(i).centerFreq0);
+                        result.put("centerFreq1", results.get(i).centerFreq1);
+                        result.put("channelWidth", results.get(i).channelWidth);
+                        result.put("timestamp", results.get(i).timestamp);
+                        result.put("venueName", results.get(i).venueName);
+                    }
+
+                    valuesArray.put(valuesArray.size(), valuesArray, result);
+                }
+                ReturnObject ret = new ReturnObject();
+                ret.put("networks", valuesArray);
+                callback.event(ret);
+
+                if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
+            }
+        };
+
+        wifi.startScan();
+        getAppRunner().getAppContext().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    }
 
     // --------- RegisterServiceCB ---------//
     public interface RegisterServiceCB {
@@ -717,11 +761,9 @@ public class PNetwork extends ProtoBase {
         return pMqtt;
     }
 
-
     @Override
     public void __stop() {
-
+        if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
     }
-
 
 }

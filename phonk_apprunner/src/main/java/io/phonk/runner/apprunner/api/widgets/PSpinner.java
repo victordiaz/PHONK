@@ -22,8 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,7 +41,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner implements PViewMethodsInterface, PTextInterface {
     private String[] mData;
 
-    public StyleProperties props = new StyleProperties();
+    public StylePropertiesProxy props = new StylePropertiesProxy();
     // public Styler styler;
     private Typeface mFont;
 

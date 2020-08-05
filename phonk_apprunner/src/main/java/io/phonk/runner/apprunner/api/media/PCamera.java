@@ -25,22 +25,32 @@ package io.phonk.runner.apprunner.api.media;
 import android.hardware.Camera;
 
 import java.util.List;
+import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
+import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.apprunner.api.widgets.Styler;
 import io.phonk.runner.base.gui.CameraTexture;
 
 @PhonkClass
-public class PCamera extends CameraTexture implements PCameraInterface {
+public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*/ PCameraInterface {
     private final PCamera cam;
     protected AppRunner mAppRunner;
 
     private LearnImages learnImages = null;
     private DetectImage detectImage = null;
     private ReturnInterface mOnPictureTakenCallback;
+
+    // this is a props proxy for the user
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+
+    // the props are transformed / accessed using the styler object
+    public Styler styler;
 
     public PCamera(AppRunner appRunner, String camera) {
         super(appRunner, camera, "color");
@@ -221,4 +231,19 @@ public class PCamera extends CameraTexture implements PCameraInterface {
     public void focus(ReturnInterface callback) {
         super.focus(callback);
     }
+
+    /*
+    @Override
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+
+    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
+    }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+    */
 }

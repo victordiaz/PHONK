@@ -10,8 +10,8 @@ buildscript {
 }
 
 project.ext {
-    versionCode = 127
-    versionName = "1.2.7"
+    versionCode = 130
+    versionName = "1.2.8"
 }
 
 task hello {
@@ -26,5 +26,3 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
-
-//apply plugin: 'com.github.ben-manes.versions'

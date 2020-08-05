@@ -40,31 +40,42 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PInput extends EditText implements PViewMethodsInterface, PTextInterface {
     private final AppRunner mAppRunner;
     private EditText mInput;
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public InputStyler styler;
     private Typeface mFont;
 
-    public PInput(AppRunner appRunner) {
+    public PInput(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
         mAppRunner = appRunner;
         setClickable(true);
         setFocusableInTouchMode(true);
 
-        styler = new Styler(appRunner, this, props);
+        styler = new InputStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("textAlign", props, "left");
+        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("backgroundPressed", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("borderColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
+        props.put("padding", props, appRunner.pUtil.dpToPixels(0));
+        props.put("paddingLeft", props, appRunner.pUtil.dpToPixels(10));
+        props.put("paddingRight", props, appRunner.pUtil.dpToPixels(10));
+        props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
+        props.put("hintColor", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("hint", props, "");
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
         styler.apply();
 
-        setHintTextColor(styler.hintColor);
-        setHint("");
-
         mInput = this;
-
         textFont(mFont);
     }
 
@@ -192,5 +203,22 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
     private void hideKeyboard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) mAppRunner.getAppContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    class InputStyler extends Styler {
+        int hintColor;
+
+        InputStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            hintColor = Color.parseColor(mProps.get("hintColor").toString());
+            setHint(mProps.get("hint").toString());
+            setHintTextColor(styler.hintColor);
+        }
     }
 }

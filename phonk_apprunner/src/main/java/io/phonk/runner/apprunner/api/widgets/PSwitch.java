@@ -40,7 +40,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 @SuppressLint("NewApi")
 @PhonkClass
 public class PSwitch extends Switch implements PViewMethodsInterface {
-    public StyleProperties props = new StyleProperties();
+    public StylePropertiesProxy props = new StylePropertiesProxy();
     public Styler styler;
     private Typeface currentFont;
 

@@ -36,8 +36,6 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
 import android.hardware.input.InputManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -48,14 +46,11 @@ import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -596,10 +591,10 @@ public class PDevice extends ProtoBase {
     @PhonkMethod
     public void battery(final ReturnInterface callback) {
         batteryReceiver = new BroadcastReceiver() {
-            int scale = -1;
-            int level = -1;
-            int voltage = -1;
-            int temp = -1;
+            float scale = -1;
+            float level = -1;
+            float voltage = -1;
+            float temp = -1;
             boolean isConnected = false;
             private int status;
             private final boolean alreadyKilled = false;
@@ -622,10 +617,13 @@ public class PDevice extends ProtoBase {
                 ReturnObject o = new ReturnObject();
 
                 o.put("level", level);
-                o.put("temperature", temp);
                 o.put("connected", isConnected);
                 o.put("scale", scale);
                 o.put("temperature", temp);
+
+                // some devices output mV instead of V
+                // https://stackoverflow.com/questions/24500795/android-battery-voltage-unit-discrepancies
+                if (voltage > 1000) voltage = voltage / 1000;
                 o.put("voltage", voltage);
 
                 callback.event(o);
@@ -732,8 +730,8 @@ public class PDevice extends ProtoBase {
         ret.put("maxMem", Runtime.getRuntime().maxMemory());
 
         PackageManager pm = getContext().getPackageManager();
-        ret.put("backCamera", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA));
-        ret.put("frontCamera", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT));
+        ret.put("cameraBack", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA));
+        ret.put("cameraFront", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT));
         ret.put("cameraFlash", pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH));
         ret.put("bluetooth", pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH));
         ret.put("bluetoothLE", pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE));

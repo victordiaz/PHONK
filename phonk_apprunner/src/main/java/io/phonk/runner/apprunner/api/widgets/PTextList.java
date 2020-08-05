@@ -28,9 +28,12 @@ import android.view.View;
 
 import org.mozilla.javascript.NativeArray;
 
+import java.util.Map;
+
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
+import io.phonk.runner.base.utils.AndroidUtils;
 
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
@@ -45,28 +48,24 @@ public class PTextList extends PList implements PTextInterface {
     private int mTextColor = -1;
     private Typeface mTextfont;
 
-    public PTextList(AppRunner appRunner) {
-        super(appRunner);
+    public PTextList(AppRunner appRunner, Map initProps) {
+        super(appRunner, null);
 
         init();
-        // props.put("background", "#000000");
-        // styler.apply();
         super.numColumns(numCol);
         super.init(data, mCreateCallback, mUpdateCallback);
     }
 
     private void init() {
         mCreateCallback = r -> {
-            // int defaultTextSize = AndroidUtils.pixelsToSp(getContext(), 16);
-            PText t = new PText(mAppRunner);
-            // tv.setTextSize((float) defaultTextSize);
-            t.setTextSize(22);
+            PText t = new PText(mAppRunner, null);
+            t.setTextSize(AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6));
             t.setTextColor(Color.argb(255, 255, 255, 255));
 
             if (mTextColor != -1)
-                t.textColor(mTextColor); //.props.put("textColor", t.props, mTextColor);
+                t.textColor(mTextColor);
             if (mTextSize != -1)
-                t.textSize(mTextSize); // t.props.put("textSize", t.props, mTextSize);
+                t.textSize(mTextSize);
 
             styler.apply();
             return t;

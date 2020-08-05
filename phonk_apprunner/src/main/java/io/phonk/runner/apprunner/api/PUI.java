@@ -27,16 +27,19 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.phonk.runner.AppRunnerFragment;
@@ -48,7 +51,7 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.widgets.PPopupDialogFragment;
 import io.phonk.runner.apprunner.api.widgets.PToolbar;
-import io.phonk.runner.apprunner.api.widgets.StyleProperties;
+import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
 import io.phonk.runner.apprunner.api.widgets.WidgetHelper;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.AndroidUtils;
@@ -56,14 +59,20 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject(mergeFrom = "ViewsArea")
 public class PUI extends PViewsArea {
-    LinkedHashMap<String, StyleProperties> styles = new LinkedHashMap<>();
-
-    public StyleProperties style;
-    public StyleProperties theme;
+    public StylePropertiesProxy theme;
+    public StylePropertiesProxy rootStyle = new StylePropertiesProxy();
 
     private boolean isMainLayoutSetup = false;
+    public View mainLayout;
+    public ArrayList viewTree = new ArrayList<ViewElement>();
     public int screenWidth;
     public int screenHeight;
+
+    class ViewElement {
+        String id;
+        String type;
+        View ref;
+    }
 
     public PUI(AppRunner appRunner) {
         super(appRunner);
@@ -76,9 +85,18 @@ public class PUI extends PViewsArea {
         if (fragment != null) {
             toolbar = new PToolbar(getAppRunner(), getActivity().getSupportActionBar());
         }
+
         initializeLayout();
     }
 
+    @Override
+    public void statusBarColor(int color) {
+        if (mActivity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.mActivity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
+    }
 
     /**
      * This method creates the basic layout where the user created views will lay out
@@ -90,7 +108,7 @@ public class PUI extends PViewsArea {
      */
     protected void initializeLayout() {
         if (isMainLayoutSetup) return;
-        View mainLayout = initMainLayout();
+        mainLayout = initMainLayout();
 
         // here we add the layout
         if (getFragment() != null) {
@@ -104,6 +122,8 @@ public class PUI extends PViewsArea {
         setTheme();
         setStyle();
         background((String) theme.get("background"));
+
+        viewTree.add(mainLayout);
     }
 
     @PhonkMethod
@@ -122,7 +142,7 @@ public class PUI extends PViewsArea {
     }
 
     private void setTheme() {
-        theme = new StyleProperties();
+        theme = new StylePropertiesProxy();
 
         theme.put("background", getContext().getResources().getString(R.color.phonk_backgroundColor));
         theme.put("primary", getContext().getResources().getString(R.color.phonk_colorPrimary));
@@ -133,6 +153,7 @@ public class PUI extends PViewsArea {
         theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
         theme.put("animationOnViewAdd", false);
 
+        // if the theme is change then we reapply the styles
         theme.onChange((name, value) -> {
             setStyle();
         });
@@ -146,153 +167,47 @@ public class PUI extends PViewsArea {
         String colorTextPrimary = (String) theme.get("textPrimary");
         String colorBackground = (String) theme.get("background");
         String colorTransparent = "#00FFFFFF";
-        int borderSize = 5;
 
-        style = new StyleProperties();
-        style.put("enabled", style, true);
-        style.put("opacity", style, 1.0f);
-        style.put("visibility", style, "visible");
-        style.put("background", style, colorTransparent);
-        style.put("backgroundHover", style, "#88000000");
-        style.put("backgroundPressed", style, "#88FFFFFF");
-        style.put("backgroundSelected", style, "#88000000");
-        style.put("backgroundChecked", style, "#88000000");
-        style.put("borderColor", style, colorTransparent);
-        style.put("borderWidth", style, 0);
-        style.put("borderRadius", style, 0);
+        rootStyle.put("x", rootStyle, 0f);
+        rootStyle.put("y", rootStyle, 0f);
+        rootStyle.put("w", rootStyle, 0f);
+        rootStyle.put("h", rootStyle, 0f);
 
-        style.put("src", style, "");
-        style.put("srcPressed", style, "");
+        rootStyle.put("enabled", rootStyle, true);
+        rootStyle.put("opacity", rootStyle, 1.0f);
+        rootStyle.put("visibility", rootStyle, "visible");
+        rootStyle.put("backgroundHover", rootStyle, "#88000000");
+        rootStyle.put("backgroundPressed", rootStyle, "#33FFFFFF");
+        rootStyle.put("backgroundSelected", rootStyle, "#88000000");
+        rootStyle.put("backgroundChecked", rootStyle, "#88000000");
+        rootStyle.put("borderColor", rootStyle, colorTransparent);
+        rootStyle.put("borderWidth", rootStyle, 0);
+        rootStyle.put("borderRadius", rootStyle, 0);
 
-        style.put("textColor", style, colorTextPrimary);
-        style.put("textSize", style, 16);
-        style.put("textFont", style, "monospace");
-        style.put("textStyle", style, "normal");
-        style.put("textAlign", style, "center");
-        style.put("textTransform", style, "none");
-        style.put("padding", style, AndroidUtils.dpToPixels(getContext(), 2));
-        style.put("paddingLeft", style, AndroidUtils.dpToPixels(getContext(), 2));
-        style.put("paddingTop", style, AndroidUtils.dpToPixels(getContext(), 2));
-        style.put("paddingRight", style, AndroidUtils.dpToPixels(getContext(), 2));
-        style.put("paddingBottom", style, AndroidUtils.dpToPixels(getContext(), 2));
+        rootStyle.put("src", rootStyle, "");
+        rootStyle.put("srcPressed", rootStyle, "");
 
-        style.put("hintColor", style, colorSecondaryShade);
+        rootStyle.put("textColor", rootStyle, colorTextPrimary);
+        rootStyle.put("textSize", rootStyle, 16);
+        rootStyle.put("textFont", rootStyle, "monospace");
+        rootStyle.put("textStyle", rootStyle, "normal");
+        rootStyle.put("textAlign", rootStyle, "center");
+        rootStyle.put("textTransform", rootStyle, "none");
+        rootStyle.put("padding", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+        /*
+        rootStyle.put("paddingLeft", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+        rootStyle.put("paddingTop", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+        rootStyle.put("paddingRight", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+        rootStyle.put("paddingBottom", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+         */
+        rootStyle.put("background", rootStyle, colorSecondaryShade);
 
         // style.put("animInBefore", style, "this.x(0).y(100)");
         // style.put("animIn", style, "this.animate().x(100)");
         // style.put("animOut", style, "this.animate().x(0)");
-
-        // slider
-        style.put("slider", style, colorPrimary);
-        style.put("sliderPressed", style, colorPrimary);
-        style.put("sliderHeight", style, 20);
-        style.put("sliderBorderSize", style, 0);
-        style.put("sliderBorderColor", style, colorTransparent);
-
-        // pad
-        style.put("padSize", style, AndroidUtils.dpToPixels(mContext, 50));
-        // style.put("background", style, colorSecondaryShade);
-        style.put("padColor", style, colorPrimary);
-        style.put("padBorderColor", style, colorPrimary);
-        style.put("padBorderSize", style, AndroidUtils.dpToPixels(mContext, 2));
-
-        // knobf
-        style.put("knobBorderWidth", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 1));
-        style.put("knobProgressWidth", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
-        style.put("knobProgressSeparation", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 15));
-        style.put("knobBorderColor", style, colorSecondary);
-        style.put("knobProgressColor", style, colorPrimary);
-
-        // matrix
-        style.put("matrixCellColor", style, colorTransparent);
-        style.put("matrixCellSelectedColor", style, colorPrimary);
-        style.put("matrixCellBorderSize", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 1));
-        style.put("matrixCellBorderColor", style, colorSecondaryShade);
-        style.put("matrixCellBorderRadius", style, 0);
-
-        // plot
-        style.put("plotColor", style, colorPrimary);
-        style.put("background", style, colorSecondaryShade);
-        style.put("plotWidth", style, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
-        styles.put("*", style);
-
-        StyleProperties buttonStyle = new StyleProperties();
-        buttonStyle.put("textStyle", buttonStyle, "bold");
-        buttonStyle.put("textAlign", buttonStyle, "center");
-        buttonStyle.put("background", buttonStyle, colorSecondaryShade);
-        // buttonStyle.put("backgroundPressed", buttonStyle, colorPrimary);
-
-        style.put("srcTintPressed", buttonStyle, colorSecondary);
-        styles.put("button", buttonStyle);
-
-        StyleProperties imageStyle = new StyleProperties();
-        imageStyle.put("background", imageStyle, colorTransparent);
-        imageStyle.put("srcMode", imageStyle, "fit");
-        styles.put("image", imageStyle);
-
-        StyleProperties imageButtonStyle = new StyleProperties();
-        imageButtonStyle.put("srcMode", imageButtonStyle, "resize");
-        style.put("srcTintPressed", imageButtonStyle, colorSecondary);
-        styles.put("imagebutton", imageButtonStyle);
-
-        StyleProperties knobStyle = new StyleProperties();
-        knobStyle.put("background", knobStyle, colorTransparent);
-        knobStyle.put("textColor", knobStyle, colorSecondary);
-        knobStyle.put("textFont", knobStyle, "monospace");
-        knobStyle.put("textSize", knobStyle, 10);
-        styles.put("knob", knobStyle);
-
-        StyleProperties textStyle = new StyleProperties();
-        textStyle.put("background", textStyle, colorTransparent);
-        textStyle.put("textColor", textStyle, colorTextPrimary);
-        // textStyle.put("textSize", textStyle, 12);
-        textStyle.put("textAlign", textStyle, "left");
-        styles.put("text", textStyle);
-
-        StyleProperties toggleStyle = new StyleProperties();
-        toggleStyle.put("textColor", toggleStyle, colorPrimary);
-        toggleStyle.put("background", toggleStyle, colorTransparent);
-        toggleStyle.put("backgroundChecked", toggleStyle, colorSecondaryShade);
-        toggleStyle.put("backgroundPressed", toggleStyle, colorSecondaryShade);
-        toggleStyle.put("borderColor", toggleStyle, colorSecondary);
-        toggleStyle.put("borderWidth", toggleStyle, borderSize);
-        styles.put("toggle", toggleStyle);
-
-        StyleProperties inputStyle = new StyleProperties();
-        inputStyle.put("textAlign", inputStyle, "left");
-        inputStyle.put("background", inputStyle, colorSecondaryShade);
-        inputStyle.put("backgroundPressed", inputStyle, colorSecondaryShade);
-        inputStyle.put("borderColor", inputStyle, colorSecondary);
-        inputStyle.put("borderWidth", inputStyle, borderSize);
-        // inputStyle.put("textAlign", inputStyle, "center");
-        inputStyle.put("textColor", inputStyle, colorTextPrimary);
-        styles.put("input", inputStyle);
-
-        StyleProperties matrixStyle = new StyleProperties();
-        textStyle.put("background", matrixStyle, colorTransparent);
-        textStyle.put("backgroundPressed", matrixStyle, colorTransparent);
-        styles.put("matrix", matrixStyle);
-
-        StyleProperties plotStyle = new StyleProperties();
-        plotStyle.put("textColor", plotStyle, "#ffffff");
-        // plotStyle.put("borderColor", plotStyle, colorSecondaryShade);
-        plotStyle.put("background", plotStyle, colorSecondaryShade);
-        styles.put("plot", plotStyle);
-
-        StyleProperties touchPadStyle = new StyleProperties();
-        touchPadStyle.put("background", plotStyle, colorSecondaryShade);
-        styles.put("touchpad", plotStyle);
-
     }
-
-    public void registerStyle(String name, StyleProperties widgetProp) {
-        if (styles.containsKey(name) == false) {
-            styles.put(name, widgetProp);
-        }
-    }
-
-    public LinkedHashMap<String, StyleProperties> getStyles() {
-        return styles;
+    public StylePropertiesProxy getStyle() {
+        return rootStyle;
     }
 
     public void screenMode(String mode) {
@@ -340,8 +255,6 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void setTheme(Map<String, Object> properties) {
-        MLog.d("qqq", "setTheme");
-
         theme.eventOnChange = false;
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             theme.put(entry.getKey(), theme, entry.getValue());
@@ -349,7 +262,6 @@ public class PUI extends PViewsArea {
         setStyle();
         background((String) theme.get("background"));
         theme.eventOnChange = true;
-        MLog.d("qqq", "setTheme 2");
     }
 
     /**
@@ -651,6 +563,10 @@ public class PUI extends PViewsArea {
     @PhonkMethod
     public Bitmap takeViewScreenshot(View v) {
         return AndroidUtils.takeScreenshotView(v);
+    }
+
+    public ArrayList getViewTree() {
+        return viewTree;
     }
 
     @Override

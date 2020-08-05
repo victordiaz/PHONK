@@ -1,3 +1,15 @@
+1.2.8
+- Decimals method in slider and knob now works
+- Launch other scripts via app.launchScript(path) method
+- Scan WIFI networks using network.wifiScan(callback)
+- MQTT uses now async calls
+- console.adbLog() method (for debug purposes)
+- camera is now less distorted
+- ui.background changes the status bar color too
+- OSM maps work now on 4.x.x devices
+- SMS send works properly in extended version
+- Theming and styling is improved internally
+
 1.2.7
 - Better notifications in WebEditor
 - Better NFC handling

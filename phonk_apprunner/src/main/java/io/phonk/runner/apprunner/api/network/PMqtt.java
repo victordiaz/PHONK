@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api.network;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -43,7 +44,7 @@ import io.phonk.runner.base.utils.MLog;
 public class PMqtt extends ProtoBase {
     private final String TAG = PMqtt.class.getSimpleName();
 
-    private MqttClient client;
+    private MqttAsyncClient client;
     private ReturnInterface mCallback;
 
     public PMqtt(AppRunner appRunner) {
@@ -67,7 +68,7 @@ public class PMqtt extends ProtoBase {
         MemoryPersistence persistence = new MemoryPersistence();
 
         try {
-            client = new MqttClient((String) connectionSettings.get("broker"), (String) connectionSettings.get("clientId"), persistence);
+            client = new MqttAsyncClient((String) connectionSettings.get("broker"), (String) connectionSettings.get("clientId"), persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
 
             if (connectionSettings.containsKey("user") && connectionSettings.containsKey("password")) {
@@ -147,14 +148,18 @@ public class PMqtt extends ProtoBase {
      * @return
      */
     @PhonkMethod
-    public PMqtt subscribe(final String topic) {
+    public PMqtt subscribe(final String topic, int qos) {
         try {
-            client.subscribe(topic);
+            client.subscribe(topic, qos);
         } catch (MqttException e) {
             e.printStackTrace();
         }
 
         return this;
+    }
+
+    public PMqtt subscribe(String topic) {
+        return subscribe(topic, 2);
     }
 
     /**
@@ -172,7 +177,6 @@ public class PMqtt extends ProtoBase {
         }
         return this;
     }
-
 
     /**
      * Callback that returns data from a subscribed topic
@@ -196,6 +200,7 @@ public class PMqtt extends ProtoBase {
     public PMqtt publish(final String topic, final String data, int qos, boolean retain) {
         MqttMessage message = new MqttMessage(data.getBytes());
         message.setQos(qos);
+        // message.setRetained(retain);
         try {
             client.publish(topic, message);
         } catch (MqttException e) {

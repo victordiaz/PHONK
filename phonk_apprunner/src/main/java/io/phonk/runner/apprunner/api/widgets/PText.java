@@ -42,13 +42,21 @@ import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
 public class PText extends TextView implements PViewMethodsInterface, PTextInterface {
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public TextStyler styler;
     private Typeface currentFont;
 
-    public PText(AppRunner appRunner) {
+    public PText(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
-        styler = new Styler(appRunner, this, props);
+
+        styler = new TextStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("background", props, "#00FFFFFF");
+        props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
+        // textStyle.put("textSize", textStyle, 12);
+        props.put("textAlign", props, "left");
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
         styler.apply();
     }
 
@@ -230,12 +238,15 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
         return props;
     }
 
-    /*
-    public PTextView center(String how) {
-        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_START);
-        this.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
-        this.setTextAlignment(TEXT_ALIGNMENT);
+    class TextStyler extends Styler {
+        TextStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+        }
     }
-    */
+
 }

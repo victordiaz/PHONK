@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.AppRunnerLauncherService;
 import io.phonk.runner.BuildConfig;
 import io.phonk.runner.R;
 import io.phonk.runner.apidoc.annotation.PhonkField;
@@ -496,6 +497,25 @@ public class PApp extends ProtoBase {
         getContext().startActivity(intent);
 
         // getActivity().startActivityForResult();
+    }
+
+    /**
+     * Launch a PHONK script as follows
+     *
+     * app.launchScript('examples/Graphical User Interface/Basic Views')
+     * @param path
+     */
+    @PhonkMethod
+    public void launchScript(String path) {
+        Project p = new Project(path);
+        Intent intent = new Intent(getContext(), AppRunnerLauncherService.class);
+        // intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
+        intent.putExtra(Project.FOLDER, p.getFolder());
+        intent.putExtra(Project.NAME, p.getName());
+        // intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
+        // intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
+        // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUNNING, p));
+        getContext().startService(intent);
     }
 
     /**

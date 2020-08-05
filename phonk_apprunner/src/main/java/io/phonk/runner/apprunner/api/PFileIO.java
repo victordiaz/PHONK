@@ -31,6 +31,7 @@ import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
@@ -303,7 +304,6 @@ public class PFileIO extends ProtoBase {
             returnValues(null, callback);
         });
         t.start();
-
     }
 
     @PhonkMethod(description = "Unzip a file into a folder", example = "")
@@ -366,6 +366,25 @@ public class PFileIO extends ProtoBase {
                 fileObserver.stopWatching();
                 fileObserver = null;
             }
+        }
+    }
+
+    public void saveImage(Bitmap finalBitmap, String fileName, String type, int quality) {
+        String filePath = getAppRunner().getProject().getFullPathForFile(fileName);
+
+        Bitmap.CompressFormat formatType;
+        if (type.equals("jpg")) formatType = Bitmap.CompressFormat.JPEG;
+        else formatType = Bitmap.CompressFormat.PNG;
+
+        File file = new File(filePath);
+        if (file.exists()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(formatType, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

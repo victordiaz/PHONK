@@ -61,7 +61,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PMap extends MapView {
+public class PMap extends MapView implements PViewMethodsInterface {
     final String TAG = PMap.class.getSimpleName();
 
     private IMapController mapController = null;
@@ -74,12 +74,24 @@ public class PMap extends MapView {
     private AppRunner mAppRunner;
     private Context mContext;
 
-    public PMap(AppRunner appRunner) {
+    // this is a props proxy for the user
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+
+    // the props are transformed / accessed using the styler object
+    public Styler styler;
+
+    public PMap(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
         mAppRunner = appRunner;
         this.mContext = appRunner.getAppContext();
-        // super(appRunner, pixelTileSize);
+
+        styler = new Styler(appRunner, this, props);
+        props.eventOnChange = false;
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
+        styler.apply();
+
         Configuration.getInstance().setUserAgentValue(this.mContext.getApplicationContext().getPackageName());
 
         // Create the mapview with the custom tile provider array
@@ -613,6 +625,19 @@ public class PMap extends MapView {
             return this;
         }
 
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+
+    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
+    }
+
+    @Override
+    public Map getProps() {
+        return props;
     }
 }
 

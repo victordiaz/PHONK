@@ -36,6 +36,7 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.events.Events;
 import io.phonk.runner.base.utils.GSONUtil;
+import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.StrUtils;
 
 @PhonkObject
@@ -86,6 +87,7 @@ public class PConsole extends ProtoBase {
     }
 
     public PConsole p_error(int type, Object outputs) {
+        MLog.d("qq", "" + type);
 
         switch (type) {
             case AppRunnerInterpreter.RESULT_ERROR:
@@ -97,7 +99,7 @@ public class PConsole extends ProtoBase {
                 break;
 
             case AppRunnerInterpreter.RESULT_NOT_CAPABLE:
-                base_log("log_error", "This device does not support " + outputs);
+                base_log("log_error", "This device does not support/have " + outputs);
         }
 
         return this;
@@ -239,6 +241,10 @@ public class PConsole extends ProtoBase {
 
     private String getCurrentTime() {
         return s.format(new Date());
+    }
+
+    public void adbLog(String tag, String msg) {
+        MLog.d(tag, msg);
     }
 
     public void __stop() {

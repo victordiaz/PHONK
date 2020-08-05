@@ -22,12 +22,12 @@
   -->
 
 <resources>
-	<string name="app_name">\\\\\\</string>
-    <string name="runner_name">\\\\\\\</string>
+	<string name="app_name">PHONK AppRunner</string>
+    <string name="runner_name">PHONK AppRunner</string>
     <string name="connect_message">Click to connect</string>
     <string name="menu_settings">Settings</string>
     <string name="BT_Home">Connect</string>
-    
+
     <!-- puredata -->
     <string name="pref_title">Pure Data Preferences</string>
 	<string name="pref_sum">Pure Data Preferences</string>
@@ -40,5 +40,5 @@
 	<string name="pref_key_outchannels">OUTPUT_CHANNELS</string>
 	<string name="pref_title_outchannels">Output channels</string>
 	<string name="pref_sum_outchannels">Number of output channels</string>
-    
+
 </resources>

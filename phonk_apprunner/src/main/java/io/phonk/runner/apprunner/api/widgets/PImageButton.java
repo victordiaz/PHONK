@@ -25,6 +25,8 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
+import java.util.Map;
+
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
@@ -40,8 +42,16 @@ public class PImageButton extends PImage {
     private Bitmap mBitmapPressed;
     private ReturnInterface callbackfn;
 
-    public PImageButton(AppRunner appRunner) {
-        super(appRunner);
+    public PImageButton(AppRunner appRunner, Map initProps) {
+        super(appRunner, initProps);
+    }
+
+    @Override
+    protected void addFromChild(StylePropertiesProxy props) {
+        super.addFromChild(props);
+        props.put("background", props, mAppRunner.pUi.theme.get("secondaryShade"));
+        props.put("srcTintPressed", props, mAppRunner.pUi.theme.get("secondary"));
+        props.put("padding", props, mAppRunner.pUtil.dpToPixels(10));
     }
 
     // Set on click behavior

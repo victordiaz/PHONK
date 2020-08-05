@@ -27,20 +27,29 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 
+import java.util.Map;
+
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
+import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
+import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.apprunner.api.widgets.Styler;
 import io.phonk.runner.base.gui.CustomVideoTextureView;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass(mergeFrom = "AudioPlayer")
-public class PVideo extends PAudioPlayer {
-
+public class PVideo extends PAudioPlayer /* implements PViewMethodsInterface */ {
     private static final java.lang.String TAG = PVideo.class.getSimpleName();
-
     private final CustomVideoTextureView mTextureView;
+
+    // this is a props proxy for the user
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+
+    // the props are transformed / accessed using the styler object
+    public Styler styler;
 
     public PVideo(AppRunner appRunner) {
         super(appRunner);
@@ -108,5 +117,18 @@ public class PVideo extends PAudioPlayer {
         return (float) mMediaPlayer.getVideoWidth() / (float) mMediaPlayer.getVideoHeight();
     }
 
+    /*
+    @Override
+    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
 
+    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
+    }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+    */
 }

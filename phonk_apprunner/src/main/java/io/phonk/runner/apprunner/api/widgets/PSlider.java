@@ -22,7 +22,9 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import android.graphics.Color;
 import android.view.MotionEvent;
+import android.view.View;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -36,22 +38,21 @@ import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.AndroidUtils;
+import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
 @PhonkClass
 public class PSlider extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PSlider.class.getSimpleName();
 
-    public StyleProperties props = new StyleProperties();
-    public Styler styler;
+    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public SliderStyler styler;
 
     private ArrayList touches;
     private float x;
     private float y;
     private boolean touching;
     private ReturnInterface callback;
-    private int mWidth;
-    private int mHeight;
     private float unmappedVal;
     private float mappedVal;
     private float rangeFrom = 0;
@@ -66,17 +67,23 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private String formatString = "#.##";
     private int numDecimals = 1;
 
-    public PSlider(AppRunner appRunner) {
-        super(appRunner);
+    public PSlider(AppRunner appRunner, Map initProps) {
+        super(appRunner, initProps);
 
         draw = mydraw;
-        styler = new Styler(appRunner, this, props);
+        
+        styler = new SliderStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("slider", props, (String) appRunner.pUi.theme.get("primary"));
+        props.put("sliderPressed", props, (String) appRunner.pUi.theme.get("primary"));
+        props.put("sliderHeight", props, 20);
+        props.put("sliderBorderSize", props, 0);
+        props.put("sliderBorderColor", props, "#00FFFFFF");
+        styler.fromTo(initProps, props);
+        props.eventOnChange = true;
         styler.apply();
 
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols(Locale.FRANCE);
-        symbol.setDecimalSeparator('.');
-        df = new DecimalFormat(formatString, symbol);
-        df.setMinimumFractionDigits(2);
+        df = new DecimalFormat(formatString);
     }
 
     @Override
@@ -134,13 +141,17 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             mWidth = c.width;
             mHeight = c.height;
 
+            PSlider.this.unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, mWidth);
+
             c.clear();
             c.cornerMode(true);
 
             if (!touching) c.fill(styler.slider);
             else c.fill(styler.sliderPressed);
+
             c.strokeWidth(styler.sliderBorderSize);
             c.stroke(styler.sliderBorderColor);
+
             c.rect(0, 0, unmappedVal, c.height);
 
             df.setRoundingMode(RoundingMode.DOWN);
@@ -153,6 +164,15 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             c.drawTextCentered("" + df.format(mappedVal));
         }
     };
+
+    public PSlider decimals(int num) {
+        if (num <= 0) formatString = "#";
+        else {
+            formatString = "#." + new String(new char[num]).replace("\0", "#");
+        }
+        df.applyPattern(formatString);
+        return this;
+    }
 
     public PSlider onChange(final ReturnInterface callbackfn) {
         this.callback = callbackfn;
@@ -168,8 +188,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     public void value(float val) {
         this.mappedVal = val;
-        this.unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, mWidth);
-
         this.invalidate();
     }
 
@@ -197,6 +215,30 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+
+    class SliderStyler extends Styler {
+        int slider;
+        int sliderPressed;
+        float sliderHeight;
+        float sliderBorderSize;
+        int sliderBorderColor;
+
+        SliderStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            slider = Color.parseColor(mProps.get("slider").toString());
+            sliderPressed = Color.parseColor(mProps.get("sliderPressed").toString());
+            sliderHeight = toFloat(mProps.get("sliderHeight"));
+            sliderBorderSize = toFloat(mProps.get("sliderBorderSize"));
+            sliderBorderColor = Color.parseColor(mProps.get("sliderBorderColor").toString());
+        }
     }
 
 }

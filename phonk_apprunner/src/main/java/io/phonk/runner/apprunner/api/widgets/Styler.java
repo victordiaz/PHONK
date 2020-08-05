@@ -42,7 +42,7 @@ public class Styler {
 
     View mView;
     AppRunner mAppRunner;
-    public StyleProperties props;
+    public StylePropertiesProxy mProps;
 
     MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
     // MyRoundCornerDrawable mActiveDrawable = new MyRoundCornerDrawable();
@@ -52,77 +52,63 @@ public class Styler {
     MyRoundCornerDrawable mHoveredDrawable = new MyRoundCornerDrawable();
     StateListDrawable mStateListDrawable = new StateListDrawable();
 
+    // String animInBefore;
+    // String animIn;
+    // String animOut;
+
+    // common properties
+    String id;
+    String mViewName;
+    boolean enabled;
     String visibility;
     float opacity;
-    boolean enabled;
+    float x;
+    float y;
+    float width;
+    float height;
     int background;
     int backgroundHover;
     int backgroundPressed;
     int backgroundSelected;
-    private int backgroundChecked;
+    int backgroundChecked;
     double borderWidth;
     int borderColor;
     double borderRadius;
+    float padding;
     int textColor;
     double textSize;
-    String src;
-    String srcPressed;
-    int srcTintPressed;
     String textFont;
     String textStyle;
     String textTransform;
-    private String textAlign;
-    public float padding;
-    public int hintColor;
-    // String animInBefore;
-    // String animIn;
-    // String animOut;
-    int slider;
-    int sliderPressed;
-    float sliderHeight;
-    float sliderBorderSize;
-    int sliderBorderColor;
-    float padSize;
-    int padColor;
-    int padBorderColor;
-    float padBorderSize;
-    public float knobProgressSeparation;
-    public float knobBorderWidth;
-    public float knobProgressWidth;
-    public int knobBorderColor;
-    public int knobProgressColor;
-    public int matrixCellColor;
-    public int matrixCellSelectedColor;
-    public float matrixCellBorderSize;
-    public int matrixCellBorderColor;
-    public float matrixCellBorderRadius;
+    String textAlign;
 
-    private boolean mViewIsSet;
-    public int plotBackground = Color.parseColor("#22000000");
-    public int plotColor = Color.parseColor("#222222");
-    public int plotBorderColor = Color.parseColor("#222222");
-    public float plotWidth = 2;
-    String viewName;
     private Typeface font;
-    private int tStyle;
+    private int typeFaceStyle;
 
-    Styler(AppRunner appRunner, View view, StyleProperties props) {
+    /*
+    String src;
+    String srcPressed;
+    */
+
+    private int mWidth;
+    private int mHeight;
+    private boolean mViewIsSet = false;
+
+    Styler(AppRunner appRunner, View view, StylePropertiesProxy props) {
         mAppRunner = appRunner;
-        mView = view;
 
-        viewName = mView.getClass().getSimpleName().substring(1).toLowerCase();
-        MLog.d(TAG, "Applying style to " + viewName);
-        this.props = props;
+        mView = view;
+        mViewName = mView.getClass().getSimpleName().substring(1).toLowerCase();
+        mProps = props;
+
+        MLog.d(TAG, "Applying style to " + mViewName);
 
         // mStateListDrawable.addState(new int[]{android.R.attr.state_checked}, mCheckedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_pressed}, mPressedDrawable);
         // mStateListDrawable.addState(new int[]{}, mActiveDrawable);
-
         mStateListDrawable.addState(new int[]{android.R.attr.state_enabled}, mBackgroundDrawable);
-
         mStateListDrawable.addState(new int[]{android.R.attr.state_selected}, mSelectedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_hovered}, mHoveredDrawable);
-
         mStateListDrawable.addState(new int[]{}, mCheckedDrawable);
         mStateListDrawable.addState(new int[]{android.R.attr.state_checkable}, mCheckedDrawable);
         mView.setBackground(mStateListDrawable);
@@ -132,6 +118,7 @@ public class Styler {
 
         // when property changes then reapply them
         props.onChange((name, value) -> {
+            /*
             switch (name) {
                 case "x":
                     setX(value);
@@ -139,115 +126,83 @@ public class Styler {
                 case "y":
                     setY(value);
                     break;
-                case "width":
+                case "w":
                     setWidth(value);
                     break;
-                case "height":
+                case "h":
                     setHeight(value);
                     break;
             }
-
+            */
             apply();
         });
     }
 
     public void resetStyle() {
-        LinkedHashMap<String, StyleProperties> styles = mAppRunner.pUi.getStyles();
-
-        fromTo(styles.get("*"), props);
-
-        StyleProperties p = styles.get(viewName);
-        if (p != null) {
-            // MLog.d(TAG, "" + p.size());
-            // MLog.d(TAG, "applying view specific style for " + viewName);
-            fromTo(p, props);
-        }
+        StylePropertiesProxy style = mAppRunner.pUi.getStyle();
+        fromTo(style, mProps);
     }
 
-    public void setProps(Map o) {
-        props.eventOnChange = false;
-        fromTo(o, props);
-        apply();
-        props.eventOnChange = true;
-    }
+    public static void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {
+        if (styleFrom == null) return;
 
-    private void fromTo(Map<String, Object> styleFrom, StyleProperties styleTo) {
         for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
-            // MLog.d(TAG, "" + entry.getKey() + " " + entry.getValue());
-
             styleTo.put(entry.getKey(), styleTo, entry.getValue());
         }
     }
 
     public void apply() {
-        visibility = props.get("visibility").toString();
-        opacity = toFloat(props.get("opacity"));
-        enabled = (boolean) props.get("enabled");
-        background = Color.parseColor(props.get("background").toString());
-        backgroundHover = Color.parseColor(props.get("backgroundHover").toString());
-        backgroundPressed = Color.parseColor(props.get("backgroundPressed").toString());
-        backgroundSelected = Color.parseColor(props.get("backgroundSelected").toString());
-        backgroundChecked = Color.parseColor(props.get("backgroundChecked").toString());
-        borderWidth = toFloat(props.get("borderWidth"));
-        borderColor = Color.parseColor(props.get("borderColor").toString());
-        borderRadius = toFloat(props.get("borderRadius"));
-        textColor = Color.parseColor(props.get("textColor").toString());
-        textSize = toFloat(props.get("textSize"));
-        textFont = props.get("textFont").toString();
-        textStyle = props.get("textStyle").toString();
-        textTransform = props.get("textTransform").toString();
-        textAlign = props.get("textAlign").toString();
-        padding = toFloat(props.get("padding"));
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 
+        if (mViewIsSet) {
+            setX(mProps.get("x"));
+            setY(mProps.get("y"));
+            setWidth(mProps.get("w"));
+            setHeight(mProps.get("h"));
+        }
+        mViewIsSet = true;
+
+        enabled = (boolean) mProps.get("enabled");
+        visibility = mProps.get("visibility").toString();
+        opacity = toFloat(mProps.get("opacity"));
+        background = Color.parseColor(mProps.get("background").toString());
+
+        backgroundHover = Color.parseColor(mProps.get("backgroundHover").toString());
+        backgroundPressed = Color.parseColor(mProps.get("backgroundPressed").toString());
+        backgroundSelected = Color.parseColor(mProps.get("backgroundSelected").toString());
+        backgroundChecked = Color.parseColor(mProps.get("backgroundChecked").toString());
+        borderWidth = toFloat(mProps.get("borderWidth"));
+        borderColor = Color.parseColor(mProps.get("borderColor").toString());
+        borderRadius = toFloat(mProps.get("borderRadius"));
+
+        textColor = Color.parseColor(mProps.get("textColor").toString());
+        textSize = toFloat(mProps.get("textSize"));
+        textFont = mProps.get("textFont").toString();
+        textStyle = mProps.get("textStyle").toString();
+        textTransform = mProps.get("textTransform").toString();
+        textAlign = mProps.get("textAlign").toString();
+        padding = toFloat(mProps.get("padding"));
+
+        // individual paddings have preference over general
         float paddingLeft = padding;
         float paddingTop = padding;
         float paddingRight = padding;
         float paddingBottom = padding;
 
-        try {
-            paddingLeft = toFloat(props.get("paddingLeft"));
-            paddingTop = toFloat(props.get("paddingTop"));
-            paddingRight = toFloat(props.get("paddingRight"));
-            paddingBottom = toFloat(props.get("paddingBottom"));
-        } catch (Exception e) {
+        try { paddingLeft = toFloat(mProps.get("paddingLeft")); } catch (Exception e) { }
+        try { paddingTop = toFloat(mProps.get("paddingTop")); } catch (Exception e) { }
+        try { paddingRight = toFloat(mProps.get("paddingRight")); } catch (Exception e) { }
+        try { paddingBottom = toFloat(mProps.get("paddingBottom")); } catch (Exception e) { }
 
-        }
-
-        hintColor = Color.parseColor(props.get("hintColor").toString());
-
+        /*
         src = props.get("src").toString();
         srcPressed = props.get("srcPressed").toString();
-        srcTintPressed = Color.parseColor(props.get("srcTintPressed").toString());
+
 
         // animInBefore = props.get("animInBefore").toString();
         // animIn = props.get("animIn").toString();
         // animOut = props.get("animOut").toString();
-
-        slider = Color.parseColor(props.get("slider").toString());
-        sliderPressed = Color.parseColor(props.get("sliderPressed").toString());
-        sliderHeight = toFloat(props.get("sliderHeight"));
-        sliderBorderSize = toFloat(props.get("sliderBorderSize"));
-        sliderBorderColor = Color.parseColor(props.get("sliderBorderColor").toString());
-
-        padSize = toFloat(props.get("padSize"));
-        padColor = Color.parseColor(props.get("padColor").toString());
-        padBorderColor = Color.parseColor(props.get("padBorderColor").toString());
-        padBorderSize = toFloat(props.get("padBorderSize"));
-
-        knobProgressSeparation = toFloat(props.get("knobProgressSeparation"));
-        knobBorderWidth = toFloat(props.get("knobBorderWidth"));
-        knobProgressWidth = toFloat(props.get("knobProgressWidth"));
-        knobBorderColor = Color.parseColor(props.get("knobBorderColor").toString());
-        knobProgressColor = Color.parseColor(props.get("knobProgressColor").toString());
-
-        matrixCellColor = Color.parseColor(props.get("matrixCellColor").toString());
-        matrixCellSelectedColor = Color.parseColor(props.get("matrixCellSelectedColor").toString());
-        matrixCellBorderSize = toFloat(props.get("matrixCellBorderSize"));
-        matrixCellBorderColor = Color.parseColor(props.get("matrixCellBorderColor").toString());
-        matrixCellBorderRadius = toFloat(props.get("matrixCellBorderRadius"));
-
-        plotColor = Color.parseColor(props.get("plotColor").toString());
-        plotWidth = toFloat(props.get("plotWidth"));
+        */
 
         // mView.setVisibility(visibility);
         mView.setAlpha(opacity);
@@ -298,7 +253,7 @@ public class Styler {
                     font = Typeface.SANS_SERIF;
                     break;
                 case "monospace":
-                    MLog.d(TAG, viewName + " yep!");
+                    MLog.d(TAG, mViewName + " yep!");
                     font = Typeface.MONOSPACE;
                     break;
             }
@@ -306,19 +261,19 @@ public class Styler {
 
             switch (textStyle) {
                 case "normal":
-                    tStyle = Typeface.NORMAL;
+                    typeFaceStyle = Typeface.NORMAL;
                     break;
                 case "bold":
-                    tStyle = Typeface.BOLD;
+                    typeFaceStyle = Typeface.BOLD;
                     break;
                 case "boldItalic":
-                    tStyle = Typeface.BOLD_ITALIC;
+                    typeFaceStyle = Typeface.BOLD_ITALIC;
                     break;
                 case "italic":
-                    tStyle = Typeface.ITALIC;
+                    typeFaceStyle = Typeface.ITALIC;
                     break;
             }
-            v.textStyle(tStyle);
+            v.textStyle(typeFaceStyle);
 
             int tAlignment = TEXT_ALIGNMENT_TEXT_START;
             switch (textAlign) {
@@ -335,47 +290,71 @@ public class Styler {
             }
             v.textAlign(tAlignment);
         }
-
     }
 
-    private float toFloat(Object o) {
+    public void setProps(Map o) {
+        mProps.eventOnChange = false;
+        fromTo(o, mProps);
+        apply();
+        mProps.eventOnChange = true;
+    }
+
+    protected float toFloat(Object o) {
         return ((Number) o).floatValue();
     }
 
-    void setLayoutProps(float x, float y, float width, float height) {
-        props.eventOnChange = false;
-        props.put("x", props, x);
-        props.put("y", props, y);
-        props.put("width", props, width);
-        props.put("height", props, height);
-        props.eventOnChange = true;
-        mViewIsSet = true;
+    public void setLayoutProps(float x, float y, float width, float height) {
+        mProps.eventOnChange = false;
+        mProps.put("x", mProps, x);
+        mProps.put("y", mProps, y);
+        mProps.put("w", mProps, width);
+        mProps.put("h", mProps, height);
+        mProps.eventOnChange = true;
+    }
+
+    void getScreenSize() {
+        mWidth = mAppRunner.pUi.screenWidth;
+        mHeight = mAppRunner.pUi.screenHeight;
     }
 
     public void setX(Object value) {
-        mView.setX(toFloat(value));
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
+
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
+            lp.x = val;
+        }
     }
 
     public void setY(Object value) {
-        mView.setY(toFloat(value));
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
+
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
+            lp.y = val;
+        }
     }
 
     private void setWidth(Object value) {
-        ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
 
-        if (mViewIsSet) {
-            int w = ((Number) value).intValue();
-            lp.width = w;
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            ViewGroup.LayoutParams lp = mView.getLayoutParams();
+            lp.width = val;
             mView.setLayoutParams(lp);
         }
     }
 
     private void setHeight(Object value) {
-        ViewGroup.LayoutParams lp = mView.getLayoutParams();
+        getScreenSize();
+        int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
 
-        if (mViewIsSet) {
-            int h = ((Number) value).intValue();
-            lp.height = h;
+        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+            ViewGroup.LayoutParams lp = mView.getLayoutParams();
+            lp.height = val;
             mView.setLayoutParams(lp);
         }
     }

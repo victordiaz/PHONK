@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api.sensors;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,6 +31,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
@@ -40,6 +42,8 @@ import android.os.SystemClock;
 import android.provider.Settings;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,10 +68,11 @@ public class PLocation extends ProtoBase {
     private boolean isGPSFix;
     private Location mLastLocation;
     private long mLastLocationMillis;
-    private LocationListener listener;
+    private LocationListener locationListener;
     public boolean running;
 
-    private ReturnInterface mCallback;
+    private ReturnInterface mLocationCallback;
+    private ReturnInterface mSatellitesCallback;
 
 
     // The minimum distance to change Updates in meters
@@ -83,6 +88,7 @@ public class PLocation extends ProtoBase {
     }
 
 
+    @SuppressLint("MissingPermission")
     @PhonkMethod(description = "Start the location. Returns lat, lon, alt, speed, bearing", example = "")
     @PhonkMethodParam(params = {"function(lat, lon, alt, speed, bearing)"})
     public void start() {
@@ -130,7 +136,7 @@ public class PLocation extends ProtoBase {
 
         provider = locationManager.getBestProvider(criteria, false);
 
-        listener = new LocationListener() {
+        locationListener = new LocationListener() {
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -182,13 +188,12 @@ public class PLocation extends ProtoBase {
                 r.put("longitude", location.getLongitude());
                 r.put("altitude", location.getAltitude());
                 r.put("speed", location.getSpeed());
-                r.put("accuracy", location.getAccuracy());
-                r.put("speed", location.getSpeed());
+                r.put("speedUnit", "m/s");
                 r.put("accuracy", location.getAccuracy());
                 r.put("bearing", location.getBearing());
                 r.put("provider", location.getProvider());
                 r.put("time", location.getTime());
-                mCallback.event(r);
+                mLocationCallback.event(r);
 
                 if (location == null) {
                     return;
@@ -196,30 +201,63 @@ public class PLocation extends ProtoBase {
 
                 mLastLocationMillis = SystemClock.elapsedRealtime();
                 mLastLocation = location;
-
             }
         };
 
-        locationManager.requestLocationUpdates(provider, 100, 0.1f, listener);
-    }
+        locationManager.requestLocationUpdates(provider, 100, 0.1f, locationListener);
+        locationManager.addGpsStatusListener(new GpsStatus.Listener() {
+            @Override
+            public void onGpsStatusChanged(int i) {
+                int satellitesCount = 0;
+                int satellitesInFix = 0;
+                int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
+                MLog.d(TAG, "Time to first fix = " + timetofix);
+                ArrayList sats = new ArrayList();
 
+                for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
+                    if(sat.usedInFix()) {
+                        satellitesInFix++;
+                    }
+                    satellitesCount++;
+
+                    HashMap<String, Object> satItem = new HashMap<>();
+                    satItem.put("azimuth", sat.getAzimuth());
+                    satItem.put("elevation", sat.getAzimuth());
+                    satItem.put("prn", sat.getPrn());
+                    satItem.put("snr", sat.getSnr());
+                    sats.add(satItem);
+
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("satellites", sats);
+                    ret.put("satellitesInView", satellitesCount);
+                    ret.put("satellitesInFix", satellitesInFix);
+
+                    if (mSatellitesCallback != null) mSatellitesCallback.event(ret);
+                }
+                // MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
+            }
+        });
+    }
 
     @PhonkMethod(description = "Start the GPS. Returns x, y, z", example = "")
     @PhonkMethodParam(params = {"function(x, y, z)"})
     public PLocation onChange(final ReturnInterface callbackfn) {
-        mCallback = callbackfn;
-
+        mLocationCallback = callbackfn;
         return this;
     }
 
+    @PhonkMethod(description = "Start the GPS. Returns x, y, z", example = "")
+    @PhonkMethodParam(params = {"function(x, y, z)"})
+    public PLocation onSatellitesChange(final ReturnInterface callbackfn) {
+        mSatellitesCallback = callbackfn;
+        return this;
+    }
 
     @PhonkMethod(description = "Get the last known location", example = "")
     @PhonkMethodParam(params = {""})
     public Location getLastKnownLocation() {
         return locationManager.getLastKnownLocation(provider);
-
     }
-
 
     @PhonkMethod(description = "Get the location name of a given latitude and longitude", example = "")
     @PhonkMethodParam(params = {"latitude", "longitude"})
@@ -293,7 +331,7 @@ public class PLocation extends ProtoBase {
 
     public void stop() {
         running = false;
-        locationManager.removeUpdates(listener);
+        locationManager.removeUpdates(locationListener);
     }
 
     @Override

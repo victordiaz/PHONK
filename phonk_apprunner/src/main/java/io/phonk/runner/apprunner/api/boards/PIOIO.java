@@ -55,7 +55,6 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
         void event();
     }
 
-
     @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
     @PhonkMethodParam(params = {""})
     public void start() {

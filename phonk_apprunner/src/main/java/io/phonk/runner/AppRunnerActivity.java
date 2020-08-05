@@ -32,6 +32,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -198,7 +199,6 @@ public class AppRunnerActivity extends BaseActivity {
             win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         }
         setScreenAlwaysOn(mSettingScreenAlwaysOn);
-
     }
 
     @Override
@@ -271,6 +271,8 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
     private void addDebugFragment() {
+        MLog.d("qq", "adding debug fragment");
+
         mDebugFragment = DebugFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         FrameLayout fl = findViewById(R.id.debug_fragment);
@@ -542,7 +544,7 @@ public class AppRunnerActivity extends BaseActivity {
         i.putExtra("data", data);
         sendBroadcast(i);
 
-        MLog.d("action", action);
+        MLog.d("qq action", action + " " + data);
         if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible)
             addDebugFragment();
         else if (action == "show") addDebugFragment();

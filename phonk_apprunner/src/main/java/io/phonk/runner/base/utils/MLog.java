@@ -48,7 +48,7 @@ public class MLog {
     }
 
     public static void d(String msg) {
-        d("", msg);
+        d(msg, "");
     }
 
     public static void e(String tag, String msg) {
