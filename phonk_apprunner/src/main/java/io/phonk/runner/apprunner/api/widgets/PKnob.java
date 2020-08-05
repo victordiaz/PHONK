@@ -85,6 +85,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
+
         df = new DecimalFormat(formatString);
     }
 
@@ -200,6 +201,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         else {
             formatString = "#." + new String(new char[num]).replace("\0", "#");
         }
+        df.applyPattern(formatString);
         return this;
     }
 

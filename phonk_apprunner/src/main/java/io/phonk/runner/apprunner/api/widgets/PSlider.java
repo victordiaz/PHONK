@@ -83,10 +83,7 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         props.eventOnChange = true;
         styler.apply();
 
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols(Locale.FRANCE);
-        symbol.setDecimalSeparator('.');
-        df = new DecimalFormat(formatString, symbol);
-        df.setMinimumFractionDigits(2);
+        df = new DecimalFormat(formatString);
     }
 
     @Override
@@ -167,6 +164,15 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             c.drawTextCentered("" + df.format(mappedVal));
         }
     };
+
+    public PSlider decimals(int num) {
+        if (num <= 0) formatString = "#";
+        else {
+            formatString = "#." + new String(new char[num]).replace("\0", "#");
+        }
+        df.applyPattern(formatString);
+        return this;
+    }
 
     public PSlider onChange(final ReturnInterface callbackfn) {
         this.callback = callbackfn;
