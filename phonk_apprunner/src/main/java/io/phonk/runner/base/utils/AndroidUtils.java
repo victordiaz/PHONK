@@ -42,6 +42,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -120,39 +121,21 @@ public class AndroidUtils {
     }
 
     public static int pixelsToDp(Context c, int px) {
-
-        Resources resources = c.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / (metrics.densityDpi / 160f);
-
+        float dp = px / c.getResources().getDisplayMetrics().density;
         return (int) dp;
     }
 
     public static int dpToPixels(Context c, int dp) {
-
-        Resources resources = c.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-
+        float px = dp * c.getResources().getDisplayMetrics().density;
         return (int) px;
     }
 
-    public static int pixelsToSp(Context c, int px) {
-
-        Resources resources = c.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / (metrics.densityDpi / 160f);
-
-        return (int) dp;
+    public static float pixelsToSp(Context c, int px) {
+        return  px / c.getResources().getDisplayMetrics().scaledDensity;
     }
 
     public static int spToPixels(Context c, int sp) {
-
-        Resources resources = c.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = sp * (metrics.densityDpi / 160f);
-
-        return (int) px;
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, c.getResources().getDisplayMetrics());
     }
 
 
