@@ -1,7 +1,7 @@
 /*
  * Phonk Example: DataList
  *
- * create and display a list of data
+ * Create and display a list of data using custom widgets
  */
 
 ui.addTitle(app.name)
@@ -21,7 +21,8 @@ var list = ui.addList(0.1, 0.2, 0.8, 0.7).init(
   function (o) { // data binding
     var t = mydata[o.position].text
     o.view.props.background = '#00FFFFFF'
-    o.view.setText(t)
+    o.view.props.padding = 50
+    o.view.text(t)
     o.view.onClick(function () {
       ui.toast('pressed ' + t)
     }
