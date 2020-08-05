@@ -21,4 +21,8 @@ sensors.location.onChange(function (data) {
   txt.append('\n\nYour are ' + distance / 1000 + ' km far away from Granada, Spain')
 })
 
+sensors.location.onSatellitesChange(function (data) {
+  console.log(data)
+})
+
 sensors.location.start()
