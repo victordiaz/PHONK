@@ -21,10 +21,11 @@
  */
 
 package io.phonk.runner.apprunner.api.network;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -45,7 +46,9 @@ public class PMqtt extends ProtoBase {
     private final String TAG = PMqtt.class.getSimpleName();
 
     private MqttAsyncClient client;
-    private ReturnInterface mCallback;
+    private ReturnInterface mCallbackData;
+    private ReturnInterface mCallbackConnected;
+    private ReturnInterface mCallbackDisconnected;
 
     public PMqtt(AppRunner appRunner) {
         super(appRunner);
@@ -76,29 +79,47 @@ public class PMqtt extends ProtoBase {
                 connOpts.setPassword(((String)connectionSettings.get("password")).toCharArray());
             }
 
-            connOpts.setCleanSession(true);
-            client.connect(connOpts);
+            if (connectionSettings.containsKey("autoConnect")) {
+                connOpts.setAutomaticReconnect(((boolean) connectionSettings.get("autoConnect")));
+            }
 
-            client.setCallback(new MqttCallbackExtended() {
+            connOpts.setCleanSession(true);
+            client.connect(connOpts, "", new IMqttActionListener() {
                 @Override
-                public void connectComplete(boolean reconnect, String serverURI) {
+                public void onSuccess(IMqttToken asyncActionToken) {
                     ReturnObject ret = new ReturnObject();
-                    ret.put("status", "connectComplete");
-                    ret.put("broker", serverURI);
+                    ret.put("status", "connected");
 
                     mHandler.post(() -> {
-                        mCallback.event(ret);
+                        if (mCallbackConnected != null) mCallbackConnected.event(ret);
                     });
                     MLog.d(TAG, "connectComplete");
                 }
 
                 @Override
-                public void connectionLost(Throwable cause) {
-                    MLog.d(TAG, "connectionLost");
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     ReturnObject ret = new ReturnObject();
-                    ret.put("status", "connectionLost");
+                    ret.put("status", "failure");
+
                     mHandler.post(() -> {
-                        mCallback.event(ret);
+                        if (mCallbackConnected != null) mCallbackConnected.event(ret);
+                    });
+                    MLog.d(TAG, "connectComplete");
+                }
+            });
+
+            client.setCallback(new MqttCallbackExtended() {
+                @Override
+                public void connectComplete(boolean reconnect, String serverURI) {
+                }
+
+                @Override
+                public void connectionLost(Throwable cause) {
+                    MLog.d(TAG, "disconnected");
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("status", "disconnected");
+                    mHandler.post(() -> {
+                        if (mCallbackDisconnected != null) mCallbackDisconnected.event(ret);
                     });
                 }
 
@@ -114,7 +135,7 @@ public class PMqtt extends ProtoBase {
                     ret.put("id", message.getId());
                     ret.put("topic", topic);
                     mHandler.post(() -> {
-                        mCallback.event(ret);
+                        mCallbackData.event(ret);
                     });
                 }
 
@@ -124,7 +145,7 @@ public class PMqtt extends ProtoBase {
                     ReturnObject ret = new ReturnObject();
                     ret.put("status", "deliveryComplete");
                     mHandler.post(() -> {
-                        mCallback.event(ret);
+                        mCallbackData.event(ret);
                     });
                 }
             });
@@ -184,7 +205,27 @@ public class PMqtt extends ProtoBase {
      * @return
      */
     public PMqtt onNewData(ReturnInterface callback) {
-        mCallback = callback;
+        mCallbackData = callback;
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    public PMqtt onConnected(ReturnInterface callback) {
+        mCallbackConnected = callback;
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    public PMqtt onDisconnected(ReturnInterface callback) {
+        mCallbackDisconnected = callback;
         return this;
     }
 
