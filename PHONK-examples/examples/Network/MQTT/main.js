@@ -13,13 +13,24 @@ var connectionData = {
 }
 
 var c = network.createMQTTClient()
+
+c.onConnected(function (e) {
+  console.log(e)
+  if (e.status === 'connected') {
+    c.subscribe('debug')
+  }
+})
+
+c.onDisconnected(function (e) {
+  console.log(e)
+})
+
 c.onNewData(function (e) {
   console.log(e)
 })
 
 ui.addButton('connect and subscribe', 0.1, 0.45, 0.35, 0.1).onClick(function (e) {
   c.connect(connectionData)
-  c.subscribe('debug')
 })
 
 ui.addButton('publish', 0.55, 0.45, 0.35, 0.1).onClick(function (e) {
