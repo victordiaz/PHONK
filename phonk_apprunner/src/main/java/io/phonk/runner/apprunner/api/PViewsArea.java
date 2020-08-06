@@ -457,9 +457,9 @@ public class PViewsArea extends ProtoBase {
             map.put("textOn", text[0]);
             map.put("textOff", text[0]);
         } else if (text.length == 2) {
-            map.put("text", text[1]);
-            map.put("textOn", text[0]);
-            map.put("textOff", text[1]);
+            map.put("text", text[0]);
+            map.put("textOn", text[1]);
+            map.put("textOff", text[0]);
         } else if (text.length == 3) {
             map.put("text", text[0]);
             map.put("textOn", text[1]);
