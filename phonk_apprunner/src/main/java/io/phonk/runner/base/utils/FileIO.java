@@ -59,7 +59,6 @@ import java.util.zip.ZipInputStream;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 
 public class FileIO {
-
     private static final String TAG = FileIO.class.getSimpleName();
 
     /**
@@ -246,7 +245,6 @@ public class FileIO {
         OutputStream out = null;
         try {
             in = assetManager.open(filename);
-            //TODO reenable this
             String newFileName = AppRunnerSettings.getBaseDir() + filename;
             out = new FileOutputStream(newFileName);
 
@@ -263,7 +261,6 @@ public class FileIO {
         } catch (Exception e) {
             Log.e("tag", e.getMessage());
         }
-
     }
 
     public static void copyFile(File src, File dst) throws IOException {
@@ -511,7 +508,6 @@ public class FileIO {
     }
 
     static public void extractZip(String zipFile, String location) throws IOException {
-
         int size;
         int BUFFER_SIZE = 1024;
 
@@ -572,7 +568,6 @@ public class FileIO {
         File f = new File(path);
 
         return f.listFiles((dir, fileName) -> fileName.endsWith(extension));
-
     }
 
     public static String getFileExtension(String fileName) {

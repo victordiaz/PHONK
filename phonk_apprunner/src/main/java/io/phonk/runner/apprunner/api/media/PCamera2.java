@@ -49,7 +49,7 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void takePicture(String file) {
+    public void takePicture() {
 
     }
 
@@ -69,12 +69,12 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void setPreviewSize(int w, int h) {
+    public void previewSize(int w, int h) {
 
     }
 
     @Override
-    public void setPictureResolution(int w, int h) {
+    public void pictureResolution(int w, int h) {
 
     }
 
@@ -103,7 +103,7 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     }
 
     @Override
-    public void setColorEffect(String effect) {
+    public void colorEffect(String effect) {
 
     }
 
