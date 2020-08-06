@@ -11,14 +11,18 @@ ui.addTitle(app.name)
 var camera = media.useCamera('back')
 ui.addView(camera, 0, 0, 1, 1)
 
+camera.onPictureTaken(function (data) {
+  // saveImage(bitmapData, name, imageType, quality)
+  fileio.saveImage(data.bitmap, 'picture.jpg', 'jpg', 50)
+  console.logImage(app.path() + 'picture.jpg')
+})
+
 // take a picture and save it
 ui.addButton('Take pic', 0.2, 0.8, 0.2, 0.1).onClick(function () {
-  camera.takePicture('picture.png', function () {
-    console.logImage(app.fullPath() + 'picture.png')
-  })
+  camera.takePicture()
 })
 
 // toggle flash on and off
 ui.addToggle('Flash', 0.6, 0.8, 0.2, 0.1).onChange(function (e) {
-  camera.flash(e.checked)
+  camera.flashLight(e.checked)
 })
