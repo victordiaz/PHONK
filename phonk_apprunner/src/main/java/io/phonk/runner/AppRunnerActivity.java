@@ -111,7 +111,6 @@ public class AppRunnerActivity extends BaseActivity {
     private boolean debugFramentIsVisible;
     private boolean orientationChanged = false;
     private Bundle mBundle;
-    private boolean isLandscape;
     private boolean isPortrait;
     private Map<String, Object> scriptSettings;
 
@@ -154,13 +153,18 @@ public class AppRunnerActivity extends BaseActivity {
          */
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
-        if (size.x > size.y) isLandscape = true;
+        if (size.x > size.y) isPortrait = false;
         else isPortrait = true;
+
+        MLog.d("qqq isPortrait: ", "" + isPortrait);
 
         if (orientation.equals("landscape")) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if (orientation.equals("portrait")) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else if (orientation.equals("current")) {
+            if (isPortrait) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
         // if we changed the orientation, we will wait for the orientation to change

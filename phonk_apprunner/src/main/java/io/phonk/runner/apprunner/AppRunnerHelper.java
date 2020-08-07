@@ -88,7 +88,7 @@ public class AppRunnerHelper {
         if (!map.containsKey("description")) map.put("description", "portrait");
         if (!map.containsKey("icon")) map.put("icon", "portrait");
         if (!map.containsKey("window_size")) map.put("window_size", "");
-        if (!map.containsKey("orientation")) map.put("orientation", "portrait");
+        if (!map.containsKey("orientation")) map.put("orientation", "current");
         if (!map.containsKey("screen_mode")) map.put("screen_mode", "normal");
         if (!map.containsKey("featured_image")) map.put("featured_image", "");
         if (!map.containsKey("background_service")) map.put("background_service", false);
