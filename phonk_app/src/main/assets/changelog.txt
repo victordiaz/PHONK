@@ -1,3 +1,12 @@
+1.2.9
+- Toggle state order are fixed
+- Camera methods changed to fix callbacks
+- MQTT methods are changed a bit to work better asynchronously. Hopefully it won't change anymore! :)
+- Background service now stops properly
+- Fixed memory leak in main app
+- Custom icons in projects and shortcuts
+- Scripts now launch with the same previous orientation. This is nice for tablets!
+
 1.2.8
 - Decimals method in slider and knob now works
 - Launch other scripts via app.launchScript(path) method

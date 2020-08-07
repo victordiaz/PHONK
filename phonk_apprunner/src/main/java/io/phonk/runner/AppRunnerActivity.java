@@ -156,8 +156,6 @@ public class AppRunnerActivity extends BaseActivity {
         if (size.x > size.y) isPortrait = false;
         else isPortrait = true;
 
-        MLog.d("qqq isPortrait: ", "" + isPortrait);
-
         if (orientation.equals("landscape")) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else if (orientation.equals("portrait")) {
