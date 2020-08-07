@@ -159,19 +159,6 @@ public class PhonkServerService extends Service {
         mEventsProxy = new EventsProxy();
         EventBus.getDefault().register(this);
 
-        /*
-        // go back to app intent
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        // The stack object will contain an artificial back stack for
-        // navigating backward from the Activity leads out your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        */
-
         // close server intent
         Intent notificationIntent = new Intent(this, PhonkServerService.class).setAction(SERVICE_CLOSE);
         PendingIntent pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
@@ -377,7 +364,7 @@ public class PhonkServerService extends Service {
         unregisterReceiver(stopActivitiyBroadcastReceiver);
         unregisterReceiver(viewsUpdateBroadcastReceiver);
 
-        fileObserver.stopWatching();
+        if (fileObserver != null) fileObserver.stopWatching();
 
         EventBus.getDefault().unregister(this);
     }
@@ -477,7 +464,6 @@ public class PhonkServerService extends Service {
             phonkWebsockets.send(jsonObject);
         }
     };
-
 
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {

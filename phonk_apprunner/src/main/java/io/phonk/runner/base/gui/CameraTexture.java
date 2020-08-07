@@ -63,6 +63,7 @@ import java.util.Vector;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.media.AutoFitTextureView;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
@@ -92,18 +93,14 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     private String _path;
     private View v;
 
-    private Vector<CameraListener> listeners = new Vector<CameraListener>();
     private CallbackData callbackData;
     private CallbackBmp callbackBmp;
     private CallbackStream callbackStream;
     private boolean frameProcessing = false;
     protected Parameters mParameters;
     private OnReadyCallback mOnReadyCallback;
-
-    public interface CameraListener {
-        void onPicTaken();
-        void onVideoRecorded();
-    }
+    private ReturnInterface mPictureTakenCallback;
+    private ReturnInterface mVideoTakenCallback;
 
     public CameraTexture(AppRunner appRunner, String camera, String colorMode) {
         super(appRunner.getAppContext());
@@ -306,25 +303,19 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     File file = null;
     String fileName;
 
-    public String takePic(final String path) {
+    public String takePic() {
         // final CountDownLatch latch = new CountDownLatch(1);
 
         AudioManager mgr = (AudioManager) mAppRunner.getAppContext().getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
-
         SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
-        // final int shutterSound = soundPool.load(this, R.raw.camera_click, 0);
 
         mCamera.takePicture(null, null, (data, camera) -> {
-
             Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-
-            // soundPool.play(shutterSound, 1f, 1f, 0, 0, 1);
-
+            /*
             FileOutputStream outStream = null;
             try {
-
                 file = new File(path);
 
                 outStream = new FileOutputStream(file);
@@ -332,20 +323,18 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
                 outStream.flush();
                 outStream.close();
                 MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
-
-                for (CameraListener l : listeners) {
-                    l.onPicTaken();
-                }
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
             }
+             */
+            ReturnObject ret = new ReturnObject();
+            ret.put("bitmap", bitmapPicture);
+            if (mPictureTakenCallback != null) mPictureTakenCallback.event(ret);
 
             MLog.d(TAG, "onPictureTaken - jpeg");
-
             camera.startPreview();
         });
 
@@ -364,7 +353,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     }
 
     public void recordVideo(String file) {
-
         MLog.d(TAG, "mCamera " + mCamera);
         // Camera.Parameters parameters = mCamera.getParameters();
         // MLog.d(TAG, "parameters " + parameters);
@@ -511,22 +499,19 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     public void focus(final ReturnInterface callbackfn) {
         if (hasAutofocus()) {
-            if (true) {
-                mCamera.autoFocus((success, camera) -> {
-                    if (callbackfn != null) callbackfn.event(null);
-                });
-            } else {
-                mCamera.cancelAutoFocus();
-            }
+            mCamera.autoFocus((success, camera) -> {
+                if (callbackfn != null) callbackfn.event(null);
+            });
+            mCamera.cancelAutoFocus();
         }
     }
 
-    public void addListener(CameraListener listener) {
-        listeners.add(listener);
+    public void addPictureTakenCallback(ReturnInterface callback) {
+        mPictureTakenCallback = callback;
     }
 
-    public void removeListener(CameraListener listener) {
-        listeners.remove(listener);
+    public void addVideoTakenCallback(ReturnInterface callback) {
+        mVideoTakenCallback = callback;
     }
 
     public void setCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {

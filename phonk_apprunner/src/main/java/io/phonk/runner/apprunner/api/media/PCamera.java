@@ -25,14 +25,12 @@ package io.phonk.runner.apprunner.api.media;
 import android.hardware.Camera;
 
 import java.util.List;
-import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
 import io.phonk.runner.apprunner.api.widgets.Styler;
 import io.phonk.runner.base.gui.CameraTexture;
@@ -44,7 +42,6 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
 
     private LearnImages learnImages = null;
     private DetectImage detectImage = null;
-    private ReturnInterface mOnPictureTakenCallback;
 
     // this is a props proxy for the user
     public StylePropertiesProxy props = new StylePropertiesProxy();
@@ -63,27 +60,26 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
         });
     }
 
+    @PhonkMethod
     public PCamera onPictureTaken(final ReturnInterface callbackfn) {
-        mOnPictureTakenCallback = callbackfn;
+        addPictureTakenCallback(callbackfn);
+
         return this;
     }
 
-    @PhonkMethodParam(params = {"fileName"})
+    @PhonkMethod
+    public PCamera onVideoTaken(final ReturnInterface callbackfn) {
+        addVideoTakenCallback(callbackfn);
+
+        return this;
+    }
+
+
+
     @PhonkMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
     // @APIRequires()
-    public void takePicture(String file) {
-        takePic(mAppRunner.getProject().getFullPathForFile(file));
-        addListener(new CameraListener() {
-            @Override
-            public void onVideoRecorded() {}
-
-            @Override
-            public void onPicTaken() {
-                mOnPictureTakenCallback.event(null);
-                cam.removeListener(this);
-            }
-        });
-
+    public void takePicture() {
+        takePic();
     }
 
     public List<Camera.Size> getSizes() {
@@ -168,44 +164,32 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
 
     @PhonkMethodParam(params = {"width", "height"})
     @PhonkMethod(description = "Set the camera preview resolution", example = "")
-    public void setPreviewSize(int w, int h) {
+    public void previewSize(int w, int h) {
         super.setPreviewSize(w, h);
     }
 
     @PhonkMethodParam(params = {"width", "height"})
     @PhonkMethod(description = "Set the camera picture resolution", example = "")
-    public void setPictureResolution(int w, int h) {
+    public void pictureResolution(int w, int h) {
         super.setPictureSize(w, h);
     }
 
     @PhonkMethodParam(params = {"{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}"})
     @PhonkMethod(description = "Set the camera picture effect if supported", example = "")
-    public void setColorEffect(String effect) {
+    public void colorEffect(String effect) {
         super.setColorEffect(effect);
     }
 
     @PhonkMethod(description = "Records a video in fileName", example = "")
     @PhonkMethodParam(params = {"fileName"})
-    public void recordVideo(String file, final ReturnInterface callbackfn) {
-        recordVideo(mAppRunner.getProject().getFullPathForFile(file));
-        addListener(new CameraListener() {
-
-            @Override
-            public void onVideoRecorded() {
-                callbackfn.event(null);
-                cam.removeListener(this);
-            }
-
-            @Override
-            public void onPicTaken() {
-            }
-        });
+    public void recordVideo(String file) {
+        super.recordVideo(mAppRunner.getProject().getFullPathForFile(file));
     }
 
     @PhonkMethod(description = "Stops recording the video", example = "")
     @PhonkMethodParam(params = {""})
     public void stopRecordingVideo() {
-        stopRecordingVideo();
+        super.stopRecordingVideo();
     }
 
     @PhonkMethod(description = "Checks if flash is available", example = "")
@@ -216,7 +200,7 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
 
     @PhonkMethod(description = "Turns on/off the flash", example = "")
     @PhonkMethodParam(params = {""})
-    public void flash(boolean b) {
+    public void flashLight(boolean b) {
         super.flash(b);
     }
 

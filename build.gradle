@@ -10,8 +10,8 @@ buildscript {
 }
 
 project.ext {
-    versionCode = 130
-    versionName = "1.2.8"
+    versionCode = 131
+    versionName = "1.2.9"
 }
 
 task hello {

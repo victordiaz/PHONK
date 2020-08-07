@@ -331,7 +331,7 @@ public class PLocation extends ProtoBase {
 
     public void stop() {
         running = false;
-        locationManager.removeUpdates(locationListener);
+        if (locationManager != null) locationManager.removeUpdates(locationListener);
     }
 
     @Override

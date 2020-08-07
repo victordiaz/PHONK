@@ -213,7 +213,6 @@ public class PFileIO extends ProtoBase {
         FileIO.appendString(getAppRunner().getProject().getFullPathForFile(fileName), line);
     }
 
-
     @PhonkMethod(description = "Append an array of text into a file", example = "")
     @PhonkMethodParam(params = {"fileName", "lines[]"})
     public void appendTextToFileAsync(final String line, final String fileName, final ReturnInterface callback) {
@@ -222,7 +221,6 @@ public class PFileIO extends ProtoBase {
             returnValues(null, callback);
         });
     }
-
 
     @PhonkMethod(description = "Load the Strings of a text file into an array", example = "")
     @PhonkMethodParam(params = {"fileName"})
@@ -248,13 +246,13 @@ public class PFileIO extends ProtoBase {
     }
 
     @PhonkMethod(description = "Loads a bitmap", example = "")
-    public Bitmap loadBitmap(String path) {
+    public Bitmap loadImage(String path) {
         return Image.loadBitmap(getAppRunner().getProject().getFullPathForFile(path));
     }
 
-    public void loadBitmapAsync(final String path, final ReturnInterface callback) {
+    public void loadImageAsync(final String path, final ReturnInterface callback) {
         Thread t = new Thread(() -> {
-            loadBitmap(path);
+            loadImage(path);
             returnValues(null, callback);
         });
         t.start();
@@ -380,7 +378,7 @@ public class PFileIO extends ProtoBase {
         if (file.exists()) file.delete ();
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(formatType, 100, out);
+            finalBitmap.compress(formatType, quality, out);
             out.flush();
             out.close();
         } catch (Exception e) {

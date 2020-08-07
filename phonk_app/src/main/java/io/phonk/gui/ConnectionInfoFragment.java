@@ -237,7 +237,6 @@ public class ConnectionInfoFragment extends Fragment {
         handler.post(() -> mComputerText.append(text + "\n> "));
     }
 
-
     // folder choose
     @Subscribe
     public void onEventMainThread(Events.FolderChosen e) {

@@ -70,6 +70,7 @@ import io.phonk.runner.apprunner.api.media.PPureData;
 import io.phonk.runner.apprunner.api.media.PTextToSpeech;
 import io.phonk.runner.apprunner.api.media.PVideo;
 import io.phonk.runner.apprunner.api.media.PWave;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -380,14 +381,25 @@ public class PMedia extends ProtoBase {
      * @advanced
      */
     public PCamera useCamera(String camera) {
-        PCamera pCamera = new PCamera(getAppRunner(), camera);
+        boolean existsCameraFront = (boolean) getAppRunner().pDevice.info().get("cameraFront");
+        boolean existsCameraBack = (boolean) getAppRunner().pDevice.info().get("cameraBack");
 
+        boolean cameraIsAvailable = camera.equals("front") & existsCameraFront | camera.equals("back") & existsCameraBack;
+        // MLog.d("qq", existsCameraFront + " " + existsCameraBack + " " + cameraIsAvailable);
+
+        if (!cameraIsAvailable) {
+            // MLog.d("qq", "no camera");
+            // getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, camera + " camera");
+            return null;
+        }
+
+        PCamera pCamera = new PCamera(getAppRunner(), camera);
         return pCamera;
     }
-    
+
     @Override
     public void __stop() {
-        getContext().unregisterReceiver(headsetPluggedReceiver);
+        if (headsetCallbackfn != null) getContext().unregisterReceiver(headsetPluggedReceiver);
     }
 }
 

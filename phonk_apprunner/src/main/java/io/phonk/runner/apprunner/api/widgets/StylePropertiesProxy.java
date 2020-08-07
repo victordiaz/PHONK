@@ -168,7 +168,7 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     @Override
     public Object put(String key, Object value) {
-        MLog.d(TAG, "put 3: " + key + " " + values.get(key));
+        // MLog.d(TAG, "put 3: " + key + " " + values.get(key));
         values.put(key, value);
 
         return value;
@@ -181,7 +181,7 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     @Override
     public void putAll(Map<? extends String, ? extends Object> m) {
-        MLog.d(TAG, "putAll: ");
+        // MLog.d(TAG, "putAll: ");
 
         values.putAll(m);
     }

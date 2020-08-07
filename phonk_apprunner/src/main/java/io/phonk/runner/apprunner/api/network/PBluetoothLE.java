@@ -113,7 +113,7 @@ public class PBluetoothLE extends ProtoBase {
     }
 
     public PBluetoothLE stopScan() {
-        mBleAdapter.stopLeScan(mScanCallback);
+        if (mBleAdapter != null) mBleAdapter.stopLeScan(mScanCallback);
         return this;
     }
 

@@ -22,6 +22,9 @@
 
 package io.phonk.runner.base.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.File;
 
 import io.phonk.runner.apprunner.AppRunnerSettings;
@@ -113,5 +116,25 @@ public class Project {
     public boolean exists() {
         File f = new File(getFullPath());
         return f.exists();
+    }
+
+    public String getIconUrl() {
+        File f = new File(this.getFullPathForFile("icon.png"));
+        if (f.exists()) return f.toString();
+        else return null;
+    }
+
+    public Bitmap getIcon() {
+        String iconUrl = getIconUrl();
+
+        if (iconUrl != null) {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(iconUrl, bmOptions);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            return bitmap;
+        } else {
+            return null;
+        }
+
     }
 }

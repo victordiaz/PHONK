@@ -89,10 +89,9 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
 
         for (int i = 0; i < mProjectList.size(); i++) {
             String name = mProjectList.get(i).getName();
-            // MLog.d(TAG, "name " + name);
 
             if (name.equals(appName)) {
-                pos = i; //(int) mProjectAdapter.getItemId(i);
+                pos = i;
 
                 break;
             }

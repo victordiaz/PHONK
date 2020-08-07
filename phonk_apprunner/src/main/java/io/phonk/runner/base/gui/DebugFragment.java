@@ -142,6 +142,7 @@ public class DebugFragment extends Fragment {
     @Subscribe(sticky = true)
     public void onEventMainThread(Events.LogEvent e) {
         String logMsg = e.getData();
+        MLog.d("qq logMsg", logMsg);
 
         int actionType = AppRunnerInterpreter.RESULT_OK;
         if (e.getAction() == "log_error") actionType = AppRunnerInterpreter.RESULT_ERROR;
