@@ -399,7 +399,7 @@ public class PMedia extends ProtoBase {
 
     @Override
     public void __stop() {
-        getContext().unregisterReceiver(headsetPluggedReceiver);
+        if (headsetCallbackfn != null) getContext().unregisterReceiver(headsetPluggedReceiver);
     }
 }
 

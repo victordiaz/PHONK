@@ -23,17 +23,24 @@
 package io.phonk.runner.base.services;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import java.util.List;
+
 import io.phonk.runner.base.utils.AndroidUtils;
+import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NotificationService extends NotificationListenerService {
@@ -47,6 +54,7 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        MLog.d("notification", "received");
 
         if (AndroidUtils.isVersionKitKat()) {
             String pack = sbn.getPackageName();
@@ -90,5 +98,17 @@ public class NotificationService extends NotificationListenerService {
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         Log.i("Msg", "Notification Removed");
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

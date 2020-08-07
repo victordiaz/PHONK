@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
@@ -82,7 +83,7 @@ public class MainActivity extends BaseActivity {
 
     private static final java.lang.String TAG = MainActivity.class.getSimpleName();
 
-    private AppRunnerCustom mAppRunner;
+    // private AppRunnerCustom mAppRunner;
 
     private Intent mServerIntent;
 
@@ -107,10 +108,12 @@ public class MainActivity extends BaseActivity {
     private boolean isWebIdeMode = false;
 
     private boolean mUiInit = false;
-    private PDelay mDelay;
+    // private PDelay mDelay;
 
     private boolean alreadyStartedServices = false;
     private boolean isConfigChanging = false;
+    private Runnable mDelay;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +129,8 @@ public class MainActivity extends BaseActivity {
            alreadyStartedServices = savedInstanceState.getBoolean("alreadyStartedServices", false);
         }
 
-        mAppRunner = new AppRunnerCustom(this);
-        mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
+        // mAppRunner = new AppRunnerCustom(this);
+        // mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
 
         // PhonkApp phonkApp = new PhonkApp(mAppRunner);
         // phonkApp.network.checkVersion();
@@ -141,7 +144,18 @@ public class MainActivity extends BaseActivity {
             loadUI(1);
         } else {
             loadUI(0);
-            mDelay = mAppRunner.pUtil.delay(3000, () -> mViewPager.setCurrentItem(1));
+
+            mHandler = new Handler();
+            mDelay = new Runnable() {
+                @Override
+                public void run() {
+                    mViewPager.setCurrentItem(1);
+                    mHandler.removeCallbacks(this);
+                }
+            };
+            mHandler.postDelayed(mDelay, 3000);
+
+            // mDelay = mAppRunner.pUtil.delay(3000, () -> mViewPager.setCurrentItem(1));
         }
         setScreenAlwaysOn((boolean) UserPreferences.getInstance().get("screen_always_on"));
 
@@ -181,8 +195,9 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if (mDelay != null) mDelay.stop();
-        mAppRunner.byebye();
+        // if (mDelay != null) mDelay.stop();
+        if (mHandler != null) mHandler.removeCallbacks(mDelay);
+        // mAppRunner.byebye();
 
         if (!isConfigChanging) stopServers();
     }
@@ -289,7 +304,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset > 0.1) {
-                    if (mDelay != null) mDelay.stop();
+                    // if (mDelay != null) mDelay.stop();
+                    if (mHandler != null) mHandler.removeCallbacks(mDelay);
                 }
 
                 if (position == 0) {

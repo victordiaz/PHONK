@@ -157,12 +157,10 @@ public class AppRunnerActivity extends BaseActivity {
         if (size.x > size.y) isLandscape = true;
         else isPortrait = true;
 
-        if (orientation.equals("landscape")) { // && !isLandscape) {
+        if (orientation.equals("landscape")) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            // orientationChanged = true;
-        } else if (orientation.equals("portrait")) { // && !isPortrait) {
+        } else if (orientation.equals("portrait")) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            // orientationChanged = true;
         }
 
         // if we changed the orientation, we will wait for the orientation to change

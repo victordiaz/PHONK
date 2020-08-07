@@ -905,9 +905,9 @@ public class PDevice extends ProtoBase {
 
     @Override
     public void __stop() {
-        getContext().unregisterReceiver(batteryReceiver);
-        getContext().unregisterReceiver(onNotification);
-        getContext().unregisterReceiver(smsReceiver);
+        if (batteryReceiver != null) getContext().unregisterReceiver(batteryReceiver);
+        if (onNotification != null) getContext().unregisterReceiver(onNotification);
+        if (smsReceiver != null) getContext().unregisterReceiver(smsReceiver);
 
         batteryReceiver = null;
         onNotification = null;

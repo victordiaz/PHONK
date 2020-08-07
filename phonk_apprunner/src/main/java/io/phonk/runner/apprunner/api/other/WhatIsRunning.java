@@ -31,19 +31,14 @@ import io.phonk.runner.base.utils.MLog;
 public class WhatIsRunning {
 
     private static final String TAG = WhatIsRunning.class.getSimpleName();
-    private WhatIsRunning instance;
     private Vector<Object> runners;
 
     public WhatIsRunning() {
         runners = new Vector<Object>();
+        // MLog.d(TAG, "instancing WhatIsRunning...");
     }
 
     public void stopAll() {
-        MLog.d("qqbyebye", "stopping");
-        for (Object o : runners) {
-            // MLog.d(TAG, "list " + o.getClass().getCanonicalName());
-        }
-
         for (Object o : runners) {
             Method method = null;
 
@@ -53,20 +48,26 @@ public class WhatIsRunning {
             } catch (NoSuchMethodException e) {
             }
 
-            MLog.d("qqbyebye", "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
+            MLog.d(TAG, "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);
 
             try {
-                //if (method !== null) {
                 method.invoke(o);
-                //}
             } catch (IllegalArgumentException e) {
+                MLog.d(TAG, "cannot stop 1");
             } catch (IllegalAccessException e) {
+                MLog.d(TAG, "cannot stop 2");
             } catch (InvocationTargetException e) {
+                MLog.d(TAG, "cannot stop 3");
+                e.printStackTrace();
+            } catch (Exception e) {
+                MLog.d(TAG, "cannot stop 4");
+                e.printStackTrace();
             }
         }
     }
 
     public void add(Object object) {
+        // MLog.d(TAG, "adding: " + object.getClass().getCanonicalName());
         runners.add(object);
     }
 
