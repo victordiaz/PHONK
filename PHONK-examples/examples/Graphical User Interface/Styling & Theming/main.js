@@ -3,6 +3,9 @@
  *
  *  Changing the theme will apply the style to all subsequent added views
  *  For more granularity each view can be styled individual
+ *
+ *  As you could see this project has a custom icon. You just have to include
+ *  a not too big PNG image named icon.png inside the project and that's all!
  */
 
 ui.setTheme({
