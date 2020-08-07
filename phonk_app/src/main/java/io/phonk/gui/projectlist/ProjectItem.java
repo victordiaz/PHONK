@@ -72,7 +72,6 @@ public class ProjectItem extends LinearLayout {
     public ProjectItem(Context context, boolean listMode) {
         super(context);
         this.mContext = context;
-        //this.mPlf = plf;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (listMode) {
@@ -86,17 +85,8 @@ public class ProjectItem extends LinearLayout {
         customIcon = mItemView.findViewById(R.id.iconImg);
 
         this.setOnClickListener(v -> {
-            /*
-            AnimatorSet animSpin;
-            animSpin = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.run);
-            animSpin.setTarget(v);
-            animSpin.start();
-            */
-
             Runnable r = () -> {
                 PhonkAppHelper.launchScript(getContext(), mProject);
-                // getActivity().overridePendingTransition(R.anim.splash_slide_in_anim_set,
-                //        R.anim.splash_slide_out_anim_set);
             };
 
             Handler handler = new Handler();
@@ -116,41 +106,6 @@ public class ProjectItem extends LinearLayout {
         textViewName.setText(text);
     }
 
-    public void reInit(String text, boolean selected) {
-        setText(text);
-        // TODO reenable this setHighlighted(selected);
-    }
-
-    public void drawText(ImageView imageView, String t2) {
-
-        // ImageView myImageView =
-        Bitmap myBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
-        Paint myPaint = new Paint();
-        myPaint.setColor(Color.BLUE);
-        myPaint.setAntiAlias(true);
-        myPaint.setTextSize(80);
-
-        int x1 = 10;
-        int y1 = 80;
-        int x2 = 20;
-        int y2 = 20;
-
-        // Create mContext new image bitmap and attach a brand new canvas to it
-        Bitmap tempBitmap = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), Bitmap.Config.RGB_565);
-        Canvas tempCanvas = new Canvas(tempBitmap);
-
-        // Draw the image bitmap into the cavas
-        tempCanvas.drawBitmap(myBitmap, 0, 0, null);
-
-        // Draw everything else you want into the canvas, in this example mContext
-        // rectangle with rounded edges
-        tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myPaint);
-        tempCanvas.drawText(t2.substring(0, 1).toUpperCase(), x1, y1, myPaint);
-
-        // Attach the canvas to the ImageView
-        imageView.setImageDrawable(new BitmapDrawable(getResources(), tempBitmap));
-    }
-
     public void setMenu() {
         // setting menu for mProject.getName());
         mMenuButton = findViewById(R.id.card_menu_button);
@@ -161,15 +116,7 @@ public class ProjectItem extends LinearLayout {
             return true;
         });
 
-        //customIcon.setOnCreateContextMenuListener();
         mMenuButton.setOnClickListener(v -> showMenu(mMenuButton));
-//        this.setOnLongClickListener(new OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                showContextMenu();
-//                return true;
-//            }
-//        });
     }
 
     private void showMenu(View fromView) {
@@ -177,18 +124,14 @@ public class ProjectItem extends LinearLayout {
         PopupMenu myPopup = new PopupMenu(wrapper, fromView);
         myPopup.inflate(R.menu.project_actions);
         myPopup.setOnMenuItemClickListener(menuItem -> {
-
             int itemId = menuItem.getItemId();
 
             switch (itemId) {
                 case R.id.menu_project_list_run:
-                    // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, mProject));
                     PhonkAppHelper.launchScript(getContext(), mProject);
                     return true;
                 case R.id.menu_project_list_edit:
                     PhonkAppHelper.launchEditor(getContext(), mProject);
-
-                    // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_EDIT, mProject));
                     return true;
                 case R.id.menu_project_webeditor:
                     PhonkAppHelper.openInWebEditor(getContext(), mProject);
@@ -233,21 +176,6 @@ public class ProjectItem extends LinearLayout {
 
     }
 
-    /*
-    public Drawable getBg() {
-        return bg;
-    }
-
-    public void setHighlighted(boolean highlighted) {
-        if (highlighted) {
-            getBg().setColorFilter(0x22000000, PorterDuff.Mode.MULTIPLY);
-        } else {
-            getBg().clearColorFilter();
-        }
-        this.highlighted = highlighted;
-    }
-    */
-
     public boolean isHighlighted() {
         return highlighted;
     }
@@ -263,16 +191,8 @@ public class ProjectItem extends LinearLayout {
         setText(p.getName());
         setTag(p.getName());
 
-        File f = new File(p.getFullPathForFile("icon.png"));
-        // setImage(R.drawable.primarycolor_rounded_rect);
-
-        if (f.exists()) {
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(f.getPath(), bmOptions);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-
-            setImage(bitmap);
-        }
+        Bitmap icon = p.getIcon();
+        if (icon != null) setImage(icon);
         setMenu();
     }
 

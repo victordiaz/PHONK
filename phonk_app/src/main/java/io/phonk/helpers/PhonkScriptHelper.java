@@ -26,6 +26,7 @@ import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -428,9 +429,6 @@ public class PhonkScriptHelper {
     public static void addShortcut(Context c, String folder, String name) {
         Project p = new Project(folder, name);
 
-        Intent.ShortcutIconResource icon;
-        icon = Intent.ShortcutIconResource.fromContext(c, R.drawable.app_icon);
-
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(c)) {
             Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -439,10 +437,15 @@ public class PhonkScriptHelper {
             shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
             shortcutIntent.setAction(Intent.ACTION_MAIN);
 
+            Bitmap bitmapIcon = p.getIcon();
+
+            IconCompat icon = IconCompat.createWithResource(c, R.drawable.app_icon);
+            if (bitmapIcon != null) icon = IconCompat.createWithBitmap(bitmapIcon);
+
             ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(c, folder + "/" + name)
                     .setIntent(shortcutIntent) // !!! intent's action must be set on oreo
                     .setShortLabel(name)
-                    .setIcon(IconCompat.createWithResource(c, R.drawable.app_icon))
+                    .setIcon(icon)
                     .build();
             ShortcutManagerCompat.requestPinShortcut(c, shortcutInfo, null);
         }
