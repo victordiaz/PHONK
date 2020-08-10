@@ -17,10 +17,10 @@ device.onKeyEvent(function (data) {
   log(data.key)
 })
 
-var txt =  ui.addText(0.1, 0.35, 0.8, -1)
-txt.props.textSize = 50
+var txt = ui.addText(0.1, 0.35, 0.8, -1)
+txt.props.textSize = 25
 
-function log(msg) {
+function log (msg) {
   txt.text('Key Pressed: ' + msg)
   console.log(msg)
 }
