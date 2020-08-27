@@ -5,14 +5,14 @@ apply plugin: 'com.android.library'
 android {
     flavorDimensions "default_apprunner"
 
-    compileSdkVersion 29
+    compileSdkVersion project.compileSdkVersion
 
     defaultPublishConfig "normalrunnerDebug"
     publishNonDefault true
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 29
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
 
         versionCode project.versionCode
         versionName project.versionName
