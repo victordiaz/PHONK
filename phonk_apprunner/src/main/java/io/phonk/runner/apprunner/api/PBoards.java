@@ -28,6 +28,7 @@ import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.boards.PIOIO;
 import io.phonk.runner.apprunner.api.boards.PSerial;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
 
 @PhonkObject
 public class PBoards extends ProtoBase {
@@ -40,16 +41,12 @@ public class PBoards extends ProtoBase {
 
 
     @PhonkMethod(description = "initializes the ioio board", example = "")
-    @PhonkMethodParam(params = {"function()"})
-    public PIOIO connectIOIO(PIOIO.startCB callbackfn) {
+    public PIOIO connectIOIO() {
         PIOIO ioio = new PIOIO(getAppRunner());
-        ioio.start(callbackfn);
-
         return ioio;
     }
 
     @PhonkMethod(description = "initializes serial communication", example = "")
-    @PhonkMethodParam(params = {"bauds", "function()"})
     public PSerial createSerial(int bauds) {
         PSerial serial = new PSerial(getAppRunner());
         return serial;

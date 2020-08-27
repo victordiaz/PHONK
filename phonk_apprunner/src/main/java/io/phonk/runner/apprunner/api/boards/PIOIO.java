@@ -27,6 +27,8 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.hardware.IOIOBoard;
 import io.phonk.runner.base.utils.MLog;
 import ioio.lib.api.AnalogInput;
@@ -42,35 +44,20 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     private final String TAG = PIOIO.class.getSimpleName();
 
     private IOIOBoard board;
-    boolean mIoioStarted = false;
     private IOIO mIoio;
-    private startCB mIoioCallbackfn;
+    boolean mIOIOConnected = false;
+    private ReturnInterface mCallbackConnected;
+    private ReturnInterface mCallbackDisconnected;
+    private ReturnInterface mCallbackStatus;
 
     public PIOIO(AppRunner appRunner) {
         super(appRunner);
     }
 
-    // --------- getRequest ---------//
-    public interface startCB {
-        void event();
-    }
-
     @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
     @PhonkMethodParam(params = {""})
     public void start() {
-        if (!mIoioStarted) {
-            this.board = new IOIOBoard(getContext(), this);
-            board.powerOn();
-            getAppRunner().whatIsRunning.add(board);
-        }
-    }
-
-
-    @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
-    @PhonkMethodParam(params = {"function()"})
-    public void start(startCB callbackfn) {
-        mIoioCallbackfn = callbackfn;
-        if (!mIoioStarted) {
+        if (!mIOIOConnected) {
             this.board = new IOIOBoard(getContext(), this);
             board.powerOn();
             getAppRunner().whatIsRunning.add(board);
@@ -81,85 +68,62 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
         return mIoio;
     }
 
-
     @PhonkMethod(description = "stops the ioio board", example = "ioio.stop();")
     public void stop() {
-        mIoioStarted = false;
+        mIOIOConnected = false;
         board.powerOff();
         board = null;
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber"})
     public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
         return mIoio.openDigitalOutput(pinNum, false); // start with the on board
-
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber"})
     public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
         return mIoio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
-
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber"})
     public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
         return mIoio.openAnalogInput(pinNum);
-
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber", "frequency"})
     public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
         return mIoio.openPwmOutput(pinNum, freq);
     }
 
-
-    public void resume() {
-    }
-
-    public void pause() {
-    }
-
-
     @PhonkMethod(description = "returns true is the ioio board is connected", example = "")
     public boolean isStarted() {
-        return mIoioStarted;
+        return mIOIOConnected;
     }
 
-
     @Override
-    public void onConnect(Object obj) {
-        this.mIoio = (IOIO) obj;
-        MLog.d(TAG, "MOIO Connected");
+    public void onConnect(Object ioio) {
+        MLog.d(TAG, "ioio Connected");
+        mIOIOConnected = true;
 
-        if (mIoioCallbackfn != null) {
-            mIoioCallbackfn.event();
-        }
+        this.mIoio = (IOIO) ioio;
 
-        mIoioStarted = true;
+        ReturnObject ret = new ReturnObject();
+        ret.put("status", "connected");
+
         mHandler.post(() -> {
+            if (mCallbackConnected != null) mCallbackConnected.event(ret);
+            if (mCallbackStatus != null) mCallbackStatus.event(ret);
         });
     }
 
     @Override
-    public void setup() {
-    }
+    public void setup() { }
 
     @Override
-    public void loop() {
-    }
+    public void loop() { }
 
     @Override
-    public void onComplete() {
-
-    }
+    public void onComplete() { }
 
     @Override
     public void __stop() {
