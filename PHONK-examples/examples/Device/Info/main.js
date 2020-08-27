@@ -8,6 +8,8 @@ ui.addTitle(app.name)
 
 var txt = ui.addTextList(0.1, 0.15, 0.8, 0.5).autoScroll(true)
 txt.props.textSize = 15
+txt.props.padding = 30
+
 txt.add('battery: ' + device.battery())
 txt.add('brightness: ' + device.brightness())
 
