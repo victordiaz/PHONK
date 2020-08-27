@@ -182,6 +182,8 @@ public class MainActivity extends BaseActivity {
         Intent i = new Intent("io.phonk.intent.CLOSED");
         sendBroadcast(i);
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        mHeader.setAlpha(1.0f);
     }
 
     @Override
