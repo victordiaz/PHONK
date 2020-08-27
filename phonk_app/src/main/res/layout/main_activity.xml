@@ -145,7 +145,7 @@
                 android:layout_marginLeft="100dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="100dp"
-                android:background="@color/phonk_colorSecondary_shade_1" />
+                android:background="@color/phonk_colorPrimary_shade" />
 
         </RelativeLayout>
 

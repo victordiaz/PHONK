@@ -39,6 +39,7 @@ import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +52,7 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.widgets.PPopupDialogFragment;
 import io.phonk.runner.apprunner.api.widgets.PToolbar;
+import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
 import io.phonk.runner.apprunner.api.widgets.WidgetHelper;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
@@ -123,7 +125,7 @@ public class PUI extends PViewsArea {
         setStyle();
         background((String) theme.get("background"));
 
-        viewTree.add(mainLayout);
+        viewTree.add(this);
     }
 
     @PhonkMethod
@@ -146,11 +148,10 @@ public class PUI extends PViewsArea {
 
         theme.put("background", getContext().getResources().getString(R.color.phonk_backgroundColor));
         theme.put("primary", getContext().getResources().getString(R.color.phonk_colorPrimary));
-        theme.put("primaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
         theme.put("secondary", getContext().getResources().getString(R.color.phonk_colorSecondary));
+        theme.put("primaryShade", getContext().getResources().getString(R.color.phonk_colorPrimary_shade));
         theme.put("secondaryShade", getContext().getResources().getString(R.color.phonk_colorSecondary_shade));
         theme.put("textPrimary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
-        theme.put("textSecondary", getContext().getResources().getString(R.color.phonk_textColor_secondary));
         theme.put("animationOnViewAdd", false);
 
         // if the theme is change then we reapply the styles
@@ -170,19 +171,22 @@ public class PUI extends PViewsArea {
 
         rootStyle.put("x", rootStyle, 0f);
         rootStyle.put("y", rootStyle, 0f);
-        rootStyle.put("w", rootStyle, 0f);
-        rootStyle.put("h", rootStyle, 0f);
+        rootStyle.put("w", rootStyle, 0.2f);
+        rootStyle.put("h", rootStyle, 0.2f);
 
         rootStyle.put("enabled", rootStyle, true);
         rootStyle.put("opacity", rootStyle, 1.0f);
         rootStyle.put("visibility", rootStyle, "visible");
+
+        rootStyle.put("background", rootStyle, colorPrimaryShade);
         rootStyle.put("backgroundHover", rootStyle, "#88000000");
         rootStyle.put("backgroundPressed", rootStyle, "#33FFFFFF");
         rootStyle.put("backgroundSelected", rootStyle, "#88000000");
         rootStyle.put("backgroundChecked", rootStyle, "#88000000");
+
         rootStyle.put("borderColor", rootStyle, colorTransparent);
         rootStyle.put("borderWidth", rootStyle, 0);
-        rootStyle.put("borderRadius", rootStyle, 0);
+        rootStyle.put("borderRadius", rootStyle, 20);
 
         rootStyle.put("src", rootStyle, "");
         rootStyle.put("srcPressed", rootStyle, "");
@@ -200,7 +204,6 @@ public class PUI extends PViewsArea {
         rootStyle.put("paddingRight", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
         rootStyle.put("paddingBottom", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
          */
-        rootStyle.put("background", rootStyle, colorSecondaryShade);
 
         // style.put("animInBefore", style, "this.x(0).y(100)");
         // style.put("animIn", style, "this.animate().x(100)");
@@ -341,9 +344,9 @@ public class PUI extends PViewsArea {
     }
 
     @PhonkMethod
-    public void toast(String text, boolean length) {
+    public void toast(String text, boolean longTime) {
         int duration = Toast.LENGTH_SHORT;
-        if (length) {
+        if (longTime) {
             duration = Toast.LENGTH_LONG;
         }
         Toast.makeText(getContext(), text, duration).show();
@@ -374,7 +377,6 @@ public class PUI extends PViewsArea {
     /*
      * Utilities
      */
-
 
     /**
      * Resize a view to a given width and height. If a parameter is -1 then that dimension is not changed
@@ -565,8 +567,47 @@ public class PUI extends PViewsArea {
         return AndroidUtils.takeScreenshotView(v);
     }
 
-    public ArrayList getViewTree() {
-        return viewTree;
+    public View getViewById(String id) {
+        ArrayList<View> views = ((PViewsArea) (viewTree.get(0))).viewArray;
+
+        for (View v : views) {
+            PViewMethodsInterface vmi = (PViewMethodsInterface) v;
+            String viewId = (String) vmi.getProps().get("id");
+            if (id.equals(viewId)) {
+                return v;
+            } else {
+            }
+        }
+
+        return null;
+    }
+
+    public PhonkNativeArray getViewTree() {
+        PhonkNativeArray ret = it(viewTree);
+
+        return ret;
+    }
+
+    private PhonkNativeArray it(ArrayList tree) {
+        PhonkNativeArray ret = new PhonkNativeArray(0);
+
+        for (Object o : tree) {
+            ReturnObject ob = new ReturnObject();
+            ob.put("name", o.getClass().getSimpleName().substring(1));
+
+            if (o instanceof PViewMethodsInterface) {
+                Map props = ((PViewMethodsInterface) o).getProps();
+                ReturnObject qq = ((StylePropertiesProxy) props).values;
+                ob.put("props", qq);
+            } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass().getSimpleName().equals("PUI") ) {
+                if (((PViewsArea) o).viewArray.size() > 0){
+                    ob.put("children", it(((PViewsArea) o).viewArray));
+                }
+            }
+            ret.put(ret.size(), ret, ob);
+        }
+
+        return ret;
     }
 
     @Override

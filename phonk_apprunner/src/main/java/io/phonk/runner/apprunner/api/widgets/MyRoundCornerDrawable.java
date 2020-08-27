@@ -41,6 +41,7 @@ public class MyRoundCornerDrawable extends Drawable {
     private Paint mPaintBg;
     private final Paint mPaintBorder;
     private float mRadius = 22;
+    private int mBorderWidth = 0;
 
     public MyRoundCornerDrawable(/* Bitmap bitmap */) {
         /*
@@ -52,7 +53,7 @@ public class MyRoundCornerDrawable extends Drawable {
         // background
         mPaintBg = new Paint();
         mPaintBg.setStyle(Paint.Style.FILL);
-        mPaintBg.setStrokeWidth(0);
+        mPaintBg.setStrokeWidth(mBorderWidth);
         // mPaintBg.setShadowLayer(10, 22, 22, Color.BLACK);
         mPaintBg.setAntiAlias(true);
 
@@ -74,13 +75,15 @@ public class MyRoundCornerDrawable extends Drawable {
         clipBounds.inset(-12, -12);
         // canvas.clipRect(clipBounds, Region.Op.DIFFERENCE);
 
-        RectF rect = new RectF(0.0f, 0.0f, width, height);
 
         // background
+        RectF rect = new RectF(0.0f, 0.0f, width, height);
         canvas.drawRoundRect(rect, mRadius, mRadius, mPaintBg);
 
         // border
-        canvas.drawRoundRect(rect, mRadius, mRadius, mPaintBorder);
+        float d = mBorderWidth / 2;
+        RectF rectBorder = new RectF(0.0f + d, 0.0f + d, width - d, height - d);
+        canvas.drawRoundRect(rectBorder, mRadius, mRadius, mPaintBorder);
     }
 
     @Override
@@ -103,7 +106,7 @@ public class MyRoundCornerDrawable extends Drawable {
 
         int c1 = Color.argb(100, 0, 252, 0);
         int c2 = Color.argb(100, 0, 252, 0);
-        // mPaintBg.setAntiAlias(true);
+        mPaintBg.setAntiAlias(true);
 
         // Android < Lollipop doesnt like so transparency in the background
         // a shader makes the trick
@@ -120,7 +123,9 @@ public class MyRoundCornerDrawable extends Drawable {
     }
 
     public void setBorderWidth(int w) {
+        this.mBorderWidth = w;
         this.mPaintBorder.setStrokeWidth(w);
+        this.mPaintBorder.setAntiAlias(true);
         invalidateSelf();
     }
 

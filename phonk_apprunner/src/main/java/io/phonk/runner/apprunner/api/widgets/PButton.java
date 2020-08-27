@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 
 import java.util.Map;
 
@@ -58,8 +59,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         props.eventOnChange = false;
         props.put("textStyle", props, "bold");
         props.put("textAlign", props, "center");
-        props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
-        props.put("text", props, "hola");
+        // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
+        props.put("text", props, "");
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
@@ -170,6 +171,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public PButton pos(int x, int y) {
         this.setX(x);
         this.setY(y);
+
         return this;
     }
 

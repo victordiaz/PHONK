@@ -81,7 +81,7 @@ public class PViewsArea extends ProtoBase {
     protected Context mContext;
 
     // contains a reference of all views added to the absolute layout
-    private ArrayList<View> viewArray = new ArrayList<>();
+    protected ArrayList<View> viewArray = new ArrayList<>();
 
     // UI
     private StylePropertiesProxy mTheme;
@@ -176,17 +176,18 @@ public class PViewsArea extends ProtoBase {
         return v;
     }
 
-    public View addView(Map props) {
-        String type = props.get("type").toString();
+    public View addView(PViewMethodsInterface v) {
+        Map props = v.getProps();
+        // String type = props.get("type").toString();
         Object x = props.get("x");
         Object y = props.get("y");
         Object w = props.get("w");
         Object h = props.get("h");
 
-        PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
-        this.addView((View) btn, x, y, w, h);
+        // PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
+        this.addView((View) v, x, y, w, h);
 
-        return (View) btn;
+        return (View) v;
     }
 
     /**

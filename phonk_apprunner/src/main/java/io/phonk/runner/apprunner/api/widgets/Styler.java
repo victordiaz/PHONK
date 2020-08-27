@@ -29,8 +29,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
@@ -97,6 +100,7 @@ public class Styler {
     Styler(AppRunner appRunner, View view, StylePropertiesProxy props) {
         mAppRunner = appRunner;
 
+        id = RandomStringUtils.randomAlphanumeric(8);
         mView = view;
         mViewName = mView.getClass().getSimpleName().substring(1).toLowerCase();
         mProps = props;
@@ -141,6 +145,7 @@ public class Styler {
     public void resetStyle() {
         StylePropertiesProxy style = mAppRunner.pUi.getStyle();
         fromTo(style, mProps);
+        mProps.put("id", id);
     }
 
     public static void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {

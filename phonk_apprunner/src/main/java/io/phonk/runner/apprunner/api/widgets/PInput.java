@@ -61,9 +61,9 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
         styler = new InputStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("textAlign", props, "left");
-        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("background", props, "#00FFFFFF"); // appRunner.pUi.theme.get("secondaryShade"));
         props.put("backgroundPressed", props, appRunner.pUi.theme.get("secondaryShade"));
-        props.put("borderColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("borderColor", props, appRunner.pUi.theme.get("secondaryShade"));
         props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
         props.put("padding", props, appRunner.pUtil.dpToPixels(0));
         props.put("paddingLeft", props, appRunner.pUtil.dpToPixels(10));

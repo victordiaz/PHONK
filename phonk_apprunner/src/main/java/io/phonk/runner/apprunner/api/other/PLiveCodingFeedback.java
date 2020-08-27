@@ -82,7 +82,7 @@ public class PLiveCodingFeedback {
         this.mContext = context;
         fontCode = Typeface.createFromAsset(context.getAssets(), "Inconsolata.otf");
 
-        bgColor = mContext.getResources().getColor(R.color.phonk_colorPrimary_shade_1);
+        bgColor = mContext.getResources().getColor(R.color.phonk_colorPrimary_shade);
         textSize = AndroidUtils.dpToPixels(mContext, 8);;
         paddingLeft = paddingRight = paddingTop = paddingBottom = AndroidUtils.dpToPixels(mContext, 10);
 

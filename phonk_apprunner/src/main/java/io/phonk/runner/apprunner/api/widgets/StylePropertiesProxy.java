@@ -29,13 +29,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.GSONUtil;
 import io.phonk.runner.base.utils.MLog;
 
 public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     private static final java.lang.String TAG = StylePropertiesProxy.class.getSimpleName();
-    private HashMap<String, Object> values = new HashMap<>();
+    public ReturnObject values = new ReturnObject();
     private OnChangeListener changeListener;
     public boolean eventOnChange = true;
 
