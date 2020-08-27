@@ -41,9 +41,10 @@
             android:id="@+id/properties_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:orientation="vertical"
-            android:padding="15dp"></LinearLayout>
+            android:padding="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"></LinearLayout>
     </ScrollView>
 
 </RelativeLayout>
