@@ -27,14 +27,13 @@ import android.os.Looper;
 import android.util.Log;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
@@ -45,9 +44,13 @@ public class PWebSocketClient extends ProtoBase {
     private static final String TAG = PWebSocketClient.class.getSimpleName();
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    private ReturnInterface mCallbackfn;
     private WebSocketClient mWebSocketClient = null;
     private boolean mIsConnected = false;
+    private ReturnInterface mCallbackNewData;
+    private ReturnInterface mCallbackConnect;
+    private ReturnInterface mCallbackDisconnect;
+    private ReturnInterface mCallbackError;
+    private ReturnInterface mCallbackStatus;
 
     public PWebSocketClient(AppRunner appRunner, String uri) {
         super(appRunner);
@@ -58,25 +61,23 @@ public class PWebSocketClient extends ProtoBase {
                 @Override
                 public void onOpen(ServerHandshake arg0) {
                     mIsConnected = true;
-                    if (mCallbackfn == null) return;
 
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
-                        o.put("status", "open");
-                        mCallbackfn.event(o);
+                        o.put("status", "connected");
+                        if (mCallbackConnect != null) mCallbackConnect.event(o);
+                        if (mCallbackStatus != null) mCallbackStatus.event(o);
                     });
                     //Log.d(TAG, "onOpen");
                 }
 
                 @Override
                 public void onMessage(final String arg0) {
-                    if (mCallbackfn == null) return;
-
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
                         o.put("status", "message");
                         o.put("data", arg0);
-                        mCallbackfn.event(o);
+                        if (mCallbackNewData != null) mCallbackNewData.event(o);
                     });
 
                     //Log.d(TAG, "onMessage client");
@@ -84,12 +85,11 @@ public class PWebSocketClient extends ProtoBase {
 
                 @Override
                 public void onError(Exception arg0) {
-                    if (mCallbackfn == null) return;
-
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
                         o.put("status", "error");
-                        mCallbackfn.event(o);
+                        if (mCallbackError != null) mCallbackError.event(o);
+                        if (mCallbackStatus != null) mCallbackStatus.event(o);
                     });
 
                     //Log.d(TAG, "onError");
@@ -97,12 +97,12 @@ public class PWebSocketClient extends ProtoBase {
 
                 @Override
                 public void onClose(int arg0, String arg1, boolean arg2) {
-                    if (mCallbackfn == null) return;
 
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
-                        o.put("status", "close");
-                        mCallbackfn.event(o);
+                        o.put("status", "disconnect");
+                        if (mCallbackDisconnect != null) mCallbackDisconnect.event(o);
+                        if (mCallbackStatus != null) mCallbackStatus.event(o);
                     });
 
                     //Log.d(TAG, "onClose");
@@ -117,18 +117,68 @@ public class PWebSocketClient extends ProtoBase {
             ReturnObject o = new ReturnObject();
             o.put("status", "error");
             o.put("data", e.toString());
-
-            mCallbackfn.event(o);
+            if (mCallbackError != null) mCallbackError.event(o);
             e.printStackTrace();
         }
     }
 
-    public PWebSocketClient onNewData(final ReturnInterface callbackfn) {
-        mCallbackfn = callbackfn;
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    @PhonkMethod
+    public PWebSocketClient onConnect(ReturnInterface callback) {
+        mCallbackConnect = callback;
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    @PhonkMethod
+    public PWebSocketClient onDisconnect(ReturnInterface callback) {
+        mCallbackDisconnect = callback;
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    @PhonkMethod
+    public PWebSocketClient onError(ReturnInterface callback) {
+        mCallbackError = callback;
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    @PhonkMethod
+    public PWebSocketClient onStatus(ReturnInterface callback) {
+        mCallbackStatus = callback;
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    @PhonkMethod
+    public PWebSocketClient onNewData(final ReturnInterface callback) {
+        mCallbackNewData = callback;
 
         return this;
     }
 
+    @PhonkMethod
     public PWebSocketClient send(String msg) {
         if (mIsConnected) {
             mWebSocketClient.send(msg);
