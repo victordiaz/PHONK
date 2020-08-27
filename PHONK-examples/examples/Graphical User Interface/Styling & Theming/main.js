@@ -33,5 +33,5 @@ var btn = ui.addButton('Click me', 0.1, 0.2, 0.8, 0.2).onClick(function () {
 // change many properties at once
 btn.setProps({
   background: '#bbbb00',
-  textSize: 72
+  textSize: 35
 })
