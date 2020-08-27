@@ -411,10 +411,11 @@ public class PCanvas {
         int cx = mCanvasBuffer.getWidth() / 2;
         int cy = mCanvasBuffer.getHeight() / 2;
 
-        Rect textBounds = new Rect();
+        Rect rectTextBounds = new Rect();
+        mPaintFill.getTextBounds(text, 0, text.length(), rectTextBounds);
 
-        mPaintFill.getTextBounds(text, 0, text.length(), textBounds);
-        mCanvasBuffer.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), mPaintFill);
+        this.textAlign("center");
+        mCanvasBuffer.drawText(text, cx, cy - rectTextBounds.exactCenterY(), mPaintFill);
     }
 
 
