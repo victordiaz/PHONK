@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -31,8 +32,10 @@ import android.webkit.WebViewClient;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
+import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apprunner.AppRunner;
 
+@SuppressLint("JavascriptInterface")
 @PhonkClass
 public class PWebView extends WebView implements PViewMethodsInterface {
     private final AppRunner mAppRunner;
@@ -44,9 +47,9 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
         styler = new Styler(appRunner, this, props);
-        // styler.apply();
+        styler.apply();
 
-        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        // this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         WebSettings webSettings = this.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -71,18 +74,41 @@ public class PWebView extends WebView implements PViewMethodsInterface {
 
         WebViewClient webViewClient = new CustomWebViewClient();
         this.setWebViewClient(webViewClient);
+
         this.addJavascriptInterface(mAppRunner.pApp, "app");
+        /*
+        this.addJavascriptInterface(mAppRunner.pBoards, "boards");
+        this.addJavascriptInterface(mAppRunner.pConsole, "console");
+        this.addJavascriptInterface(mAppRunner.pDashboard, "dashboard");
+        this.addJavascriptInterface(mAppRunner.pDevice, "device");
+        this.addJavascriptInterface(mAppRunner.pFileIO, "fileio");
+        this.addJavascriptInterface(mAppRunner.pMedia, "media");
+        this.addJavascriptInterface(mAppRunner.pNetwork, "network");
+        this.addJavascriptInterface(mAppRunner.pPhonk, "phonk");
+        this.addJavascriptInterface(mAppRunner.pSensors, "sensors");
+        this.addJavascriptInterface(mAppRunner.pUi, "ui");
+        this.addJavascriptInterface(mAppRunner.pUtil, "util");
+         */
+
     }
 
+    @PhonkMethod
+    public void addInterface(Object object, String name) {
+        this.addJavascriptInterface(object, name);
+    }
+
+    @PhonkMethod
     public void loadData(String content) {
         this.loadData(content, "text/html", "utf-8");
     }
 
+    @PhonkMethod
     public void loadFile(String fileName) {
         String path = mAppRunner.getProject().getFullPathForFile(fileName);
         loadUrl("file://" + path);
     }
 
+    @PhonkMethod
     public void loadUrl(String url) {
         super.loadUrl(url);
     }
