@@ -25,6 +25,7 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 
@@ -84,6 +85,43 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
                 r.put("action", "clicked");
                 callbackfn.event(r);
             }
+        });
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Triggers the function when the button is released", example = "")
+    @PhonkMethodParam(params = {"function"})
+    public PButton onPress(final ReturnInterface callbackfn) {
+        // Set on click behavior
+        this.setOnTouchListener((v, event) -> {
+            ReturnObject r = new ReturnObject(PButton.this);
+            r.put("action", "release");
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN && callbackfn != null) {
+                callbackfn.event(r);
+            } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                MLog.d("qqq", "qq");
+            }
+
+            return false;
+        });
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Triggers the function when the button is released", example = "")
+    @PhonkMethodParam(params = {"function"})
+    public PButton onLongPress(final ReturnInterface callbackfn) {
+        // Set on click behavior
+        this.setOnLongClickListener(v -> {
+            if (callbackfn != null) {
+
+                ReturnObject r = new ReturnObject(PButton.this);
+                r.put("action", "longPress");
+                callbackfn.event(r);
+            }
+            return true;
         });
 
         return this;
