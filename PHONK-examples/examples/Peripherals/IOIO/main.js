@@ -1,42 +1,34 @@
 /*
- * Phonk Example Serial communication
+ * PHONK Example IOIO board
  *
- * Serial communication
- * Works great with Arduino and similar
- *
- * Your device must support OTG connectivity
- * If you want a quick working setup,
- * load the Arduino.ino firmware in your Arduino
+ * Make sure that you use the latest IOIO firmware
+ * If you use the BT connection use the pin 4545
  */
 
-var dataLabel = ui.addText('', 0, 0, 1, 0.5)
+var led
+var input
 
-// start serial connection
-var serial
-ui.addButton('START', 0.03, 0.5, 0.45, 0.18).onClick(function () {
+var ioio = boards.createIOIO()
 
-  // connect
-  serial = boards.connectSerial(9600, function (connected) {
-  	console.log('connected ' + connected)
-	})
+  // this function is executed when the ioio board is ready
+ioio.onConnect(function () {
+  console.log('connected')
+  led = ioio.openDigitalOutput(0)
+  input = ioio.openAnalogInput(31)
+  device.vibrate(500)
+})
 
-  // incomming data
-	serial.onNewData(function (data) {
-		dataLabel.text('Data : '+ data)
-	})
+// connect
+ui.addButton('Start IOIO', 0.1, 0.5, 0.35, 0.2).onClick(function () {
+  ioio.connect()
 })
 
 // stop connection
-ui.addButton('STOP', 0.52, 0.5, 0.45, 0.18).onClick(function () {
-	serial.stop()
+ui.addButton('Stop IOIO', 0.55, 0.5, 0.35, 0.2).onClick(function () {
+  ioio.stop()
 })
 
-// write to the serial led on
-ui.addButton('LED ON', 0.03, 0.7, 0.45, 0.18).onClick(function () {
-	serial.write('ledon')
-})
-
-// turn off the led
-ui.addButton('LED OFF', 0.52, 0.7, 0.45, 0.18).onClick(function () {
-	serial.write('ledoff')
+// turn on / off LED
+ui.addToggle(['LED ON', 'LED OFF'], 0.1, 0.75, 0.8, 0.18).onChange(function (e) {
+  led.write(e.checked)
 })
