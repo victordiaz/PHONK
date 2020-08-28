@@ -39,16 +39,15 @@ public class PBoards extends ProtoBase {
         super(appRunner);
     }
 
-
     @PhonkMethod(description = "initializes the ioio board", example = "")
-    public PIOIO connectIOIO() {
+    public PIOIO createIOIO() {
         PIOIO ioio = new PIOIO(getAppRunner());
         return ioio;
     }
 
     @PhonkMethod(description = "initializes serial communication", example = "")
     public PSerial createSerial(int bauds) {
-        PSerial serial = new PSerial(getAppRunner());
+        PSerial serial = new PSerial(getAppRunner(), bauds);
         return serial;
     }
 

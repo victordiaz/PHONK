@@ -105,6 +105,10 @@ dependencies {
 
     // hardware stuff
     api group: 'com.github.ytai.ioio', name: 'IOIOLibAndroid', version: '5.07'
+    api group: 'com.github.ytai.ioio', name: 'IOIOLibCore', version: '5.07'
+    api group: 'com.github.ytai.ioio', name: 'IOIOLibAndroidBluetooth', version: '5.07'
+    api group: 'com.github.ytai.ioio', name: 'IOIOLibAndroidAccessory', version: '5.07'
+    api group: 'com.github.ytai.ioio', name: 'IOIOLibAndroidDevice', version: '5.07'
     implementation 'com.github.felHR85:UsbSerial:6.1.0'
     api 'jp.kshoji:midi-driver:0.1.4:@aar'
 

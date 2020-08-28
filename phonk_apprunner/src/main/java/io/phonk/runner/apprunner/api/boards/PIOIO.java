@@ -39,13 +39,12 @@ import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 
 @PhonkClass
-public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
+public class PIOIO extends ProtoBase {
 
     private final String TAG = PIOIO.class.getSimpleName();
 
     private IOIOBoard board;
     private IOIO mIoio;
-    boolean mIOIOConnected = false;
     private ReturnInterface mCallbackConnected;
     private ReturnInterface mCallbackDisconnected;
     private ReturnInterface mCallbackStatus;
@@ -54,15 +53,44 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
         super(appRunner);
     }
 
-    @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
-    @PhonkMethodParam(params = {""})
-    public void start() {
-        if (!mIOIOConnected) {
-            this.board = new IOIOBoard(getContext(), this);
-            board.powerOn();
-            getAppRunner().whatIsRunning.add(board);
-        }
+    @PhonkMethod(description = "initializes ioio board", example = "ioio.connect();")
+    public void connect() {
+        this.board = new IOIOBoard(getContext(), ioioCallback);
+        board.powerOn();
+        getAppRunner().whatIsRunning.add(board);
     }
+
+    @PhonkMethod
+    public void onConnect(ReturnInterface callback) {
+        mCallbackConnected = callback;
+    }
+
+    IOIOBoard.HardwareCallback ioioCallback = new IOIOBoard.HardwareCallback() {
+        @Override
+        public void onConnect(Object ioio) {
+            MLog.d(TAG, "ioio Connected " + ioio);
+            PIOIO.this.mIoio = (IOIO) ioio;
+
+            ReturnObject ret = new ReturnObject();
+            ret.put("status", "connected");
+
+            mHandler.post(() -> {
+                if (mCallbackConnected != null) mCallbackConnected.event(ret);
+                if (mCallbackStatus != null) mCallbackStatus.event(ret);
+            });
+        }
+
+        @Override
+        public void setup() { }
+
+        @Override
+        public void loop() {
+            MLog.d(TAG, "loop");
+        }
+
+        @Override
+        public void onComplete() { }
+    };
 
     public IOIO get() {
         return mIoio;
@@ -70,14 +98,16 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
 
     @PhonkMethod(description = "stops the ioio board", example = "ioio.stop();")
     public void stop() {
-        mIOIOConnected = false;
-        board.powerOff();
-        board = null;
+        if (mIoio != null) {
+            board.powerOff();
+            board = null;
+            mIoio = null;
+        }
     }
 
     @PhonkMethod(description = "", example = "")
     public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
-        return mIoio.openDigitalOutput(pinNum, false); // start with the on board
+        return mIoio.openDigitalOutput(pinNum, false);
     }
 
     @PhonkMethod(description = "", example = "")
@@ -94,36 +124,6 @@ public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
     public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
         return mIoio.openPwmOutput(pinNum, freq);
     }
-
-    @PhonkMethod(description = "returns true is the ioio board is connected", example = "")
-    public boolean isStarted() {
-        return mIOIOConnected;
-    }
-
-    @Override
-    public void onConnect(Object ioio) {
-        MLog.d(TAG, "ioio Connected");
-        mIOIOConnected = true;
-
-        this.mIoio = (IOIO) ioio;
-
-        ReturnObject ret = new ReturnObject();
-        ret.put("status", "connected");
-
-        mHandler.post(() -> {
-            if (mCallbackConnected != null) mCallbackConnected.event(ret);
-            if (mCallbackStatus != null) mCallbackStatus.event(ret);
-        });
-    }
-
-    @Override
-    public void setup() { }
-
-    @Override
-    public void loop() { }
-
-    @Override
-    public void onComplete() { }
 
     @Override
     public void __stop() {
