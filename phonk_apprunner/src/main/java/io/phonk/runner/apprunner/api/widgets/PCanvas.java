@@ -31,6 +31,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
@@ -126,6 +127,13 @@ public class PCanvas {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setColor(c);
         fillOn = true;
+
+        return this;
+    }
+
+    public PCanvas porterDuff(String strMode) {
+        PorterDuff.Mode mode = PorterDuff.Mode.valueOf(strMode);
+        mPaintFill.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
 
         return this;
     }
