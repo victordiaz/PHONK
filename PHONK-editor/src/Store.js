@@ -39,7 +39,7 @@ var state = {
   show_preferences: false,
   preferences: {
     'editor': {
-      'text size': 20,
+      'text size': 18,
       /*
       'light theme': true,
       'autosave': true,
@@ -494,7 +494,7 @@ store.copyArray = function (or, dst) {
 }
 
 /*
- * Method that returns the ProtocoderURL Server, useful when debugging
+ * Method that returns the PHONK Server, useful when debugging
  */
 var getUrl = function (route) {
   if (DEBUG) {
