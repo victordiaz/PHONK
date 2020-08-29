@@ -9,6 +9,8 @@ import Editor from './components/Editor.vue'
 import TutorialLoader from './components/TutorialLoader'
 import About from './components/About'
 import Preferences from './components/Preferences'
+import UIEditor from './components/UIEditor'
+
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
@@ -46,7 +48,7 @@ var router = new VueRouter({
       path: '/editor',
       name: 'editor',
       component: Editor,
-      title: 'Protocoder'
+      title: 'PHONK'
     },
     {
       path: '/editor/:type/:folder/:project',
@@ -57,7 +59,13 @@ var router = new VueRouter({
        require(['./components/Editor.vue'], resolve)
       },
       */
-      title: 'Protocoder'
+      title: 'PHONK'
+    },
+    {
+      path: '/uieditor/',
+      name: 'uieditor',
+      title: 'UI Editor',
+      component: UIEditor
     },
     {
       path: '/tutorial/:id',
