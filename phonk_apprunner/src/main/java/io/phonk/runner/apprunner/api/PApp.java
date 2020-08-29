@@ -151,7 +151,7 @@ public class PApp extends ProtoBase {
     @PhonkMethod
     public void eval(final String code) {
         runOnUiThread(r -> {
-            // getAppRunner().interp.eval(code);
+            getAppRunner().interp.eval(code);
         });
     }
 

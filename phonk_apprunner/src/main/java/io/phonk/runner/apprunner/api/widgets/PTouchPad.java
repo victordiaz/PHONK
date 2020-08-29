@@ -59,7 +59,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         styler = new TouchPadStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("padSize", props, appRunner.pUtil.dpToPixels(50));
-        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("background", props, appRunner.pUi.theme.get("primaryShade"));
         props.put("padColor", props, appRunner.pUi.theme.get("primary"));
         props.put("padBorderColor", props, appRunner.pUi.theme.get("primary"));
         props.put("padBorderSize", props, appRunner.pUtil.dpToPixels(2));

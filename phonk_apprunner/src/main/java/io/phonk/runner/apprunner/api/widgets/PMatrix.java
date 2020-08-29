@@ -72,6 +72,10 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         props.eventOnChange = false;
         props.put("matrixCellColor", props, "#00FFFFFF");
         props.put("matrixCellSelectedColor", props, appRunner.pUi.theme.get("primary"));
+
+        props.put("borderColor", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("borderRadius", props, 0);
+
         props.put("matrixCellBorderSize", props, appRunner.pUtil.dpToPixels(1));
         props.put("matrixCellBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
         props.put("matrixCellBorderRadius", props, 0);
@@ -257,17 +261,30 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
 
             c.stroke(styler.matrixCellBorderColor);
             c.strokeWidth(styler.matrixCellBorderSize);
+
+            // grid
+            for (int i = 0; i < COLS; i++) {
+                for (int j = 0; j < ROWS; j++) {
+                    c.fill(matrix[i][j]);
+                    // c.rect(i * W, j * H, W, H, 2, 2);
+                    c.point(i * W, j * H);
+                }
+            }
+
+            // cells
+            c.noStroke();
             for (int i = 0; i < COLS; i++) {
                 for (int j = 0; j < ROWS; j++) {
                     c.fill(matrix[i][j]);
                     c.rect(i * W, j * H, W, H, 2, 2);
+                    // c.point(i * W, j * H);
                 }
             }
 
             // matrix border
-            c.stroke("#FFFFFF");
+            c.stroke(styler.borderColor);
             c.noFill();
-            c.rect(0, 0, c.width, c.height);
+            c.rect(0, 0, c.width, c.height, (float) styler.borderRadius, (float) styler.borderRadius);
 
             c.stroke("#00000022");
             c.fill("#2200FF00");

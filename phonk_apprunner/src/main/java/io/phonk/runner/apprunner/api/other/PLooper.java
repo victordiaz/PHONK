@@ -47,12 +47,12 @@ public class PLooper implements WhatIsRunningInterface {
         void event();
     }
 
-    public PLooper(AppRunner appRunner, final int duration, final LooperCB callbackkfn) {
+    public PLooper(AppRunner appRunner, final int speed, final LooperCB callbackkfn) {
         mAppRunner = appRunner;
         handler = new Handler();
 
         mCallbackfn = callbackkfn;
-        speed = duration;
+        this.speed = speed;
 
         task = new Runnable() {
 
@@ -64,7 +64,7 @@ public class PLooper implements WhatIsRunningInterface {
                     mCallbackfn.event();
                 }
 
-                handler.postDelayed(this, speed);
+                handler.postDelayed(this, PLooper.this.speed);
             }
         };
 
@@ -80,13 +80,14 @@ public class PLooper implements WhatIsRunningInterface {
     }
 
     @PhonkMethod(description = "Change the current time speed to a new one", example = "")
-    @PhonkMethodParam(params = {"duration"})
-    public PLooper speed(int duration) {
-        this.speed = duration;
-        if (duration < this.speed) {
-            stop();
-            start();
-        }
+    @PhonkMethodParam(params = {"speed"})
+    public PLooper speed(int speed) {
+        if (!this.isLooping) return this;
+
+        this.speed = speed;
+        stop();
+        start();
+
         return this;
     }
 

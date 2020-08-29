@@ -86,13 +86,13 @@ public class AppRunnerHelper {
         // fill with default properties
         if (!map.containsKey("name")) map.put("name", "");
         if (!map.containsKey("description")) map.put("description", "portrait");
-        if (!map.containsKey("icon")) map.put("icon", "portrait");
+        if (!map.containsKey("icon")) map.put("icon", "");
         if (!map.containsKey("window_size")) map.put("window_size", "");
         if (!map.containsKey("orientation")) map.put("orientation", "current");
         if (!map.containsKey("screen_mode")) map.put("screen_mode", "normal");
         if (!map.containsKey("featured_image")) map.put("featured_image", "");
         if (!map.containsKey("background_service")) map.put("background_service", false);
-        if (!map.containsKey("protocoder_version")) map.put("protocoder_version", "");
+        if (!map.containsKey("phonk_version")) map.put("phonk_version", "");
         if (!map.containsKey("permissions")) map.put("permissions", "");
         if (!map.containsKey("author")) map.put("author", "");
         if (!map.containsKey("contact")) map.put("contact", "");

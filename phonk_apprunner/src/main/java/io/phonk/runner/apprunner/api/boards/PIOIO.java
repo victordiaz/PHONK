@@ -27,6 +27,8 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.hardware.IOIOBoard;
 import io.phonk.runner.base.utils.MLog;
 import ioio.lib.api.AnalogInput;
@@ -37,128 +39,90 @@ import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 
 @PhonkClass
-public class PIOIO extends ProtoBase implements IOIOBoard.HardwareCallback {
+public class PIOIO extends ProtoBase {
 
     private final String TAG = PIOIO.class.getSimpleName();
 
     private IOIOBoard board;
-    boolean mIoioStarted = false;
     private IOIO mIoio;
-    private startCB mIoioCallbackfn;
+    private ReturnInterface mCallbackConnected;
+    private ReturnInterface mCallbackDisconnected;
+    private ReturnInterface mCallbackStatus;
 
     public PIOIO(AppRunner appRunner) {
         super(appRunner);
     }
 
-    // --------- getRequest ---------//
-    public interface startCB {
-        void event();
+    @PhonkMethod(description = "initializes ioio board", example = "ioio.connect();")
+    public void connect() {
+        this.board = new IOIOBoard(getContext(), ioioCallback);
+        board.powerOn();
+        getAppRunner().whatIsRunning.add(board);
     }
 
-    @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
-    @PhonkMethodParam(params = {""})
-    public void start() {
-        if (!mIoioStarted) {
-            this.board = new IOIOBoard(getContext(), this);
-            board.powerOn();
-            getAppRunner().whatIsRunning.add(board);
+    @PhonkMethod
+    public void onConnect(ReturnInterface callback) {
+        mCallbackConnected = callback;
+    }
+
+    IOIOBoard.HardwareCallback ioioCallback = new IOIOBoard.HardwareCallback() {
+        @Override
+        public void onConnect(Object ioio) {
+            MLog.d(TAG, "ioio Connected " + ioio);
+            PIOIO.this.mIoio = (IOIO) ioio;
+
+            ReturnObject ret = new ReturnObject();
+            ret.put("status", "connected");
+
+            mHandler.post(() -> {
+                if (mCallbackConnected != null) mCallbackConnected.event(ret);
+                if (mCallbackStatus != null) mCallbackStatus.event(ret);
+            });
         }
-    }
 
+        @Override
+        public void setup() { }
 
-    @PhonkMethod(description = "initializes ioio board", example = "ioio.start();")
-    @PhonkMethodParam(params = {"function()"})
-    public void start(startCB callbackfn) {
-        mIoioCallbackfn = callbackfn;
-        if (!mIoioStarted) {
-            this.board = new IOIOBoard(getContext(), this);
-            board.powerOn();
-            getAppRunner().whatIsRunning.add(board);
+        @Override
+        public void loop() {
+            MLog.d(TAG, "loop");
         }
-    }
+
+        @Override
+        public void onComplete() { }
+    };
 
     public IOIO get() {
         return mIoio;
     }
 
-
     @PhonkMethod(description = "stops the ioio board", example = "ioio.stop();")
     public void stop() {
-        mIoioStarted = false;
-        board.powerOff();
-        board = null;
+        if (mIoio != null) {
+            board.powerOff();
+            board = null;
+            mIoio = null;
+        }
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber"})
     public DigitalOutput openDigitalOutput(int pinNum) throws ConnectionLostException {
-        return mIoio.openDigitalOutput(pinNum, false); // start with the on board
-
+        return mIoio.openDigitalOutput(pinNum, false);
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber"})
     public DigitalInput openDigitalInput(int pinNum) throws ConnectionLostException {
         return mIoio.openDigitalInput(pinNum, DigitalInput.Spec.Mode.PULL_UP);
-
     }
 
-
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber"})
     public AnalogInput openAnalogInput(int pinNum) throws ConnectionLostException {
         return mIoio.openAnalogInput(pinNum);
-
     }
-
 
     @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"pinNumber", "frequency"})
     public PwmOutput openPWMOutput(int pinNum, int freq) throws ConnectionLostException {
         return mIoio.openPwmOutput(pinNum, freq);
-    }
-
-
-    public void resume() {
-    }
-
-    public void pause() {
-    }
-
-
-    @PhonkMethod(description = "returns true is the ioio board is connected", example = "")
-    public boolean isStarted() {
-        return mIoioStarted;
-    }
-
-
-    @Override
-    public void onConnect(Object obj) {
-        this.mIoio = (IOIO) obj;
-        MLog.d(TAG, "MOIO Connected");
-
-        if (mIoioCallbackfn != null) {
-            mIoioCallbackfn.event();
-        }
-
-        mIoioStarted = true;
-        mHandler.post(() -> {
-        });
-    }
-
-    @Override
-    public void setup() {
-    }
-
-    @Override
-    public void loop() {
-    }
-
-    @Override
-    public void onComplete() {
-
     }
 
     @Override

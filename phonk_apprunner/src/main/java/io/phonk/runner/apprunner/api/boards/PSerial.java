@@ -63,15 +63,16 @@ public class PSerial extends ProtoBase {
     private UsbSerialDevice mSerialPort;
 
     private boolean mSerialPortConnected = false;
-    private int mBaudsRate = 9600;
+    private int mBaudsRate;
     private boolean isReturningFullLine = true;
 
-    public PSerial(AppRunner appRunner) {
+    public PSerial(AppRunner appRunner, int bauds) {
         super(appRunner);
+        mBaudsRate = bauds;
     }
 
     @PhonkMethod(description = "starts serial", example = "")
-    public void start() {
+    public void connect() {
         getAppRunner().whatIsRunning.add(this);
         mUsbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
 
@@ -83,11 +84,23 @@ public class PSerial extends ProtoBase {
         findSerialPortDevice();
     }
 
+    @PhonkMethod
+    public void start() {
+        this.connect();
+    }
+
     @PhonkMethod(description = "stop serial", example = "")
     @PhonkMethodParam(params = {})
     public void stop() {
         if (mSerialPortConnected) {
             mSerialPort.close();
+            mHandler.post(() -> {
+                ReturnObject o = new ReturnObject();
+                o.put("status", "disconnect");
+                if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
+            });
+
+            mSerialPortConnected = false;
         }
         getContext().unregisterReceiver(usbReceiver);
     }
@@ -99,7 +112,7 @@ public class PSerial extends ProtoBase {
         mSerialPort.write(data.getBytes());
     }
 
-    public void onSerialStatus(ReturnInterface cb) {
+    public void onConnectionStatus(ReturnInterface cb) {
         mCallbackSerialStatus = cb;
     }
 
@@ -107,7 +120,6 @@ public class PSerial extends ProtoBase {
         mCallbackData = cb;
         return this;
     }
-
 
     private void findSerialPortDevice() {
         // This snippet will try to open the first encountered usb mDevice connected, excluding usb root hubs
@@ -176,13 +188,15 @@ public class PSerial extends ProtoBase {
             if (intent.getAction().equals(ACTION_USB_PERMISSION)) {
                 final boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
 
+                /*
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
-                    o.put("usbPermission", granted);
-                    if (mCallbackData != null) mCallbackData.event(o);
+                    o.put("status", "serialGranted");
+                    if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
                 });
+                */
 
-                // User accepted our USB connection. Try to open the mDevice as a serial port
+                // User accepted our USB connection. Try to open the device as a serial port
                 if (granted) {
                     MLog.d(TAG, "onReceive granted " + granted);
                     // Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
@@ -190,7 +204,7 @@ public class PSerial extends ProtoBase {
                     mConnection = mUsbManager.openDevice(mDevice);
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
-                        o.put("usbPermission", granted);
+                        o.put("status", "open");
                         if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
                     });
                     new ConnectionThread().start();
@@ -253,20 +267,30 @@ public class PSerial extends ProtoBase {
                         e.printStackTrace();
                     }
                     MLog.d(TAG, "serial connected");
+
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "connected");
+                        if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
+                    });
                 } else {
                     // no connection
                     mSerialPortConnected = false;
+
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "disconnected");
+                        if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
+                    });
                 }
-                mHandler.post(() -> {
-                    ReturnObject o = new ReturnObject();
-                    o.put("connected", mSerialPortConnected);
-                    if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
-                });
 
             } else {
                 // No driver for given device, even generic CDC driver could not be loaded
-                // Intent intent = new Intent(ACTION_USB_NOT_SUPPORTED);
-                // getContext().sendBroadcast(intent);
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "no driver");
+                    if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
+                });
             }
         }
     }
@@ -305,8 +329,6 @@ public class PSerial extends ProtoBase {
             } else {
                 // returnData = returnLine;
             }
-
-
         }
     };
 

@@ -51,15 +51,15 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         props.eventOnChange = false;
         props.put("textColor", props, appRunner.pUi.theme.get("primary"));
         props.put("background", props, "#00FFFFFF");
-        props.put("backgroundChecked", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("backgroundChecked", props, appRunner.pUi.theme.get("primaryShade"));
         // props.put("backgroundPressed", props, appRunner.pUi.theme.get("textPrimary"));
-        props.put("borderColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("borderColor", props, appRunner.pUi.theme.get("secondaryShade"));
         props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
         props.put("checked", props, false);
         props.put("text", props, "Toggle");
         props.put("textOn", props, "ON");
         props.put("textOff", props, "OFF");
-        props.put("textOnColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("textOnColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("textOffColor", props, appRunner.pUi.theme.get("textPrimary"));
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
@@ -74,8 +74,10 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
 
             if (isChecked) {
                 setTextColor(styler.textOnColor);
+                styler.mBackgroundDrawable.setBackground(styler.backgroundCheckedColor);
             } else {
                 setTextColor(styler.textOffColor);
+                styler.mBackgroundDrawable.setBackground(styler.backgroundColor);
             }
 
             ReturnObject r = new ReturnObject(PToggle.this);
@@ -168,6 +170,8 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         private String text;
         private int textOnColor;
         private int textOffColor;
+        private int backgroundColor;
+        private int backgroundCheckedColor;
 
         ToggleStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
@@ -190,6 +194,9 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
 
             textOnColor = Color.parseColor(mProps.get("textOnColor").toString());
             textOffColor = Color.parseColor(mProps.get("textOffColor").toString());
+
+            backgroundColor = Color.parseColor(mProps.get("background").toString());
+            backgroundCheckedColor = Color.parseColor(mProps.get("backgroundChecked").toString());
         }
     }
 }

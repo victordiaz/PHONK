@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,6 +37,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -50,6 +52,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -586,12 +589,10 @@ public class PNetwork extends ProtoBase {
         return type;
     }
 
-    // http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
-
-    @PhonkMethod(description = "Connect to a given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+    // http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
+    @PhonkMethod(description = "Connect to a given Wifi network with a given 'wpa', 'wep', 'open' type and mContext password", example = "")
     @PhonkMethodParam(params = {"ssidName", "type", "password"})
     public void connectWifi(String networkSSID, String type, String networkPass) {
-
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
         // should contain ssid in quotes
@@ -623,11 +624,9 @@ public class PNetwork extends ProtoBase {
                 break;
             }
         }
-
     }
 
-    private Object mIsWifiAPEnabled = true;
-
+    private boolean mIsWifiAPEnabled = true;
 
     @PhonkMethod(description = "Enable/Disable a Wifi access point", example = "")
     @PhonkMethodParam(params = {"AP name, enabled"})
@@ -675,7 +674,7 @@ public class PNetwork extends ProtoBase {
                 final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
                 for (int i = 0; i < results.size(); i++) {
 
-                    HashMap<String, Object> result = new HashMap<>();
+                    ReturnObject result = new ReturnObject();
 
                     result.put("SSID", results.get(i).SSID);
                     result.put("BSSID", results.get(i).BSSID);
@@ -704,6 +703,23 @@ public class PNetwork extends ProtoBase {
         wifi.startScan();
         getAppRunner().getAppContext().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
+
+    /*
+    @SuppressLint("MissingPermission")
+    public void getCellNeightbours() {
+        TelephonyManager manager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        List<CellInfo> cellInfoList = new ArrayList<>();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return cellInfoList;
+        }
+        cellInfoList = manager.getAllCellInfo();
+        if (cellInfoList != null) {
+            for (CellInfo info : cellInfoList) {
+                //
+            }
+        }
+    }
+     */
 
     // --------- RegisterServiceCB ---------//
     public interface RegisterServiceCB {

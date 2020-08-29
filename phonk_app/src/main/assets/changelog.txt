@@ -1,3 +1,15 @@
+1.3.0
+- WebEditor fixes when previewing a file
+- added onPress and onLongPress callbacks in buttons
+- wifiScan returns now a proper Javascript object
+- Refactor IOIO's and Serial API
+- Better color defaults when creating scripts
+- Looper has a better behavior
+- Knob & Slider have a onRelease callback
+- Improved Websockets API
+- new MQTT callbacks
+- better webview example on how to interface with PHONK's api
+
 1.2.9
 - Toggle state order are fixed
 - Camera methods changed to fix callbacks

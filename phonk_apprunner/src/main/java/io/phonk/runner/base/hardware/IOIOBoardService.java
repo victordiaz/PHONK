@@ -33,10 +33,11 @@ import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOService;
 
 public class IOIOBoardService extends IOIOService {
-    public static final int SET_CALLBACK = 1;
     protected static final String TAG = IOIOBoardService.class.getSimpleName();
-    private IOIOBoard.HardwareCallback callback_;
-    protected Boolean abort_ = false;
+
+    private IOIOBoard.HardwareCallback mCallback;
+    protected Boolean mAbort = false;
+
     // Binder given to clients
     private final IBinder mBinder = new IOIOServiceBinder();
 
@@ -52,18 +53,21 @@ public class IOIOBoardService extends IOIOService {
         return new BaseIOIOLooper() {
             @Override
             protected void setup() throws ConnectionLostException, InterruptedException {
-                MLog.d(TAG, "Setup in IOIOLooper");
-                callback_.onConnect(ioio_);
-                callback_.setup();
-                // abort_ = (resp != null && resp != true);
+                MLog.d(TAG, "Setup in IOIOLooper " + mCallback + " " + ioio_);
+
+                if (mCallback != null) {
+                    mCallback.onConnect(ioio_);
+                    mCallback.setup();
+                }
             }
 
             @Override
             public void loop() throws ConnectionLostException, InterruptedException {
-                if (abort_) {
+                MLog.d(TAG, "loop " + mCallback);
+                if (mAbort) {
                     this.disconnected();
                 } else {
-                    callback_.loop();
+                    if (mCallback != null) mCallback.loop();
                     // abort_ = (resp != null && resp != true);
                     Thread.sleep(100);
                 }
@@ -72,7 +76,7 @@ public class IOIOBoardService extends IOIOService {
             @Override
             public void disconnected() {
                 super.disconnected();
-                MLog.d("IOIOBoardService", "-----> Disconnecting <-----");
+                MLog.d(TAG, "disconnected");
                 ioio_.disconnect();
             }
         };
@@ -80,7 +84,7 @@ public class IOIOBoardService extends IOIOService {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        MLog.d(TAG, "onSTART");
+        MLog.d(TAG, "onStart");
         super.onStart(intent, startId);
     }
 
@@ -90,12 +94,12 @@ public class IOIOBoardService extends IOIOService {
     }
 
     public void setCallback(IOIOBoard.HardwareCallback cb) {
-        MLog.d(TAG, "setCallback");
-        callback_ = cb;
+        MLog.d(TAG, "3 -> setCallback");
+        mCallback = cb;
     }
 
     public void start(Intent in) {
-        MLog.d(TAG, "START WITH INTENT");
+        MLog.d(TAG, "start");
         startService(in);
     }
 }

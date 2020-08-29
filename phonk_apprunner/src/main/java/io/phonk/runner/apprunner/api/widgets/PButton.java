@@ -25,7 +25,9 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 
 import java.util.Map;
 
@@ -58,8 +60,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         props.eventOnChange = false;
         props.put("textStyle", props, "bold");
         props.put("textAlign", props, "center");
-        props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
-        props.put("text", props, "hola");
+        // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
+        props.put("text", props, "");
         styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
@@ -83,6 +85,42 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
                 r.put("action", "clicked");
                 callbackfn.event(r);
             }
+        });
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Triggers the function when the button is released", example = "")
+    @PhonkMethodParam(params = {"function"})
+    public PButton onPress(final ReturnInterface callbackfn) {
+        // Set on click behavior
+        this.setOnTouchListener((v, event) -> {
+            ReturnObject r = new ReturnObject(PButton.this);
+            r.put("action", "release");
+
+            if (event.getAction() == MotionEvent.ACTION_DOWN && callbackfn != null) {
+                callbackfn.event(r);
+            } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+            }
+
+            return false;
+        });
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Triggers the function when the button is released", example = "")
+    @PhonkMethodParam(params = {"function"})
+    public PButton onLongPress(final ReturnInterface callbackfn) {
+        // Set on click behavior
+        this.setOnLongClickListener(v -> {
+            if (callbackfn != null) {
+
+                ReturnObject r = new ReturnObject(PButton.this);
+                r.put("action", "longPress");
+                callbackfn.event(r);
+            }
+            return true;
         });
 
         return this;
@@ -170,6 +208,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public PButton pos(int x, int y) {
         this.setX(x);
         this.setY(y);
+
         return this;
     }
 

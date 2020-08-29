@@ -28,9 +28,7 @@ import android.view.View;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -48,11 +46,13 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     public StylePropertiesProxy props = new StylePropertiesProxy();
     public SliderStyler styler;
 
+    private ReturnInterface callbackDrag;
+    private ReturnInterface callbackRelease;
+
     private ArrayList touches;
     private float x;
     private float y;
     private boolean touching;
-    private ReturnInterface callback;
     private float unmappedVal;
     private float mappedVal;
     private float rangeFrom = 0;
@@ -64,14 +64,12 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     private float val = 0;
 
     private DecimalFormat df;
-    private String formatString = "#.##";
-    private int numDecimals = 1;
 
     public PSlider(AppRunner appRunner, Map initProps) {
         super(appRunner, initProps);
 
         draw = mydraw;
-        
+
         styler = new SliderStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("slider", props, (String) appRunner.pUi.theme.get("primary"));
@@ -83,7 +81,8 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         props.eventOnChange = true;
         styler.apply();
 
-        df = new DecimalFormat(formatString);
+        df = new DecimalFormat("#.##");
+        decimals(2);
     }
 
     @Override
@@ -91,48 +90,55 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         x = event.getX();
         y = event.getY();
 
-        if (mode.equals("direct")) {
-            if (x < 0) x = 0;
-            if (x > mWidth) x = mWidth;
-            if (y < 0) y = 0;
-            if (y > mHeight) y = mHeight;
-            unmappedVal = x;
-            mappedVal = CanvasUtils.map(x, 0, mWidth, rangeFrom, rangeTo);
-        } else if (mode.equals("drag")){
 
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    firstX = x;
-                    prevVal = val;
-                    return true;
-                case MotionEvent.ACTION_MOVE:
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                firstX = x;
+                prevVal = val;
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                if (mode.equals("direct")) {
+                    if (x < 0) x = 0;
+                    if (x > mWidth) x = mWidth;
+                    if (y < 0) y = 0;
+                    if (y > mHeight) y = mHeight;
+                    unmappedVal = x;
+                    mappedVal = CanvasUtils.map(x, 0, mWidth, rangeFrom, rangeTo);
+                } else if (mode.equals("drag")) {
                     float delta = x - firstX;
                     val = prevVal + delta;
                     if (val < 0) val = 0;
                     if (val > mWidth) val = mWidth;
                     unmappedVal = val; // CanvasUtils.map(val, 0, mWidth, 0, 360);
                     mappedVal = CanvasUtils.map(val, 0, mWidth, rangeFrom, rangeTo);
+                }
+                executeCallbackDrag();
 
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-                default:
-                    return false;
-            }
+                break;
+
+            case MotionEvent.ACTION_UP:
+                executeCallbackRelease();
+                break;
+
+            default:
+                return false;
         }
 
-        executeCallback();
         invalidate();
 
         return true;
     }
 
-    private void executeCallback() {
-        if (callback != null) {
-            ReturnObject ret = new ReturnObject();
-            ret.put("value", mappedVal);
-            callback.event(ret);
-        }
+    private void executeCallbackDrag() {
+        ReturnObject ret = new ReturnObject();
+        ret.put("value", mappedVal);
+        if (callbackDrag != null) callbackDrag.event(ret);
+    }
+
+    private void executeCallbackRelease() {
+        ReturnObject ret = new ReturnObject();
+        ret.put("value", mappedVal);
+        if (callbackRelease != null) callbackRelease.event(ret);
     }
 
     OnDrawCallback mydraw = new OnDrawCallback() {
@@ -149,11 +155,13 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             if (!touching) c.fill(styler.slider);
             else c.fill(styler.sliderPressed);
 
-            c.strokeWidth(styler.sliderBorderSize);
-            c.stroke(styler.sliderBorderColor);
+            c.strokeWidth((float) styler.borderWidth);
+            c.stroke(styler.borderColor);
 
-            c.rect(0, 0, unmappedVal, c.height);
 
+            c.rect(0, 0, unmappedVal, c.height, (float) styler.borderRadius, (float) styler.borderRadius);
+
+            c.porterDuff("XOR");
             df.setRoundingMode(RoundingMode.DOWN);
 
             c.fill(styler.textColor);
@@ -166,16 +174,26 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     };
 
     public PSlider decimals(int num) {
-        if (num <= 0) formatString = "#";
-        else {
-            formatString = "#." + new String(new char[num]).replace("\0", "#");
-        }
+        String formatString = "#";
+        if (num > 0) formatString = "#." + new String(new char[num]).replace("\0", "#");
         df.applyPattern(formatString);
+        df.setMinimumFractionDigits(num);
+        df.setMaximumFractionDigits(num);
         return this;
     }
 
     public PSlider onChange(final ReturnInterface callbackfn) {
-        this.callback = callbackfn;
+        this.callbackDrag = callbackfn;
+        return this;
+    }
+
+    public PSlider onDrag(final ReturnInterface callbackfn) {
+        this.callbackDrag = callbackfn;
+        return this;
+    }
+
+    public PSlider onRelease(final ReturnInterface callbackfn) {
+        this.callbackRelease = callbackfn;
         return this;
     }
 
@@ -186,14 +204,18 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    public void value(float val) {
+    public PSlider value(float val) {
         this.mappedVal = val;
         this.invalidate();
+
+        return this;
     }
 
-    public void valueAndTriggerEvent(float val) {
+    public PSlider valueAndTriggerEvent(float val) {
         this.value(val);
-        executeCallback();
+        executeCallbackDrag();
+
+        return this;
     }
 
     public PSlider mode(String mode) {
@@ -236,8 +258,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             slider = Color.parseColor(mProps.get("slider").toString());
             sliderPressed = Color.parseColor(mProps.get("sliderPressed").toString());
             sliderHeight = toFloat(mProps.get("sliderHeight"));
-            sliderBorderSize = toFloat(mProps.get("sliderBorderSize"));
-            sliderBorderColor = Color.parseColor(mProps.get("sliderBorderColor").toString());
         }
     }
 

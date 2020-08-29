@@ -46,6 +46,9 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     public StylePropertiesProxy props = new StylePropertiesProxy();
     public KnobStyler styler;
 
+    private ReturnInterface callbackDrag;
+    private ReturnInterface callbackRelease;
+
     private Typeface textStyle = Typeface.DEFAULT;
     private Typeface textFont;
 
@@ -54,7 +57,6 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     private float prevVal = 0;
     private float val = 0;
     private boolean autoTextSize = false;
-    private ReturnInterface callback;
     private int mWidth;
     private int mHeight;
     private float mappedVal;
@@ -63,8 +65,6 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     private float rangeTo = 360;
 
     private DecimalFormat df;
-    private String formatString = "#.##";
-    private int numDecimals = 1;
 
     public PKnob(AppRunner appRunner, Map initProps) {
         super(appRunner, initProps);
@@ -76,7 +76,8 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
         props.put("knobProgressWidth", props, appRunner.pUtil.dpToPixels(2));
         props.put("knobProgressSeparation", props, appRunner.pUtil.dpToPixels(15));
-        props.put("knobBorderColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("knobBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
+
         props.put("knobProgressColor", props, appRunner.pUi.theme.get("primary"));
         props.put("background", props, "#00FFFFFF");
         props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
@@ -86,7 +87,8 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         props.eventOnChange = true;
         styler.apply();
 
-        df = new DecimalFormat(formatString);
+        df = new DecimalFormat("#.##");
+        decimals(2);
     }
 
     @Override
@@ -109,23 +111,28 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
                 break;
             case MotionEvent.ACTION_UP:
+                executeCallbackRelease();
                 break;
             default:
                 return false;
         }
 
-        executeCallback();
+        executeCallbackDrag();
         invalidate();
 
         return true;
     }
 
-    private void executeCallback() {
-        if (callback != null) {
-            ReturnObject ret = new ReturnObject();
-            ret.put("value", mappedVal);
-            callback.event(ret);
-        }
+    private void executeCallbackDrag() {
+        ReturnObject ret = new ReturnObject();
+        ret.put("value", mappedVal);
+        if (callbackDrag != null) callbackDrag.event(ret);
+    }
+
+    private void executeCallbackRelease() {
+        ReturnObject ret = new ReturnObject();
+        ret.put("value", mappedVal);
+        if (callbackRelease != null) callbackRelease.event(ret);
     }
 
     OnDrawCallback mydraw = new OnDrawCallback() {
@@ -197,17 +204,21 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     };
 
     public PKnob decimals(int num) {
-        if (num <= 0) formatString = "#";
-        else {
-            formatString = "#." + new String(new char[num]).replace("\0", "#");
-        }
+        String formatString = "#.##";
+        if (num > 0) formatString = "#." + new String(new char[num]).replace("\0", "#");
         df.applyPattern(formatString);
+        df.setMinimumFractionDigits(num);
+        df.setMinimumFractionDigits(num);
         return this;
     }
 
     public PKnob onChange(final ReturnInterface callbackfn) {
-        this.callback = callbackfn;
+        this.callbackDrag = callbackfn;
+        return this;
+    }
 
+    public PKnob onRelease(final ReturnInterface callbackfn) {
+        this.callbackRelease = callbackfn;
         return this;
     }
 
@@ -218,16 +229,20 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         return this;
     }
 
-    public void value(float val) {
+    public PKnob value(float val) {
         this.mappedVal = val;
         this.unmappedVal = CanvasUtils.map(val, rangeFrom, rangeTo, 0, 360);
 
         this.invalidate();
+
+        return this;
     }
 
-    public void valueAndTriggerEvent(float val) {
+    public PKnob valueAndTriggerEvent(float val) {
         this.value(val);
-        executeCallback();
+        executeCallbackDrag();
+
+        return this;
     }
 
     @Override

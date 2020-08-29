@@ -36,81 +36,55 @@ public class IOIOBoard {
     private static String TAG = IOIOBoard.class.getSimpleName();
 
     private final Context mContext;
-    private IOIOBoardService service_;
-    private Intent serviceIntent_;
-    private Boolean serviceBound = false;
-    protected HardwareCallback callback_;
-    protected IOIO ioio;
+    private IOIOBoardService mIOIOService;
+    private Intent mServiceIntent;
+    private Boolean mServiceBound = false;
+    protected HardwareCallback mHardwareCallback;
 
-    private final ServiceConnection connection_ = new ServiceConnection() {
-
+    private final ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            serviceBound = false;
             MLog.d(TAG, "onServiceDisconnected");
+            mServiceBound = false;
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            MLog.d(TAG, "2 --> onServiceConnected");
             IOIOBoardService.IOIOServiceBinder binder = (IOIOBoardService.IOIOServiceBinder) service;
-            service_ = binder.getService();
-            service_.setCallback(callback_);
-            service_.start(serviceIntent_);
-            serviceBound = true;
-            MLog.d(TAG, "onServiceConnected");
+            mIOIOService = binder.getService();
+            mIOIOService.setCallback(mHardwareCallback);
+            mIOIOService.start(mServiceIntent);
+            mServiceBound = true;
         }
     };
 
     public IOIOBoard(Context context, HardwareCallback callback) {
         mContext = context;
+        mHardwareCallback = callback;
     }
 
-    /**
-     * Start To power on the board u can do this (/system/xbin/makr_poweron.sh):
-     * <p/>
-     * echo 43 > /sys/class/gpio/export echo out >
-     * /sys/class/gpio/gpio43/direction echo 1 > /sys/class/gpio/gpio43/value
-     */
     public void powerOn() {
-        //SysFs.write("/sys/class/gpio/export", "43");
-        //SysFs.write("/sys/class/gpio/gpio43/direction", "out");
-        //SysFs.write("/sys/class/gpio/gpio43/value", "1");
-
-        MLog.d(TAG, "Setting up intent");
-        serviceIntent_ = new Intent(mContext, IOIOBoardService.class);
-        MLog.d(TAG, "Binding service...");
-        mContext.bindService(serviceIntent_, connection_, Context.BIND_AUTO_CREATE);
-        MLog.d(TAG, "Service bound with connection");
+        MLog.d(TAG, "1 --> Binding service...");
+        mServiceIntent = new Intent(mContext, IOIOBoardService.class);
+        mContext.bindService(mServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    /**
-     * Power off the board To power off the board u can do this
-     * (/system/xbin/makr_poweroff.sh):
-     * <p/>
-     * echo 43 > /sys/class/gpio/export echo out >
-     * /sys/class/gpio/gpio43/direction echo 0 > /sys/class/gpio/gpio43/value
-     */
     public void powerOff() {
-        if (serviceBound) {
+        if (mServiceBound) {
             MLog.d(TAG, "Aborting thread...");
-            service_.stopSelf();
-            mContext.unbindService(connection_);
-            serviceBound = false;
-            service_ = null;
+            mIOIOService.stopSelf();
+            mContext.unbindService(mConnection);
+            mServiceBound = false;
+            mIOIOService = null;
         }
-
-        /*
-        SysFs.write("/sys/class/gpio/export", "43");
-        SysFs.write("/sys/class/gpio/gpio43/direction", "out");
-        SysFs.write("/sys/class/gpio/gpio43/value", "0");
-        */
     }
 
     public void __stop() {
         MLog.d(TAG, "IOIOBoard stop called");
-        // powerOff();
-        if (serviceIntent_ != null) {
-            mContext.stopService(serviceIntent_);
+        powerOff();
+        if (mServiceIntent != null) {
+            mContext.stopService(mServiceIntent);
         }
     }
 

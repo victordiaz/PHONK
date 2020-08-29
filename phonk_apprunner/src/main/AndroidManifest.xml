@@ -77,8 +77,6 @@
         android:allowBackup="false"
         android:hardwareAccelerated="true">
 
-        <!--android:autoRemoveFromRecents="true"-->
-
         <activity
             android:name="io.phonk.runner.AppRunnerActivity"
             android:process=":AppRunner"

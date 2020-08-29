@@ -14,12 +14,12 @@ android {
     // flavorDimensions "default"
     flavorDimensions "version"
 
-    compileSdkVersion 29
+    compileSdkVersion project.compileSdkVersion
 
     defaultConfig {
         applicationId "io.phonk"
-        minSdkVersion 16
-        targetSdkVersion 29
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
 
         versionCode project.versionCode
         versionName project.versionName
