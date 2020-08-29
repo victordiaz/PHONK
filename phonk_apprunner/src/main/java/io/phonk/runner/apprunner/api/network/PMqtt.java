@@ -220,7 +220,7 @@ public class PMqtt extends ProtoBase {
      * @param callback
      * @return
      */
-    public PMqtt onDataDelivered(ReturnInterface callback) {
+    public PMqtt onDataDelivery(ReturnInterface callback) {
         mCallbackDataDelivered = callback;
         return this;
     }
@@ -231,7 +231,8 @@ public class PMqtt extends ProtoBase {
      * @return
      */
     public PMqtt onConnected(ReturnInterface callback) {
-        mCallbackConnected = callback;
+        getAppRunner().pUi.toast("Please update to the new API onConnect, this will be deprecated in a future release, thx :)", true);
+        onConnect(callback);
         return this;
     }
 
@@ -242,8 +243,33 @@ public class PMqtt extends ProtoBase {
      */
     public PMqtt onDisconnected(ReturnInterface callback) {
         mCallbackDisconnected = callback;
+        getAppRunner().pUi.toast("Please update to the new API onDisconnect, this will be deprecated in a future release, thx :)", true);
+
+        onConnect(callback);
         return this;
     }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    public PMqtt onConnect(ReturnInterface callback) {
+        mCallbackConnected = callback;
+
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     * @param callback
+     * @return
+     */
+    public PMqtt onDisconnect(ReturnInterface callback) {
+        mCallbackDisconnected = callback;
+        return this;
+    }
+
     /**
      * Callback that returns connection status
      * @param callback
