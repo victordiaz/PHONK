@@ -45,8 +45,8 @@ public class PWebSocketServer extends ProtoBase {
     public Handler mHandler = new Handler(Looper.getMainLooper());
     WebSocketServer websocketServer;
     private ReturnInterface mCallbackNewData;
-    private ReturnInterface mCallbackConnected;
-    private ReturnInterface mCallbackDisconnected;
+    private ReturnInterface mCallbackConnect;
+    private ReturnInterface mCallbackDisconnect;
     private ReturnInterface mCallbackError;
     private ReturnInterface mCallbackStatus;
     private ReturnInterface mCallbackStart;
@@ -59,26 +59,24 @@ public class PWebSocketServer extends ProtoBase {
 
             @Override
             public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
-
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
-                    o.put("status", "close");
-                    o.put("socker", arg0);
-                    if (mCallbackDisconnected == null) mCallbackDisconnected.event(o);
-                    if (mCallbackStatus == null) mCallbackStatus.event(o);
+                    o.put("status", "disconnect");
+                    o.put("socket", arg0);
+                    if (mCallbackDisconnect != null) mCallbackDisconnect.event(o);
+                    if (mCallbackStatus != null) mCallbackStatus.event(o);
                 });
                 // MLog.d(TAG, "onClose");
             }
 
             @Override
             public void onError(final WebSocket arg0, Exception arg1) {
-
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
                     o.put("status", "error");
                     o.put("socket", arg0);
-                    if (mCallbackError == null) mCallbackError.event(o);
-                    if (mCallbackStatus == null) mCallbackStatus.event(o);
+                    if (mCallbackError != null) mCallbackError.event(o);
+                    if (mCallbackStatus != null) mCallbackStatus.event(o);
                 });
                 //MLog.d(TAG, "onError");
             }
@@ -87,21 +85,20 @@ public class PWebSocketServer extends ProtoBase {
             public void onStart() {
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
-                    o.put("status", "started");
-                    if (mCallbackStart == null) mCallbackStart.event(o);
-                    if (mCallbackStatus == null) mCallbackStatus.event(o);
+                    o.put("status", "start");
+                    if (mCallbackStart != null) mCallbackStart.event(o);
+                    if (mCallbackStatus != null) mCallbackStatus.event(o);
                 });
             }
 
             @Override
             public void onMessage(final WebSocket arg0, final String arg1) {
-
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
                     o.put("status", "message");
                     o.put("socket", arg0);
                     o.put("data", arg1);
-                    if (mCallbackNewData == null) mCallbackNewData.event(o);
+                    if (mCallbackNewData != null) mCallbackNewData.event(o);
                 });
                 //MLog.d(TAG, "onMessage server");
 
@@ -111,10 +108,10 @@ public class PWebSocketServer extends ProtoBase {
             public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
-                    o.put("status", "open");
+                    o.put("status", "connect");
                     o.put("socket", arg0);
-                    if (mCallbackConnected == null) mCallbackConnected.event(o);
-                    if (mCallbackStatus == null) mCallbackStatus.event(o);
+                    if (mCallbackConnect != null) mCallbackConnect.event(o);
+                    if (mCallbackStatus != null) mCallbackStatus.event(o);
                 });
                 //MLog.d(TAG, "onOpen");
             }
@@ -135,14 +132,14 @@ public class PWebSocketServer extends ProtoBase {
     }
 
     @PhonkMethod
-    public PWebSocketServer onClientConnected(ReturnInterface callback) {
-        mCallbackConnected = callback;
+    public PWebSocketServer onClientConnect(ReturnInterface callback) {
+        mCallbackConnect = callback;
         return this;
     }
 
     @PhonkMethod
-    public PWebSocketServer onClientDisconnected(ReturnInterface callback) {
-        mCallbackDisconnected = callback;
+    public PWebSocketServer onClientDisconnect(ReturnInterface callback) {
+        mCallbackDisconnect = callback;
         return this;
     }
 
