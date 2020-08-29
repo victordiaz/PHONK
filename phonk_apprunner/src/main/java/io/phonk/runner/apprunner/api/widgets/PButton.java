@@ -101,7 +101,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
             if (event.getAction() == MotionEvent.ACTION_DOWN && callbackfn != null) {
                 callbackfn.event(r);
             } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-                MLog.d("qqq", "qq");
             }
 
             return false;

@@ -589,12 +589,10 @@ public class PNetwork extends ProtoBase {
         return type;
     }
 
-    // http://stackoverflow.com/questions/8818290/how-to-connect-to-mContext-specific-wifi-network-in-android-programmatically
-
-    @PhonkMethod(description = "Connect to a given Wifi network with mContext given 'wpa', 'wep', 'open' type and mContext password", example = "")
+    // http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
+    @PhonkMethod(description = "Connect to a given Wifi network with a given 'wpa', 'wep', 'open' type and mContext password", example = "")
     @PhonkMethodParam(params = {"ssidName", "type", "password"})
     public void connectWifi(String networkSSID, String type, String networkPass) {
-
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
         // should contain ssid in quotes
@@ -626,11 +624,9 @@ public class PNetwork extends ProtoBase {
                 break;
             }
         }
-
     }
 
-    private Object mIsWifiAPEnabled = true;
-
+    private boolean mIsWifiAPEnabled = true;
 
     @PhonkMethod(description = "Enable/Disable a Wifi access point", example = "")
     @PhonkMethodParam(params = {"AP name, enabled"})
