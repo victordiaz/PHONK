@@ -359,14 +359,16 @@ export default {
     try_again: function () {
       console.log('trying again')
 
-      let project = this.$route.params.project
-      console.log(project)
+      this.$router.go(this.$router.currentRoute)
+
+      // let project = this.$route.params.project
+      // console.log(project)
       /*
       let to = {name: 'editor.load', params: { type: type, folder: folder, project: project }}
       this.$router.push(to)
       */
       // this.$router.go(this.$router.currentRoute)
-      this.sharedState.show_load_project = true
+      // this.sharedState.show_load_project = true
     }
 
     /*
@@ -508,7 +510,7 @@ export default {
         &.active {
           font-weight: 500;
           // background-color: darken(@mainColor, 2%);
-          border-bottom: 2px solid white;
+          border-bottom: 3px solid white;
         }
 
         &:hover {
