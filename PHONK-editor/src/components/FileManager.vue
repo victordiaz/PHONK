@@ -102,6 +102,7 @@
     </div>
 
     <popup arrow = "right" :posx = "posx" :posy = "posy" v-if = "showpopover">
+      <i class="material-icons close" v-on:click = "close">close</i>
       <p v-html = "popup_content"></p>
       <audio-player v-show = "showAudioPlayer" v-bind:src = "url"></audio-player>
       <video-player v-show = "showVideoPlayer" src = "/static/cityfireflies.m4v"></video-player>
@@ -268,7 +269,7 @@ export default {
 
       var selectedFile = this.files[i]
       this.url = store.getUrlForCurrentProject() + 'files/view/' + escape(selectedFile.name)
-      this.posx = 300 + 'px'
+      this.posx = document.getElementById('file_manager').clientWidth + 30 + 'px'
       this.posy = 0 + 'px' // target.offsetTop + 22 + 'px'
 
       this.playersOff()
@@ -304,6 +305,9 @@ export default {
         console.log('opening file ' + selectedFile.name)
         store.load_file(selectedFile)
       }
+    },
+    close: function () {
+      this.showpopover = false
     },
     clickedOutside: function () {
       console.log('click')
@@ -530,6 +534,23 @@ export default {
   z-index: 1;
   height: 20%;
   position: relative;
+
+  .close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: gray;
+    font-size: 0.9em;
+    cursor: pointer;
+
+    &:hover {
+      color: white;
+    }
+
+    &:active {
+      color: gray;
+    }
+  }
 
   .actionbar {
     input {

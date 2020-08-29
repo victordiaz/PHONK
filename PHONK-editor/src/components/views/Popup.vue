@@ -102,16 +102,22 @@ export default {
     background-color: @backgroundColor;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-    border-top: 1px solid @secondaryColor;
-    border-left: 1px solid @secondaryColor;
     border-radius: 2px;
     z-index: -1;
+  }
+
+  &.top {
+    &:before {
+      border-top: 1px solid @secondaryColor;
+      border-left: 1px solid @secondaryColor;
+    }
   }
 
   &.left {
     &:before {
       left: -10px;
       bottom: 40px;
+
       /*
       box-shadow: -5px 3px 5px 0px rgba(0, 0, 0, 0.22);
       */
@@ -122,8 +128,11 @@ export default {
     min-height: 200px;
 
     &:before {
-      right: 10px;
+      right: -9px;
       top: 15px;
+      border-top: 1px solid @secondaryColor;
+      border-right: 1px solid @secondaryColor;
+
       /*
       box-shadow: 5px -3px 5px 0px rgba(0, 0, 0, 0.22);
       */

@@ -47,6 +47,7 @@ export default {
   min-height: auto;
 
   .audio {
+    margin-top: 35px;
     audio {
       width: 100%;
     }
