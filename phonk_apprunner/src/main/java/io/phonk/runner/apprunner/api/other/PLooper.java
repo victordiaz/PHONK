@@ -82,6 +82,8 @@ public class PLooper implements WhatIsRunningInterface {
     @PhonkMethod(description = "Change the current time speed to a new one", example = "")
     @PhonkMethodParam(params = {"speed"})
     public PLooper speed(int speed) {
+        if (!this.isLooping) return this;
+
         this.speed = speed;
         stop();
         start();
