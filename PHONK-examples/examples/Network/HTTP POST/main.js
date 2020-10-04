@@ -1,5 +1,5 @@
 /*
- * Phonk Example: HTTP_POST
+ * PHONK Example: HTTP_POST
  *
  * With this code you are able to upload multipart content to a webserver
  * An example of a php file that will handle the upload is included
@@ -12,14 +12,15 @@
 
 ui.addTitle(app.name)
 
-var url = 'http://yoururlhere'
-
-var data = [
-  { 'name': 'field_1', 'content': 'hello', 'type': 'text' },
-  { 'name': 'field_2', 'content': 'world', 'type': 'text' },
-  { 'name': 'userfile', 'content': 'patata.png', 'type': 'file', 'mediaType': 'image/png'}
-]
-
-network.httpPost(url, data, function (e) {
-  console.log(e)
+network.httpRequest({
+  method: 'POST',
+  url: 'https://postman-echo.com/post',
+  data: [
+    { 'name': 'field_1', 'content': 'hello', 'type': 'text' },
+    { 'name': 'field_2', 'content': 'world', 'type': 'text' },
+    { 'name': 'userfile', 'content': 'patata.png', 'type': 'file', 'mediaType': 'image/png' }
+  ]
+}).onResponse(function (e) {
+  console.log(e.status, e.response)
 })
+

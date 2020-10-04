@@ -5,7 +5,7 @@
 ui.addTitle(app.name)
 ui.addSubtitle('Creating a webserver in the port 1111')
 
-var server = network.createSimpleHttpServer(1111)
+var server = network.createHttpServer(1111)
 
 server.onNewRequest(function (e) {
   console.log(e.uri + ' ' + e.method) //, e.header, e.params, e.files)
@@ -14,7 +14,7 @@ server.onNewRequest(function (e) {
   switch (e.uri) {
 
     case '/':
-      return server.response('Phonk!')
+      return server.response('PHONK!')
 
     case '/helloworld':
       console.log('got helloworld GET petition!')
