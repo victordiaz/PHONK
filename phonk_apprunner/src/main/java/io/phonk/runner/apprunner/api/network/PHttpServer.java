@@ -45,8 +45,8 @@ import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PSimpleHttpServer extends NanoHTTPD {
-    public static final String TAG = PSimpleHttpServer.class.getSimpleName();
+public class PHttpServer extends NanoHTTPD {
+    public static final String TAG = PHttpServer.class.getSimpleName();
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
     private AppRunner mAppRunner;
@@ -82,7 +82,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
     private ReturnInterfaceWithReturn mCallback = null;
     private Project mProject = null;
 
-    public PSimpleHttpServer(AppRunner appRunner, int port) throws IOException {
+    public PHttpServer(AppRunner appRunner, int port) throws IOException {
         super(port);
 
         mAppRunner = appRunner;
@@ -102,7 +102,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
     }
 
     public void onNewRequest(ReturnInterfaceWithReturn callbackfn) {
-        MLog.d(TAG, "1 onNewRequest callback added " + callbackfn);
+        // MLog.d(TAG, "1 onNewRequest callback added " + callbackfn);
         this.mCallback = callbackfn;
     }
 
@@ -110,7 +110,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
     @PhonkMethodParam(params = {"boolean"})
     public Response response(String data) {
         Response r = newFixedLengthResponse(data);
-        MLog.d(TAG, "responding with " + r);
+        // MLog.d(TAG, "responding with " + r);
 
         return r;
     }
@@ -129,7 +129,7 @@ public class PSimpleHttpServer extends NanoHTTPD {
         InputStream fi = null;
         try {
             String filePath = mProject.getFullPathForFile(fileName);
-            MLog.d(TAG, "reading file " + filePath);
+            // MLog.d(TAG, "reading file " + filePath);
             fi = new FileInputStream(filePath);
             res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
         } catch (FileNotFoundException e) {
@@ -163,11 +163,10 @@ public class PSimpleHttpServer extends NanoHTTPD {
         ret.put("header", session.getHeaders());
         ret.put("params", session.getParameters());
         // ret.put("files", session.get());
-        MLog.d(TAG, "2 calling callback");
         Response res = (Response) mCallback.event(ret);
 
         if (res == null) MLog.d(TAG, "2 is null");
-        MLog.d(TAG, "response: " + res);
+        // MLog.d(TAG, "response: " + res);
 
         if (res == null) {
             try {
@@ -211,5 +210,4 @@ public class PSimpleHttpServer extends NanoHTTPD {
     public void stop() {
         super.stop();
     }
-
 }
