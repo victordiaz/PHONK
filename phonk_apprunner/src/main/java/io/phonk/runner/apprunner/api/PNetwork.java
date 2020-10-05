@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api;
 
-import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,7 +36,6 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -52,8 +50,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -72,9 +68,10 @@ import io.phonk.runner.apprunner.api.network.PFtpClient;
 import io.phonk.runner.apprunner.api.network.PFtpServer;
 import io.phonk.runner.apprunner.api.network.PMqtt;
 import io.phonk.runner.apprunner.api.network.PNfc;
-import io.phonk.runner.apprunner.api.network.PSimpleHttpServer;
+import io.phonk.runner.apprunner.api.network.PHttpServer;
 import io.phonk.runner.apprunner.api.network.PWebSocketClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketServer;
+import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.network.OSC;
@@ -82,6 +79,7 @@ import io.phonk.runner.base.network.ServiceDiscovery;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.ExecuteCmd;
 import io.phonk.runner.base.utils.MLog;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -123,7 +121,6 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
     @PhonkMethodParam(params = {"url", "fileName", "function(progress)"})
     public void download(String url, String fileName, final ReturnInterface callbackfn) {
-
         NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getAppRunner().getAppContext(), url, getAppRunner().getProject().getFullPathForFile(fileName));
         downloadTask.addListener(progress -> {
             ReturnObject ret = new ReturnObject();
@@ -155,8 +152,7 @@ public class PNetwork extends ProtoBase {
                     query.setFilterById(enqueue);
                     Cursor c = dm.query(query);
                     if (c.moveToFirst()) {
-                        int columnIndex = c
-                                .getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
                         if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
                             if (callback != null) callback.event(null);
                             // callback successful
@@ -167,8 +163,6 @@ public class PNetwork extends ProtoBase {
         };
 
         getContext().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-
     }
 
     // @JavascriptInterface
@@ -198,8 +192,7 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Check if internet connection is available", example = "")
     @PhonkMethodParam(params = {""})
     public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -238,7 +231,6 @@ public class PNetwork extends ProtoBase {
         return client;
     }
 
-
     WifiManager.MulticastLock wifiLock;
 
     @PhonkMethod(description = "Enable multicast networking", example = "")
@@ -253,31 +245,6 @@ public class PNetwork extends ProtoBase {
                 wifiLock.release();
             }
         }
-    }
-
-    class MulticastEnabler {
-        WifiManager.MulticastLock wifiLock;
-
-        MulticastEnabler(boolean b) {
-            WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            if (wifi != null) {
-                if (b) {
-                    wifiLock = wifi.createMulticastLock("mylock");
-                    wifiLock.acquire();
-                    getAppRunner().whatIsRunning.add(this);
-
-                } else {
-                    wifiLock.release();
-                }
-            }
-        }
-
-        public void stop() {
-            if (wifiLock != null) {
-                wifiLock.release();
-            }
-        }
-
     }
 
     @PhonkMethod(description = "Start a websocket server", example = "")
@@ -296,203 +263,103 @@ public class PNetwork extends ProtoBase {
         return pWebSocketClient;
     }
 
-    @PhonkMethod(description = "Simple http get. It returns the data using the callback", example = "")
-    @PhonkMethodParam(params = {"url", "function(eventType, responseString)"})
-    public void httpGet(String url, final ReturnInterface callbackfn) {
-        final OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder().url(url).build();
+    @PhonkMethod
+    public HTTPRequest httpRequest(final NativeObject requestParams) {
+      HTTPRequest httpRequest = new HTTPRequest(requestParams);
+      httpRequest.request();
 
-        Thread t = new Thread(() -> {
-            final ReturnObject ret = new ReturnObject();
-            try {
-                Response response = client.newCall(request).execute();
-                ret.put("response", response.body().string());
-                ret.put("status", response.code());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+      return httpRequest;
+    }
 
-            mHandler.post(() -> callbackfn.event(ret));
-        });
-        t.start();
+    public class HTTPRequest {
+        private final String method;
+        private final String url;
+        private NativeObject headers;
+        private final NativeArray data;
 
-            /*
-        class RequestTask extends AsyncTask<String, String, String> {
-            String responseString = null;
+        private ReturnInterface callbackfn;
 
-            @Override
-            protected String doInBackground(String... uri) {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpResponse response;
-                try {
-                    URL url = new URL(uri[0]);
-                    response = httpclient.execute(new HttpGet(url.toString()));
-                    final StatusLine statusLine = response.getStatusLine();
-                    if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        response.getEntity().writeTo(out);
-                        out.close();
-                        responseString = out.toString();
-                    } else {
-                        // Closes the connection.
-                        response.getEntity().getContent().close();
-                        throw new IOException(statusLine.getReasonPhrase());
-                    }
-                    MLog.d(TAG, "downloading ");
+        public HTTPRequest(NativeObject requestParams) {
+            method = (String) requestParams.get("method");
+            url = (String) requestParams.get("url");
+            headers = (NativeObject) requestParams.get("headers");
+            data = (NativeArray) requestParams.get("data");
+        }
 
-                    final ReturnObject ret = new ReturnObject();
-                    ret.put("status", statusLine.getStatusCode());
-                    ret.put("response", responseString);
+        public void request() {
+            final OkHttpClient client = new OkHttpClient();
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callbackfn.event(ret);
+            Thread t = new Thread(() -> {
+                MultipartBody multipartBody = null;
+                boolean dataExists = false;
+                boolean headersExists = false;
+                if (data != null) { if (data.size() > 0) dataExists = true; }
+                if (headers == null) {
+                    headers = new NativeObject();
+                }
+
+                if (dataExists) {
+                    MultipartBody.Builder formBody = new MultipartBody.Builder();
+                    formBody.setType(MultipartBody.FORM);
+
+                    for (int i = 0; i < data.size(); i++) {
+                        NativeObject o = (NativeObject) data.get(i);
+
+                        // go through elements
+                        String name = o.get("name").toString();
+                        String content = o.get("content").toString();
+                        String type = o.get("type").toString();
+
+                        if (type.equals("file")) {
+                            String mediaType = (String) o.get("mediaType");
+                            File f = new File(getAppRunner().getProject().getFullPathForFile(content));
+                            // MLog.d("nn1", f.getAbsolutePath() + " " + content + " " + name + " " + mediaType);
+                            formBody.addFormDataPart(name, content, RequestBody.create(MediaType.parse(mediaType), f));
+                        } else {
+                            formBody.addFormDataPart(name, content);
                         }
-                    });
-
-                } catch (ClientProtocolException e) {
-                    MLog.e(TAG, e.toString());
-                } catch (IOException e) {
-                    MLog.e(TAG, e.toString());
-                } finally {
-                    MLog.e(TAG, "error");
+                    }
+                    multipartBody = formBody.build();
                 }
-                return responseString;
-            }
 
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                // Do anything with response..
-            }
-        }
+                // Map<String, String> header = new HashMap<String, String>();
 
-        MLog.d(TAG, "" + new RequestTask().execute(url));
-        */
-    }
-
-    // --------- postRequest ---------//
-    interface HttpPostCB {
-        void event(String string);
-    }
-
-
-    @PhonkMethod(description = "Simple http post request. It needs an object to be sent. If an element of the object contains the key file then it will try to upload the resource indicated in the value as Uri ", example = "")
-    @PhonkMethodParam(params = {"url", "params", "function(responseString)"})
-    public void httpPost(final String url, final NativeArray parts, final ReturnInterface callbackfn) {
-        final OkHttpClient client = new OkHttpClient();
-
-        Thread t = new Thread(() -> {
-
-            MultipartBody.Builder formBody = new MultipartBody.Builder();
-            formBody.setType(MultipartBody.FORM);
-
-            for (int i = 0; i < parts.size(); i++) {
-                NativeObject o = (NativeObject) parts.get(i);
-
-                // go through elements
-                String name = o.get("name").toString();
-                String content = o.get("content").toString();
-                String type = o.get("type").toString();
-
-                if (type.equals("file")) {
-                    String mediaType = (String) o.get("mediaType");
-                    File f = new File(getAppRunner().getProject().getFullPathForFile(content));
-                    MLog.d("nn1", f.getAbsolutePath() + " " + content + " " + name + " " + mediaType);
-                    formBody.addFormDataPart(name, content, RequestBody.create(MediaType.parse(mediaType), f));
-                } else {
-                    formBody.addFormDataPart(name, content);
-                }
-            }
-            MultipartBody body = formBody.build();
-
-            Request request = new Request.Builder().url(url).post(body).build();
-            Response response = null;
-            final ReturnObject ret = new ReturnObject();
-            try {
-                response = client.newCall(request).execute();
-                ret.put("response", response.body().string());
-                ret.put("status", response.code());
-                mHandler.post(() -> callbackfn.event(ret));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        });
-        t.start();
-
-
-        /*
-        final HttpClient httpClient = new DefaultHttpClient();
-        final HttpContext localContext = new BasicHttpContext();
-        final HttpPost httpPost = new HttpPost(url);
-
-        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-        for (int i = 0; i < parts.size(); i++) {
-            NativeObject o = (NativeObject) parts.get(i);
-
-            // go through elements
-            String name = (String) o.get("name");
-            String content = (String) o.get("content");
-            String type = (String) o.get("type");
-
-            // create the multipart
-            if (type.contains("file")) {
-                File f = new File(getAppRunner().getProject().getFullPathForFile(content));
-                ContentBody cbFile = new FileBody(f);
-                entity.addPart(name, cbFile);
-            } else if (type.equals("text")){ // Normal string data
-                entity.addPart(name, new StringBody(content, ContentType.TEXT_PLAIN));
-            } else if (type.equals("json")){ // Normal string data
-                entity.addPart(name, new StringBody(content, ContentType.APPLICATION_JSON));
-            }
-        }
-
-        // send
-        httpPost.setEntity(entity);
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
+                Request request;
                 try {
-                    HttpResponse response = httpClient.execute(httpPost, localContext);
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    response.getEntity().writeTo(out);
-                    out.close();
-                    String responseString = out.toString();
+                    Headers buildHeaders = Headers.of(headers);
+                    request = new Request.Builder().headers(buildHeaders).url(url).method(method, multipartBody).build();
+                } catch (Exception e) {
+                    getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_ERROR, e.toString());
+                    return;
+                }
 
-                    ReturnObject o = new ReturnObject();
-                    o.put("status", response.getStatusLine().toString());
-                    o.put("response", responseString);
-                    callbackfn.event(o);
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
+                Response response = null;
+                final ReturnObject ret = new ReturnObject();
+                try {
+                    response = client.newCall(request).execute();
+                    ret.put("response", response.body().string());
+                    ret.put("status", response.code());
+                    if (callbackfn != null) mHandler.post(() -> callbackfn.event(ret));
                 } catch (IOException e) {
                     e.printStackTrace();
+                    getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_ERROR, e.toString());
                 }
-            }
-        }).start();
 
-        */
+            });
+            t.start();
+        }
+
+        public void onResponse(ReturnInterface callbackfn) {
+            this.callbackfn = callbackfn;
+        }
     }
-
-    //gives the url trying to access
-    //if (url == "") {
-    //} else {
-    //server.serveFiles()
-    //
-    //}
-
 
     @PhonkMethod(description = "Simple http server, serving the content of the project folder", example = "")
     @PhonkMethodParam(params = {"port", "function(responseString)"})
-    public PSimpleHttpServer createSimpleHttpServer(int port) {
-        PSimpleHttpServer httpServer = null;
+    public PHttpServer createHttpServer(int port) {
+        PHttpServer httpServer = null;
         try {
-            httpServer = new PSimpleHttpServer(getAppRunner(), port);
+            httpServer = new PHttpServer(getAppRunner(), port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -500,9 +367,9 @@ public class PNetwork extends ProtoBase {
         return httpServer;
     }
 
+    @PhonkMethod
     public String ssh(final String serverAddress, final int port, final String username, final String password) {
         MLog.d(TAG, "trying to connect");
-
 
         new Thread(() -> {
             com.jcraft.jsch.Session session = null;
@@ -545,7 +412,6 @@ public class PNetwork extends ProtoBase {
             }
 
         }).start();
-
 
         return "";
     }

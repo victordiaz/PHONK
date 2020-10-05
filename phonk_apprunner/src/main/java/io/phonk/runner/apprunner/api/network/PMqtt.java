@@ -104,6 +104,7 @@ public class PMqtt extends ProtoBase {
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     ReturnObject ret = new ReturnObject();
                     ret.put("status", "error");
+                    ret.put("message", exception.toString());
 
                     mHandler.post(() -> {
                         if (mCallbackError != null) mCallbackError.event(ret);

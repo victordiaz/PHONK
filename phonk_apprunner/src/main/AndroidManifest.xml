@@ -84,10 +84,9 @@
             android:windowSoftInputMode="stateUnchanged"
             android:theme="@style/PhonkAppRunnerTheme"
             android:label="@string/runner_name"
-            android:launchMode="standard" >
+            android:launchMode="standard">
 
             <intent-filter>
-
                 <action android:name="io.phonk.runner.AppRunnerActivity" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -111,7 +110,7 @@
 
         <service
             android:name="io.phonk.runner.AppRunnerLauncherService"
-            android:label="AppRunnerServiceLauncher" >
+            android:label="AppRunnerLauncherService" >
         </service>
 
         <service

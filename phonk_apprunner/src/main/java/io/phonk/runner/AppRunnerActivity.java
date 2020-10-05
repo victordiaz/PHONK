@@ -135,6 +135,8 @@ public class AppRunnerActivity extends BaseActivity {
         AppRunnerSettings.SERVER_PORT = intent.getIntExtra(Project.SERVER_PORT, 0);
         Project p = new Project(folder, name);
 
+        // MLog.d(TAG, "launching " + folder + " " + name);
+
         // settings
         scriptSettings = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
 

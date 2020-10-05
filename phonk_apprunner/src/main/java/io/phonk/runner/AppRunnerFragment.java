@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -102,13 +103,17 @@ public class AppRunnerFragment extends Fragment {
 
         MLog.d(TAG, "bundle " + bundle);
 
-        if (bundle != null) {
-            folder = bundle.getString(Project.FOLDER, "");
-            name = bundle.getString(Project.NAME, "");
-            // String settings = bundle.getString(Project.SETTINGS, "");
-
-            mAppRunner.loadProject(folder, name);
+        // if there is not intent data we close the activity
+        if (bundle == null) {
+            Toast.makeText(getContext(), "No project to load", Toast.LENGTH_LONG).show();
+            getActivity().finish();
         }
+
+        folder = bundle.getString(Project.FOLDER, "");
+        name = bundle.getString(Project.NAME, "");
+        // String settings = bundle.getString(Project.SETTINGS, "");
+
+        mAppRunner.loadProject(folder, name);
 
         mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
         mAppRunner.mIntentCode = bundle.getString(Project.INTENTCODE, "");

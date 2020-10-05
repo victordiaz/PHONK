@@ -213,7 +213,15 @@ public class PUtil extends ProtoBase {
         return face_count;
     }
 
-    public String bitmapToBase64String(Bitmap bmp, int quality) {
+    public String stringToBase64(String string) {
+        return Base64.encodeToString(string.getBytes(), Base64.DEFAULT).toString();
+    }
+
+    public String base64ToString(String base64) {
+        return new String(Base64.decode(base64, Base64.DEFAULT));
+    }
+
+    public String bitmapToBase64(Bitmap bmp, int quality) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -225,7 +233,7 @@ public class PUtil extends ProtoBase {
 
     @PhonkMethod(description = "Converts byte array to bmp", example = "")
     @PhonkMethodParam(params = {"encodedImage"})
-    public Bitmap base64StringToBitmap(String encodedImage) {
+    public Bitmap base64ToBitmap(String encodedImage) {
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
 
         // MLog.d(TAG, "bytes--> " + decodedString);
