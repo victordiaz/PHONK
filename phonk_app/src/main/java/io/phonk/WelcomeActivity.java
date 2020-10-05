@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -83,6 +84,8 @@ public class WelcomeActivity extends BaseActivity {
         mNextStepButton = findViewById(R.id.next_step_button);
         mNextStepButton.setOnClickListener(v -> goToStep(mNextStep));
         mLoading = findViewById(R.id.loading);
+
+        // MLog.d(TAG, "folder" + this.getFilesDir() + " ");
 
         goToStep(STEP_WELCOME);
     }

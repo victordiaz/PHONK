@@ -187,6 +187,7 @@ public class PApp extends ProtoBase {
 
     }
 
+    @PhonkMethod
     public Bundle getIntentData() {
         return intentData;
     }

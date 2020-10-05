@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import io.phonk.gui.AboutActivity;
 import io.phonk.gui.UpdateActivity;
+import io.phonk.runner.base.utils.MLog;
 
 public class LauncherActivity extends Activity {
 
@@ -44,6 +45,7 @@ public class LauncherActivity extends Activity {
         // or the app it self
         SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
         boolean firstLaunch = userDetails.getBoolean(getResources().getString(R.string.pref_is_first_launch), true);
+        // firstLaunch = true;
 
         // uncomment to reset (true) first launch
         // userDetails.edit().putBoolean(getResources().getString(R.string.pref_is_first_launch), true).commit();
