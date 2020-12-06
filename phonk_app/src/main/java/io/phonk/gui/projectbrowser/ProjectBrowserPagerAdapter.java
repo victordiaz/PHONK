@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui;
+package io.phonk.gui.projectbrowser;
 
 import android.util.SparseArray;
 import android.view.View;
@@ -31,29 +31,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
 
-import io.phonk.gui.folderchooser.FolderListFragment;
-import io.phonk.gui.projectlist.ProjectListFragment;
-import io.phonk.runner.base.utils.MLog;
+import io.phonk.gui.projectbrowser.folderlist.FolderListFragment;
+import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 
-public class SectionsPagerAdapter extends PagerAdapter {
+public class ProjectBrowserPagerAdapter extends PagerAdapter {
     private final FragmentManager mFragmentManager;
     private final SparseArray mFragments;
-    private FragmentTransaction mCurTransaction;
+    private FragmentTransaction mCurrentTransaction;
 
-    public SectionsPagerAdapter(FragmentManager fm, EmptyFragment mEmptyFragment, CombinedFolderAndProjectFragment mCombinedFolderAndProjectFragment) {
+    public ProjectBrowserPagerAdapter(FragmentManager fm, FolderListFragment mFolderListFragment, ProjectListFragment mProjectListFragment) {
         mFragmentManager = fm;
         mFragments = new SparseArray<>();
-        mFragments.put(0, mEmptyFragment);
-
-        mFragments.put(1, mCombinedFolderAndProjectFragment);
-    }
-
-    public SectionsPagerAdapter(FragmentManager fm, EmptyFragment mEmptyFragment, FolderListFragment mFolderListFragment, ProjectListFragment mProjectListFragment) {
-        mFragmentManager = fm;
-        mFragments = new SparseArray<>();
-        mFragments.put(0, mEmptyFragment);
-        mFragments.put(1, mFolderListFragment);
-        mFragments.put(2, mProjectListFragment);
+        mFragments.put(0, mFolderListFragment);
+        mFragments.put(1, mProjectListFragment);
     }
 
     public Fragment getItem(int position) {
@@ -63,22 +53,20 @@ public class SectionsPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = getItem(position);
-        if (mCurTransaction == null) {
-            mCurTransaction = mFragmentManager.beginTransaction();
+        if (mCurrentTransaction == null) {
+            mCurrentTransaction = mFragmentManager.beginTransaction();
         }
-
-        mCurTransaction.add(container.getId(), fragment, "fragment:" + position);
+        mCurrentTransaction.add(container.getId(), fragment, "fragment:" + position);
 
         return mFragments.get(position);
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        if (mCurTransaction == null) {
-            mCurTransaction = mFragmentManager.beginTransaction();
+        if (mCurrentTransaction == null) {
+            mCurrentTransaction = mFragmentManager.beginTransaction();
         }
-        mCurTransaction.detach((Fragment) mFragments.get(position));
-        // mFragments.remove(position);
+        mCurrentTransaction.detach((Fragment) mFragments.get(position));
     }
 
     @Override
@@ -88,16 +76,15 @@ public class SectionsPagerAdapter extends PagerAdapter {
 
     @Override
     public void finishUpdate(ViewGroup container) {
-        if (mCurTransaction != null) {
-            mCurTransaction.commitAllowingStateLoss();
-            mCurTransaction = null;
+        if (mCurrentTransaction != null) {
+            mCurrentTransaction.commitAllowingStateLoss();
+            mCurrentTransaction = null;
             mFragmentManager.executePendingTransactions();
         }
     }
 
     @Override
     public int getCount() {
-        // MLog.d("fff", "getCount " + mFragments.size());
         return mFragments.size();
     }
 }

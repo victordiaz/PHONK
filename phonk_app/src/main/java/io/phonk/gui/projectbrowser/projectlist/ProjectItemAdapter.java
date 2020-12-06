@@ -20,23 +20,32 @@
  *
  */
 
-package io.phonk.gui.projectlist;
+package io.phonk.gui.projectbrowser.projectlist;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.phonk.runner.base.models.Project;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = ProjectItemAdapter.class.getSimpleName();
     private final Context mContext;
+    private final int mPickMode;
 
     public ArrayList<Project> mProjectList = new ArrayList<>();
+    public HashMap<Project, Boolean> mProjectSelection = new HashMap<>();
     private final boolean mListMode;
+    private ProjectListFragment.ProjectSelectedListener mListener;
+
+    public void setListener(ProjectListFragment.ProjectSelectedListener listener) {
+        mListener = listener;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ProjectItem mView;
@@ -50,9 +59,10 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     /*
      * ProjectItemAdapter
      */
-    public ProjectItemAdapter(Context c, boolean listMode) {
+    public ProjectItemAdapter(Context c, boolean listMode, int pickMode) {
         mContext = c;
         mListMode = listMode;
+        mPickMode = pickMode;
     }
 
     public void setArray(ArrayList<Project> projectList) {
@@ -103,7 +113,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ProjectItem projectItem = new ProjectItem(mContext,/* mPlf, */ mListMode);
+        ProjectItem projectItem = new ProjectItem(mContext, mListMode, mPickMode);
         ViewHolder vh = new ProjectItemAdapter.ViewHolder(projectItem);
 
         return vh;
@@ -114,6 +124,22 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         Project p = mProjectList.get(position);
         holder.mView.setProjectInfo(p);
+
+        holder.mView.checkbox.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) mProjectSelection.put(p, b);
+            else mProjectSelection.remove(p);
+
+            mListener.onMultipleProjectsSelected(mProjectSelection);
+        });
+
+        holder.mView.setOnClickListener(v -> {
+            Runnable r = () -> {
+                mListener.onProjectSelected(p);
+            };
+
+            Handler handler = new Handler();
+            handler.postDelayed(r, 0);
+        });
     }
 
     @Override

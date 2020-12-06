@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui.folderchooser;
+package io.phonk.gui.projectbrowser.folderlist;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -51,36 +51,49 @@ public class FolderListFragment extends BaseFragment {
 
     private String TAG = FolderListFragment.class.getSimpleName();
 
-    ArrayList<FolderAdapterData> foldersForAdapter;
+    ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
     private ResizableRecyclerView mFolderRecyclerView;
-    private FolderChooserAdapter folderChooserAdapter;
-    private String currentParentFolder;
-    private String currentFolder;
+    private FolderListAdapter folderListAdapter;
 
     private boolean isShown = true;
     private boolean mIsTablet = false;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private ActionListener mListener;
+
+    public static FolderListFragment newInstance(String folderName, boolean orderByName) {
+        FolderListFragment myFragment = new FolderListFragment();
+
+        Bundle args = new Bundle();
+        args.putString("folderName", folderName);
+        args.putBoolean("orderByName", orderByName);
+        myFragment.setArguments(args);
+
+        return myFragment;
+    }
+
+    public interface ActionListener {
+        void onFolderSelected(String folder, String name);
+    }
+
+    public void setListener(ActionListener listener) {
+        mListener = listener;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final View v = inflater.inflate(R.layout.folderchooser_fragment, container, false);
 
         // this goes to the adapter
-        foldersForAdapter = new ArrayList<FolderAdapterData>();
-        listFolders();
+        listFolders(foldersForAdapter);
 
         // Attach the adapter with the folders data
         mFolderRecyclerView = v.findViewById(R.id.folderList);
         mFolderRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mFolderRecyclerView.setLayoutManager(linearLayoutManager);
-        folderChooserAdapter = new FolderChooserAdapter(foldersForAdapter);
-        mFolderRecyclerView.setAdapter(folderChooserAdapter);
+        folderListAdapter = new FolderListAdapter(foldersForAdapter);
+        folderListAdapter.setListener(mListener);
+        mFolderRecyclerView.setAdapter(folderListAdapter);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         LinearLayout llChooseFolder = v.findViewById(R.id.choosefolder);
@@ -89,24 +102,24 @@ public class FolderListFragment extends BaseFragment {
         return v;
     }
 
-    public void listFolders() {
-        foldersForAdapter.clear();
+    public void listFolders(ArrayList<FolderAdapterData> foldersForAdapter) {
+        this.foldersForAdapter.clear();
 
         // get the user folder
         ArrayList<Folder> folders = PhonkScriptHelper.listFolders(PhonkSettings.USER_PROJECTS_FOLDER, true);
 
         if (!folders.isEmpty()) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.USER_PROJECTS_FOLDER, "Playground"));
+            this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.USER_PROJECTS_FOLDER, "Playground"));
             for (Folder folder : folders) {
-                foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.USER_PROJECTS_FOLDER, folder.getName()));
+                this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.USER_PROJECTS_FOLDER, folder.getName(), folder.getNumSubfolders()));
             }
         }
 
         // get the examples folder
         ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
-        foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
+        this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
         for (Folder folder : examples) {
-            foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName()));
+            this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName(), folder.getNumSubfolders()));
         }
     }
 
@@ -127,32 +140,20 @@ public class FolderListFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    public static FolderListFragment newInstance(String folderName, boolean orderByName) {
-        FolderListFragment myFragment = new FolderListFragment();
-
-        Bundle args = new Bundle();
-        args.putString("folderName", folderName);
-        args.putBoolean("orderByName", orderByName);
-        myFragment.setArguments(args);
-
-        return myFragment;
-    }
-
-
-
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
-        MLog.d(TAG, "connect -> " + e.getAction());
+        MLog.d(TAG, "event -> " + e.getAction());
 
         String action = e.getAction();
         Project p = e.getProject();
 
         if (action.equals(Events.PROJECT_NEW)) {
-            listFolders();
-            folderChooserAdapter.notifyDataSetChanged();
+            listFolders(foldersForAdapter);
+            folderListAdapter.notifyDataSetChanged();
         } else if (action.equals(Events.PROJECT_DELETE)) {
-            listFolders();
-            folderChooserAdapter.notifyDataSetChanged();
+            listFolders(foldersForAdapter);
+            folderListAdapter.notifyDataSetChanged();
         }
     }
+
 }
