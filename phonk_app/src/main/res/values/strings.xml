@@ -43,7 +43,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="symbol">&lt;\u0020\u0020\u0020&gt;</string>
-    <string name="no_projects">No projects yet!\nStart experimenting :)</string>
+    <string name="no_projects">No projects found in this folder\n</string>
 
     <string name="view">View</string>
     <string name="run">Run</string>

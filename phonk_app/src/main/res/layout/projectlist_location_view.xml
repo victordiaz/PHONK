@@ -75,9 +75,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="subfolder"
+            android:textColor="@color/phonk_colorPrimary"
             android:textStyle="bold"
-            android:visibility="visible"
-            android:textColor="@color/phonk_colorPrimary" />
+            android:visibility="visible" />
 
     </LinearLayout>
 </LinearLayout>
