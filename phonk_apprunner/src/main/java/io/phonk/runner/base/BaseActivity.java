@@ -214,7 +214,6 @@ public class BaseActivity extends AppCompatActivity {
 
 
     public void addFragment(Fragment fragment, int fragmentPosition, boolean addToBackStack) {
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // FIXME: Because we have no tagging system we need to use the int as mContext
         // tag, which may cause collisions

@@ -110,7 +110,7 @@ public class PUI extends PViewsArea {
      */
     protected void initializeLayout() {
         if (isMainLayoutSetup) return;
-        mainLayout = initMainLayout();
+        mainLayout = initMainLayout("match", "match");
 
         // here we add the layout
         if (getFragment() != null) {
@@ -129,17 +129,22 @@ public class PUI extends PViewsArea {
     }
 
     @PhonkMethod
-    public PViewsArea newArea(Object x, Object y, Object w, Object h) {
+    public PViewsArea addArea(Object x, Object y, Object w, Object h) {
         PViewsArea pViewsArea = new PViewsArea(mAppRunner);
-        View v = pViewsArea.initMainLayout();
+        View v = pViewsArea.initMainLayout("match", "match");
         addView(v, x, y, w, h);
         return pViewsArea;
     }
 
     @PhonkMethod
     public PViewsArea newArea() {
+        return newArea("match", "match");
+    }
+
+    @PhonkMethod
+    public PViewsArea newArea(String widthType, String heightType) {
         PViewsArea pViewsArea = new PViewsArea(mAppRunner);
-        View v = pViewsArea.initMainLayout();
+        View v = pViewsArea.initMainLayout(widthType, heightType);
         return pViewsArea;
     }
 
