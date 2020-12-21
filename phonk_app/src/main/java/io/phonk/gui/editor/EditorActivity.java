@@ -159,7 +159,7 @@ public class EditorActivity extends BaseActivity {
         menu.add(1, MENU_SAVE, 0, "Save File").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         if (!isTablet)
             menu.add(1, MENU_FILES, 0, "Show Project Files").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        // menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         menu.add(1, MENU_INCREASE_FONT, 0, "Increase font").setIcon(R.drawable.ic_zoom_in_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         menu.add(1, MENU_DECREASE_FONT, 0, "Decrease font").setIcon(R.drawable.ic_zoom_out_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
@@ -221,27 +221,22 @@ public class EditorActivity extends BaseActivity {
 
             case MENU_SAVE:
                 onlySave();
-
                 return true;
 
             case MENU_FILES:
                 toggleFilesDrawer();
-
                 return true;
 
             case MENU_API:
                 toggleApiDrawer();
-
                 return true;
 
             case MENU_INCREASE_FONT:
                 editorFragment.increaseFont();
-
                 return true;
 
             case MENU_DECREASE_FONT:
                 editorFragment.decreaseFont();
-
                 return true;
 
             default:

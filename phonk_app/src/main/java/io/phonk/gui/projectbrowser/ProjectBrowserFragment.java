@@ -74,7 +74,6 @@ public class ProjectBrowserFragment extends Fragment {
 
         mFolderListFragment.setListener((folder, name) -> {
             mViewPager.setCurrentItem(1);
-            MLog.d("qq", folder + " " + name);
             mProjectListFragment.loadFolder(folder, name);
         });
 

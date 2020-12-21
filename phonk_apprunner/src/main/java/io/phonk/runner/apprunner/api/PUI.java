@@ -191,7 +191,7 @@ public class PUI extends PViewsArea {
 
         rootStyle.put("borderColor", rootStyle, colorTransparent);
         rootStyle.put("borderWidth", rootStyle, 0);
-        rootStyle.put("borderRadius", rootStyle, 0); // set to 20
+        rootStyle.put("borderRadius", rootStyle, 20); // set to 20
 
         rootStyle.put("src", rootStyle, "");
         rootStyle.put("srcPressed", rootStyle, "");

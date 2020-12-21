@@ -28,9 +28,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import io.phonk.gui.AboutActivity;
 import io.phonk.gui.UpdateActivity;
-import io.phonk.runner.base.utils.MLog;
+import io.phonk.gui.WelcomeActivity;
 
 public class LauncherActivity extends Activity {
 
@@ -69,6 +68,7 @@ public class LauncherActivity extends Activity {
             intent = new Intent(this, UpdateActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
+            // intent = new Intent(this, NewMainActivity.class);
             // intent.putExtras();
         }
 

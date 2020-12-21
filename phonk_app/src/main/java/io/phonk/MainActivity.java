@@ -26,98 +26,105 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import io.phonk.appinterpreter.AppRunnerCustom;
-import io.phonk.appinterpreter.PhonkApp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.phonk.events.Events;
-import io.phonk.gui.CombinedFolderAndProjectFragment;
 import io.phonk.gui.ConnectionInfoFragment;
-import io.phonk.gui.EmptyFragment;
-import io.phonk.gui.SectionsPagerAdapter;
+import io.phonk.gui.projectbrowser.ProjectBrowserFragment;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui._components.NewProjectDialogFragment;
-import io.phonk.gui.folderchooser.FolderListFragment;
-import io.phonk.gui.projectlist.ProjectListFragment;
+import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
+import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.apprunner.AppRunnerHelper;
-import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.server.PhonkServerService;
+import io.phonk.server.model.ProtoFile;
 
 public class MainActivity extends BaseActivity {
 
     private static final java.lang.String TAG = MainActivity.class.getSimpleName();
 
-    // private AppRunnerCustom mAppRunner;
-
     private Intent mServerIntent;
 
-    private int mCurrentPagerPosition;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    private RelativeLayout mHeader;
-    private RelativeLayout mLaunchScreenLogo;
+    private ProjectBrowserFragment mProjectBrowserFragment;
 
     private ImageButton mToggleConnectionInfo;
-    private RelativeLayout mConnectionInfo;
+    private CardView mConnectionInfo;
 
-    private EmptyFragment mEmptyFragment;
-    private FolderListFragment mFolderListFragment;
-    private ProjectListFragment mProjectListFragment;
     private ConnectionInfoFragment mConnectionInfoFragment;
-    private CombinedFolderAndProjectFragment mCombinedFolderAndProjectFragment;
     private APIWebviewFragment mWebViewFragment;
 
     private boolean mIsTablet = true;
-    private boolean mIsLandscapeBig = false;
     private boolean isWebIdeMode = false;
-
-    private boolean mUiInit = false;
-    // private PDelay mDelay;
 
     private boolean alreadyStartedServices = false;
     private boolean isConfigChanging = false;
-    private Runnable mDelay;
-    private Handler mHandler;
+
+    private void listProjectsWithControls() {
+        ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 2);
+        ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.EXAMPLES_FOLDER, 2);
+
+        for (ProtoFile protoFile : examplesFolder) {
+            for (ProtoFile projectFolder : protoFile.files) {
+                Project p = new Project(projectFolder.getPath());
+                Map<String, Object> scriptSettings = AppRunnerHelper.readProjectProperties(getApplicationContext(), p);
+                boolean isDeviceControl = (boolean) scriptSettings.get("device_control");
+
+                if (isDeviceControl) {
+                    MLog.d(TAG,  "yep: " + p.getFullPath() + " " + isDeviceControl + " : " + p.getFullPath());
+                } else {
+                    // MLog.d(TAG, "nop: " + p.getFullPath() + " " + isDeviceControl + " : " + p.getFullPath());
+                }
+            }
+        }
+
+        MLog.d(TAG, "breakpoint");
+    }
+
+    private void listProjectsWithControlsThread() {
+        Thread t = new Thread(() -> {
+            try {
+                listProjectsWithControls();
+            } catch (Exception e) {
+                MLog.d(TAG, "Error:" + e);
+            }
+        });
+        t.start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // listProjectsWithControlsThread();
 
         // PhonkAppHelper.launchSchedulerList(this);
         EventBus.getDefault().register(this);
@@ -129,34 +136,11 @@ public class MainActivity extends BaseActivity {
            alreadyStartedServices = savedInstanceState.getBoolean("alreadyStartedServices", false);
         }
 
-        // mAppRunner = new AppRunnerCustom(this);
-        // mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings()).initInterpreter();
-
-        // PhonkApp phonkApp = new PhonkApp(mAppRunner);
-        // phonkApp.network.checkVersion();
-        // mAppRunner.interp.eval("device.vibrate(100);");
-
         // startServers if conf specifies. In webidemode always have to start it
         MLog.d(TAG, "isWebIdeMode " + isWebIdeMode);
         if (isWebIdeMode) startServers();
 
-        if (alreadyStartedServices) {
-            loadUI(1);
-        } else {
-            loadUI(0);
-
-            mHandler = new Handler();
-            mDelay = new Runnable() {
-                @Override
-                public void run() {
-                    mViewPager.setCurrentItem(1);
-                    mHandler.removeCallbacks(this);
-                }
-            };
-            mHandler.postDelayed(mDelay, 3000);
-
-            // mDelay = mAppRunner.pUtil.delay(3000, () -> mViewPager.setCurrentItem(1));
-        }
+        loadUI();
         setScreenAlwaysOn((boolean) UserPreferences.getInstance().get("screen_always_on"));
 
         // execute onLaunch script
@@ -182,8 +166,6 @@ public class MainActivity extends BaseActivity {
         Intent i = new Intent("io.phonk.intent.CLOSED");
         sendBroadcast(i);
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        mHeader.setAlpha(1.0f);
     }
 
     @Override
@@ -197,17 +179,12 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        // if (mDelay != null) mDelay.stop();
-        if (mHandler != null) mHandler.removeCallbacks(mDelay);
-        // mAppRunner.byebye();
-
         if (!isConfigChanging) stopServers();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        MLog.d(TAG, "alreadyStartedChanging");
         outState.putBoolean("alreadyStartedServices", true);
         isConfigChanging = true;
     }
@@ -215,30 +192,26 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        MLog.d(TAG, "alreadyRestoring");
     }
 
-    /*
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        MLog.d(TAG, "changing conf");
-        removeFragment(mConnectionInfoFragment);
-        removeFragment(mEmptyFragment);
-        removeFragment(mProjectListFragment);
-        removeFragment(mFolderListFragment);
-        if (mCombinedFolderAndProjectFragment != null)
-            removeFragment(mCombinedFolderAndProjectFragment);
-        RelativeLayout mainContent = findViewById(R.id.main_content);
-        mainContent.removeAllViews();
-        super.onConfigurationChanged(newConfig);
-        loadUI(1);
-    }
-     */
-
-    private void loadUI(int toPage) {
+    private void loadUI() {
         // load UI
         setContentView(R.layout.main_activity);
 
+        mProjectBrowserFragment = ProjectBrowserFragment.newInstance(ProjectItem.MODE_NORMAL);
+        mProjectBrowserFragment.setProjectClickListener(new ProjectListFragment.ProjectSelectedListener() {
+            @Override
+            public void onProjectSelected(Project p) {
+                MLog.d("launching", p.getSandboxPath());
+                PhonkAppHelper.launchScript(MainActivity.this, p);
+            }
+
+            @Override
+            public void onMultipleProjectsSelected(HashMap<Project, Boolean> projects) {
+            }
+        });
+
+        /*
         // Show PHONK version on load
         TextView txtPhonkVersion = findViewById(R.id.phonkVersion);
         txtPhonkVersion.setText(BuildConfig.VERSION_NAME);
@@ -246,48 +219,14 @@ public class MainActivity extends BaseActivity {
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         mIsLandscapeBig = getResources().getBoolean(R.bool.isLandscapeBig);
 
-        if (!mUiInit) {
-            mEmptyFragment = EmptyFragment.newInstance();
+        // Create Fragments
 
-            mFolderListFragment = FolderListFragment.newInstance(PhonkSettings.EXAMPLES_FOLDER, true);
-            mProjectListFragment = ProjectListFragment.newInstance("", true);
-            mConnectionInfoFragment = ConnectionInfoFragment.newInstance();
+         */
+        addFragment(mProjectBrowserFragment, R.id.projectBrowserFragment, false);
 
-            /*
-            if (mIsTablet) {
-                mCombinedFolderAndProjectFragment = CombinedFolderAndProjectFragment.newInstance(mFolderListFragment, mProjectListFragment);
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mEmptyFragment, mCombinedFolderAndProjectFragment);
-            } else {
-            }
-            */
-
-            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mEmptyFragment, mFolderListFragment, mProjectListFragment);
-            mUiInit = true;
-        }
+        // Connection Fragment
+        mConnectionInfoFragment = ConnectionInfoFragment.newInstance();
         addFragment(mConnectionInfoFragment, R.id.infoLayout, false);
-
-        mHeader = findViewById(R.id.header);
-        mLaunchScreenLogo = findViewById(R.id.appintro);
-
-        if (alreadyStartedServices) {
-            mLaunchScreenLogo.setAlpha(0);
-        } else {
-            AnimationSet set = new AnimationSet(true);
-
-            Animation anim = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            Animation animT = new TranslateAnimation(0, 0, 100, 0);
-            Animation animO = new AlphaAnimation(0, 1);
-
-            set.addAnimation(anim);
-            set.addAnimation(animT);
-            set.addAnimation(animO);
-            set.setInterpolator(new AnticipateOvershootInterpolator());
-            set.setDuration(800);
-            set.setStartOffset(100);
-            // set.setFillAfter(true);
-            mLaunchScreenLogo.startAnimation(set);
-        }
-
 
         mConnectionInfo = findViewById(R.id.ip_container);
 
@@ -297,42 +236,6 @@ public class MainActivity extends BaseActivity {
                 mConnectionInfo.setVisibility(View.VISIBLE);
             else mConnectionInfo.setVisibility(View.GONE);
         });
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (positionOffset > 0.1) {
-                    // if (mDelay != null) mDelay.stop();
-                    if (mHandler != null) mHandler.removeCallbacks(mDelay);
-                }
-
-                if (position == 0) {
-                    // MLog.d(TAG, position + " " + positionOffset + " " + positionOffsetPixels);
-                    mLaunchScreenLogo.setAlpha(1 - positionOffset);
-
-                    float scale = positionOffset / 5.0f;
-                    mLaunchScreenLogo.setScaleX(1 - scale);
-                    mLaunchScreenLogo.setScaleY(1 - scale);
-
-                    mHeader.setAlpha(positionOffset);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mCurrentPagerPosition = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                // MLog.d("selected", "state " + state + " " + mCurrentPagerPosition);
-            }
-        });
-        mViewPager.setCurrentItem(toPage);
 
         final ImageButton moreOptionsButton = findViewById(R.id.more_options);
         moreOptionsButton.setOnClickListener(view -> {
@@ -368,7 +271,7 @@ public class MainActivity extends BaseActivity {
 
         if (mWebViewFragment != null) return;
 
-        FrameLayout fl = findViewById(R.id.fragmentEditor);
+        FrameLayout fl = findViewById(R.id.webEditorFragment);
         fl.setVisibility(View.VISIBLE);
         MLog.d(TAG, "using webide");
         mWebViewFragment = new APIWebviewFragment();
@@ -380,9 +283,7 @@ public class MainActivity extends BaseActivity {
         bundle.putBoolean("isTablet", mIsTablet);
         mWebViewFragment.setArguments(bundle);
 
-        addFragment(mWebViewFragment, R.id.fragmentEditor, "qq");
-
-        // mWebViewFragment.webView.loadUrl(url);
+        addFragment(mWebViewFragment, R.id.webEditorFragment, "qq");
     }
 
     public void createProjectDialog() {
@@ -469,7 +370,7 @@ public class MainActivity extends BaseActivity {
     @Subscribe
     public void onEventMainThread(Events.FolderChosen e) {
         MLog.d(TAG, "< Event (folderChosen)");
-        mViewPager.setCurrentItem(2, true);
+        // mViewPager.setCurrentItem(2, true);
     }
 
     @Subscribe
@@ -480,7 +381,7 @@ public class MainActivity extends BaseActivity {
 
         switch (action) {
             case "page":
-                mViewPager.setCurrentItem((int) value);
+                // mViewPager.setCurrentItem((int) value);
                 break;
             case "stopServers":
                 stopServers();
@@ -494,8 +395,6 @@ public class MainActivity extends BaseActivity {
                 if (isWebIdeMode) loadWebIde();
                 break;
             case "recreate":
-                // recreate();
-                // finish();
                 break;
         }
     }
@@ -524,10 +423,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mCurrentPagerPosition == 2) {
-            mViewPager.setCurrentItem(1, true);
-        } else {
-            super.onBackPressed();
-        }
+       // mViewPager.setCurrentItem(1, true);
+       super.onBackPressed();
     }
 }

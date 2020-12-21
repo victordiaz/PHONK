@@ -55,7 +55,7 @@
         android:background="@drawable/gray_box_bg_transparent"
         android:gravity="center"
         android:text="Pr"
-        android:textColor="@color/phonk_colorPrimary"
+        android:textColor="@color/phonk_colorTertiary"
         android:textSize="22sp"
         android:textStyle="bold"
         android:visibility="visible"

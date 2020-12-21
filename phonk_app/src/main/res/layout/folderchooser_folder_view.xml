@@ -28,11 +28,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:layout_marginBottom="6dp"
+    android:layout_marginBottom="8dp"
     android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="12dp"
+    android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingBottom="0dp">
 
@@ -56,6 +56,8 @@
         android:id="@+id/txtProjectIcon"
         android:layout_width="55dp"
         android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:background="@drawable/gray_box_bg_transparent"
         android:gravity="center"
         android:padding="14dp"
@@ -66,7 +68,7 @@
 
     <TextView
         android:id="@+id/textFolder"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -79,6 +81,7 @@
         android:textColor="@color/phonk_textColor_secondary"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/textNumProjects"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintLeft_toRightOf="@id/txtProjectIcon"
         app:layout_constraintStart_toEndOf="@+id/txtProjectIcon"
@@ -90,6 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="10"
+        android:textColor="@color/phonk_textColor_secondary_shade"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textFolder"

@@ -53,7 +53,7 @@
     <string name="open">Open</string>
     <string name="open_with">Open With...</string>
     <string name="cut_file">Cut File</string>
-    <string name="copy_file">Cut File</string>
+    <string name="copy_file">Copy File</string>
 
     <string name="add_shortcut">Add shortcut to Home screen</string>
     <string name="share">Share main.js code</string>
