@@ -34,6 +34,7 @@ import java.util.Map;
 
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
+import io.phonk.runner.base.utils.MLog;
 
 public class AppRunnerHelper {
 
@@ -53,6 +54,9 @@ public class AppRunnerHelper {
 
     public static String getCode(Project p, String name) {
         String path = p.getFullPath() + File.separator + name;
+
+        File f = new File(path);
+        MLog.d("getCode -->", p.getFullPath() + " " + name + " " + f.exists() + " " + FileIO.loadStringFromFile(path));
 
         return FileIO.loadStringFromFile(path);
     }
@@ -92,6 +96,7 @@ public class AppRunnerHelper {
         if (!map.containsKey("screen_mode")) map.put("screen_mode", "normal");
         if (!map.containsKey("featured_image")) map.put("featured_image", "");
         if (!map.containsKey("background_service")) map.put("background_service", false);
+        if (!map.containsKey("device_control")) map.put("device_control", false);
         if (!map.containsKey("phonk_version")) map.put("phonk_version", "");
         if (!map.containsKey("permissions")) map.put("permissions", "");
         if (!map.containsKey("author")) map.put("author", "");

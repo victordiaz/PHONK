@@ -154,6 +154,7 @@ public class AppRunner {
     public AppRunner loadProject(String folder, String name) {
         mProject = new Project(folder, name);
         mScript = AppRunnerHelper.getCode(mProject);
+        MLog.d("--> 2 loadProject:", mScript);
 
         return this;
     }

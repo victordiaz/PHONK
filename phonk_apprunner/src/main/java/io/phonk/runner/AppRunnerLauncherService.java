@@ -52,7 +52,7 @@ public class AppRunnerLauncherService extends Service {
 
         Map<String, Object> map = AppRunnerHelper.readProjectProperties(this, p);
         boolean isService = (boolean) map.get("background_service");
-        MLog.d(TAG, "launching " + p.getFullPath() + " " + isService);
+        MLog.d(TAG, "--> launching " + p.getFullPath() + " " + isService);
 
         Intent newIntent = null;
         if (isService) {
