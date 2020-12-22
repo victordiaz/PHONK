@@ -69,6 +69,7 @@
             android:icon="@drawable/ic_notifications_24dp"
             android:checked="true"
             android:key="notify_new_version"
+            android:enabled="false"
             android:summary="@string/setting_new_version_description"
             android:title="@string/setting_new_version_title" />
 
@@ -125,13 +126,21 @@
             android:summary="@string/setting_app_color_description"
             android:title="@string/setting_app_color_title" />
         -->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Restore Settings">
         <Preference
             android:icon="@drawable/ic_refresh_24dp"
             android:key="reinstall_examples"
             android:summary="@string/setting_reinstall_description"
             android:title="@string/setting_reinstall_title" />
 
-
+        <Preference
+            android:icon="@drawable/ic_baseline_perm_device_information_24"
+            android:key="request_permissions"
+            android:summary="@string/setting_request_permissions_description"
+            android:title="@string/setting_request_permissions_title" />
     </PreferenceCategory>
 
     <!--

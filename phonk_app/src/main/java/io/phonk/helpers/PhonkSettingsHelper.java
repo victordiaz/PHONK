@@ -62,7 +62,6 @@ public class PhonkSettingsHelper {
     }
 
     public static void installExamples(final Context c, final String assetsName, final InstallListener l) {
-
         new Thread(() -> {
             File dir = new File(PhonkSettings.getBaseDir() + assetsName);
             FileIO.deleteDir(dir);

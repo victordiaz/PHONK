@@ -1,3 +1,7 @@
+1.3.2
+- Ask permission for background location
+- Settings has a new entry that asks again for permissions
+
 1.3.1
 - Http request is refactored to be more flexible supporting headers, methods, etc
 - MQTT shows more descriptive errors

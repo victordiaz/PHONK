@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                android:animateLayoutChanges="true"
     >
 
     <LinearLayout
@@ -83,8 +84,8 @@
                 android:text="Installing..."
                 android:layout_gravity="center"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                ></TextView>
+                android:textSize="16sp"
+                />
 
         </LinearLayout>
 
