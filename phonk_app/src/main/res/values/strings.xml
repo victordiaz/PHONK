@@ -90,7 +90,7 @@
     <string name="welcome_1_title">Welcome!</string>
     <string name="welcome_1_body">PHONK is a coding environment for Android devices suited for tinkering, making and learning.\nYou can write code very rapidly using the Web Editor! Access any type of sensor, play sounds, display graphics or communicate with Arduino.</string>
     <string name="welcome_2_title">Grant permissions</string>
-    <string name="welcome_2_body">In order to write code that uses sensors, cameras, Internet access, etc you should grant some permissions. You can opt out some but some certain functionality won\'t work\nYou can always enable or disable them in PHONK or in the system settings.</string>  
+    <string name="welcome_2_body">In order to write code that uses sensors, cameras, Internet access, etc you should grant some permissions. External storage is required since the scripts will be saved there. \nYou can always enable or disable them in PHONK or in the system settings.</string>  
     <string name="welcome_3_title">Installing examples</string>
     <string name="welcome_3_body">PHONK comes with lots of examples to get you started very fast!\nA copy of the examples will be in the phonk folder in your device, so you can access them from any other app. If they get deleted or modified its easy to reinstall them from the Settings!</string>
 
@@ -115,31 +115,33 @@
     <string name="setting_connection_alert_title">Connection Alert</string>
     <string name="setting_connection_alert_description">PHONK will show when a new user is connecting</string>
     <string name="setting_new_version_title">Notify New version</string>
-    <string name="setting_new_version_description">PHONK will download (only Wifi) and notify when there is a new version</string>
+    <string name="setting_new_version_description">PHONK will notify when there is a new version</string>
 
     <string name="setting_send_usage_log_title">Send Usage and Crash log</string>
     <string name="setting_send_usage_log_description">Only anonymous information will be send to improve the app quality</string>
     <string name="setting_launch_script_on_app_launch_title">Script Launch</string>
-    <string name="setting_launch_script_on_app_launch_description">A project will be launched when PHONK starts</string>
+    <string name="setting_launch_script_on_app_launch_description">Launch a specific project when PHONK starts</string>
 
-    <string name="setting_enable_wakeup_on_play_title">Wake up screen on Play</string>
-    <string name="setting_enable_wakeup_on_play_description">When using the Web Editor, scripts can wake up the screen on play</string>
+    <string name="setting_enable_wakeup_on_play_title">Wake up screen on Script Run</string>
+    <string name="setting_enable_wakeup_on_play_description">When using the Web Editor, scripts can wake up the screen when running them</string>
 
 
     <string name="setting_enable_servers_on_start_title">Start server on app launch</string>
     <string name="setting_enable_servers_on_start_description">WebEditor is ready to use when PHONK is launched</string>
     <string name="setting_enable_advertise_mdns_title">Advertise Web IDE using mDNS</string>
-    <string name="setting_enable_advertise_mdns_description">You can access the WebIDE using http://android.local:8585 \nHave in mind that everybody in your network would be able to see this service advertised \nRestart PHONK after change this setting </string>
+    <string name="setting_enable_advertise_mdns_description">You can access the WebIDE using http://android.local:8585 \nThe service will advertise in the network \nRestart PHONK after change this setting </string>
     <string name="setting_maskip_title">Mask the Web Editor address</string>
-    <string name="setting_maskip_description">The IP address will be hidden as XXX.XXX.XXX.XXX. Press to uncover it</string>
+    <string name="setting_maskip_description">The IP address will hidde as XXX.XXX.XXX.XXX in the main screen. Click to uncover it</string>
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Overwrite all the examples with the default ones</string>
+    <string name="setting_request_permissions_title">Request permissions</string>
+    <string name="setting_request_permissions_description">Request again permissions to enable or disable them</string>
     <string name="settings_activity_name">Settings</string>
-    <string name="setting_options_title">Normal</string>
+    <string name="setting_options_title">General Settings</string>
     <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
-    <string name="setting_show_html5_mode">Using the WebIDE interface is suitable for tablets and ChromeOS devices</string>
+    <string name="setting_show_html5_mode">Useful for tablets and ChromeOS devices</string>
     <string name="setting_launch_on_device_boot_title">Launch PHONK when device boots</string>
-    <string name="setting_launch_on_device_boot_description">PHONK will be launched right after the device is turned on</string>
+    <string name="setting_launch_on_device_boot_description">PHONK will launch right after the device is booted</string>
     <string name="setting_show_webserver_title">Webserver port</string>
     <string name="setting_show_webserver"></string>
     <string name="setting_show_websocket_title">Websocket port</string>

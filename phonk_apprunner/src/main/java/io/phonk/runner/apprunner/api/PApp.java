@@ -31,6 +31,7 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -455,8 +456,13 @@ public class PApp extends ProtoBase {
      */
     @PhonkMethod
     public String version() {
-        return BuildConfig.VERSION_NAME;
-    }
+        String versionName = "";
+        try {
+            versionName = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;    }
 
     /**
      * Start an activity

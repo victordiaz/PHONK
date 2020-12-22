@@ -22,10 +22,15 @@
 
 package io.phonk.helpers;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
@@ -35,6 +40,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.phonk.MainActivity;
 import io.phonk.events.Events;
@@ -139,6 +146,14 @@ public class PhonkAppHelper {
         }
     }
 
+    public static void launchAppSettings(Context c) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", c.getPackageName(), null);
+        intent.setData(uri);
+        // c.startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
+        c.startActivity(intent);
+    }
+
     public static void newProjectDialog(final MainActivity c) {
         FragmentManager fm = c.getSupportFragmentManager();
         NewProjectDialogFragment newProjectDialog = new NewProjectDialogFragment();
@@ -161,7 +176,6 @@ public class PhonkAppHelper {
         });
     }
 
-
     public static void openInWebEditor(final Context c, Project p) {
         Intent i = new Intent("io.phonk.intent.WEBEDITOR_SEND");
 
@@ -172,7 +186,6 @@ public class PhonkAppHelper {
         i.putExtra("name", p.getName());
         c.sendBroadcast(i);
     }
-
 
     public static String readFile(Context c, String path) {
         InputStream is = null;
@@ -198,4 +211,56 @@ public class PhonkAppHelper {
 
         return byteArrayOutputStream.toString();
     }
+
+    public static void requestPermissions(Activity ac, int requestCode) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+            Toast.makeText(ac, "Permissions are only available from Android 6.0", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        List<String> requiredPermissions = new ArrayList<String>();
+        requiredPermissions.add(Manifest.permission.INTERNET);
+        requiredPermissions.add(Manifest.permission.ACCESS_WIFI_STATE);
+        requiredPermissions.add(Manifest.permission.CHANGE_WIFI_STATE);
+        requiredPermissions.add(Manifest.permission.CHANGE_WIFI_MULTICAST_STATE);
+        requiredPermissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
+        requiredPermissions.add(Manifest.permission.VIBRATE);
+        requiredPermissions.add(Manifest.permission.WAKE_LOCK);
+        requiredPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        requiredPermissions.add(Manifest.permission.READ_PHONE_STATE);
+        requiredPermissions.add(Manifest.permission.BLUETOOTH);
+        requiredPermissions.add(Manifest.permission.BLUETOOTH_ADMIN);
+        requiredPermissions.add(Manifest.permission.WRITE_SETTINGS);
+        requiredPermissions.add(Manifest.permission.NFC);
+        requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
+        requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
+        requiredPermissions.add(Manifest.permission.CAMERA);
+
+        // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
+
+        requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        requiredPermissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
+        requiredPermissions.add(Manifest.permission.RECORD_AUDIO);
+        requiredPermissions.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
+
+        // check if permission is already granted
+        for (int i = 0; i < requiredPermissions.size(); i++) {
+            String permissionName = requiredPermissions.get(i);
+            int isGranted1 = ac.checkSelfPermission(permissionName);
+            int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
+
+            MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
+            // requiredPermissions.remove(i);
+        }
+
+        MLog.d(TAG, "" + requiredPermissions.isEmpty());
+
+        // request the permissions
+        //if (!requiredPermissions.isEmpty()) {
+            ac.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), requestCode);
+        //}
+    }
+
 }
