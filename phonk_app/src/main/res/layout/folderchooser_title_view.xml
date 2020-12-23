@@ -38,5 +38,6 @@
         android:gravity="start|left|center_vertical"
         android:text="Large Text"
         android:textColor="@color/phonk_colorPrimary"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="@string/secondary_font"/>
 </RelativeLayout>

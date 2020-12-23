@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import io.phonk.gui.UpdateActivity;
 import io.phonk.gui.WelcomeActivity;
+import io.phonk.gui.settings.SettingsActivity;
 
 public class LauncherActivity extends Activity {
 
@@ -69,6 +70,7 @@ public class LauncherActivity extends Activity {
         } else {
             intent = new Intent(this, MainActivity.class);
             // intent = new Intent(this, NewMainActivity.class);
+            // intent = new Intent(this, SettingsActivity.class);
             // intent.putExtras();
         }
 

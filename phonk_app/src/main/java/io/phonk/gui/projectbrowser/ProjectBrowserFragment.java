@@ -42,7 +42,7 @@ public class ProjectBrowserFragment extends Fragment {
     private FolderListFragment mFolderListFragment;
     private ProjectListFragment mProjectListFragment;
     private ProjectBrowserPagerAdapter mProjectBrowserPagerAdapter;
-    private ViewPager mViewPager;
+    public ViewPager mViewPager;
     private ProjectListFragment.ProjectSelectedListener mListener;
     private int mMode;
 

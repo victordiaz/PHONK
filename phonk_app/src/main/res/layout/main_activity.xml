@@ -68,7 +68,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                app:srcCompat="@drawable/phonk_logo_name"></ImageView>
+                app:srcCompat="@drawable/phonk_logo_name"
+                tools:ignore="VectorDrawableCompat"></ImageView>
 
             <View
                 android:layout_width="match_parent"

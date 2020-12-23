@@ -22,33 +22,46 @@
   ~
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     >
 
     <LinearLayout
         android:id="@+id/logo_area"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
         android:gravity="left|center"
         android:padding="0dp">
 
-        <TextView
-            style="@style/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:paddingLeft="50dp"
-            android:layout_marginLeft="8dp"
-            android:visibility="visible" />
+        <ImageView
+            android:layout_width="71dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            app:srcCompat="@drawable/phonk_logo_name"
+            tools:ignore="VectorDrawableCompat"></ImageView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="2"></View>
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/next_step_button_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -83,25 +96,18 @@
                 android:text="Installing..."
                 android:layout_gravity="center"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                ></TextView>
+                android:textSize="16sp"
+                />
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/next_step_button"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textAlignment="gravity"
+            style="@style/YellowButton"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="@string/welcome_accept"
-            style="@style/YellowButton"
-            android:textColor="@color/phonk_backgroundColor"
             android:foreground="?attr/selectableItemBackground"
+            android:text="@string/welcome_accept"
             />
 
     </LinearLayout>
@@ -138,7 +144,5 @@
         android:text="lalal"
         android:textColor="@color/primaryAccent"
         android:textSize="10dp" />
-
-
 
 </RelativeLayout>

@@ -41,6 +41,7 @@ import androidx.preference.TwoStatePreference;
 import io.phonk.BuildConfig;
 import io.phonk.R;
 import io.phonk.gui.LicenseActivity;
+import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkSettingsHelper;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -62,17 +63,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     public static SettingsFragment newInstance() {
         SettingsFragment fragment = new SettingsFragment();
-        // Bundle args = new Bundle();
-        // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        // fragment.setArguments(args);
-
         return fragment;
     }
 
     //twostatepreference(boolean)->action/action edittextpreference(text)->action preference->action
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // View mParentView = super.onCreateView(inflater, container, savedInstanceState);
         mParentView = super.onCreateView(inflater, container, savedInstanceState);
 
         mContext = getActivity();
@@ -115,7 +111,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
         prefWakeUpOnPlay.setChecked((Boolean) mUserPreferences.get("device_wakeup_on_play"));
-
 
         // Start servers on launch
         final TwoStatePreference prefMaskIp = (TwoStatePreference) findPreference("servers_mask_ip");
@@ -261,6 +256,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
 
+        Preference btnRequestPermissions = findPreference("request_permissions");
+        btnRequestPermissions.setOnPreferenceClickListener(preference -> {
+            PhonkAppHelper.launchAppSettings(getActivity());
+            return true;
+        });
+
 
         /*
         // Connection alert mode
@@ -352,7 +353,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         */
 
         return mParentView;
-
     }
-
 }

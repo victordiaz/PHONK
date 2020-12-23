@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity {
         isWebIdeMode = (boolean) UserPreferences.getInstance().get("webide_mode");
 
         if (savedInstanceState != null) {
-           alreadyStartedServices = savedInstanceState.getBoolean("alreadyStartedServices", false);
+            alreadyStartedServices = savedInstanceState.getBoolean("alreadyStartedServices", false);
         }
 
         // startServers if conf specifies. In webidemode always have to start it
@@ -345,7 +345,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void stopServers() {
-        stopService(mServerIntent);
+        if (mServerIntent != null) stopService(mServerIntent);
     }
 
     // execute lines
@@ -423,7 +423,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-       // mViewPager.setCurrentItem(1, true);
-       super.onBackPressed();
+        // if we are not in the first page we go dont exit the app
+        if (mProjectBrowserFragment.mViewPager.getCurrentItem() != 0) {
+            mProjectBrowserFragment.mViewPager.setCurrentItem(0, true);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

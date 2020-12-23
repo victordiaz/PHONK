@@ -22,9 +22,9 @@
   -->
 
 <manifest
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:tools="http://schemas.android.com/tools"
-     package="io.phonk">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.phonk">
 
     <!-- android:resizeableActivity = "true" -->
 
@@ -106,7 +106,7 @@
         </activity>
         <activity
             android:name="io.phonk.gui.settings.SettingsActivity"
-            android:theme="@style/PhonkAppTheme"
+            android:theme="@style/PhonkAppThemePreferences"
             android:label="@string/settings_activity_name" >
         </activity>
         <activity

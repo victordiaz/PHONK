@@ -25,23 +25,41 @@
 
     <!-- ProtocoderThemeApp -->
     <style name="PhonkAppTheme.Base" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:actionBarStyle">@style/PhonkAppTheme.ActionBarStyle</item>
+        <item name="titleTextColor">@color/phonk_textColor_secondary</item>
+        <item name="subtitleTextColor">@color/phonk_textColor_primary</item>
         <item name="android:windowBackground">@drawable/phonk_background</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:alertDialogTheme">@style/PhonkAppTheme.Dialog</item>
         <item name="colorAccent">@color/phonk_colorPrimary</item>
         <item name="android:actionMenuTextColor">@color/phonk_textColor_secondary</item>
         <item name="popupMenuStyle">@style/phonk_PopupMenu</item>
-        <item name="fontFamily">@string/default_font</item>
         <item name="android:buttonStyleToggle">@style/ToggleButton</item>
 
-        <item name="android:textColorPrimary">@color/phonk_colorPrimary</item>
+        <item name="android:textColorPrimary">@color/phonk_colorTertiary</item>
         <item name="android:textColorSecondary">@color/phonk_colorSecondary</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/white</item>
-
     </style>
+
+    <style name="PhonkAppThemePreferences" parent="PhonkAppTheme">
+        <item name="titleTextColor">@color/phonk_textColor_secondary</item>
+        <item name="subtitleTextColor">@color/phonk_textColor_primary</item>
+        <item name="android:windowBackground">@drawable/phonk_background</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:alertDialogTheme">@style/PhonkAppTheme.Dialog</item>
+        <item name="colorAccent">@color/phonk_textColor_primary</item>
+        <item name="android:actionMenuTextColor">@color/phonk_textColor_secondary</item>
+        <item name="popupMenuStyle">@style/phonk_PopupMenu</item>
+        <item name="android:buttonStyleToggle">@style/ToggleButton</item>
+
+        <item name="android:textColorPrimary">@color/phonk_textColor_secondary</item>
+        <item name="android:textColorSecondary">#ababab</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
+
 
     <style name="phonk_PopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@drawable/gray_box_bg_solid</item>
@@ -52,6 +70,7 @@
         <item name="textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
         <item name="android:textAppearanceSmallPopupMenu">@style/myPopupMenuTextAppearanceSmall</item>
         <item name="android:textColor">@color/phonk_textColor_secondary</item>
+        <item name="fontFamily">@string/primary_font</item>
     </style>
 
     <style name="myPopupMenuTextAppearanceSmall" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
@@ -81,33 +100,44 @@
         -->
     </style>
 
-    <style name="PhonkAppTheme.ActionBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name = "android:textColorPrimary">@color/phonk_colorSecondary</item>
-        <item name = "android:textColorSecondary">@color/phonk_colorSecondary</item>
-        <item name = "colorPrimary">@color/blue</item>
-        <item name = "colorAccent">@color/green</item>
-        <item name = "android:selectableItemBackground">@drawable/actionbar_highlight</item>
-        <item name = "android:actionOverflowButtonStyle">@style/OverFlow</item>
-        <item name = "android:displayOptions">showHome|homeAsUp|showTitle</item>
-        <item name = "android:icon">@drawable/phonk_icon</item>
-    </style>
-
     <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_white_24dp</item>
     </style>
 
     <style name="PhonkAppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:textSize">14sp</item>
-        <item name="fontFamily">@string/default_font</item>
+        <item name="fontFamily">@string/secondary_font</item>
         <item name="android:windowMinWidthMajor">85%</item>
         <item name="android:windowMinWidthMinor">85%</item>
         <item name="android:textColor">@color/phonk_textColor_secondary</item>
         <item name="colorAccent">@color/primaryAccent</item>
         <item name="android:textColorPrimary">@color/phonk_textColor_secondary</item>
-
         <item name="android:windowBackground">@drawable/gray_box_bg_solid</item>
     </style>
 
+    <style name="PrefTheme" parent="@style/PreferenceThemeOverlay">
+        <item name = "android:textColor">@color/theme_bg_blue</item>
+        <item name = "android:fontFamily">@string/primary_font</item>
+        <item name="editTextPreferenceStyle">@style/editTextPref</item>
+        <item name="preferenceCategoryTitleTextAppearance">@style/catTitle</item>
+
+        <item name = "android:colorAccent">@color/theme_bg_magenta</item>
+    </style>
+
+    <style name="catTitle" parent = "@style/TextAppearance.AppCompat.Body2">
+        <item name = "android:textColor">@color/theme_bg_magenta</item>
+        <item name="android:textSize">85sp</item>
+        <item name="fontFamily">@string/primary_font</item>
+    </style>
+    <style name = "editTextPref" parent="@style/Preference.DialogPreference.EditTextPreference.Material">
+        <item name = "android:fontFamily">@string/primary_font</item>
+        <item name = "fontFamily">@string/primary_font</item>
+        <item name = "subtitleTextColor">@color/theme_bg_magenta</item>
+    </style>
+
+    <style name="PreferenceSummaryTextStyle">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
 
 
     <!-- ProtocoderThemeAppRunner -->

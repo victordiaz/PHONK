@@ -80,6 +80,7 @@
         android:text="Title"
         android:textColor="@color/phonk_textColor_secondary"
         android:textSize="16sp"
+        android:fontFamily="@string/primary_font"
         app:layout_constraintBottom_toTopOf="@+id/textNumProjects"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -94,7 +95,8 @@
         android:layout_marginBottom="8dp"
         android:text="10"
         android:textColor="@color/phonk_textColor_secondary_shade"
-        android:textSize="10sp"
+        android:textSize="12sp"
+        android:fontFamily="@string/primary_font"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textFolder"
         app:layout_constraintTop_toBottomOf="@+id/textFolder" />
