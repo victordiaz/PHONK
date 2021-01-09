@@ -131,6 +131,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefMDNS.setChecked((Boolean) mUserPreferences.get("advertise_mdns"));
 
         // Notify new version
+        /*
         final TwoStatePreference prefNewVersionCheck = (TwoStatePreference) findPreference("notify_new_version");
         prefNewVersionCheck.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
@@ -138,7 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
         prefNewVersionCheck.setChecked((Boolean) mUserPreferences.get("notify_new_version"));
-
+         */
 
         /*
         // Send usage log

@@ -26,12 +26,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.RotateAnimation;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import org.greenrobot.eventbus.EventBus;
+
 import io.phonk.R;
+import io.phonk.events.Events;
 import io.phonk.gui.projectbrowser.folderlist.FolderListFragment;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.gui.settings.PhonkSettings;
@@ -73,8 +77,10 @@ public class ProjectBrowserFragment extends Fragment {
         mProjectBrowserPagerAdapter = new ProjectBrowserPagerAdapter(getChildFragmentManager(), mFolderListFragment, mProjectListFragment);
 
         mFolderListFragment.setListener((folder, name) -> {
-            mViewPager.setCurrentItem(1);
             mProjectListFragment.loadFolder(folder, name);
+            mViewPager.setCurrentItem(1);
+            Events.FolderChosen ev = new Events.FolderChosen(folder, name);
+            EventBus.getDefault().post(ev);
         });
 
         mProjectListFragment.setBackClickListener(() -> mViewPager.setCurrentItem(0));

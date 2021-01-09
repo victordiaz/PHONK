@@ -265,7 +265,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                 // saving all the files changed
                 for (ProtoFile file : neo.files) {
-                    PhonkScriptHelper.saveCodeFromSandboxPath(p.getSandboxPath() + file.path, file.code);
+                    PhonkScriptHelper.saveCodeFromSandboxPath(p, file.path, file.code);
                 }
 
                 res = newFixedLengthResponse("OK");
@@ -287,7 +287,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                 String json = gson.toJson(neo);
 
-                EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
+                EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_LOAD, p));
                 res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
 
             } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
@@ -484,6 +484,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                 try {
                     FileIO.copyFile(fileSrc, fileDst);
+                    EventBus.getDefault().post(new Events.HTTPServerEvent(Events.EDITOR_UPLOAD, p));
                 } catch (IOException e) {
                     // MLog.d(TAG, "qq5");
                     e.printStackTrace();
@@ -529,6 +530,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 NEOProject neo = gson.fromJson(json, NEOProject.class);
                 for (ProtoFile file : neo.files) {
                     PhonkScriptHelper.moveFileFromTo(p, file.formerPath, file.path);
+                    // EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_RENAME, file.formerName + " to " + file.path));
                 }
                 res = NanoHTTPD.newFixedLengthResponse("OK");
             } else {

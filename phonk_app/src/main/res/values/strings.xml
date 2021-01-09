@@ -30,8 +30,8 @@
     <string name="phonk_variant">PHONK Main</string>
     <string name="connect_message">Click to connect</string>
     <string name="connection_message_connected">Point the web browser in your computer to</string>
-    <string name="connection_message_wifi">Use your computer\'s web browser to access</string>
-    <string name="connection_message_tethering">Start coding using your computer</string>
+    <string name="connection_message_wifi">Use your 💻 web browser to access</string>
+    <string name="connection_message_tethering">Start coding using your 💻</string>
 
     <!--
     <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
@@ -157,4 +157,5 @@
 
     <string name="notification_description">Web Editor running on</string>
     <string name="notification_stop">Stop Server</string>
+    <string name="hello_emoji">💬</string>
 </resources>

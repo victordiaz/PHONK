@@ -72,7 +72,7 @@ public class ProjectItem extends LinearLayout {
 
         if (listMode) {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_list, this, true);
-            this.txtProjectIcon = findViewById(R.id.txtProjectIcon);
+            this.txtProjectIcon = findViewById(R.id.folderIcon);
         } else {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_grid, this, true);
         }
@@ -87,7 +87,7 @@ public class ProjectItem extends LinearLayout {
             mMenuButton.setVisibility(View.GONE);
         }
 
-        textViewName = mItemView.findViewById(R.id.customViewText);
+        textViewName = mItemView.findViewById(R.id.txtProjectName);
         customIcon = mItemView.findViewById(R.id.iconImg);
     }
 

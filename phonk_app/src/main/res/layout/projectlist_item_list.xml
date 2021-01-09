@@ -46,7 +46,7 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/txtProjectIcon"
+        android:id="@+id/folderIcon"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_gravity="center|left"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/customViewText"
+        android:id="@+id/txtProjectName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -76,10 +76,12 @@
         android:textColor="@color/phonk_textColor_secondary"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/txtProjectIcon"
+        app:layout_constraintLeft_toRightOf="@+id/folderIcon"
         app:layout_constraintRight_toLeftOf="@id/card_menu_button"
-        app:layout_constraintStart_toEndOf="@+id/txtProjectIcon"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="left"
+        app:layout_constraintStart_toEndOf="@+id/folderIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0"/>
 
     <View
         android:id="@+id/view1"

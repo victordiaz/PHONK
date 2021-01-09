@@ -27,7 +27,7 @@
     <color name="phonk_backgroundColorAlternative">#34352C</color>
     <color name="phonk_colorPrimary">#FFC700</color>
     <color name="phonk_colorSecondary">#FFFFFF</color>
-    <color name="phonk_colorTertiary">#E2EDAB</color>
+    <color name="phonk_colorTertiary">#bdc2bc</color>
     <color name="phonk_colorPrimary_shade">#11FFFFFF</color>
     <color name="phonk_colorSecondary_shade">#33FFFFFF</color>
 

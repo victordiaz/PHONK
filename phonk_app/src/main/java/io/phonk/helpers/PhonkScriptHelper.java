@@ -37,6 +37,7 @@ import androidx.core.graphics.drawable.IconCompat;
 import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.io.FileUtils;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,7 @@ import java.util.List;
 
 import io.phonk.App;
 import io.phonk.R;
+import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.base.models.Folder;
@@ -117,11 +119,14 @@ public class PhonkScriptHelper {
             }
         }
         dir.delete();
+
+        EventBus.getDefault().post(new Events.FileEvent(Events.PROJECT_DELETE_FILE, path));
     }
 
     // Write a file with code
-    public static void saveCodeFromSandboxPath(String relativePath, String code) {
-        String absolutePath = getAbsolutePathFromRelative(relativePath);
+    public static void saveCodeFromSandboxPath(Project p, String filePath, String code) {
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_SAVE, p));
+        String absolutePath = getAbsolutePathFromRelative(p.getSandboxPath() + filePath);
         saveCodeFromAbsolutePath(absolutePath, code);
     }
 

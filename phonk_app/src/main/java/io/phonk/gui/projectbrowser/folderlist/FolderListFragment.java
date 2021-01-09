@@ -96,8 +96,6 @@ public class FolderListFragment extends BaseFragment {
         mFolderRecyclerView.setAdapter(folderListAdapter);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
-        LinearLayout llChooseFolder = v.findViewById(R.id.choosefolder);
-        if (mIsTablet) llChooseFolder.setVisibility(View.GONE);
 
         return v;
     }

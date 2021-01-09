@@ -63,7 +63,6 @@ public class ProjectListFragment extends BaseFragment {
     private Context mContext;
 
     private FitRecyclerView mGrid;
-    private GridLayoutManager mLayoutManager;
     private ConstraintLayout mEmptyGrid;
 
     public ArrayList<Project> mListProjects = null;
@@ -190,7 +189,6 @@ public class ProjectListFragment extends BaseFragment {
         //check if a has been loaded
         if (mListProjects == null) {
             showProjectList(false);
-
             return;
         }
 

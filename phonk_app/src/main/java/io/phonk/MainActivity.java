@@ -27,13 +27,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -49,7 +52,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.events.Events;
-import io.phonk.gui.ConnectionInfoFragment;
+import io.phonk.gui.connectionInfo.ConnectionInfoFragment;
 import io.phonk.gui.projectbrowser.ProjectBrowserFragment;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui._components.NewProjectDialogFragment;
@@ -82,11 +85,9 @@ public class MainActivity extends BaseActivity {
     private ConnectionInfoFragment mConnectionInfoFragment;
     private APIWebviewFragment mWebViewFragment;
 
-    private boolean mIsTablet = true;
-    private boolean isWebIdeMode = false;
-
-    private boolean alreadyStartedServices = false;
-    private boolean isConfigChanging = false;
+    private boolean mIsWebIdeMode = false;
+    private boolean mAlreadyStartedServices = false;
+    private boolean mIsConfigChanging = false;
 
     private void listProjectsWithControls() {
         ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 2);
@@ -130,15 +131,15 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
 
         UserPreferences.getInstance().load();
-        isWebIdeMode = (boolean) UserPreferences.getInstance().get("webide_mode");
+        mIsWebIdeMode = (boolean) UserPreferences.getInstance().get("webide_mode");
 
         if (savedInstanceState != null) {
-            alreadyStartedServices = savedInstanceState.getBoolean("alreadyStartedServices", false);
+            mAlreadyStartedServices = savedInstanceState.getBoolean("alreadyStartedServices", false);
         }
 
         // startServers if conf specifies. In webidemode always have to start it
-        MLog.d(TAG, "isWebIdeMode " + isWebIdeMode);
-        if (isWebIdeMode) startServers();
+        MLog.d(TAG, "isWebIdeMode " + mIsWebIdeMode);
+        if (mIsWebIdeMode) startServers();
 
         loadUI();
         setScreenAlwaysOn((boolean) UserPreferences.getInstance().get("screen_always_on"));
@@ -179,14 +180,14 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if (!isConfigChanging) stopServers();
+        if (!mIsConfigChanging) stopServers();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("alreadyStartedServices", true);
-        isConfigChanging = true;
+        mIsConfigChanging = true;
     }
 
     @Override
@@ -211,17 +212,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        /*
-        // Show PHONK version on load
-        TextView txtPhonkVersion = findViewById(R.id.phonkVersion);
-        txtPhonkVersion.setText(BuildConfig.VERSION_NAME);
-
-        mIsTablet = getResources().getBoolean(R.bool.isTablet);
-        mIsLandscapeBig = getResources().getBoolean(R.bool.isLandscapeBig);
-
         // Create Fragments
-
-         */
         addFragment(mProjectBrowserFragment, R.id.projectBrowserFragment, false);
 
         // Connection Fragment
@@ -229,13 +220,7 @@ public class MainActivity extends BaseActivity {
         addFragment(mConnectionInfoFragment, R.id.infoLayout, false);
 
         mConnectionInfo = findViewById(R.id.ip_container);
-
         mToggleConnectionInfo = findViewById(R.id.toggleConnectionInfo);
-        mToggleConnectionInfo.setOnClickListener(view -> {
-            if (mConnectionInfo.getVisibility() == View.GONE)
-                mConnectionInfo.setVisibility(View.VISIBLE);
-            else mConnectionInfo.setVisibility(View.GONE);
-        });
 
         final ImageButton moreOptionsButton = findViewById(R.id.more_options);
         moreOptionsButton.setOnClickListener(view -> {
@@ -264,6 +249,14 @@ public class MainActivity extends BaseActivity {
 
             myPopup.show();
         });
+
+        // sendDelayedEvent("version", BuildConfig.VERSION_NAME, 500);
+        sendDelayedEvent("welcome", "Welcome to PHONK " + BuildConfig.VERSION_NAME + " Enjoy!", 1000);
+    }
+
+    public void sendDelayedEvent(String type, String message, int delay) {
+        Handler handler = new Handler(getMainLooper());
+        handler.postDelayed(() -> EventBus.getDefault().post(new Events.AppUiEvent(type, message)), delay);
     }
 
     public void loadWebIde() {
@@ -273,17 +266,16 @@ public class MainActivity extends BaseActivity {
 
         FrameLayout fl = findViewById(R.id.webEditorFragment);
         fl.setVisibility(View.VISIBLE);
-        MLog.d(TAG, "using webide");
         mWebViewFragment = new APIWebviewFragment();
 
         Bundle bundle = new Bundle();
         String url = "http://127.0.0.1:8585";
         // String url = "http://10.0.2.2:8080";
         bundle.putString("url", url);
-        bundle.putBoolean("isTablet", mIsTablet);
+        bundle.putBoolean("isTablet", true);
         mWebViewFragment.setArguments(bundle);
 
-        addFragment(mWebViewFragment, R.id.webEditorFragment, "qq");
+        addFragment(mWebViewFragment, R.id.webEditorFragment, "WebIDE");
     }
 
     public void createProjectDialog() {
@@ -387,12 +379,12 @@ public class MainActivity extends BaseActivity {
                 stopServers();
                 break;
             case "startServers":
-                if (!alreadyStartedServices)
+                if (!mAlreadyStartedServices)
                     startServers();
                 break;
             case "serversStarted":
                 // show webview
-                if (isWebIdeMode) loadWebIde();
+                if (mIsWebIdeMode) loadWebIde();
                 break;
             case "recreate":
                 break;

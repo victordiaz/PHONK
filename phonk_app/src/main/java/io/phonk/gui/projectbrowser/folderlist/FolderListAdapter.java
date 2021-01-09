@@ -105,8 +105,6 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
                 holder.mainView.setOnClickListener(v -> {
                     MLog.d(TAG, "> Event (folderChosen) " + folder + "/" + name);
                     mListener.onFolderSelected(folder, name);
-                    // Events.FolderChosen ev = new Events.FolderChosen(folder, name);
-                    // EventBus.getDefault().post(ev);
                 });
                 break;
         }

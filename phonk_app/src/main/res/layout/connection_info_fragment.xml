@@ -34,42 +34,25 @@
     android:visibility="visible"
     android:weightSum="100">
 
-    <TextView
-        android:id="@+id/computerText"
+    <io.phonk.runner.base.views.FitRecyclerView
+        android:id="@+id/recyclerViewEventLog"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
-        android:elevation="1dp"
-        android:gravity="top"
-        android:text="> "
-        android:textColor="@color/phonk_textColor_secondary"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        android:typeface="monospace"
-        android:visibility="visible"
+        android:layout_height="@dimen/log_height"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connection_ip"
-        app:layout_constraintWidth_min="120dp"
-        tools:text="bnvbnbv\npopweopweo\ndwijdiwjdw" />
+        app:layout_constraintEnd_toEndOf="@+id/connection_message"
+        app:layout_constraintStart_toStartOf="@+id/connection_message"
+        app:layout_constraintTop_toBottomOf="@+id/connection_ip"></io.phonk.runner.base.views.FitRecyclerView>
 
 
     <TextView
         android:id="@+id/connection_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:fontFamily="@string/primary_font"
         android:gravity="left"
         android:text="@string/connection_message_not_connected"
@@ -77,7 +60,7 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/connection_ip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
@@ -85,14 +68,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
+        android:fontFamily="@string/primary_font"
         android:gravity="left"
         android:text="http://1.2.3.4.5:8585"
         android:textColor="@color/phonk_textColor_primary"
         android:textSize="14sp"
-        android:fontFamily="@string/primary_font"
         android:textStyle="bold"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/connection_message"
         app:layout_constraintStart_toStartOf="@+id/connection_message"
         app:layout_constraintTop_toBottomOf="@+id/connection_message" />
 
@@ -103,9 +86,6 @@
         android:id="@+id/webide_connection_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:height="28dp"
         android:foreground="?attr/selectableItemBackground"
         android:minWidth="0dp"
@@ -115,14 +95,14 @@
         android:paddingRight="10dp"
         android:paddingBottom="2dp"
         android:textAllCaps="true"
-        android:textOff="Start Web Editor"
-        android:textOn="Stop Web Editor"
+        android:textOff="Start"
+        android:textOn="Stop"
         android:textSize="10sp"
         android:textStyle="normal"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
 
     <Button
         android:id="@+id/connect_to_wifi"
@@ -156,12 +136,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:textSize="16dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@string/secondary_font"
         android:text="WebEditor"
         android:textColor="@color/phonk_colorTertiary"
+        android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:fontFamily="@string/secondary_font" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -169,13 +169,13 @@ public class EditorActivity extends BaseActivity {
     }
 
     public void saveAndRun() {
-        Toast.makeText(this, "Code saved and launched", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Code saved and launched", Toast.LENGTH_SHORT).show();
         save();
         run();
     }
 
     public void onlySave() {
-        Toast.makeText(this, "Code saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Code saved", Toast.LENGTH_SHORT).show();
         save();
     }
 
