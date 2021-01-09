@@ -1,7 +1,7 @@
 <template>
   <div id="myeditor">
     <div id="editor_container" :class="{ project_loaded: project_loaded }">
-      <div id="nav_tabs" v-if="sharedState.preferences['editor']['show tab bar']">
+      <div id="nav_tabs" v-if="sharedState.preferences['editor']['tab bar']">
         <!-- <div id = "project_name" v-on:click = "store.emit('toggle_section', 'load_project')"> -->
         <button
           id="project_run"

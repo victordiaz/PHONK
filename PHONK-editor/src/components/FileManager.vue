@@ -182,6 +182,63 @@ export default {
     }
   },
   methods: {
+    elDrop: function (e) {
+      e.preventDefault()
+
+      console.log('drop', e.dataTransfer.files[0])
+      e.dataTransfer.dropEffect = 'copy'
+      this.onFileChange(e)
+    },
+    elDragOver: function (e) {
+      console.log('dragover el', e)
+
+      if (e.target.id === 'upload') {
+        e.effectAllowed = true
+      }
+    },
+    docDragEnter: function (e) {
+      console.log('dragenter')
+      if (this.dnd.showMode === 'dropready') this.dnd.showMode = 'drophere'
+
+      this.dnd.counter++
+      this.dnd.showMode = 'drophere'
+
+      e.stopPropagation()
+      e.preventDefault()
+    },
+    docDragOver: function (e) {
+      console.log('dragover', e.target.id)
+
+      if (e.target.id === 'upload') {
+        e.effectAllowed = true
+        // e.dataTransfer.dropEffect = 'copy'
+        this.dnd.showMode = 'dropready'
+      }
+      e.stopPropagation()
+      // this.logDndState(2)
+      e.preventDefault()
+      // e.stopPropagation()
+    },
+    docDragLeave: function (e) {
+      this.dnd.counter--
+      if (this.dnd.counter === 0) {
+        this.dnd.showMode = 'none'
+      }
+      console.log('dragleave')
+      e.preventDefault()
+    },
+    docDrop: function (e) {
+      console.log('document drop', e, e.target.id === 'upload')
+
+      if (!(e.target.id === 'upload')) {
+        this.dnd.counter = 0
+        this.dnd.showMode = 'none'
+      }
+      // this.onFileChange(e)
+
+      // e = e || event
+      e.preventDefault()
+    },
     init_filemanager: function () {
       // console.log('ready')
       store.on('project_files_list', this.project_files_list)
@@ -189,73 +246,13 @@ export default {
       store.on('project_files_action_completed', this.project_files_action_completed)
       store.on('close_popup', this.close_popup)
 
-      this.$el.addEventListener('drop', (e) => {
-        e.preventDefault()
+      this.$el.addEventListener('drop', this.elDrop, false)
+      this.$el.addEventListener('dragover', this.elDragOver, false)
 
-        console.log('drop', e.dataTransfer.files[0])
-        e.dataTransfer.dropEffect = 'copy'
-        this.onFileChange(e)
-      }, false)
-
-      this.$el.addEventListener('dragover', (e) => {
-        console.log('dragover el', e)
-
-        if (e.target.id === 'upload') {
-          e.effectAllowed = true
-        }
-
-        // e.dataTransfer.dropEffect = 'copy'
-        // e.originalEvent.dataTransfer.dropEffect = 'copy'
-        // e.stopPropagation()
-        // e.preventDefault()
-      }, false)
-
-      document.addEventListener('dragenter', (e) => {
-        console.log('dragenter')
-        if (this.dnd.showMode === 'dropready') this.dnd.showMode = 'drophere'
-
-        this.dnd.counter++
-        this.dnd.showMode = 'drophere'
-
-        e.stopPropagation()
-        e.preventDefault()
-      })
-
-      document.addEventListener('dragover', (e) => {
-        console.log('dragover', e.target.id)
-
-        if (e.target.id === 'upload') {
-          e.effectAllowed = true
-         // e.dataTransfer.dropEffect = 'copy'
-          this.dnd.showMode = 'dropready'
-        }
-        e.stopPropagation()
-        // this.logDndState(2)
-        e.preventDefault()
-        // e.stopPropagation()
-      }, false)
-
-      document.addEventListener('dragleave', e => {
-        this.dnd.counter--
-        if (this.dnd.counter === 0) {
-          this.dnd.showMode = 'none'
-        }
-        console.log('dragleave')
-        e.preventDefault()
-      })
-
-      document.addEventListener('drop', e => {
-        console.log('document drop', e, e.target.id === 'upload')
-
-        if (!(e.target.id === 'upload')) {
-          this.dnd.counter = 0
-          this.dnd.showMode = 'none'
-        }
-        // this.onFileChange(e)
-
-        // e = e || event
-        e.preventDefault()
-      }, false)
+      document.addEventListener('dragenter', this.docDragEnter)
+      document.addEventListener('dragover', this.docDragOver, false)
+      document.addEventListener('dragleave', this.docDragLeave)
+      document.addEventListener('drop', this.docDrop, false)
 
       this.input = this.$el.querySelector('#upload')
     },
@@ -514,13 +511,25 @@ export default {
 
   },
   destroyed () {
-    document.removeEventListener('dragover')
-    document.removeEventListener('dragleave')
-    document.removeEventListener('dragcancel')
+    console.log('qq 01')
 
+    this.$el.removeEventListener('dragover', this.elDragOver)
+    this.$el.removeEventListener('dragover', this.elDrop)
+
+    /*
+    document.removeEventListener('dragenter', docDragEnter)
+    document.removeEventListener('dragover', docDragOver)
+    document.removeEventListener('dragleave', docDragLeave)
+    document.removeEventListener('drop', docDrop)
+    */
+
+    console.log('qq 1')
     store.removeListener('project_files_list', this.project_files_list)
+    console.log('qq 2')
     store.removeListener('project_file_uploaded', this.project_file_uploaded)
+    console.log('qq 3')
     store.removeListener('project_files_action_completed', this.project_files_action_completed)
+    console.log('qq 4')
     store.removeListener('close_popup', this.close_popup)
   }
 }

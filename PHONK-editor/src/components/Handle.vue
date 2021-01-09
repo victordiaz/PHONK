@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import Store from '../Store'
 
 export default {
   name: 'Handle',
@@ -12,34 +11,39 @@ export default {
     container: String,
     color: String
   },
+  data () {
+    return {
+      handle: null
+    }
+  },
   mounted () {
     var that = this
 
     this.$nextTick(function () {
-      var handle = this.$el
+      that.handle = this.$el
       var container = document.querySelector('#' + this.container)
       // console.log(this.orientation + ' ' + handle + ' ' + this.container)
 
-      handle.onmousedown = function (e) {
+      that.handle.onmousedown = function (e) {
         var handlePos
         var containerSize
         // console.log(this.orientation)
         // console.log(e)
 
         if (that.orientation === 'vertical') {
-          handlePos = handle.getBoundingClientRect().left
+          handlePos = that.handle.getBoundingClientRect().left
           containerSize = container.getBoundingClientRect().width
           // console.log(that.container + ' qq')
         } else {
           // console.log('qq2')
-          handlePos = handle.getBoundingClientRect().top
+          handlePos = that.handle.getBoundingClientRect().top
           containerSize = container.getBoundingClientRect().height
         }
 
         document.onmousemove = function (e) {
           if (that.orientation === 'vertical') {
             // move handle
-            var barW = handle.getBoundingClientRect().width
+            var barW = that.handle.getBoundingClientRect().width
             var positionX = e.pageX - handlePos - barW / 2
             // console.log(handleX + ' ' + ' ' + ' ' + e.pageX + ' ' + position)
 
@@ -47,7 +51,7 @@ export default {
             container.style.width = containerSize - positionX + 'px'
           } else {
             // move handle
-            var barH = handle.getBoundingClientRect().height
+            var barH = that.handle.getBoundingClientRect().height
             var positionY = e.pageY - handlePos - barH / 2
             // console.log(handleX + ' ' + ' ' + ' ' + e.pageX + ' ' + position)
 
@@ -66,14 +70,14 @@ export default {
         e.stopPropagation()
       }
 
-      handle.onmouseup = function () {
+      that.handle.onmouseup = function () {
         // console.log('handle mouse up')
         document.onmousemove = null
       }
     })
   },
   destroyed () {
-    Store.removeListener('toggle', this.toggle_section)
+    // Store.removeListener('toggle', this.toggle_section)
   }
 }
 </script>

@@ -9,7 +9,7 @@ import Editor from './components/Editor.vue'
 import TutorialLoader from './components/TutorialLoader'
 import About from './components/About'
 import Preferences from './components/Preferences'
-import UIEditor from './components/UIEditor'
+import UIEditor from './components/uieditor/UIEditor'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'

@@ -44,10 +44,10 @@ var state = {
       'light theme': true,
       'autosave': true,
       */
-      'show tab bar': true
+      'tab bar': true,
+      'sidebar': true
     },
-    'other': {
-      'show sidebar': true,
+    'docs': {
       'show advanced api': true,
       'show documentation status': true,
       'show TODO in documentation': false
@@ -686,10 +686,16 @@ store.loadSettings = function () {
   var savedSettings = localStorage.getItem('preferences')
   // console.log('loadSettings', savedSettings)
   if (typeof savedSettings === 'undefined' || !savedSettings || savedSettings === 'null') {
-    // console.log('not loading settings')
+    console.log('not loading settings')
   } else {
-    // console.log('loadingSettings')
-    store.state.preferences = JSON.parse(savedSettings)
+    console.log('loadingSettings')
+    let parsedPreferences = JSON.parse(savedSettings)
+    if (parsedPreferences.hasOwnProperty('savedTime')) {
+      delete parsedPreferences.savedTime
+      store.state.preferences = parsedPreferences
+    } else {
+      store.clearSettings()
+    }
   }
 
   // we get the settings injected from the app
@@ -703,10 +709,13 @@ store.loadSettings = function () {
 
 store.saveSettings = function () {
   console.log('saveSettings')
-  localStorage.setItem('preferences', JSON.stringify(this.state.preferences))
+
+  let settings = JSON.parse(JSON.stringify(this.state.preferences))
+  settings.savedTime = Date.now()
+  localStorage.setItem('preferences', JSON.stringify(settings))
 
   // console.log('settingsFromAndroid', settingsFromAndroid)
-  if (settingsFromAndroid != null) {
+  if (settingsFromAndroid) {
     settingsFromAndroid.setWebIde(store.state.preferences['other']['WebIDE as default editor'])
   }
 }

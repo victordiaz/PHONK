@@ -3,7 +3,7 @@
     <div id = "view-area">
       <!-- View list -->
       <div id = "view-list" class = "block">
-        <button v-for = "v in viewTypes" @click = "addView(v)">{{ v }}</button>
+        <button v-for = "v in viewTypes" @click = "addView(v)" draggable="true">{{ v }}</button>
         <button @click = "clearViews()">x</button>
       </div>
 
@@ -286,14 +286,24 @@ export default {
     window.addEventListener('mouseup', this.stopDrag)
 
     this.websockets_init()
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Get the element by id
+      const element = document.getElementById('p1')
+      // Add the ondragstart event listener
+      element.addEventListener('dragstart', (ev) => {
+        // Add the target element's id to the data transfer object
+        ev.dataTransfer.setData('text/plain', ev.target.id)
+      })
+    })
   },
   destroyed () {
   }
 }
 </script>
 <style lang = "less">
-@import (reference) '../assets/css/variables.less';
-@import (reference) '../assets/css/hacks.less';
+@import (reference) '../../assets/css/variables.less';
+@import (reference) '../../assets/css/hacks.less';
 
 @mainColor: #6176AD;
 @mainColor: #1ca0e1;

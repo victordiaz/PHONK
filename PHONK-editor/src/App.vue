@@ -51,10 +51,15 @@
       <div
         id="right_container"
         class="container"
-        v-show="sharedState.preferences['other']['show sidebar']"
+        v-show="sharedState.preferences['editor']['sidebar']"
       >
         <div id="panels">
-          <div id="editor_panels">
+          <ul v-if = "showPanelSelector" id = "panels-menu" class = "panels-menu" v-show = "false">
+            <li v-on:click = "changePanel('general')" :class = "{'selected': panel === 'general' }">General</li>
+            <li v-on:click = "changePanel('views')"  :class = "{'selected': panel === 'views' }">Views</li>
+            <li v-on:click = "changePanel('properties')" :class = "{'selected': panel === 'properties' }">Properties</li>
+          </ul>
+          <div v-if = "panel === 'general'" id = "editor_panels" class = "panels-container">
             <documentation></documentation>
             <handle orientation="horizontal" container="documentation"></handle>
 
@@ -62,6 +67,9 @@
             <handle orientation="horizontal" color="dark" container="file_manager"></handle>
 
             <console></console>
+          </div>
+          <div v-else id = "uieditor_panels" class = "panels-container">
+            <documentation></documentation>
           </div>
         </div>
       </div>
@@ -142,7 +150,9 @@ export default {
       isMobile: false,
       dndState: '',
       myVar: 'hello',
-      sharedState: Store.state
+      sharedState: Store.state,
+      panel: 'general',
+      showPanelSelector: true
     }
   },
   methods: {
@@ -176,8 +186,10 @@ export default {
 
     },
     toggle_sidepanel: function () {
-      console.log('qq')
-      this.sharedState.preferences['other']['show sidebar'] = !this.sharedState.preferences['other']['show sidebar']
+      this.sharedState.preferences['editor']['sidebar'] = !this.sharedState.preferences['editor']['sidebar']
+    },
+    changePanel: function (panel) {
+      this.panel = panel
     }
   },
   created () {
@@ -612,13 +624,30 @@ button {
   // overflow: hidden;
   box-sizing: border-box;
   padding: 0px;
+  border-left: 1px solid @secondaryColor;
 
-  #editor_panels {
+  #panels-menu {
+    display: flex;
+    background: #41423A;
+
+    li {
+      padding: 17px;
+      font-size: 0.8em;
+      color: #f0f8ff30;
+      cursor: pointer;
+
+      &:hover, &.selected {
+        background: #272822;
+        color: white;
+      }
+    }
+  }
+
+  .panels-container {
     position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
-    border-left: 1px solid @secondaryColor;
 
     .proto_panel {
       box-sizing: border-box;

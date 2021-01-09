@@ -8,7 +8,7 @@
             <p>{{prop}}</p>
             <div class = "widget">
               <input v-show = "valueType(value) == 'boolean'" type="checkbox" id="checkbox" v-model="sharedState.preferences[name][prop]">
-              <div class = "size" v-show = "valueType(value) == 'number'"><button v-on:click = "decrease_size">-</button><input v-model = "sharedState.preferences[name][prop]" readonly="readonly" /><button v-on:click = "increase_size">+</button></div>
+              <div class = "size" v-show = "valueType(value) == 'number'"><button v-on:click = "decrease_size" class = "boxed">-</button><input v-model = "sharedState.preferences[name][prop]" readonly="readonly" /><button v-on:click = "increase_size" class = "boxed">+</button></div>
             </div>
           </li>
         </ul>
@@ -107,7 +107,19 @@ li {
 
   .size {
     // background: #ff356b;
-    border: 1px solid @accentColor;
+    border: 1px solid @secondaryColor;
+
+    button {
+      border: none;
+      color: @primaryTextColor;
+      border: 1px solid @transparent;
+
+      &:hover {
+        color: @accentColor;
+        background: none;
+        border-color: @accentColor;
+      }
+    }
 
     input {
       color: @accentColor;
@@ -131,6 +143,37 @@ input {
   outline: none;
   color: @accentColor;
   border: 0px;
+}
+
+input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+  margin: 0px 0px;
+  padding: 0;
+  text-align: center;
+  outline: none;
+  color: @accentColor;
+  border: 1px solid @secondaryColor;
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+}
+
+input[type=checkbox]:hover {
+  // background: @accentColor;
+  border-color: @accentColor;
+  // appearance: none;
+}
+
+
+input[type=checkbox]:checked:after {
+  content: '';
+  position: absolute;
+  background: @accentColor;
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
 }
 
 </style>
