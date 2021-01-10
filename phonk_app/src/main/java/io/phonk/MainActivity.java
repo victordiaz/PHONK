@@ -251,7 +251,13 @@ public class MainActivity extends BaseActivity {
         });
 
         // sendDelayedEvent("version", BuildConfig.VERSION_NAME, 500);
-        sendDelayedEvent("welcome", "Welcome to PHONK " + BuildConfig.VERSION_NAME + " Enjoy!", 1000);
+        String[] versionNameTemp = BuildConfig.VERSION_NAME.split("_");
+        String friendlyVersionName = "(unknown version)";
+        if (versionNameTemp.length > 1) {
+            friendlyVersionName = versionNameTemp[0];
+            if (!versionNameTemp[1].equals("normal")) friendlyVersionName += " (" + versionNameTemp[1] + ").";
+        }
+        sendDelayedEvent("welcome", "Welcome to PHONK " + friendlyVersionName + " Enjoy!", 1000);
     }
 
     public void sendDelayedEvent(String type, String message, int delay) {
