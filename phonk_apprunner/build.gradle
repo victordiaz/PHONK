@@ -51,7 +51,6 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 
-
     dexOptions {
         jumboMode true
     }
