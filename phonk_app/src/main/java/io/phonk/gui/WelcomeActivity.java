@@ -33,17 +33,17 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.phonk.BuildConfig;
 import io.phonk.MainActivity;
 import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
+import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.utils.AndroidUtils;
@@ -127,48 +127,6 @@ public class WelcomeActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void checkPermissions() {
-        List<String> requiredPermissions = new ArrayList<String>();
-
-        requiredPermissions.add(Manifest.permission.INTERNET);
-        requiredPermissions.add(Manifest.permission.ACCESS_WIFI_STATE);
-        requiredPermissions.add(Manifest.permission.CHANGE_WIFI_STATE);
-        requiredPermissions.add(Manifest.permission.CHANGE_WIFI_MULTICAST_STATE);
-        requiredPermissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
-        requiredPermissions.add(Manifest.permission.VIBRATE);
-        requiredPermissions.add(Manifest.permission.WAKE_LOCK);
-        requiredPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        requiredPermissions.add(Manifest.permission.READ_PHONE_STATE);
-        requiredPermissions.add(Manifest.permission.BLUETOOTH);
-        requiredPermissions.add(Manifest.permission.BLUETOOTH_ADMIN);
-        requiredPermissions.add(Manifest.permission.WRITE_SETTINGS);
-        requiredPermissions.add(Manifest.permission.NFC);
-        requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
-        requiredPermissions.add(Manifest.permission.SEND_SMS);
-        requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
-        requiredPermissions.add(Manifest.permission.CAMERA);
-        // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
-        requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        requiredPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
-        requiredPermissions.add(Manifest.permission.RECORD_AUDIO);
-        requiredPermissions.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
-
-        // check if permission is already granted
-        for (int i = 0; i < requiredPermissions.size(); i++) {
-            String permissionName = requiredPermissions.get(i);
-            int isGranted1 = checkSelfPermission(permissionName);
-            int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
-
-            MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
-        }
-
-        // request the permissions
-        if (!requiredPermissions.isEmpty()) {
-            requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         boolean isPermissionWriteExternalGranted = false;
@@ -190,11 +148,17 @@ public class WelcomeActivity extends BaseActivity {
                     // requiredPermissions.remove(i);
                 }
 
-                // if ok go next step otherwise repeat step
-                if (isPermissionWriteExternalGranted) goToStep(STEP_ASK_PERMISSIONS_OK);
-                else goToStep(STEP_ASK_PERMISSIONS_ERROR);
+                // we need permission to access the external storage
+                // if we dont have it we ask again
+                if (isPermissionWriteExternalGranted) {
+                    goToStep(STEP_ASK_PERMISSIONS_OK);
+                } else {
+                    goToStep(STEP_ASK_PERMISSIONS_ERROR);
+                    Toast.makeText(this, "External storage is required", Toast.LENGTH_LONG).show();
+                }
             }
             break;
+
             default: {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
@@ -244,8 +208,7 @@ public class WelcomeActivity extends BaseActivity {
 
             case STEP_ASK_PERMISSIONS_PROCESS:
                 mNextStepButton.setEnabled(false);
-
-                checkPermissions();
+                PhonkAppHelper.requestPermissions(this, REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
 
                 break;
 
@@ -302,7 +265,6 @@ public class WelcomeActivity extends BaseActivity {
                 ready();
 
                 break;
-
         }
         step++;
 

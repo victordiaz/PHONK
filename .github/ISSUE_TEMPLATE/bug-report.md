@@ -1,6 +1,6 @@
 ---
-name: Issue template
-about: Use this issue template
+name: Bug report
+about: " Create a report to help improve PHONK"
 title: ''
 labels: ''
 assignees: ''

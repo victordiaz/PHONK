@@ -71,6 +71,7 @@
             android:icon="@drawable/ic_notifications_24dp"
             android:checked="true"
             android:key="notify_new_version"
+            android:enabled="false"
             android:summary="@string/setting_new_version_description"
             android:title="@string/setting_new_version_title" />
         -->

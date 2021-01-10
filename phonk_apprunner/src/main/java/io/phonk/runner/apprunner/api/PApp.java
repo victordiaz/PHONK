@@ -455,16 +455,13 @@ public class PApp extends ProtoBase {
      */
     @PhonkMethod
     public String version() {
-        // return BuildConfig.VERSION_NAME;
-
         String versionName = "";
         try {
             versionName = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return versionName;
-    }
+        return versionName;    }
 
     /**
      * Start an activity

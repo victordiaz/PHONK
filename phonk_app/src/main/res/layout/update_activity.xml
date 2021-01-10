@@ -170,7 +170,7 @@
             android:layout_marginLeft="10dp"
             android:text="Re-installing..."
             android:textColor="@color/white"
-            android:textSize="18sp"></TextView>
+            android:textSize="16sp"></TextView>
     </LinearLayout>
 
     <Button
