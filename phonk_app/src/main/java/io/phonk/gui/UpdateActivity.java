@@ -79,6 +79,8 @@ public class UpdateActivity extends BaseActivity {
         });
 
         btnSkip.setOnClickListener(view -> {
+            SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
+            userDetails.edit().putInt("last_version_reinstalled", BuildConfig.VERSION_CODE).commit();
             ready();
         });
 
