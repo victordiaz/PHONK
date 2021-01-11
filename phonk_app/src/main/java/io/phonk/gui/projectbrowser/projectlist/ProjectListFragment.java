@@ -79,7 +79,6 @@ public class ProjectListFragment extends BaseFragment {
 
     private LinearLayout mBottomBar;
     private LinearLayout mFolderPath;
-    private ConstraintLayout mSelectFolder;
 
     private ProjectSelectedListener mListener;
     private BackClickedListener mClickBackListener;
@@ -153,7 +152,6 @@ public class ProjectListFragment extends BaseFragment {
         mTxtParentFolder = v.findViewById(R.id.parentFolder);
         mTxtProjectFolder = v.findViewById(R.id.folder);
         mFolderPath = v.findViewById(R.id.folderPath);
-        mSelectFolder = v.findViewById(R.id.select_folder);
 
         mBackToFolderButton.setOnClickListener(view -> {
             mClickBackListener.onBackSelected();
@@ -224,7 +222,6 @@ public class ProjectListFragment extends BaseFragment {
         clear();
         mProjectFolder = folder + '/' + project;
 
-        mSelectFolder.setVisibility(View.GONE);
         mFolderPath.setVisibility(View.VISIBLE);
         mTxtParentFolder.setText(folder);
         mTxtProjectFolder.setText(project);
