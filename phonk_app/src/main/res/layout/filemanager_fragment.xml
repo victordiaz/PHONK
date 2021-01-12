@@ -25,43 +25,43 @@
     android:id="@+id/file_m"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/phonk_backgroundColor">
+    android:background="@color/phonk_backgroundColorAlternative"
+    android:orientation="vertical">
 
     <!-- primary bar -->
     <LinearLayout
         android:id="@+id/filemanager_toolbar"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <Button
+            android:id="@+id/dir_up"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/ic_arrow_upward_black_24dp"
-            android:id="@+id/dir_up"
+            android:background="@drawable/ic_arrow_upward_white_24dp"
             android:padding="5dp" />
 
         <HorizontalScrollView
             android:id="@+id/crumb_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp">
 
             <TextView
+                android:id="@+id/path"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="fill_vertical"
-                android:textColor="@color/phonk_colorPrimary"
-                android:gravity="center_vertical"
                 android:fontFamily="sans-serif-condensed"
+                android:gravity="center_vertical"
                 android:text="Files included in the project"
-                android:id="@+id/path" />
+                android:textColor="@color/phonk_colorPrimary" />
         </HorizontalScrollView>
     </LinearLayout>
 
@@ -69,10 +69,10 @@
     <!-- secondary bar -->
     <RelativeLayout
         android:id="@+id/filemanager_secondary_toolbar"
-        android:layout_below="@id/filemanager_toolbar"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/filemanager_toolbar"
+        android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:visibility="gone">
@@ -80,24 +80,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#55FFFFFF"
-            android:fontFamily="sans-serif-condensed"
-            android:ellipsize="marquee"
-            android:text="Paste files: "
             android:layout_alignBaseline="@+id/paste_files"
             android:layout_alignBottom="@+id/paste_files"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:ellipsize="marquee"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Paste files: "
+            android:textColor="#55FFFFFF" />
 
         <Button
+            android:id="@+id/paste_files"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="paste"
-            android:id="@+id/paste_files"
-            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_centerVertical="true"
+            android:text="paste" />
 
     </RelativeLayout>
 
@@ -109,7 +109,7 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -136,10 +136,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/filemanager_secondary_toolbar"
+        android:layout_marginTop="0dp"
         android:clipToPadding="false"
-        android:scrollbarStyle="outsideInset"
         android:orientation="vertical"
-        android:layout_marginTop="0dp">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:scrollbarStyle="outsideInset"></androidx.recyclerview.widget.RecyclerView>
 
 </RelativeLayout>

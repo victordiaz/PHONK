@@ -21,7 +21,6 @@
   -->
 
 <resources>
-
     <dimen name="main_cardview_radius">2dp</dimen>
     <dimen name="main_cardview_top_margin">10dp</dimen>
     <dimen name="main_cardview_bottom_margin">-2dp</dimen>
@@ -29,5 +28,5 @@
     <dimen name="main_cardview_right_margin">20dp</dimen>
 
     <dimen name="editor_cardview_radius">2dp</dimen>
-
+    <dimen name="log_height">@dimen/match_parent</dimen>
 </resources>

@@ -22,16 +22,16 @@
 
 package io.phonk;
 
-import android.app.Application;
-
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
+import io.phonk.gui.connectionInfo.EventManager;
 import io.phonk.runner.base.utils.TimerUtils;
 
 public class App extends MultiDexApplication {
 
     public static MyLifecycleHandler myLifecycleHandler;
+    public EventManager eventManager;
 
     @Override
     public void onCreate() {
@@ -49,20 +49,13 @@ public class App extends MultiDexApplication {
         registerActivityLifecycleCallbacks(myLifecycleHandler);
         TimerUtils.stamp("registerActivityLifecycleCallbacks");
 
-        // Fabric.with(this, new Crashlytics());
-
-        /*
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .logger(new DefaultLogger(Log.VERBOSE))
-                .debuggable(true)
-                .build();
-
-        Fabric.with(fabric);
-        */
-
         if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof PhonkExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new PhonkExceptionHandler());
         }
+
+        eventManager = new EventManager(getApplicationContext());
+
+        // EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
+        // EmojiCompat.init(config);
     }
 }

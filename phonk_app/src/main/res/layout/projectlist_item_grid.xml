@@ -40,7 +40,7 @@
         android:visibility="gone"
         />
     <TextView
-        android:id="@+id/txtProjectIcon"
+        android:id="@+id/folderIcon"
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:gravity="center"
@@ -52,7 +52,7 @@
         android:visibility="visible"/>
 
     <TextView
-        android:id="@+id/customViewText"
+        android:id="@+id/txtProjectName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -64,7 +64,7 @@
         android:textColor="@color/phonk_textColor_secondary"
         android:fontFamily="sans-serif-light"
         android:textSize="20sp"
-        android:layout_below="@+id/txtProjectIcon"
+        android:layout_below="@+id/folderIcon"
         android:layout_marginTop="14dp" />
 
     <View
@@ -84,8 +84,8 @@
         android:src="@drawable/ic_more_vert_black_24dp"
         android:layout_marginLeft="13dp"
         android:layout_marginStart="13dp"
-        android:layout_below="@+id/txtProjectIcon"
-        android:layout_toRightOf="@+id/txtProjectIcon"
-        android:layout_toEndOf="@+id/txtProjectIcon" />
+        android:layout_below="@+id/folderIcon"
+        android:layout_toRightOf="@+id/folderIcon"
+        android:layout_toEndOf="@+id/folderIcon" />
 
 </RelativeLayout>

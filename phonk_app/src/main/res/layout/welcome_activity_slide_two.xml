@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/primaryAccent"
         android:text="@string/welcome_2_title"
-        android:layout_marginBottom="12dp">
+        style="@style/WelcomeTextTitle">
     </TextView>
 
     <TextView
@@ -44,15 +44,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_title"
-        android:layout_alignParentLeft="true"
-        android:fontFamily="sans-serif-condensed"
-        android:maxWidth="400dp"
-        android:shadowColor="#55000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
         android:text="@string/welcome_2_body"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        style="@style/WelcomeText" />
+
     <!--
     <TextView
         android:id="@+id/step_title_1"

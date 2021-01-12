@@ -34,9 +34,8 @@
         android:id="@+id/welcome_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:text="@string/welcome_1_title"
-        android:textColor="@color/primaryAccent"></TextView>
+        style="@style/WelcomeTextTitle"></TextView>
 
     <TextView
         android:id="@+id/welcome_body"
@@ -44,13 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/welcome_title"
         android:layout_alignParentLeft="true"
-        android:maxWidth="400dp"
-        android:shadowColor="#55000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:text="@string/welcome_1_body"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        style="@style/WelcomeText"
+        android:text="@string/welcome_1_body" />
 
     <ImageView
         android:id="@+id/imageView3"

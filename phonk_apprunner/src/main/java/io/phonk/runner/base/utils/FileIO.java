@@ -25,6 +25,7 @@ package io.phonk.runner.base.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.storage.StorageManager;
 import android.util.Log;
 
 import net.lingala.zip4j.core.ZipFile;
@@ -52,6 +53,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -630,4 +632,17 @@ public class FileIO {
             // Log.e("Project", e.toString());
         }
     }
+
+    public static void getDiskSpaceAvailability(Context c) {
+        StorageManager storageManager = c.getApplicationContext().getSystemService(StorageManager.class);
+        UUID appSpecificInternalDirUuid = null;
+        try {
+            appSpecificInternalDirUuid = storageManager.getUuidForPath(c.getFilesDir());
+            long availableBytes = storageManager.getAllocatableBytes(appSpecificInternalDirUuid);
+            MLog.d(TAG, "qqq" + FileUtils.byteCountToDisplaySize(availableBytes));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

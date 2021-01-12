@@ -20,16 +20,14 @@
  *
  */
 
-package io.phonk;
+package io.phonk.gui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -38,10 +36,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.io.File;
 
+import io.phonk.BuildConfig;
+import io.phonk.MainActivity;
+import io.phonk.R;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
@@ -159,7 +158,7 @@ public class WelcomeActivity extends BaseActivity {
                 }
             }
             break;
-            
+
             default: {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }

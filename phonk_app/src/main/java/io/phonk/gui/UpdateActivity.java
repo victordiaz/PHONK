@@ -43,7 +43,6 @@ import java.util.List;
 import io.phonk.BuildConfig;
 import io.phonk.MainActivity;
 import io.phonk.R;
-import io.phonk.WelcomeActivity;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkSettingsHelper;
@@ -80,6 +79,8 @@ public class UpdateActivity extends BaseActivity {
         });
 
         btnSkip.setOnClickListener(view -> {
+            SharedPreferences userDetails = getSharedPreferences("io.phonk", MODE_PRIVATE);
+            userDetails.edit().putInt("last_version_reinstalled", BuildConfig.VERSION_CODE).commit();
             ready();
         });
 

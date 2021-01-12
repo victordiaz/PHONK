@@ -71,7 +71,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-        android:background="@color/console_background"
+        android:background="@drawable/dark_box_bg_solid"
         android:maxWidth="200dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/btnReinstall"

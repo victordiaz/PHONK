@@ -113,6 +113,7 @@ public class AppRunnerFragment extends Fragment {
         name = bundle.getString(Project.NAME, "");
         // String settings = bundle.getString(Project.SETTINGS, "");
 
+        MLog.d("11 -->", folder + " " + name);
         mAppRunner.loadProject(folder, name);
 
         mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");

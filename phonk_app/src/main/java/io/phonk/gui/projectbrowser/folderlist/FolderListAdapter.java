@@ -20,74 +20,79 @@
  *
  */
 
-package io.phonk.gui.folderchooser;
+package io.phonk.gui.projectbrowser.folderlist;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import io.phonk.R;
-import io.phonk.events.Events;
 import io.phonk.runner.base.utils.MLog;
 
-public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdapter.ViewHolder> {
+public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.ViewHolder> {
 
-    private static final String TAG = FolderChooserAdapter.class.getSimpleName();
+    private static final String TAG = FolderListAdapter.class.getSimpleName();
     private final ArrayList<FolderAdapterData> mDataSet;
+    private FolderListFragment.ActionListener mListener;
+
+    public void setListener(FolderListFragment.ActionListener listener) {
+        mListener = listener;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
-        public RelativeLayout mainView;
+        public ViewGroup mainView;
+        public TextView textNumProjects;
 
-        public ViewHolder(int viewType, RelativeLayout v) {
+        public ViewHolder(int viewType, ViewGroup v) {
             super(v);
             mainView = v;
 
             switch (viewType) {
                 case FolderAdapterData.TYPE_TITLE:
                     textView = v.findViewById(R.id.textType);
-
                     break;
+
                 case (FolderAdapterData.TYPE_FOLDER_NAME):
                     textView = v.findViewById(R.id.textFolder);
-
+                    textNumProjects = v.findViewById(R.id.textNumProjects);
                     break;
             }
         }
     }
 
-    public FolderChooserAdapter(ArrayList<FolderAdapterData> folders) {
+    public FolderListAdapter(ArrayList<FolderAdapterData> folders) {
         mDataSet = folders;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mDataSet.get(position).item_type;
+        return mDataSet.get(position).itemType;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RelativeLayout t = null;
+        ViewGroup t = null;
         if (viewType == FolderAdapterData.TYPE_TITLE) {
             t = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_title_view, parent, false);
         } else if (viewType == FolderAdapterData.TYPE_FOLDER_NAME) {
-            t = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_folder_view, parent, false);
+            t = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_folder_view, parent, false);
         }
         return new ViewHolder(viewType, t);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        int type = mDataSet.get(position).item_type;
+        int type = mDataSet.get(position).itemType;
         final String name = mDataSet.get(position).name;
         final String folder = mDataSet.get(position).parentFolder;
+        final int numProjects = mDataSet.get(position).numSubfolders;
 
         switch (type) {
             case FolderAdapterData.TYPE_TITLE:
@@ -96,11 +101,10 @@ public class FolderChooserAdapter extends RecyclerView.Adapter<FolderChooserAdap
                 break;
             case FolderAdapterData.TYPE_FOLDER_NAME:
                 holder.textView.setText(name);
+                holder.textNumProjects.setText("" + numProjects + " projects");
                 holder.mainView.setOnClickListener(v -> {
                     MLog.d(TAG, "> Event (folderChosen) " + folder + "/" + name);
-
-                    Events.FolderChosen ev = new Events.FolderChosen(folder, name);
-                    EventBus.getDefault().post(ev);
+                    mListener.onFolderSelected(folder, name);
                 });
                 break;
         }

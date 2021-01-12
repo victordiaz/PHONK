@@ -32,7 +32,7 @@ android {
         }
 
         aaptOptions {
-          noCompress "tflite"
+            noCompress "tflite"
         }
     }
 
@@ -47,7 +47,7 @@ android {
 
     buildTypes {
         release {
-        	minifyEnabled false
+            minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig signingConfigs.releaseConfig
@@ -106,7 +106,11 @@ dependencies {
     implementation project(path: ':phonk_apprunner')
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference:1.1.1'
+    // implementation 'androidx.emoji:emoji-bundled:1.0.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    implementation 'org.reactivestreams:reactive-streams:1.0.3'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
 }

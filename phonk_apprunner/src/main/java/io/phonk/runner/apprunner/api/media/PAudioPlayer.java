@@ -25,8 +25,10 @@ package io.phonk.runner.apprunner.api.media;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
+import android.media.audiofx.Visualizer;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
@@ -43,6 +45,7 @@ public class PAudioPlayer extends ProtoBase {
 
     protected MediaPlayer mMediaPlayer;
     private ReturnInterface callbackfn;
+    private Visualizer mVisualiser;
 
     public interface OnFinishCB {
         void event();
@@ -209,6 +212,12 @@ public class PAudioPlayer extends ProtoBase {
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
     public PAudioPlayer finish() {
+        if (mVisualiser != null) {
+            mVisualiser.setEnabled(false);
+            mVisualiser.release();
+            mVisualiser.setDataCaptureListener(null, 0, false, false);
+        }
+
         mMediaPlayer.stop();
         mMediaPlayer.release();
         mMediaPlayer = null;
@@ -219,8 +228,27 @@ public class PAudioPlayer extends ProtoBase {
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
     public PAudioPlayer onFinish(PAudioPlayer.OnFinishCB callbackfn) {
-
         return this;
+    }
+
+    @PhonkMethod
+    public void startVisualizer(int captureSize) {
+        mVisualiser = new Visualizer(mMediaPlayer.getAudioSessionId());
+        mVisualiser.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+            @Override
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int i) {
+                byte[] waveform = Arrays.copyOf(bytes, bytes.length);
+                //MLog.d(TAG, "getting waveform " + bytes.length);
+            }
+
+            @Override
+            public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int i) {
+                byte[] waveform = Arrays.copyOf(bytes, bytes.length);
+                //MLog.d(TAG, "getting fft " + bytes.length);
+            }
+        }, Visualizer.getMaxCaptureRate(), true, false);
+        mVisualiser.setCaptureSize(captureSize);
+        mVisualiser.setEnabled(true);
     }
 
     @Override

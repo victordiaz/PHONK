@@ -158,8 +158,15 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             c.strokeWidth((float) styler.borderWidth);
             c.stroke(styler.borderColor);
 
-
             c.rect(0, 0, unmappedVal, c.height, (float) styler.borderRadius, (float) styler.borderRadius);
+
+            /*
+            c.fill("#FF000055");
+            c.rect(0, 0, c.width, c.height, (float) styler.borderRadius, (float) styler.borderRadius);
+            c.porterDuff("SRC_IN");
+            c.fill("#0000FF");
+            c.rect(0, 0, unmappedVal, c.height, 0, 0);
+            */
 
             c.porterDuff("XOR");
             df.setRoundingMode(RoundingMode.DOWN);

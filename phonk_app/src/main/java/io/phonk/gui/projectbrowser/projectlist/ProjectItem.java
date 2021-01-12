@@ -20,15 +20,15 @@
  *
  */
 
-package io.phonk.gui;
+package io.phonk.gui.projectbrowser.projectlist;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,54 +39,56 @@ import androidx.appcompat.widget.PopupMenu;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
-
 import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.base.models.Project;
-import io.phonk.runner.base.utils.MLog;
 
-public class ProjectAdapterViewItem extends LinearLayout {
+public class ProjectItem extends LinearLayout {
 
-    private static final String TAG = ProjectAdapterViewItem.class.getSimpleName();
+    private static final String TAG = ProjectItem.class.getSimpleName();
 
+    public static int MODE_NORMAL = 0;
+    public static int MODE_SINGLE_PICK = 1;
+    public static int MODE_MULTIPLE_PICK = 2;
+
+    public final CheckBox checkbox;
     private View mItemView;
-    private final Context c;
+    private final Context mContext;
 
     private String t;
+    private boolean highlighted = false;
     private Project mProject;
     private TextView txtProjectIcon;
     private TextView textViewName;
     private ImageView mMenuButton;
     private final ImageView customIcon;
 
-    public ProjectAdapterViewItem(Context context, boolean listMode) {
+    public ProjectItem(Context context, boolean listMode, int pickMode) {
         super(context);
-        this.c = context;
-
+        this.mContext = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (listMode) {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_list, this, true);
-            this.txtProjectIcon = findViewById(R.id.txtProjectIcon);
+            this.txtProjectIcon = findViewById(R.id.folderIcon);
         } else {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_grid, this, true);
         }
 
-        textViewName = mItemView.findViewById(R.id.customViewText);
+        checkbox = (CheckBox) findViewById(R.id.checkBoxPicker);
+        mMenuButton = findViewById(R.id.card_menu_button);
+
+        if (pickMode == MODE_MULTIPLE_PICK) {
+            checkbox.setVisibility(View.VISIBLE);
+            mMenuButton.setVisibility(View.GONE);
+        } else if (pickMode == MODE_SINGLE_PICK) {
+            mMenuButton.setVisibility(View.GONE);
+        }
+
+        textViewName = mItemView.findViewById(R.id.txtProjectName);
         customIcon = mItemView.findViewById(R.id.iconImg);
-
-        this.setOnClickListener(v -> {
-            // showMenu(v);
-
-            Runnable r = () -> PhonkAppHelper.launchScript(getContext(), mProject);
-
-            Handler handler = new Handler();
-            handler.postDelayed(r, 0);
-        });
-
     }
 
     public void setImage(Bitmap bmp) {
@@ -100,14 +102,8 @@ public class ProjectAdapterViewItem extends LinearLayout {
         textViewName.setText(text);
     }
 
-    boolean isPlayOnPress = true;
-
     public void setMenu() {
-        mMenuButton = findViewById(R.id.card_menu_button);
-
-        // show / hide right menu
-        if (!isPlayOnPress) mMenuButton.setVisibility(View.GONE);
-
+        // setting menu for mProject.getName());
         mItemView.setOnLongClickListener(v -> {
             showMenu(mMenuButton);
 
@@ -118,21 +114,19 @@ public class ProjectAdapterViewItem extends LinearLayout {
     }
 
     private void showMenu(View fromView) {
-        PopupMenu myPopup = new PopupMenu(c, fromView);
+        Context wrapper = new ContextThemeWrapper(mContext, R.style.phonk_PopupMenu);
+        PopupMenu myPopup = new PopupMenu(wrapper, fromView);
         myPopup.inflate(R.menu.project_actions);
         myPopup.setOnMenuItemClickListener(menuItem -> {
-
             int itemId = menuItem.getItemId();
 
             switch (itemId) {
                 case R.id.menu_project_list_run:
                     PhonkAppHelper.launchScript(getContext(), mProject);
                     return true;
-
                 case R.id.menu_project_list_edit:
                     PhonkAppHelper.launchEditor(getContext(), mProject);
                     return true;
-
                 case R.id.menu_project_webeditor:
                     PhonkAppHelper.openInWebEditor(getContext(), mProject);
                     return true;
@@ -142,7 +136,7 @@ public class ProjectAdapterViewItem extends LinearLayout {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_DELETE, mProject));
-                                MLog.d(TAG, "deleting " + mProject.getFullPath());
+                                //mPlf.removeItem(mProject);
                                 Toast.makeText(getContext(), mProject.getName() + " Deleted", Toast.LENGTH_LONG).show();
                                 PhonkScriptHelper.deleteFileOrFolder(mProject.getFullPath());
 
@@ -152,21 +146,21 @@ public class ProjectAdapterViewItem extends LinearLayout {
                                 break;
                         }
                     };
-                    AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                     builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener).show();
                     return true;
                 case R.id.menu_project_list_add_shortcut:
-                    PhonkScriptHelper.addShortcut(c, mProject.getFolder(), mProject.getName());
+                    PhonkScriptHelper.addShortcut(mContext, mProject.getFolder(), mProject.getName());
                     return true;
                 case R.id.menu_project_list_share_with:
-                    PhonkScriptHelper.shareMainJsDialog(c, mProject.getFolder(), mProject.getName());
+                    PhonkScriptHelper.shareMainJsDialog(mContext, mProject.getFolder(), mProject.getName());
                     return true;
                 case R.id.menu_project_list_share_proto_file:
-                    PhonkScriptHelper.shareProtoFileDialog(c, mProject.getFolder(), mProject.getName());
+                    PhonkScriptHelper.sharePhonkFileDialog(mContext, mProject.getFolder(), mProject.getName());
                     return true;
                 case R.id.menu_project_list_show_info:
-                    PhonkAppHelper.launchScriptInfoActivity(c, mProject);
+                    PhonkAppHelper.launchScriptInfoActivity(mContext, mProject);
                     return true;
                 default:
                     return true;
@@ -176,10 +170,12 @@ public class ProjectAdapterViewItem extends LinearLayout {
 
     }
 
-    public void setInfo(Project p) {
-        mProject = p;
+    public boolean isHighlighted() {
+        return highlighted;
+    }
 
-        MLog.d("qq1", p.getFolder() + " " + p.getName());
+    public void setProjectInfo(Project p) {
+        mProject = p;
 
         if (p.getName().length() > 2) {
             setIcon(p.getName().substring(0, 2));
@@ -189,16 +185,8 @@ public class ProjectAdapterViewItem extends LinearLayout {
         setText(p.getName());
         setTag(p.getName());
 
-        File f = new File(p.getFullPathForFile("icon.png"));
-        // setImage(R.drawable.primarycolor_rounded_rect);
-
-        if (f.exists()) {
-            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(f.getPath(), bmOptions);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-
-            setImage(bitmap);
-        }
+        Bitmap icon = p.getIcon();
+        if (icon != null) setImage(icon);
         setMenu();
     }
 

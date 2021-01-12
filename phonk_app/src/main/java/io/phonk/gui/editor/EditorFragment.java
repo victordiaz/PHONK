@@ -169,7 +169,6 @@ public class EditorFragment extends BaseFragment {
 
             }
         });
-
     }
 
     public void increaseFont() {

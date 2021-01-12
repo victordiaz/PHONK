@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui.projectlist;
+package io.phonk.gui.projectbrowser.projectlist;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -37,6 +37,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -44,6 +45,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import io.phonk.R;
 import io.phonk.events.Events;
@@ -61,8 +63,7 @@ public class ProjectListFragment extends BaseFragment {
     private Context mContext;
 
     private FitRecyclerView mGrid;
-    private GridLayoutManager mLayoutManager;
-    private LinearLayout mEmptyGrid;
+    private ConstraintLayout mEmptyGrid;
 
     public ArrayList<Project> mListProjects = null;
     public ProjectItemAdapter mProjectAdapter;
@@ -70,33 +71,59 @@ public class ProjectListFragment extends BaseFragment {
     public String mProjectFolder;
     boolean mListMode = true;
     public boolean mOrderByName = true;
-    public int num = 0;
-    public static int totalNum = 0;
 
     private ImageButton mBackToFolderButton;
     private TextView mTxtParentFolder;
-    private TextView mTxtFolder;
+    private TextView mTxtProjectFolder;
     private boolean mIsTablet = false;
 
     private LinearLayout mBottomBar;
     private LinearLayout mFolderPath;
-    private LinearLayout mSelectFolder;
 
-    public ProjectListFragment() {
-        num = totalNum++;
-    }
+    private ProjectSelectedListener mListener;
+    private BackClickedListener mClickBackListener;
+    private int mMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mProjectFolder = getArguments().getString("folderName", "");
-        //mProjectFolder = "projects";
-        MLog.d(TAG, "showing " + mProjectFolder);
         mOrderByName = getArguments().getBoolean("orderByName");
-        // mListMode = (boolean) UserPreferences.getInstance().get("apps_in_list_mode");
+        mMode = getArguments().getInt("mode");
 
-        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode);
+        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode, mMode);
+        mProjectAdapter.setListener(mListener);
+    }
+
+    public static ProjectListFragment newInstance(String folderName, int mode, boolean orderByName) {
+        ProjectListFragment myFragment = new ProjectListFragment();
+
+        Bundle args = new Bundle();
+        args.putString("folderName", folderName);
+        args.putInt("mode", mode);
+        args.putBoolean("orderByName", orderByName);
+        myFragment.setArguments(args);
+
+        return myFragment;
+    }
+
+    public interface BackClickedListener {
+        void onBackSelected();
+    }
+
+    public interface ProjectSelectedListener {
+        void onProjectSelected(Project p);
+        void onMultipleProjectsSelected(HashMap<Project, Boolean> projects);
+    }
+
+    public void setBackClickListener(BackClickedListener listener) {
+        mClickBackListener = listener;
+    }
+
+    public void setListener(ProjectSelectedListener listener) {
+        mListener = listener;
+        if (mProjectAdapter != null) mProjectAdapter.setListener(listener);
     }
 
     @Override
@@ -119,25 +146,19 @@ public class ProjectListFragment extends BaseFragment {
         // checkEmptyState();
         registerForContextMenu(mGrid);
 
-        if (mProjectFolder != "") loadFolder(mProjectFolder);
+        // if (mProjectFolder != "") loadFolder(mProjectFolder);
 
         mBackToFolderButton = v.findViewById(R.id.backToFolders);
         mTxtParentFolder = v.findViewById(R.id.parentFolder);
-        mTxtFolder = v.findViewById(R.id.folder);
+        mTxtProjectFolder = v.findViewById(R.id.folder);
         mFolderPath = v.findViewById(R.id.folderPath);
-        mSelectFolder = v.findViewById(R.id.select_folder);
 
         mBackToFolderButton.setOnClickListener(view -> {
-            EventBus.getDefault().post(new Events.AppUiEvent("page", 1));
-            // show folderlist
-            // if (isShown)
-            // else
+            mClickBackListener.onBackSelected();
         });
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         LinearLayout llFolderLocation = v.findViewById(R.id.folderLocation2);
-
-        // if (mIsTablet) llFolderLocation.setVisibility(View.GONE);
 
         mBottomBar = v.findViewById(R.id.bottombar);
         mBottomBar.setVisibility(View.GONE);
@@ -162,31 +183,16 @@ public class ProjectListFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    public static ProjectListFragment newInstance(String folderName, boolean orderByName) {
-        ProjectListFragment myFragment = new ProjectListFragment();
-
-        Bundle args = new Bundle();
-        args.putString("folderName", folderName);
-        args.putBoolean("orderByName", orderByName);
-        myFragment.setArguments(args);
-
-        return myFragment;
-    }
-
     private void checkEmptyState() {
         //check if a has been loaded
         if (mListProjects == null) {
             showProjectList(false);
-
             return;
         }
 
         //if empty we show, hey! there is no projects!
-        if (mListProjects.isEmpty()) {
-            showProjectList(false);
-        } else {
-            showProjectList(true);
-        }
+        if (mListProjects.isEmpty()) showProjectList(false);
+        else showProjectList(true);
     }
 
     private void showProjectList(boolean b) {
@@ -199,20 +205,12 @@ public class ProjectListFragment extends BaseFragment {
         }
     }
 
-    // public View getViewByName(String appName) {
-    //   int pos = findAppPosByName(appName);
-    //View view = mProjectAdapter.getView(pos, null, null);
-
-    // return null;
-    //}
-
     public void goTo(int pos) {
         if (pos != -1) mGrid.smoothScrollToPosition(pos);
     }
 
     public void clear() {
         if (mListProjects != null) mListProjects.clear();
-        // mGrid.removeAllViews();
         mProjectAdapter.notifyDataSetChanged();
     }
 
@@ -220,10 +218,13 @@ public class ProjectListFragment extends BaseFragment {
         checkEmptyState();
     }
 
-    public void loadFolder(String folder) {
+    public void loadFolder(String folder, String project) {
         clear();
+        mProjectFolder = folder + '/' + project;
 
-        mProjectFolder = folder;
+        mFolderPath.setVisibility(View.VISIBLE);
+        mTxtParentFolder.setText(folder);
+        mTxtProjectFolder.setText(project);
 
         mListProjects = PhonkScriptHelper.listProjects(mProjectFolder, mOrderByName);
         mProjectAdapter.setArray(mListProjects);
@@ -246,7 +247,6 @@ public class ProjectListFragment extends BaseFragment {
     public View getItemView(String projectName) {
         return mGrid.findViewWithTag(projectName);
     }
-
 
     /*
      * UI fancyness
@@ -291,10 +291,6 @@ public class ProjectListFragment extends BaseFragment {
         String action = evt.getAction();
 
         switch (action) {
-            case Events.PROJECTLIST_SHOW_BOTTOM_BAR:
-                break;
-            case Events.PROJECTLIST_HIDE_BOTTOM_BAR:
-                break;
             case Events.PROJECT_RUN:
                 Project p = evt.getProject();
                 projectRefresh(p.getName());
@@ -308,23 +304,9 @@ public class ProjectListFragment extends BaseFragment {
                 mProjectAdapter.remove(evt.getProject());
                 break;
             case Events.PROJECT_REFRESH_LIST:
-                loadFolder(mProjectFolder);
+                // loadFolder(mProjectFolder);
                 break;
         }
 
     }
-
-    // folder choose
-    @Subscribe
-    public void onEventMainThread(Events.FolderChosen e) {
-        MLog.d(TAG, "< Event (folderChosen)");
-        String folder = e.getFullFolder();
-        loadFolder(folder);
-
-        mSelectFolder.setVisibility(View.GONE);
-        mFolderPath.setVisibility(View.VISIBLE);
-        mTxtParentFolder.setText(e.getParent());
-        mTxtFolder.setText(e.getName());
-    }
-
 }

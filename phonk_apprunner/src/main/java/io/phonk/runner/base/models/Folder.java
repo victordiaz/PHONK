@@ -27,14 +27,16 @@ public class Folder {
     public static final int PARENT = 1;
 
     private final String folderUrl;
+    private final int numSubfolders;
     private String name;
     private String folder;
     private int parent;
 
-    public Folder(String folderUrl, String folder, String projectName) {
+    public Folder(String folderUrl, String folder, String projectName, int numSubfolders) {
         this.folderUrl = folderUrl;
         this.folder = folder;
         this.name = projectName;
+        this.numSubfolders = numSubfolders;
     }
 
     public String getName() {
@@ -56,4 +58,6 @@ public class Folder {
     public int getType() {
         return parent;
     }
+
+    public int getNumSubfolders() { return numSubfolders; }
 }

@@ -31,34 +31,8 @@
     android:layout_alignParentTop="true"
     android:layout_gravity="left|top"
     android:animateLayoutChanges="true"
-    android:background="@color/phonk_backgroundColor"
+    android:background="@color/transparent"
     android:gravity="center">
-
-    <!-- back & folder info -->
-    <LinearLayout
-        android:id="@+id/choosefolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:visibility="gone">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:padding="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_folder_open_black_24dp" />
-
-        <!-- choose folder -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="choose a folder"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:visibility="visible" />
-    </LinearLayout>
 
     <!--
     <ToggleButton
@@ -72,7 +46,7 @@
 
     <io.phonk.gui._components.ResizableRecyclerView
         android:id="@+id/folderList"
-        android:paddingTop="20dp"
+        android:paddingTop="0dp"
         android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

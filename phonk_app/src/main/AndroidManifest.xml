@@ -22,9 +22,9 @@
   -->
 
 <manifest
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:tools="http://schemas.android.com/tools"
-     package="io.phonk">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.phonk">
 
     <!-- android:resizeableActivity = "true" -->
 
@@ -100,13 +100,13 @@
         </activity>
 
         <activity
-            android:name="io.phonk.WelcomeActivity"
+            android:name="io.phonk.gui.WelcomeActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="@string/welcome_activity_name" >
         </activity>
         <activity
             android:name="io.phonk.gui.settings.SettingsActivity"
-            android:theme="@style/PhonkAppTheme"
+            android:theme="@style/PhonkAppThemePreferences"
             android:label="@string/settings_activity_name" >
         </activity>
         <activity
@@ -162,6 +162,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".NewMainActivity" />
+
         <service
             android:name="io.phonk.server.PhonkServerService"
             android:exported="false">
@@ -191,6 +193,15 @@
             </intent-filter>
         </receiver>
 
+        <!-- New signature permission to ensure only systemui can bind to these services -->
+        <service android:name="io.phonk.MyCustomControlService" android:label="@string/app_name"
+            android:permission="android.permission.BIND_CONTROLS">
+            <intent-filter>
+                <action android:name="android.service.controls.ControlsProviderService" />
+            </intent-filter>
+        </service>
+
+
         <!--
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -206,7 +217,7 @@
         -->
 
     </application>
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 </manifest>

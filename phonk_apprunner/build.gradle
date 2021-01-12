@@ -51,7 +51,6 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 
-
     dexOptions {
         jumboMode true
     }
@@ -134,19 +133,19 @@ def modelArchivePath = "${buildDir}/model.zip"
 def modelTargetLocation = 'src/main/assets/model'
 
 task downloadModel(type: DefaultTask) {
-  doFirst {
-    println "Downloading and unpacking the model..."
-    mkdir project.buildDir
-  }
+    doFirst {
+        println "Downloading and unpacking the model..."
+        mkdir project.buildDir
+    }
 
-  doLast {
-    ant.mkdir(dir: modelTargetLocation)
-    // If you want to use your own models rather than pre-built models,
-    // comment out the following three lines.
-    ant.get(src: modelUrl, dest: modelArchivePath)
-    ant.unzip(src: modelArchivePath, dest: modelTargetLocation)
-    ant.delete(file: modelArchivePath)
-  }
+    doLast {
+        ant.mkdir(dir: modelTargetLocation)
+        // If you want to use your own models rather than pre-built models,
+        // comment out the following three lines.
+        ant.get(src: modelUrl, dest: modelArchivePath)
+        ant.unzip(src: modelArchivePath, dest: modelTargetLocation)
+        ant.delete(file: modelArchivePath)
+    }
 }
 
 preBuild.dependsOn downloadModel

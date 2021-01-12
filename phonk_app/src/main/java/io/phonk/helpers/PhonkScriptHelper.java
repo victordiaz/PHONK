@@ -37,6 +37,7 @@ import androidx.core.graphics.drawable.IconCompat;
 import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.io.FileUtils;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +48,9 @@ import java.util.List;
 
 import io.phonk.App;
 import io.phonk.R;
+import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.runner.AppRunnerActivity;
-import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.models.Folder;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
@@ -62,12 +63,8 @@ public class PhonkScriptHelper {
     private static final String TAG = PhonkScriptHelper.class.getSimpleName();
 
     private static String getBaseDir() {
-        String baseDir;
-
-        baseDir = Environment.getExternalStorageDirectory().getAbsolutePath()
+        return Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator + PhonkSettings.PHONK_FOLDER + File.separator;
-
-        return baseDir;
     }
 
     public static String getExportFolderPath() {
@@ -122,11 +119,14 @@ public class PhonkScriptHelper {
             }
         }
         dir.delete();
+
+        EventBus.getDefault().post(new Events.FileEvent(Events.PROJECT_DELETE_FILE, path));
     }
 
     // Write a file with code
-    public static void saveCodeFromSandboxPath(String relativePath, String code) {
-        String absolutePath = getAbsolutePathFromRelative(relativePath);
+    public static void saveCodeFromSandboxPath(Project p, String filePath, String code) {
+        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_SAVE, p));
+        String absolutePath = getAbsolutePathFromRelative(p.getSandboxPath() + filePath);
         saveCodeFromAbsolutePath(absolutePath, code);
     }
 
@@ -151,16 +151,15 @@ public class PhonkScriptHelper {
 
     // List folders
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
+        MLog.d(TAG, "--> " + folder);
         ArrayList<Folder> folders = new ArrayList<Folder>();
         File dir = new File(PhonkSettings.getFolderPath(folder));
-        // MLog.d(TAG, "nn1 path ->" + folder + " " + dir.getAbsolutePath() + " " + dir.exists());
 
         if (!dir.exists()) {
             dir.mkdir();
         }
 
-        File[] all_projects = dir.listFiles();
-        // MLog.d(TAG, "nn1 1" + all_projects);
+        File[] all_projects = dir.listFiles(File::isDirectory);
 
         // if folder or not existing is empty return
         if (all_projects == null) return folders;
@@ -175,13 +174,14 @@ public class PhonkScriptHelper {
             String folderUrl = file.getAbsolutePath();
             String projectName = file.getName();
 
-            // MLog.d("nn1 3", folderUrl + " " + " " + folder + " " + projectName);
-            folders.add(new Folder(folderUrl, folder, projectName));
+            int numSubfolders = file.listFiles(File::isDirectory).length;
+            long byteSize = 0; // FileUtils.sizeOfDirectory(file);
+            MLog.d("nn1 3", folderUrl + " " + " " + folder + " " + projectName + " " + numSubfolders + " " + byteSize);
+            folders.add(new Folder(folderUrl, folder, projectName, numSubfolders));
         }
 
         return folders;
     }
-
 
     public static ArrayList<ProtoFile> listFilesForFileManager(String folder) {
         ArrayList<ProtoFile> protoFiles = new ArrayList();
@@ -198,10 +198,8 @@ public class PhonkScriptHelper {
             protoFiles.add(protoFile);
         }
 
+        // order by folder first and alphabetically
         Collections.sort(protoFiles, (l, r) -> {
-
-            // order by folder first and alphabetically
-
             if (l.isDir && !r.isDir) {
                 return -1;
             } else if (!l.isDir && r.isDir) {
@@ -209,7 +207,6 @@ public class PhonkScriptHelper {
             } else {
                 return l.name.compareToIgnoreCase(r.name);
             }
-
         });
 
         return protoFiles;
@@ -288,6 +285,7 @@ public class PhonkScriptHelper {
 
     // List projects
     public static ArrayList<Project> listProjects(String folder, boolean orderByName) {
+        MLog.d(TAG, "--> " + folder);
         ArrayList<Project> projects = new ArrayList<Project>();
         File dir = new File(PhonkSettings.getFolderPath(folder));
 
@@ -311,7 +309,7 @@ public class PhonkScriptHelper {
         return projects;
     }
 
-    public static String exportProjectAsProtoFile(Project p) {
+    public static String exportProjectAsPhonkFile(Project p) {
         File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PHONK_FILE_EXTENSION);
 
         MLog.d(TAG, "compress " + p.getFullPath());
@@ -328,7 +326,7 @@ public class PhonkScriptHelper {
         return f.getAbsolutePath();
     }
 
-    public static boolean importProtoFile(String folder, String zipFilePath) {
+    public static boolean importPhonkFile(String folder, String zipFilePath) {
         // TODO: Use thread
         // extract files
         try {
@@ -339,12 +337,6 @@ public class PhonkScriptHelper {
         }
         return true;
     }
-
-    // Get code from assets
-    // public static String getCodeFromAssets(Context c, Project p) {
-    //    return FileIO.readAssetFile(c, getProjectPath() + File.separator + PhonkSettings.PROTO_FILE_EXTENSION);
-    // }
-
 
     public static ArrayList<ProtoFile> listFilesInProject(Project p) {
         File f = new File(p.getSandboxPath());
@@ -367,7 +359,6 @@ public class PhonkScriptHelper {
     }
 
     public static boolean renameProject(Project p, String newName) {
-        // p.getFullPath();
         MLog.d(TAG, "renameProject 1 -->" + p.getFullPath());
         MLog.d(TAG, "renameProject 2 -->" + p.getParentPath());
 
@@ -460,16 +451,16 @@ public class PhonkScriptHelper {
         c.startActivity(Intent.createChooser(sendIntent, c.getResources().getText(R.string.send_to)));
     }
 
-    public static void shareProtoFileDialog(Context c, String folder, String name) {
+    public static void sharePhonkFileDialog(Context c, String folder, String name) {
         final ProgressDialog progress = new ProgressDialog(c);
-        progress.setTitle("Exporting .proto");
+        progress.setTitle("Exporting .phonk");
         progress.setMessage("Your project will be ready soon!");
         progress.setCancelable(true);
         progress.setCanceledOnTouchOutside(false);
         progress.show();
 
         Project p = new Project(folder, name);
-        String zipFilePath = exportProjectAsProtoFile(p);
+        String zipFilePath = exportProjectAsPhonkFile(p);
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
@@ -500,8 +491,6 @@ public class PhonkScriptHelper {
     public static void moveFileFromTo(Project p, String oldPath, String newPath) {
         File oldFile = new File(p.getFullPathForFile(oldPath));
         File newFile = new File(p.getFullPathForFile(newPath));
-
-        MLog.d("ww", oldFile + " --- " + newFile);
 
         try {
             FileUtils.moveFile(oldFile, newFile);

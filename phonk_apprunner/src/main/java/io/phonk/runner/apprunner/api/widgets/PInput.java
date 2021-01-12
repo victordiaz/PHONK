@@ -27,7 +27,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -131,6 +133,16 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
             r.put("focused", hasFocus);
             callbackfn.event(r);
         });
+    }
+
+    public View multiline(boolean isMultiline) {
+      if (isMultiline) {
+        this.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        this.setSingleLine(false);
+        this.setGravity(Gravity.TOP);
+      }
+      // this.setInputType(InputType.TYPE_CLASS_NUMBER);
+      return this;
     }
 
     @Override

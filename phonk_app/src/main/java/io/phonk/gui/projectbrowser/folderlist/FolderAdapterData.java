@@ -20,19 +20,25 @@
  *
  */
 
-package io.phonk.gui.folderchooser;
+package io.phonk.gui.projectbrowser.folderlist;
 
 public class FolderAdapterData {
     static final int TYPE_TITLE = 0;
     static final int TYPE_FOLDER_NAME = 1;
 
-    int item_type;
+    int itemType;
     String parentFolder;
     String name;
+    int numSubfolders;
 
-    public FolderAdapterData(int item_type, String parentFolder, String name) {
-        this.item_type = item_type;
+    public FolderAdapterData(int itemType, String parentFolder, String name, int numSubfolders) {
+        this.itemType = itemType;
         this.parentFolder = parentFolder;
         this.name = name;
+        this.numSubfolders = numSubfolders;
+    }
+
+    public FolderAdapterData(int itemType, String parentFolder, String name) {
+        this(itemType, parentFolder, name, -1);
     }
 }

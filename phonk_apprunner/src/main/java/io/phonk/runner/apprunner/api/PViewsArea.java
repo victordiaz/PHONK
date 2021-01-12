@@ -24,13 +24,10 @@ package io.phonk.runner.apprunner.api;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -73,7 +70,6 @@ import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
 import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
-import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PViewsArea extends ProtoBase {
@@ -96,8 +92,14 @@ public class PViewsArea extends ProtoBase {
         mContext = appRunner.getAppContext();
     }
 
-    public View initMainLayout() {
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    private int getLayoutType(String type) {
+        if (type.equals("wrap")) return ViewGroup.LayoutParams.WRAP_CONTENT;
+        else if (type.equals("match")) return ViewGroup.LayoutParams.MATCH_PARENT;
+        return -1;
+    }
+
+    public View initMainLayout(String widthType, String heightType) {
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(getLayoutType(widthType), getLayoutType(heightType));
 
         // this is the structure of the layout
         // uiHolderLayout (background color)

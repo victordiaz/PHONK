@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui;
+package io.phonk.gui.connectionInfo;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -29,33 +29,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.phonk.R;
-import io.phonk.runner.base.models.Folder;
 
-public class ProjectFolderViewItem extends LinearLayout {
+public class EventItemView extends LinearLayout {
 
-    private static final String TAG = ProjectFolderViewItem.class.getSimpleName();
+    private static final String TAG = EventItemView.class.getSimpleName();
 
     private View mItemView;
-    private final Context c;
+    private final Context mContext;
+    private TextView txtEventType;
+    private TextView txtEventDetail;
 
-    private TextView textViewName;
-
-    public ProjectFolderViewItem(Context context) {
+    public EventItemView(Context context) {
         super(context);
-        this.c = context;
-
+        this.mContext = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mItemView = inflater.inflate(R.layout.projectlist_item_folder_list, this, true);
 
-        textViewName = mItemView.findViewById(R.id.customViewText);
+        this.mItemView = inflater.inflate(R.layout.event_list_item, this, true);
+        txtEventType = mItemView.findViewById(R.id.txtProjectName);
+        txtEventDetail = mItemView.findViewById(R.id.txtEventDetail);
     }
 
-    public void setText(String text) {
-        textViewName.setText(text);
+    public void set(String type, String detail) {
+        txtEventType.setText(type);
+        txtEventDetail.setText(detail);
     }
-
-    public void setInfo(Folder f) {
-        setText(f.getName());
-    }
-
 }

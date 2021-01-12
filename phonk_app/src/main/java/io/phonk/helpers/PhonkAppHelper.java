@@ -259,7 +259,7 @@ public class PhonkAppHelper {
 
         // request the permissions
         //if (!requiredPermissions.isEmpty()) {
-            ac.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), requestCode);
+        ac.requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), requestCode);
         //}
     }
 

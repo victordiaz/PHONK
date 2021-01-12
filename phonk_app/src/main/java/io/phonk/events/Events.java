@@ -38,9 +38,13 @@ public class Events {
     public static final String PROJECT_UPDATE = "update";
     public static final String PROJECT_EDIT = "edit";
     public static final String PROJECT_DELETE = "delete";
+    public static final String PROJECT_DELETE_FILE = "delete_file";
     public static final String PROJECT_EXECUTE_CODE = "execute_code";
     public static final String PROJECT_REFRESH_LIST = "refresh_list";
     public static final String PROJECT_RUNNING = "running";
+    public static final String PROJECT_LOAD = "load";
+    public static final String PROJECT_RENAME = "project_rename";
+    public static final String PROJECT_FILE_MOVE = "move";
 
     public static final String EDITOR_FILE_INTENT_LOAD = "editor_file_intent_load";
     public static final String EDITOR_FILE_LOAD = "editor_file_load";
@@ -48,14 +52,15 @@ public class Events {
     public static final String EDITOR_FILE_SAVE = "editor_file_saved";
     public static final String EDITOR_FILE_PREVIEW = "editor_file_preview";
     public static final String EDITOR_ALL_FILE_STATUS = "editor_all_file_status";
+    public static final String EDITOR_UPLOAD = "editor_upload";
 
     public static final String CLOSE_APP = "close_app";
+    public static final String NEW_EVENT = "new_event";
     public static final String PROJECTLIST_SHOW_BOTTOM_BAR = "projectlist_show_bottom_bar";
     public static final String PROJECTLIST_HIDE_BOTTOM_BAR = "projectlist_hide_bottom_bar";
 
     public static final String USER_CONNECTION_ENTER = "user_conection_enter";
     public static final String USER_CONNECTION_LEAVE = "user_conection_leave";
-
 
     public static class ProjectEvent {
         private Project project;
@@ -74,9 +79,25 @@ public class Events {
         public String getAction() {
             return action;
         }
-
         public Project getProject() {
             return project;
+        }
+    }
+
+    public static class FileEvent {
+        private String action;
+        private String file;
+
+        public FileEvent(String action, String file) {
+            this.action = action;
+            this.file = file;
+        }
+
+        public String getAction() {
+            return action;
+        }
+        public String getFile() {
+            return file;
         }
     }
 
@@ -167,6 +188,7 @@ public class Events {
         public String getWhat() {
             return what;
         }
+        public Project getProject() { return project; }
     }
 
     public static class Connection {
@@ -254,7 +276,7 @@ public class Events {
             return ip;
         }
 
-        public ArrayList<String> getUserrs() {
+        public ArrayList<String> getUsers() {
             return users;
         }
     }
