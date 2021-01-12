@@ -1,8 +1,7 @@
 1.4.0
 - Updated app design
 - Some app refactor that will help future development
-- Fixes in app and Web Editor
-- Probably there is new errors too! 😅
+- Small fixes in the PHONK app and the Web Editor
 
 1.3.2
 - Ask permission for background location
