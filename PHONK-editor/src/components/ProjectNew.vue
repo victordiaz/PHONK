@@ -117,6 +117,10 @@ export default {
     display: flex;
     align-items: center;
     margin-left: 12px;
+
+    button {
+      border-color: #f0f8ff30;
+    }
   }
 }
 </style>
