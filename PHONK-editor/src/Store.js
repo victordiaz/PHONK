@@ -103,6 +103,7 @@ store.project_load = function (uri) {
     store.load_project_preferences()
     store.emit('show_info', { id: id, icon: 'description', text: 'Project Loaded', status: 'done' })
     // store.list_files_in_path('')
+    document.title = 'PHONK - ' + store.state.current_project.project.folder + '/' + store.state.current_project.project.name
   }, function (response) {
     store.emit('project_loaded', false)
     store.emit('show_info', { id: id, icon: 'error', text: 'Loading project error', status: 'error' })
