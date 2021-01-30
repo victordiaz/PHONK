@@ -77,11 +77,12 @@
               <li
                 v-bind:class="{ selected: actionOnProject === f }"
                 v-for="f in folder_chosen"
-                v-on:click="load_project(f)"
                 class="project_item"
               >
-                <span class="icon">{{ f.name.substr(0, 2) }}</span>
-                <span>{{ f.name }}</span>
+                <router-link class = "project_item" @click.native="load_project(f)" :to="{name: 'editor.load', params: {type: uri.type, folder: uri.folder, project: f.name} }">
+                  <span class="icon">{{ f.name.substr(0, 2) }}</span>
+                  <span>{{ f.name }}</span>
+                </router-link>
                 <i v-on:click.stop.prevent="openActions(f)" class="action material-icons">more_vert</i>
               </li>
             </ul>
@@ -359,13 +360,14 @@ export default {
     cursor: pointer;
     user-select: none;
 
-    li {
+    li, .project_item {
       color: @primaryTextColor;
       padding: 5px 10px;
       font-weight: 400;
       display: flex;
       line-height: 1.4em;
       align-items: center;
+      text-decoration: none;
 
       .icon {
         max-width: 30px;
@@ -404,7 +406,7 @@ export default {
 
       &.selected {
         color: @secondaryTextColor;
-        background: darken(@accentColor, 10%);
+        background: @accentColor;
 
         .icon {
           color: @backgroundColor;
@@ -448,7 +450,7 @@ export default {
       padding: 2px 10px;
 
       &:hover {
-        color: darken(@accentColor, 20%);
+        color: @accentColor;
       }
     }
 
