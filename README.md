@@ -5,7 +5,7 @@
 
 **PHONK is a coding playground for new and old Android devices.**
 
-Create scripts rapidly from your phone or using the *remote Web Editor* on your computer. The API is simple and extensive. GUI, audio, graphics, Bluetooth BLE, Arduino, OSC, MIDI, and much more.
+Create scripts rapidly from your phone or using the *remote Web Editor* on your computer using Javascript. The API is simple and extensive. GUI, audio, graphics, Bluetooth BLE, Arduino, OSC, MIDI, and much more.
 
 [PHONK Website](https://phonk.app) — [Tutorial](https://phonk.app/docs/1_step_installation) — [Forum](https://github.com/victordiaz/PHONK/discussions) — [Discord](https://discord.gg/DgtyBKgp)
 
