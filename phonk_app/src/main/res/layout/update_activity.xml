@@ -182,7 +182,6 @@
         android:layout_marginBottom="16dp"
         android:foreground="?attr/selectableItemBackground"
         android:text="Let's go"
-        android:textColor="@color/phonk_backgroundColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/btnSkip"
