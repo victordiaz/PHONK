@@ -1,3 +1,11 @@
+1.4.1
+  - Support of let, const and fat arrows
+  - Help section list links to Forum and Discord
+  - Bring back httpRequest functionality that got lost in 1.4.0 transition
+  - WebEditor changes the Title depending on the project
+  - WebEditor can open projects in a new tab using middle click on a project name
+  - Some website updates
+
 1.4.0
 - Updated app design
 - Some app refactor that will help future development
