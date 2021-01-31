@@ -69,6 +69,7 @@ public class AppRunnerInterpreter {
         mScriptContextFactory.setInterpreter(this);
 
         rhino = Context.enter();
+        rhino.setLanguageVersion(Context.VERSION_ES6);
 
         // observingDebugger = new ObservingDebugger();
         // rhino.setDebugger(observingDebugger, new Integer(0));

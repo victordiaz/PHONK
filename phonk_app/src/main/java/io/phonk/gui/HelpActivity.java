@@ -45,7 +45,7 @@ public class HelpActivity extends BaseActivity {
         fl.setVisibility(View.VISIBLE);
         APIWebviewFragment webViewFragment = new APIWebviewFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("url", "file:///android_asset/help.md.html"); // http://127.0.0.1:8585");
+        bundle.putString("url", "file:///android_asset/help.html"); // http://127.0.0.1:8585");
         webViewFragment.setArguments(bundle);
         addFragment(webViewFragment, R.id.fragmentWebview2, "qq");
     }
