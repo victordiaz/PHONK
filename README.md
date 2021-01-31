@@ -3,8 +3,6 @@
 [![github version](https://img.shields.io/github/license/victordiaz/phonk.svg)](https//github.com/victordiaz/phonk)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/victordiaz/phonk/issues)
 
-:tada: Hello! I'm happy to see you here reading about PHONK!!
-
 **PHONK is a coding playground for new and old Android devices.**
 
 Create scripts rapidly from your phone or using the *remote Web Editor* on your computer. The API is simple and extensive. GUI, audio, graphics, Bluetooth BLE, Arduino, OSC, MIDI, and much more.
