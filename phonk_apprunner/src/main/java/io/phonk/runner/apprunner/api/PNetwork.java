@@ -265,10 +265,10 @@ public class PNetwork extends ProtoBase {
 
     @PhonkMethod
     public HTTPRequest httpRequest(final NativeObject requestParams) {
-      HTTPRequest httpRequest = new HTTPRequest(requestParams);
-      httpRequest.request();
+        HTTPRequest httpRequest = new HTTPRequest(requestParams);
+        httpRequest.request();
 
-      return httpRequest;
+        return httpRequest;
     }
 
     public class HTTPRequest {
@@ -276,6 +276,7 @@ public class PNetwork extends ProtoBase {
         private final String url;
         private NativeObject headers;
         private final NativeArray data;
+        private final NativeObject body;
 
         private ReturnInterface callbackfn;
 
@@ -284,19 +285,22 @@ public class PNetwork extends ProtoBase {
             url = (String) requestParams.get("url");
             headers = (NativeObject) requestParams.get("headers");
             data = (NativeArray) requestParams.get("data");
+            body = (NativeObject) requestParams.get("body");
         }
 
         public void request() {
             final OkHttpClient client = new OkHttpClient();
 
             Thread t = new Thread(() -> {
-                MultipartBody multipartBody = null;
+                RequestBody requestBody = null;
                 boolean dataExists = false;
-                boolean headersExists = false;
+
                 if (data != null) { if (data.size() > 0) dataExists = true; }
                 if (headers == null) {
                     headers = new NativeObject();
                 }
+
+                if (body != null) requestBody = RequestBody.create(MediaType.parse((String) body.get("type")), (String) body.get("data"));
 
                 if (dataExists) {
                     MultipartBody.Builder formBody = new MultipartBody.Builder();
@@ -313,13 +317,23 @@ public class PNetwork extends ProtoBase {
                         if (type.equals("file")) {
                             String mediaType = (String) o.get("mediaType");
                             File f = new File(getAppRunner().getProject().getFullPathForFile(content));
-                            // MLog.d("nn1", f.getAbsolutePath() + " " + content + " " + name + " " + mediaType);
+
+                            try {
+                                if (!f.exists()) {
+                                    throw new Exception("File does not exist");
+                                }
+                            } catch (Exception e) {
+                                getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_ERROR, e.getMessage());
+                                e.printStackTrace();
+                                return;
+                            }
+
                             formBody.addFormDataPart(name, content, RequestBody.create(MediaType.parse(mediaType), f));
                         } else {
                             formBody.addFormDataPart(name, content);
                         }
                     }
-                    multipartBody = formBody.build();
+                    requestBody = formBody.build();
                 }
 
                 // Map<String, String> header = new HashMap<String, String>();
@@ -327,7 +341,7 @@ public class PNetwork extends ProtoBase {
                 Request request;
                 try {
                     Headers buildHeaders = Headers.of(headers);
-                    request = new Request.Builder().headers(buildHeaders).url(url).method(method, multipartBody).build();
+                    request = new Request.Builder().headers(buildHeaders).url(url).method(method, requestBody).build();
                 } catch (Exception e) {
                     getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_ERROR, e.toString());
                     return;

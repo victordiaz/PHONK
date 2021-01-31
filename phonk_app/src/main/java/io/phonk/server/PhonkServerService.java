@@ -274,7 +274,7 @@ public class PhonkServerService extends Service {
                 network.put("wifi enabled", appRunner.pNetwork.isWifiEnabled());
                 network.put("cellular network type", appRunner.pNetwork.getNetworkType());
                 network.put("ip", appRunner.pNetwork.networkInfo().get("ip"));
-                network.put("wifi type", appRunner.pNetwork.networkInfo().get("type"));
+                network.put("network type", appRunner.pNetwork.networkInfo().get("type"));
                 network.put("rssi", appRunner.pNetwork.wifiInfo().getRssi());
                 network.put("ssid", appRunner.pNetwork.wifiInfo().getSSID());
 
@@ -288,7 +288,7 @@ public class PhonkServerService extends Service {
 
                 info.put("device", device);
                 info.put("screen", screen);
-                info.put("other", other);
+                info.put("system", other);
                 info.put("network", network);
                 info.put("script", script);
 

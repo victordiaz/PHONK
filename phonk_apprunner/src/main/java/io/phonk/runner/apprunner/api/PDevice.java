@@ -67,7 +67,6 @@ import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.Intents;
 import io.phonk.runner.base.utils.MLog;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 @PhonkObject
 public class PDevice extends ProtoBase {
 
