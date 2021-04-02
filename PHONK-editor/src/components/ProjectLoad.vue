@@ -56,7 +56,7 @@
                   v-bind:id="f.name"
                 >
                   <span class="icon">
-                    <i class="material-icons transparent">folder</i>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.17 6l2 2H20v10H4V6h5.17M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                   </span>
                   {{ f.name }}
                 </li>
@@ -287,10 +287,12 @@ export default {
   h3 {
     // text-transform: uppercase;
     font-weight: 400;
-    font-size: 0.8rem;
-    color: @primaryTextColor;
+    font-size: 0.9rem;
+    color: #f3f4f182;
     margin-top: 50px;
     margin-bottom: 15px;
+    font-family: 'Roboto';
+    font-weight: 500;
   }
 
   .debug {
@@ -362,12 +364,15 @@ export default {
 
     li, .project_item {
       color: @primaryTextColor;
-      padding: 5px 10px;
+      padding: 3px 10px;
       font-weight: 400;
       display: flex;
       line-height: 1.4em;
       align-items: center;
       text-decoration: none;
+      font-family: Roboto;
+      width: 100%;
+      box-sizing: border-box;
 
       .icon {
         max-width: 30px;
@@ -382,6 +387,13 @@ export default {
         align-items: center;
         margin-right: 10px;
         padding: 5px;
+        border-radius: 5px;
+
+        svg {
+          width: 28px;
+          height: 23px;
+          fill: #bdc2bc;
+        }
       }
 
       span {
@@ -405,12 +417,16 @@ export default {
       }
 
       &.selected {
-        color: @secondaryTextColor;
+        color: #664505;
         background: @accentColor;
 
         .icon {
-          color: @backgroundColor;
-          border-color: @backgroundColor;
+          color: #3c2e00;
+          border-color: #c8a427;
+
+          svg {
+            fill: #3c2e00;
+          }
         }
       }
     }

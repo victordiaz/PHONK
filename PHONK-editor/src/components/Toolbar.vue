@@ -1,5 +1,5 @@
 <template>
-  <div id="toolbar" class="main_shadow">
+  <div id="toolbar">
     <div class="left_side">
       <logo></logo>
     </div>
@@ -231,14 +231,7 @@ export default {
   z-index: 2;
   height: 52px;
   font-size: 1.2em;
-  border-bottom: 1px solid @secondaryColor;
-
-  /*
-  background: url('/static/phonk_icon_big_no_text.png') no-repeat @backgroundColor;
-  background-position-y: 0px;
-  background-size: 120px;
-  background-position-x: 0px;
-  */
+  background: rgba(255, 255, 255, 0.03);
 
   > * {
     flex: 1;
