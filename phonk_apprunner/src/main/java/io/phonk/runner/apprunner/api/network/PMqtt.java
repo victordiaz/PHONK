@@ -86,6 +86,26 @@ public class PMqtt extends ProtoBase {
                 connOpts.setAutomaticReconnect(((boolean) connectionSettings.get("autoReconnect")));
             }
 
+            if (connectionSettings.containsKey("will")) {
+                Map willOptions = (Map) connectionSettings.get("will");
+                String topic = (String) willOptions.get("topic");
+                String payload = (String) willOptions.get("payload");
+                MLog.d("qq", "qq1");
+                Double qos = (Double) willOptions.get("qos");
+                boolean retained = (boolean) willOptions.get("retained");
+
+                connOpts.setWill(topic, payload.getBytes(), qos.intValue(), retained);
+            }
+
+            if (connectionSettings.containsKey("cleanSession")) {
+                connOpts.setCleanSession((boolean) connectionSettings.get("cleanSession"));
+            }
+
+            if (connectionSettings.containsKey("connectionTimeout")) {
+                Double connectionTimeout = (double) connectionSettings.get("connectionTimeout");
+                connOpts.setConnectionTimeout(connectionTimeout.intValue());
+            }
+
             connOpts.setCleanSession(true);
             client.connect(connOpts, "", new IMqttActionListener() {
                 @Override
@@ -303,7 +323,8 @@ public class PMqtt extends ProtoBase {
     public PMqtt publish(final String topic, final String data, int qos, boolean retain) {
         MqttMessage message = new MqttMessage(data.getBytes());
         message.setQos(qos);
-        // message.setRetained(retain);
+        message.setRetained(retain);
+
         try {
             client.publish(topic, message);
         } catch (MqttException e) {
@@ -331,6 +352,7 @@ public class PMqtt extends ProtoBase {
     @Override
     public void __stop() {
         disconnect();
+        client = null;
     }
 
 }
