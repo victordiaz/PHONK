@@ -9,9 +9,9 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "build": "node build/build.js",
     "deploy": "cp -r ./dist/* ../phonk/phonk_app/src/main/assets/webide/",
-    "buildAndDeploy": "npm run build && npm run cleanAndDeploy && npm run deploy ",
+    "buildAndDeploy": "npm run build && npm run cleanInAndroid && npm run deploy ",
     "clean": "rm -rf ./dist",
-    "cleanAndDeploy": "rm -rf ../phonk/phonk_app/src/main/assets/webide/*",
+    "cleanInAndroid": "rm -rf ../phonk/phonk_app/src/main/assets/webide/*",
     "predev": "echo --> Starting WEBIDE"
   },
   "dependencies": {
