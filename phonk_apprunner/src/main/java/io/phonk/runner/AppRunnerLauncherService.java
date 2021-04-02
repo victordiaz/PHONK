@@ -52,21 +52,19 @@ public class AppRunnerLauncherService extends Service {
 
         Map<String, Object> map = AppRunnerHelper.readProjectProperties(this, p);
         boolean isService = (boolean) map.get("background_service");
-        MLog.d(TAG, "--> launching " + p.getFullPath() + " " + isService);
+        MLog.d(TAG, "--> launching " + p.getFullPath() + " isService: " + isService);
 
         Intent newIntent = null;
         if (isService) {
             newIntent = new Intent(this, AppRunnerService.class);
         } else {
             newIntent = new Intent(getApplicationContext(), AppRunnerActivity.class);
-            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            newIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             if (AndroidUtils.isVersionN() && multiWindowEnabled)
                 intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
         }
 
         newIntent.putExtras(intent);
-
         newIntent.putExtra(Project.SERVER_PORT, httpPort);
         newIntent.putExtra(Project.DEVICE_ID, deviceId);
         newIntent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, wakeUpScreen);
@@ -77,15 +75,33 @@ public class AppRunnerLauncherService extends Service {
         mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));
         */
 
-        if (isService) this.startService(newIntent);
-        else this.startActivity(newIntent);
+        if (isService) {
+            this.startService(newIntent);
+        } else {
+            MLog.d(TAG, "qqqqqqq " + newIntent.toString());
+            this.startActivity(newIntent);
+        }
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MLog.d("qq", "42");
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+        MLog.d("qq", "41");
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        MLog.d("qq", "43");
+
         return null;
     }
 }

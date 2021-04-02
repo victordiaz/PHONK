@@ -27,30 +27,49 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.TwoStatePreference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.phonk.BuildConfig;
 import io.phonk.R;
 import io.phonk.gui.LicenseActivity;
+import io.phonk.gui.projectbrowser.ProjectBrowserDialogFragment;
+import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
+import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkSettingsHelper;
+import io.phonk.runner.base.models.Project;
+import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     protected static final String TAG = SettingsFragment.class.getSimpleName();
+    private static final int REQUEST_OVERLAY_PERMISSIONS = 12312;
+    private final String TAG_PROJECT_LAUNCH_ON_PHONK_START = "launch_script_on_app_launch";
+    private final String TAG_PROJECT_LAUNCH_ON_BOOT = "launch_script_on_boot";
+
     private Context mContext;
     private UserPreferences mUserPreferences;
     private View mParentView;
+
+    private Preference prefLaunchScriptOnStart;
+    private Preference prefLaunchScriptOnBoot;
 
     public SettingsFragment() {
 
@@ -76,6 +95,43 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+
+        FragmentManager fm = getChildFragmentManager();
+        ProjectBrowserDialogFragment projectBrowserDialogFragment = ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK_CLEAR);
+        projectBrowserDialogFragment.setListener(new ProjectListFragment.ProjectSelectedListener() {
+            @Override
+            public void onProjectSelected(Project p) {
+                if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_PHONK_START)) {
+                    prefLaunchScriptOnStart.setSummary(p.getSandboxPath());
+                    mUserPreferences.set(TAG_PROJECT_LAUNCH_ON_PHONK_START, p.getSandboxPath()).save();
+                } else if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_BOOT)){
+                    prefLaunchScriptOnBoot.setSummary(p.getSandboxPath());
+                    mUserPreferences.set(TAG_PROJECT_LAUNCH_ON_BOOT, p.getSandboxPath()).save();
+                }
+                projectBrowserDialogFragment.dismiss();
+
+                Toast.makeText(getContext(), "Sending to " + p.getFullPath(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onMultipleProjectsSelected(HashMap<Project, Boolean> projects) {
+            }
+
+            @Override
+            public void onActionClicked(String action) {
+                if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_PHONK_START)) {
+                    if (action.equals("clear")) {
+                        prefLaunchScriptOnStart.setSummary(getString(R.string.setting_launch_script_on_app_launch_description));
+                        mUserPreferences.set(TAG_PROJECT_LAUNCH_ON_PHONK_START, "").save();
+                    }
+                } else if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_BOOT)) {
+                    if (action.equals("clear")) {
+                        prefLaunchScriptOnBoot.setSummary(getString(R.string.setting_launch_script_on_boot_description));
+                        mUserPreferences.set(TAG_PROJECT_LAUNCH_ON_BOOT, "").save();
+                    }
+                }
+            }
+        });
 
         final EditTextPreference prefDeviceId = (EditTextPreference) findPreference("device_id");
         prefDeviceId.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -167,55 +223,63 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefWebIdeMode.setChecked((Boolean) mUserPreferences.get("webide_mode"));
 
 
+        /**
+         * Launch PHONK on boot
+         */
         // Launch on device boot mode
         final TwoStatePreference prefLaunchOnBoot = (TwoStatePreference) findPreference("launch_on_device_boot");
         prefLaunchOnBoot.setOnPreferenceChangeListener((preference, o) -> {
-            boolean isChecked = (Boolean) o;
-            mUserPreferences.set("launch_on_device_boot", isChecked).save();
+            boolean drawOverlayIsAllowed = launchSettingsDrawOverlay();
+
+            if (drawOverlayIsAllowed) {
+                boolean isChecked = (Boolean) o;
+                mUserPreferences.set("launch_on_device_boot", isChecked).save();
+            } else {
+                Toast.makeText(getActivity(), "You need to allow the permission first", Toast.LENGTH_LONG).show();
+            }
             return true;
         });
         prefLaunchOnBoot.setChecked((Boolean) mUserPreferences.get("launch_on_device_boot"));
 
 
-        final EditTextPreference prefLaunchScript = (EditTextPreference) findPreference("launch_script_on_app_launch");
-        prefLaunchScript.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        /**
+         * Launch script when PHONK starts
+         */
+        prefLaunchScriptOnStart = findPreference("launch_script_on_app_launch");
+        prefLaunchScriptOnStart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                prefLaunchScript.setText((String) newValue);
-                mUserPreferences.set("launch_script_on_app_launch", newValue).save();
-                return false;
+            public boolean onPreferenceClick(Preference preference) {
+                projectBrowserDialogFragment.show(fm, TAG_PROJECT_LAUNCH_ON_PHONK_START);
+                return true;
             }
         });
-        prefLaunchScript.setText((String) UserPreferences.getInstance().get("launch_script_on_app_launch"));
-
-        // Column mode
-        /*
-        final TwoStatePreference prefAppsInColumnMode = (TwoStatePreference) findPreference("apps_in_list_mode");
-        if (prefAppsInColumnMode != null) {
-            prefAppsInColumnMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    boolean isChecked = (Boolean) o;
-                    mUserPreferences.set("apps_in_list_mode", isChecked).save();
-                    return true;
-                }
-            });
+        String scriptOnStartSummary = (String) mUserPreferences.get(TAG_PROJECT_LAUNCH_ON_PHONK_START);
+        if (!scriptOnStartSummary.isEmpty()) {
+            prefLaunchScriptOnStart.setSummary(scriptOnStartSummary);
         }
-        prefAppsInColumnMode.setChecked((Boolean) mUserPreferences.get("apps_in_list_mode"));
-        */
 
-        /*
-        final EditTextPreference appColor = (EditTextPreference) findPreference("app_color");
-        appColor.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
+        /**
+         * Launch script when PHONK boots
+         */
+        prefLaunchScriptOnBoot = findPreference("launch_script_on_boot");
+        prefLaunchScriptOnBoot.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                appColor.setText((String) newValue);
-                return false;
+            public boolean onPreferenceClick(Preference preference) {
+                launchSettingsDrawOverlay();
+                boolean drawOverlayIsAllowed = launchSettingsDrawOverlay();
+
+                if (drawOverlayIsAllowed) {
+                    projectBrowserDialogFragment.show(fm, TAG_PROJECT_LAUNCH_ON_BOOT);
+                } else {
+                    Toast.makeText(getActivity(), "You need to allow the permission first", Toast.LENGTH_LONG).show();
+                }
+                return true;
             }
         });
-        appColor.setText((String) UserPreferences.getInstance().get("app_color"));
-        */
+        String scriptOnBootSummary = (String) mUserPreferences.get(TAG_PROJECT_LAUNCH_ON_BOOT);
+        if (!scriptOnBootSummary.isEmpty()) {
+            prefLaunchScriptOnBoot.setSummary(scriptOnBootSummary);
+        }
 
         Preference phonkVersionName = findPreference("phonkVersionName");
         phonkVersionName.setSummary(BuildConfig.VERSION_NAME);
@@ -225,17 +289,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             startActivity(new Intent(getActivity(), LicenseActivity.class));
             return true;
         });
-
-        /*
-        Preference btnShowAbout = findPreference("app_about");
-        btnShowAbout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                startActivity(new Intent(getActivity(), AboutActivity.class));
-                return true;
-            }
-        });
-        */
 
         Preference btnReinstall = findPreference("reinstall_examples");
         btnReinstall.setOnPreferenceClickListener(arg0 -> {
@@ -354,5 +407,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         */
 
         return mParentView;
+    }
+
+    public boolean launchSettingsDrawOverlay() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(getActivity().getApplicationContext())) {
+                Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+
+                myIntent.setData(uri);
+                startActivityForResult(myIntent, REQUEST_OVERLAY_PERMISSIONS);
+
+                return false;
+             }
+        }
+        return true;
     }
 }

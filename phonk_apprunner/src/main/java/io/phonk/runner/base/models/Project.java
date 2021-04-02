@@ -41,7 +41,7 @@ public class Project {
     public static final String PREFIX = "prefix";
     public static final String INTENTCODE = "code";
     public static final String POSTFIX = "postfix";
-    public static final String LAUNCH_DATA = "launch_data";
+    public static final String LAUNCH_DATA = "launchData";
 
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";

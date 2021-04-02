@@ -99,15 +99,13 @@ public class AppRunnerFragment extends Fragment {
 
         // get parameters and set them in the AppRunner
         Bundle bundle = getArguments();
-        mAppRunner.pApp.intentData = bundle;
-
-        MLog.d(TAG, "bundle " + bundle);
 
         // if there is not intent data we close the activity
         if (bundle == null) {
             Toast.makeText(getContext(), "No project to load", Toast.LENGTH_LONG).show();
             getActivity().finish();
         }
+        mAppRunner.pApp.setIntentData(bundle);
 
         folder = bundle.getString(Project.FOLDER, "");
         name = bundle.getString(Project.NAME, "");

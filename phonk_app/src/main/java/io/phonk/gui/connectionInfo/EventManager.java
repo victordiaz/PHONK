@@ -87,7 +87,6 @@ public class EventManager {
 
         if (action.equals(Events.PROJECT_RUN)) {
             addEvent("run ", p.getSandboxPath());
-            // addEvent("qq", "qq2");
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
             addEvent("stop ", p.getSandboxPath());
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
@@ -124,9 +123,6 @@ public class EventManager {
 
     @Subscribe
     public void onEventMainThread(Events.UserConnectionEvent e) {
-        MLog.d(TAG, "qqq" + e);
-        MLog.d(TAG, "qqq" + e.getIp());
-
         String str = "";
         String ip = e.getIp();
         if (e.getConnected()) {

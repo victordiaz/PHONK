@@ -43,6 +43,10 @@ import io.phonk.runner.base.utils.MLog;
 
 public class ProjectBrowserFragment extends Fragment {
 
+    public static int MODE_NORMAL = 0;
+    public static int MODE_SINGLE_PICK = 1;
+    public static int MODE_MULTIPLE_PICK = 2;
+
     private FolderListFragment mFolderListFragment;
     private ProjectListFragment mProjectListFragment;
     private ProjectBrowserPagerAdapter mProjectBrowserPagerAdapter;

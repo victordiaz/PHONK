@@ -433,7 +433,7 @@ public class PDevice extends ProtoBase {
     }
 
     /**
-     * Check if the device is in airplane cornerMode
+     * Check if the device is in airplane mode
      *
      * @return
      * @status TOREVIEW

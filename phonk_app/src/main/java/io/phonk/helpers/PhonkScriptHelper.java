@@ -422,8 +422,7 @@ public class PhonkScriptHelper {
 
         if (ShortcutManagerCompat.isRequestPinShortcutSupported(c)) {
             Intent shortcutIntent = new Intent(c, AppRunnerActivity.class);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
             shortcutIntent.putExtra(Project.NAME, p.getName());
             shortcutIntent.putExtra(Project.FOLDER, p.getFolder());
             shortcutIntent.setAction(Intent.ACTION_MAIN);

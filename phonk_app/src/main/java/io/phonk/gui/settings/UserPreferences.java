@@ -64,10 +64,11 @@ public class UserPreferences {
         resetIfEmpty("advertise_mdns", false);
         resetIfEmpty("servers_mask_ip", false);
         resetIfEmpty("notify_new_version", true);
-        resetIfEmpty("send_usage_log", true);
+        resetIfEmpty("send_usage_log", false);
         resetIfEmpty("webide_mode", false);
         resetIfEmpty("launch_on_device_boot", false);
         resetIfEmpty("launch_script_on_app_launch", "");
+        resetIfEmpty("launch_script_on_boot", "");
         resetIfEmpty("apps_in_list_mode", true);
 
         resetIfEmpty("background_color", new String[]{"#0000bb", "#00bb00"});
