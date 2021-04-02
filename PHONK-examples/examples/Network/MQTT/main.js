@@ -1,5 +1,18 @@
 /*
- *  Phonk Example: MQTT Client
+ *  PHONK Example: MQTT Client
+ *
+ *  This options to include in connectionData are also avaible
+ * 
+ *  cleanSession: true,
+ *  connectionTimeout: 10, // In seconds, default is 30,
+ *  will: {
+ *    topic: 'phonk/byebye',
+ *    payload: 'I\'m disconnected',
+ *    qos: 1,
+ *    retained: false 
+ *  },
+ *  user: 'myuser',
+ *  password: 'mypassword'
  */
 
 ui.addTitle(app.name)
@@ -9,8 +22,6 @@ var connectionData = {
   clientId: 'phonk',
   broker: 'tcp://192.168.10.100:1883',
   autoReconnect: true
-  // user: 'myuser',
-  // password: 'mypassword'
 }
 
 var c = network.createMQTTClient()
