@@ -1,5 +1,5 @@
 /*
- * Phonk Example:	Text To Speech
+ * PHONK Example:	Text To Speech
  *
  * Speak using the system's TextToSpeech
  */

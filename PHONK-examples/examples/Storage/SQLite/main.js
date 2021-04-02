@@ -1,5 +1,5 @@
 /*
- * Phonk Example: SQLite database
+ * PHONK Example: SQLite database
  *
  * Use DataBase queries to add and retrieve content
  */

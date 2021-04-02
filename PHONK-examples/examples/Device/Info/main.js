@@ -1,5 +1,5 @@
 /*
-* Phonk Example: Device info
+* PHONK Example: Device info
 *
 * Shows different information about the device
 */

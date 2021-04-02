@@ -1,5 +1,5 @@
 /*
- *  Phonk Example: View Pager
+ *  PHONK Example: View Pager
  *
  */
 

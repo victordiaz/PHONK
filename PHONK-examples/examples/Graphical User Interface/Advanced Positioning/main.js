@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Absolute Positioning
+ * PHONK Example: Absolute Positioning
  *
  * By default all the widgets are positioned
  * using normalized units. If you need more control

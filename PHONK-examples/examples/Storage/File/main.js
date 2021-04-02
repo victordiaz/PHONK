@@ -1,5 +1,5 @@
 /*
- * Phonk Example:	File Storage
+ * PHONK Example:	File Storage
  *
  * Simple File Write and Read operation
  */

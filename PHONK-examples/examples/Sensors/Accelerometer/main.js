@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Accelerometer
+ * PHONK Example: Accelerometer
  */
 
 ui.addTitle(app.name)

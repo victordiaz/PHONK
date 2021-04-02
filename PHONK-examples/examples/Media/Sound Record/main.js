@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Record and Playback a Sound
+ * PHONK Example: Record and Playback a Sound
  */
 
 ui.addTitle(app.name)

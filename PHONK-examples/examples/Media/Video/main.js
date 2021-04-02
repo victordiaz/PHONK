@@ -1,5 +1,5 @@
 /*
- * Phonk Example:	Video playback
+ * PHONK Example:	Video playback
  *
  * Big Buck Bunny video excerpt
  * Blender Foundation | www.blender.org

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Fullscreen & orientation
+ * PHONK Example: Fullscreen & orientation
  */
 
 ui.addTitle(app.name)

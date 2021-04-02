@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Linear Acceleration
+ * PHONK Example: Linear Acceleration
  */
 
 ui.addTitle(app.name)

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Other Sensors
+ * PHONK Example: Other Sensors
  *
  * Barometer and StepDetector
  * Only few devices have them

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Location
+ * PHONK Example: Location
  *
  * Get geoposition
  */

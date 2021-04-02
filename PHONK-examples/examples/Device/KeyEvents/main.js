@@ -1,5 +1,5 @@
 /*
- * Phonk Example: KeyEvents
+ * PHONK Example: KeyEvents
  */
 
 ui.addTitle(app.name)

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Play a Sound
+ * PHONK Example: Play a Sound
  *
  * Supports wav, mp3, and ogg (recommended) files
  */

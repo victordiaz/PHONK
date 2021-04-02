@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Rotation Vector
+ * PHONK Example: Rotation Vector
  */
 
 ui.addTitle(app.name)

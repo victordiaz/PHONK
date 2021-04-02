@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Events
+ * PHONK Example: Events
  *
  * A simple way use data in different parts of the app
  * easy to obtain MVC patterns using

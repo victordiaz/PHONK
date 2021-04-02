@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Camera
+ * PHONK Example: Camera
  *
  * Show camera view and capture and image when button is clicked
  * if you are in the WebIDE an image will be shown in the console

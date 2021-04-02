@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Vibration
+ * PHONK Example: Vibration
  */
 
 ui.addTitle(app.name)

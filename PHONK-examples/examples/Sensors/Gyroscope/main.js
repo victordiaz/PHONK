@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Gyroscope
+ * PHONK Example: Gyroscope
  */
 
 ui.addTitle(app.name)

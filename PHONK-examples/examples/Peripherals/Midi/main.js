@@ -1,5 +1,5 @@
 /*
-* Phonk Example: Midi controller
+* PHONK Example: Midi controller
 *
 * Midi controllers will only work if your device has support of USB OTG
 * If your device does not work create an issue in github indicating

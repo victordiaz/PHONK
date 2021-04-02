@@ -1,5 +1,5 @@
 /*
- *  Phonk Example: BluetoothLE
+ *  PHONK Example: BluetoothLE
  *  Bluetooth Low Energy is a bit complex protocol therefore Phonk only provides
  *  a subset of what is possible
  *

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: OSC network protocol
+ * PHONK Example: OSC network protocol
  *
  * pretty protocol "to connect" different
  * devices / software together

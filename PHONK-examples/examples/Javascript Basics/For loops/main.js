@@ -1,5 +1,5 @@
 /*
- * Phonk Example: For Loop
+ * PHONK Example: For Loop
  */
 
 ui.addTitle(app.name)

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Gravity
+ * PHONK Example: Gravity
  */
 
 ui.addTitle(app.name)

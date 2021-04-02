@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Canvas
+ * PHONK Example: Canvas
  *
  * Create your custom Widgets or draw whatever you want
  * using this component

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Open Street Maps
+ * PHONK Example: Open Street Maps
  *
  * Basic operations to show and move around the maps
  */

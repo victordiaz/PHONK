@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Livecoding feedback
+ * PHONK Example: Livecoding feedback
  *
  * We can execute any line of code whenever we want from the
  * WebIDE, just press

@@ -1,5 +1,5 @@
 /*
- *	Phonk Example: HttpServer
+ *	PHONK Example: HttpServer
  */
 
 ui.addTitle(app.name)

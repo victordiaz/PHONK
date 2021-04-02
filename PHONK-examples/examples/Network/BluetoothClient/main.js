@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Bluetooth serial
+ * PHONK Example: Bluetooth serial
  *
  * If you want to connect a bluetooth serial module to Arduino this is a
  * good start

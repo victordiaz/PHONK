@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Delay
+ * PHONK Example: Delay
  *
  * Execute a function after T milliseconds
  */

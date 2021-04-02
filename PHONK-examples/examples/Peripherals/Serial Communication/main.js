@@ -1,5 +1,5 @@
 /*
- * Phonk Example Serial communication
+ * PHONK Example Serial communication
  *
  * Serial communication
  * Works great with Arduino and similar

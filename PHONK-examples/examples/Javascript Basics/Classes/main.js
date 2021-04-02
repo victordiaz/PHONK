@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Classes
+ * PHONK Example: Classes
  *
  * Javascript doesnt have classes per se,
  * but we can get similar results using the prototype

@@ -1,5 +1,5 @@
 /*
- * Phonk Example: mDNS
+ * PHONK Example: mDNS
  *
  * Register/discover network services using mDns
  */

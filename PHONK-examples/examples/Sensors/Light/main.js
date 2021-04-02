@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Light Sensor
+ * PHONK Example: Light Sensor
  */
 
 ui.addTitle(app.name)

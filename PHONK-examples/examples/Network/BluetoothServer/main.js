@@ -1,5 +1,5 @@
 /*
- *  Phonk Example: BluetoothServer
+ *  PHONK Example: BluetoothServer
  *  It works with just one connected device, if you want to handle more you will have
  *  to adjust the code
  */

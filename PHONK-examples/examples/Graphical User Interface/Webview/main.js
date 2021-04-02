@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Webview
+ * PHONK Example: Webview
  *
  * The Webview can load html files, html text or open a url
  */

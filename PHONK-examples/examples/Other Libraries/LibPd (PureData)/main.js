@@ -1,5 +1,5 @@
 /*
- * Phonk Example: LibPd (Pure Data)
+ * PHONK Example: LibPd (Pure Data)
  *
  * Using LibPd (Pure Data) sound engine
  *

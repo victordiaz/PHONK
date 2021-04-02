@@ -1,5 +1,5 @@
 /*
- * Phonk Example:	Zip / unzip files
+ * PHONK Example:	Zip / unzip files
  */
 ui.addTitle(app.name)
 ui.addSubtitle('Zip and unzip files / folders')

@@ -1,5 +1,5 @@
 /*
- *  Phonk Example: Basic Views
+ *  PHONK Example: Basic Views
  */
 
 ui.addTitle(app.name)

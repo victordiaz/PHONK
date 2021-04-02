@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Processing
+ * PHONK Example: Processing
  *
  * This is a tiny bit modified version of Processing.org
  * for Android.

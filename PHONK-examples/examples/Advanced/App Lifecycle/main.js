@@ -1,5 +1,5 @@
 /*
- * Phonk Example: App Lifecycle
+ * PHONK Example: App Lifecycle
  *
  *  Each method is called in each app state
  */

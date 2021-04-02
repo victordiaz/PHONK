@@ -1,5 +1,5 @@
 /*
- * Phonk Example: Voice recognition
+ * PHONK Example: Voice recognition
  *
  */
 

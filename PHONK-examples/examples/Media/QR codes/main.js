@@ -1,5 +1,5 @@
 /*
- *  Phonk Example: QR Codes
+ *  PHONK Example: QR Codes
  */
 
 ui.addTitle(app.name)

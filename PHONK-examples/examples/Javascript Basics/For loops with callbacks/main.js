@@ -1,5 +1,5 @@
 /*
- * Phonk Example: For Loop with callbacks
+ * PHONK Example: For Loop with callbacks
  *
  * Javascript has a strange behaviour when attaching
  * a callback inside a loop. It always attach the last
