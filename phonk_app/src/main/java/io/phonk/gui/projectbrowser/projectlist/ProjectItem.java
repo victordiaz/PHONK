@@ -51,7 +51,8 @@ public class ProjectItem extends LinearLayout {
 
     public static int MODE_NORMAL = 0;
     public static int MODE_SINGLE_PICK = 1;
-    public static int MODE_MULTIPLE_PICK = 2;
+    public static final int MODE_SINGLE_PICK_CLEAR = 2;
+    public static int MODE_MULTIPLE_PICK = 3;
 
     public final CheckBox checkbox;
     private View mItemView;

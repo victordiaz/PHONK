@@ -92,14 +92,23 @@
             android:summary="@string/setting_show_html5_mode"
             android:title="@string/setting_show_html5_mode_title" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Launch options">
         <CheckBoxPreference
             android:icon="@drawable/ic_timer_24dp"
             android:checked="true"
             android:key="launch_on_device_boot"
             android:summary="@string/setting_launch_on_device_boot_description"
             android:title="@string/setting_launch_on_device_boot_title" />
+        
+        <Preference
+            android:icon="@drawable/ic_description_24dp"
+            android:key="launch_script_on_boot"
+            android:summary="@string/setting_launch_on_device_boot_description"
+            android:title="@string/setting_launch_script_on_boot_title" />
 
-        <EditTextPreference
+        <Preference
             android:icon="@drawable/ic_description_24dp"
             android:key="launch_script_on_app_launch"
             android:summary="@string/setting_launch_script_on_app_launch_description"
@@ -174,8 +183,7 @@
         <Preference
             android:icon="@drawable/ic_baseline_settings_24"
             android:key="phonkVersionName"
-            android:title="PHONK version"
-            />
+            android:title="PHONK version" />
 
         <Preference
             android:icon="@drawable/ic_notifications_24dp"

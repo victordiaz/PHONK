@@ -26,7 +26,6 @@ import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 import io.phonk.gui.connectionInfo.EventManager;
-import io.phonk.runner.base.utils.TimerUtils;
 
 public class App extends MultiDexApplication {
 
@@ -39,15 +38,15 @@ public class App extends MultiDexApplication {
 
         MultiDex.install(this);
 
-        TimerUtils.start();
-        TimerUtils.stamp("start");
-        TimerUtils.stamp("MultiDex.install");
+        // TimerUtils.start();
+        // TimerUtils.stamp("start");
+        // TimerUtils.stamp("MultiDex.install");
 
         myLifecycleHandler = new MyLifecycleHandler();
-        TimerUtils.stamp("MyLifecycleHandler");
+        // TimerUtils.stamp("MyLifecycleHandler");
 
         registerActivityLifecycleCallbacks(myLifecycleHandler);
-        TimerUtils.stamp("registerActivityLifecycleCallbacks");
+        // TimerUtils.stamp("registerActivityLifecycleCallbacks");
 
         if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof PhonkExceptionHandler)) {
             Thread.setDefaultUncaughtExceptionHandler(new PhonkExceptionHandler());

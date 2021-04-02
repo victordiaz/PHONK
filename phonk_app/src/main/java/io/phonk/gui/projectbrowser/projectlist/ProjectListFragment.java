@@ -39,7 +39,6 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -115,6 +114,7 @@ public class ProjectListFragment extends BaseFragment {
     public interface ProjectSelectedListener {
         void onProjectSelected(Project p);
         void onMultipleProjectsSelected(HashMap<Project, Boolean> projects);
+        void onActionClicked(String action);
     }
 
     public void setBackClickListener(BackClickedListener listener) {

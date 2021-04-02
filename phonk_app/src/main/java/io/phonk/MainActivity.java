@@ -23,9 +23,11 @@
 package io.phonk;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -151,7 +153,13 @@ public class MainActivity extends BaseActivity {
             PhonkAppHelper.launchScript(this, p);
         }
 
-        // PhonkAppHelper.launchScript(this, new Project("playground/User Projects/grid"));
+        // ComponentName component = new ComponentName("com.xxx.launcher.desktop", "com.xxx.launcher.desktop.testActivity");
+        // getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+        HashMap<String, String> extras = new HashMap<>();
+        extras.put("qq1", "1");
+        extras.put("qq2", "2");
+        // PhonkAppHelper.launchScript(this, new Project("playground/User Projects/activity"), extras);
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Basic Views"));
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Styling & Theming"));
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Extra Views"));
@@ -209,6 +217,11 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onMultipleProjectsSelected(HashMap<Project, Boolean> projects) {
+            }
+
+            @Override
+            public void onActionClicked(String action) {
+
             }
         });
 

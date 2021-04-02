@@ -58,6 +58,7 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
+import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PEvents;
 import io.phonk.runner.apprunner.api.other.PLiveCodingFeedback;
 import io.phonk.runner.base.models.Project;
@@ -78,7 +79,7 @@ public class PApp extends ProtoBase {
     PEvents pevents;
     public String folder;
     public String name;
-    public Bundle intentData;
+    public ReturnObject intentData;
 
     public interface onAppStatus {
         void onStart();
@@ -184,12 +185,6 @@ public class PApp extends ProtoBase {
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, "notification cancelled");
         }
-
-    }
-
-    @PhonkMethod
-    public Bundle getIntentData() {
-        return intentData;
     }
 
     public class Notification {
@@ -512,17 +507,24 @@ public class PApp extends ProtoBase {
      * @param path
      */
     @PhonkMethod
-    public void launchScript(String path, String jsonData) {
+    public void launchScript(String path, String data) {
         Project p = new Project(path);
         Intent intent = new Intent(getContext(), AppRunnerLauncherService.class);
         // intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
         intent.putExtra(Project.FOLDER, p.getFolder());
         intent.putExtra(Project.NAME, p.getName());
-        intent.putExtra(Project.LAUNCH_DATA, jsonData);
+
+        if (data != null) intent.putExtra(Project.LAUNCH_DATA, data);
         // intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
         // intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
         // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUNNING, p));
         getContext().startService(intent);
+        // getContext().startActivity(intent);
+    }
+
+    @PhonkMethod
+    public void launchScript(String path) {
+        this.launchScript(path, null);
     }
 
     /**
@@ -589,13 +591,14 @@ public class PApp extends ProtoBase {
         //  callback.event(null);
     }
 
-    public void breakPoint() {
-        // getAppRunner().interp.stop();
+    public void setIntentData(Bundle bundle) {
+        ReturnObject ret = new ReturnObject();
+        for (String key : bundle.keySet()) {
+            ret.put(key, bundle.get(key).toString());
+        }
+        intentData = ret;
     }
 
-    public void resumeFromBreakPoint() {
-
-    }
 
     @Override
     public void __stop() {

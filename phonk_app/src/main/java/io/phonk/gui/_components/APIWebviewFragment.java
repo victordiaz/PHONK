@@ -184,7 +184,6 @@ public class APIWebviewFragment extends BaseFragment {
 
         @JavascriptInterface
         public void setWebIde(boolean b) {
-            MLog.d("qq", "" + b);
             UserPreferences.getInstance().set("webide_mode", b).save();
 
             PhonkSettingsHelper.showRestartMessage(getContext(), v);

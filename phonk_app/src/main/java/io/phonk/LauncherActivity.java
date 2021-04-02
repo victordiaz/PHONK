@@ -70,6 +70,7 @@ public class LauncherActivity extends Activity {
         } else {
             intent = new Intent(this, MainActivity.class);
             // intent = new Intent(this, NewMainActivity.class);
+            // intent = new Intent(this, SharingDispatcherActivity.class);
             // intent = new Intent(this, SettingsActivity.class);
             // intent.putExtras();
         }

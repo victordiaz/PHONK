@@ -119,12 +119,18 @@
 
     <string name="setting_send_usage_log_title">Send Usage and Crash log</string>
     <string name="setting_send_usage_log_description">Only anonymous information will be send to improve the app quality</string>
-    <string name="setting_launch_script_on_app_launch_title">Script Launch</string>
+
+    <string name="setting_launch_script_on_app_launch_title">Script Launch when PHONK starts</string>
     <string name="setting_launch_script_on_app_launch_description">Launch a specific project when PHONK starts</string>
+
+    <string name="setting_launch_script_on_boot_title">Script Launch on device Boot</string>
+    <string name="setting_launch_script_on_boot_description">Launch a specific project when the device starts. On Android 10+ you must need to grant the overlay permission.</string>
+
+    <string name="setting_launch_on_device_boot_title">Launch PHONK when device boots</string>
+    <string name="setting_launch_on_device_boot_description">PHONK will launch right after the device is booted. On Android 10+ you must need to grant the overlay permission.</string>
 
     <string name="setting_enable_wakeup_on_play_title">Wake up screen on Script Run</string>
     <string name="setting_enable_wakeup_on_play_description">When using the Web Editor, scripts can wake up the screen when running them</string>
-
 
     <string name="setting_enable_servers_on_start_title">Start server on app launch</string>
     <string name="setting_enable_servers_on_start_description">WebEditor is ready to use when PHONK is launched</string>
@@ -140,8 +146,6 @@
     <string name="setting_options_title">General Settings</string>
     <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
     <string name="setting_show_html5_mode">Useful for tablets and ChromeOS devices</string>
-    <string name="setting_launch_on_device_boot_title">Launch PHONK when device boots</string>
-    <string name="setting_launch_on_device_boot_description">PHONK will launch right after the device is booted</string>
     <string name="setting_show_webserver_title">Webserver port</string>
     <string name="setting_show_webserver"></string>
     <string name="setting_show_websocket_title">Websocket port</string>

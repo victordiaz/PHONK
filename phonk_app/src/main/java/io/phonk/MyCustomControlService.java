@@ -57,7 +57,7 @@ import io.phonk.server.model.ProtoFile;
 import io.reactivex.Flowable;
 import io.reactivex.processors.ReplayProcessor;
 
-public class MyCustomControlService extends ControlsProviderService {
+public class  MyCustomControlService extends ControlsProviderService {
     private ReplayProcessor updatePublisher;
 
     @Override

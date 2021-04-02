@@ -26,12 +26,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import io.phonk.R;
 import io.phonk.gui.projectbrowser.folderlist.FolderListFragment;
+import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.gui.settings.PhonkSettings;
 
@@ -61,7 +64,29 @@ public class ProjectBrowserDialogFragment extends DialogFragment {
 
         ProjectBrowserFragment projectBrowserFragment = ProjectBrowserFragment.newInstance(mMode);
         projectBrowserFragment.setProjectClickListener(mListener);
-        getDialog().setTitle("hola");
+
+        TextView txtTitle = rootView.findViewById(R.id.txtTitleDialog);
+        Button btnOk = rootView.findViewById(R.id.btnOk);
+        Button btnClear = rootView.findViewById(R.id.btnClear);
+
+        btnOk.setOnClickListener(view -> {
+            mListener.onActionClicked("ok");
+            dismiss();
+        });
+
+        btnClear.setOnClickListener(view -> {
+            mListener.onActionClicked("clear");
+            dismiss();
+        });
+
+        if (mMode == ProjectItem.MODE_SINGLE_PICK) {
+            btnOk.setVisibility(View.GONE);
+        } else if (mMode == ProjectItem.MODE_SINGLE_PICK_CLEAR) {
+            btnOk.setVisibility(View.GONE);
+            btnClear.setVisibility(View.VISIBLE);
+        } else if (mMode == ProjectItem.MODE_MULTIPLE_PICK) {
+            txtTitle.setText("Select one or more projects");
+        }
 
         if (savedInstanceState == null) {
             FolderListFragment folderListFragment = FolderListFragment.newInstance(PhonkSettings.EXAMPLES_FOLDER, true);

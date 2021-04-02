@@ -20,27 +20,43 @@
  *
  */
 
-package io.phonk.server;
+package io.phonk;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
-import io.phonk.MainActivity;
 import io.phonk.gui.settings.UserPreferences;
+import io.phonk.helpers.PhonkAppHelper;
+import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
 
-public class PhonkBootReceiver extends BroadcastReceiver {
+public class BootReceiver extends BroadcastReceiver {
 
-    private static final String TAG = PhonkBootReceiver.class.getSimpleName();
+    private static final String TAG = BootReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if ((boolean) UserPreferences.getInstance().get("launch_on_device_boot")) {
-            MLog.d(TAG, "launching Protocoder on boot");
-            Intent in = new Intent(context, MainActivity.class);
+            MLog.d(TAG, "launching PHONK on boot");
+            Intent in = new Intent(context, LauncherActivity.class);
             in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(in);
+        }
+
+        String scriptToLaunch = (String) UserPreferences.getInstance().get("launch_script_on_boot");
+
+        if (!scriptToLaunch.isEmpty()) {
+            // PhonkAppHelper.launchScript(context, new Project(scriptToLaunch));
+
+            Project p = new Project(scriptToLaunch);
+            Intent newIntent = new Intent(context, AppRunnerActivity.class);
+            newIntent.putExtra("projectName", p.getName());
+            newIntent.putExtra("projectFolder", p.getFolder());
+            newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(newIntent);
         }
     }
 }

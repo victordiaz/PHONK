@@ -116,7 +116,6 @@ public class ConnectionInfoFragment extends Fragment {
         mEventsRecyclerView.setAdapter(mEventsAdapter);
 
         mEventsRecyclerView.setOnClickListener(view -> {
-            MLog.d("qq", "events clicked");
             rootView.findViewById(R.id.update_layout).getLayoutParams().height = 500;
         });
 
