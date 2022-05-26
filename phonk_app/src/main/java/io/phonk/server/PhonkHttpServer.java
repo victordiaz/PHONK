@@ -47,7 +47,6 @@ import fi.iki.elonen.NanoHTTPD;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
-import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.FileIO;
