@@ -62,13 +62,6 @@ public class NotificationService extends NotificationListenerService {
                 text = getString(extras.getCharSequence("android.text"));
             }
 
-            /*
-            Log.i("Package", pack);
-            Log.i("Ticker", ticker);
-            Log.i("Title", title);
-            Log.i("Text", text);
-             */
-
             Intent in = new Intent(ACTION);
             in.putExtra("package", pack);
             in.putExtra("ticker", ticker);
