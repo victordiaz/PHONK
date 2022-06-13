@@ -51,8 +51,8 @@ public class PCustomView extends View implements PViewMethodsInterface {
     private int drawInterval = 35;
     protected boolean mAutoDraw = false;
     private PLooper loop;
-    protected int mWidth;
-    protected int mHeight;
+    protected int canvasWidth;
+    protected int canvasHeight;
 
     public interface OnSetupCallback {
         void event(PCustomView c);
