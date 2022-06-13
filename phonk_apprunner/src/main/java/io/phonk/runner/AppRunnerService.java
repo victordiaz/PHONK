@@ -27,7 +27,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,7 +55,6 @@ import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.events.Events;
 import io.phonk.runner.base.models.Project;
-import io.phonk.runner.base.network.NetworkUtils;
 import io.phonk.runner.base.utils.MLog;
 
 public class AppRunnerService extends Service {

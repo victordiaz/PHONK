@@ -32,6 +32,11 @@ import java.util.Set;
 import io.phonk.runner.base.utils.GSONUtil;
 
 // http://stackoverflow.com/questions/7519399/how-to-convert-java-map-to-a-basic-javascript-object
+
+/**
+ * Object returned from java to js using a callback
+ * @see io.phonk.runner.apprunner.api.common.ReturnInterface#event(ReturnObject)
+ */
 public class ReturnObject implements Scriptable, Map {
 
     public final Map map;

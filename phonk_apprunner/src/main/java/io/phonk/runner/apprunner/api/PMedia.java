@@ -30,11 +30,13 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -66,11 +68,11 @@ import io.phonk.runner.apprunner.api.media.PAudioPlayer;
 import io.phonk.runner.apprunner.api.media.PAudioRecorder;
 import io.phonk.runner.apprunner.api.media.PCamera;
 import io.phonk.runner.apprunner.api.media.PMidi;
+import io.phonk.runner.apprunner.api.media.PMidiController;
 import io.phonk.runner.apprunner.api.media.PPureData;
 import io.phonk.runner.apprunner.api.media.PTextToSpeech;
 import io.phonk.runner.apprunner.api.media.PVideo;
 import io.phonk.runner.apprunner.api.media.PWave;
-import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -282,6 +284,18 @@ public class PMedia extends ProtoBase {
         PMidi pMidi = new PMidi(getAppRunner());
 
         return pMidi;
+    }
+
+    @PhonkMethod(description = "Start a midi controller to control a soft synth on a computer", example = "")
+    @PhonkMethodParam(params = "")
+    public PMidiController startMidiController() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return new PMidiController(getAppRunner());
+        } else {
+            Toast.makeText(getContext(), "MIDI not supported on your Android version!", Toast.LENGTH_LONG)
+                    .show();
+            return null;
+        }
     }
 
     public boolean isHeadsetPlugged() {
