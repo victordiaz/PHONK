@@ -23,11 +23,8 @@
 package io.phonk.runner.base.services;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -35,15 +32,12 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import java.util.List;
-
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NotificationService extends NotificationListenerService {
+    public static final String ACTION = "NotificationCaptured";
     Context context;
 
     @Override
@@ -62,24 +56,19 @@ public class NotificationService extends NotificationListenerService {
             Bundle extras = sbn.getNotification().extras;
             String title = "";
             String text = "";
+
             if (extras != null) {
                 title = extras.getString("android.title");
                 text = getString(extras.getCharSequence("android.text"));
             }
 
-            /*
-            Log.i("Package", pack);
-            Log.i("Ticker", ticker);
-            Log.i("Title", title);
-            Log.i("Text", text);
-            */
+            Intent in = new Intent(ACTION);
+            in.putExtra("package", pack);
+            in.putExtra("ticker", ticker);
+            in.putExtra("title", title);
+            in.putExtra("text", text);
 
-            Intent msgrcv = new Intent("Msg");
-            msgrcv.putExtra("package", pack);
-            msgrcv.putExtra("ticker", ticker);
-            msgrcv.putExtra("title", title);
-            msgrcv.putExtra("text", text);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(msgrcv);
+            context.sendBroadcast(in);
         }
     }
 
@@ -106,9 +95,7 @@ public class NotificationService extends NotificationListenerService {
         return START_STICKY;
     }
 
-
-    @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return super.onBind(intent);
     }
 }

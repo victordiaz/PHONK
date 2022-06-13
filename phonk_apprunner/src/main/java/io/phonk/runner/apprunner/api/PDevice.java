@@ -48,9 +48,9 @@ import android.telephony.SmsManager;
 import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.KeyEvent;
-import androidx.annotation.RequiresApi;
+
 import androidx.core.app.NotificationManagerCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +63,8 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.media.PCamera2;
 import io.phonk.runner.apprunner.api.other.ApplicationInfo;
+import io.phonk.runner.base.services.NotificationService;
+import io.phonk.runner.base.services.SmsReceiver;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.Intents;
 import io.phonk.runner.base.utils.MLog;
@@ -71,7 +73,7 @@ import io.phonk.runner.base.utils.MLog;
 public class PDevice extends ProtoBase {
 
     private BroadcastReceiver batteryReceiver;
-    private BroadcastReceiver onNotification;
+    private BroadcastReceiver notificationReceiver;
     private BroadcastReceiver smsReceiver;
 
     private ReturnInterface mOnKeyDownfn;
@@ -320,7 +322,7 @@ public class PDevice extends ProtoBase {
     public void onSmsReceived(final ReturnInterface callback) {
 
         // SMS receive
-        IntentFilter intentFilter = new IntentFilter("SmsMessage.intent.MAIN");
+        IntentFilter intentFilter = new IntentFilter(SmsReceiver.ACTION);
         smsReceiver = new BroadcastReceiver() {
 
             @Override
@@ -761,7 +763,6 @@ public class PDevice extends ProtoBase {
         } else {
             getActivity().startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
         }
-
     }
 
     private boolean isNotificationServiceRunning() {
@@ -784,7 +785,9 @@ public class PDevice extends ProtoBase {
             showNotificationsManager();
         }
 
-        onNotification = new BroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter(NotificationService.ACTION);
+
+        notificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 ReturnObject ret = new ReturnObject();
@@ -797,7 +800,7 @@ public class PDevice extends ProtoBase {
             }
         };
 
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(onNotification, new IntentFilter("Msg"));
+        getContext().registerReceiver(notificationReceiver, intentFilter);
     }
 
 
@@ -905,11 +908,12 @@ public class PDevice extends ProtoBase {
     @Override
     public void __stop() {
         if (batteryReceiver != null) getContext().unregisterReceiver(batteryReceiver);
-        if (onNotification != null) getContext().unregisterReceiver(onNotification);
+        if (notificationReceiver != null) getContext().unregisterReceiver(notificationReceiver);
         if (smsReceiver != null) getContext().unregisterReceiver(smsReceiver);
 
         batteryReceiver = null;
-        onNotification = null;
+        notificationReceiver = null;
+        smsReceiver = null;
     }
 
 }
