@@ -1,0 +1,4 @@
+node_modules
+/.vscode
+/excluded_examples
+/other

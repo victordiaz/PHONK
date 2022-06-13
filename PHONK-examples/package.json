@@ -1,0 +1,13 @@
+{
+  "name" : "ProtocoderExamples",
+  "description" : "Protocoder Examples",
+  "author" : "http://protocoder.org",
+  "version" : "0.0.1",
+  "scripts" : {
+    "clean": "rm -rf ../phonk/phonk_app/src/main/assets/examples",
+    "deploy": "cp -r ./examples ../phonk/phonk_app/src/main/assets/",
+    "cleanAndDeploy": "npm run clean && npm run deploy"
+  },
+  "devDependencies": {
+  }
+}
