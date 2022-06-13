@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "build": "node build/build.js",
-    "deploy": "cp -r ./dist/* ../phonk/phonk_app/src/main/assets/webide/",
+    "deploy": "cp -r ./dist/* ../PHONK-app/phonk_app/src/main/assets/webide/",
     "buildAndDeploy": "npm run build && npm run cleanInAndroid && npm run deploy ",
     "clean": "rm -rf ./dist",
     "cleanInAndroid": "rm -rf ../phonk/phonk_app/src/main/assets/webide/*",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "prettier": "^2.0.4",
-    "vue": "^2.5.2",
+    "vue": "^2.6.14",
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.18.1"
   },
@@ -67,7 +67,7 @@
     "vue-axios": "^2.1.1",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.2",
+    "vue-template-compiler": "^2.6.14",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.11.5",
