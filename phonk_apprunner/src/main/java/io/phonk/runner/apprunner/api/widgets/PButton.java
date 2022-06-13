@@ -22,12 +22,12 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
 
 import java.util.Map;
 
@@ -52,6 +52,9 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     private Typeface mFont;
 
+    private ReturnInterface onPressCallback;
+    private ReturnInterface onReleaseCallback;
+
     public PButton(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
@@ -67,6 +70,34 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         styler.apply();
 
         setTypeface(mFont);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        boolean isEventAlreadyHandled = super.onTouchEvent(event);
+        boolean hasPressCallback = onPressCallback != null;
+        boolean hasReleaseCallback = onReleaseCallback != null;
+        boolean isEventHandled = false;
+        final ReturnObject r = new ReturnObject(PButton.this);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (hasPressCallback) {
+                    onPressCallback.event(r);
+                    isEventHandled = true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            // should be considerer as ACTION_UP according to https://developer.android.com/reference/android/view/MotionEvent#ACTION_CANCEL
+            case MotionEvent.ACTION_CANCEL:
+                if (hasReleaseCallback) {
+                    onReleaseCallback.event(r);
+                    isEventHandled = true;
+                }
+                break;
+        }
+        boolean hasToContinueProcessingFutureEvents = isEventAlreadyHandled || isEventHandled || hasReleaseCallback;
+        return hasToContinueProcessingFutureEvents;
     }
 
     public PButton text(String label) {
@@ -90,26 +121,21 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
-    @PhonkMethod(description = "Triggers the function when the button is released", example = "")
+    @PhonkMethod(description = "Triggers the function when the button is pressed", example = "")
     @PhonkMethodParam(params = {"function"})
-    public PButton onPress(final ReturnInterface callbackfn) {
-        // Set on click behavior
-        this.setOnTouchListener((v, event) -> {
-            ReturnObject r = new ReturnObject(PButton.this);
-            r.put("action", "release");
-
-            if (event.getAction() == MotionEvent.ACTION_DOWN && callbackfn != null) {
-                callbackfn.event(r);
-            } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-            }
-
-            return false;
-        });
-
+    public PButton onPress(final ReturnInterface onPressCallback) {
+        this.onPressCallback = onPressCallback;
         return this;
     }
 
     @PhonkMethod(description = "Triggers the function when the button is released", example = "")
+    @PhonkMethodParam(params = {"function"})
+    public PButton onRelease(final ReturnInterface onReleaseCallback) {
+        this.onReleaseCallback = onReleaseCallback;
+        return this;
+    }
+
+    @PhonkMethod(description = "Triggers the function when the button is pressed for a long time", example = "")
     @PhonkMethodParam(params = {"function"})
     public PButton onLongPress(final ReturnInterface callbackfn) {
         // Set on click behavior
