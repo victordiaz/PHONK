@@ -1,0 +1,13 @@
+{
+  "name" : "PhonkExamples",
+  "description" : "PHONK Examples",
+  "author" : "http://phonk.app",
+  "version" : "0.0.1",
+  "scripts" : {
+    "clean": "rm -rf ../PHONK-android/phonk_app/src/main/assets/examples",
+    "deploy": "cp -r ./examples ../PHONK-android/phonk_app/src/main/assets/",
+    "cleanAndDeploy": "npm run clean && npm run deploy"
+  },
+  "devDependencies": {
+  }
+}

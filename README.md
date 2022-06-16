@@ -27,7 +27,7 @@ Create scripts rapidly from your phone or using the *remote Web Editor* on your 
 Get it from
 - [APK](https://github.com/victordiaz/phonk/releases)
 - ~~[F-droid](https://github.com/victordiaz/phonk/issues/6)~~ (Need help)
-- [Play Store](https://play.google.com/store/apps/details?id=io.phonk)
+- ~~[Play Store](https://play.google.com/store/apps/details?id=io.phonk)~~ (Sadly I don't have time to keep up with all the changes that Google does to the Play Store requirements
 - or just [compile it your self]()
 
 If you have an Android phone with a version higher than 4.1 (that's from 2012!) then it should work! If you find a problem, please [create an issue](https://github.com/victordiaz/phonk/issues/new).
@@ -37,7 +37,7 @@ During the first install, the app will
 2. Install the examples in the device "sdcard" folder. Doing this we can easily access the examples and self-made scripts from any other app.
 
 ## How to create your first script
-> Check the [Getting started guide](http://phonk.io/getstarted) for a more detailed explanation
+> Check the [Getting started guide](http://phonk.app/getstarted) for a more detailed explanation
 
 Run the PHONK app in your Android device. You can create your first script within the device, although it might be a bit cumbersome using the device virtual keyboard.
 
@@ -62,23 +62,15 @@ You can explore the variety of examples included in PHONK and modify them in ord
 
 
 ## Compile it yourself
-PHONK depends on 3 subprojects. Each of them is on a different repository so things are a bit easy to manage.
-1. The main PHONK Android project (this repo)
-2. The Web Editor [https://github.com/victordiaz/phonk-editor](https://github.com/victordiaz/phonk-editor)
-3. The examples [https://github.com/victordiaz/phonk-examples](https://github.com/victordiaz/phonk-examples)
+PHONK depends on 3 subprojects contained in this repository.
+1. PHONK-android. The main PHONK Android project.
+2. PHONK-editor. The Web Editor written in an old version of Vue.js
+3. PHONK-examples. The examples
 
-In order to compile PHONK you should fetch the 3 repos so they follow the following folder structure.
-``` bash
-phonk_project
- ├ phonk # the Android project
- ├ phonk-editor
- └ phonk-examples
-```
-
-Once you fetched all projects, you should 
-1. Copy the examples to the Android assets folder. Go to the phonk-examples folder and run ```npm run cleanAndDeploy```
-2. Add the Web Editor to the Android app asset folder. Go to the phonk-editor folder, ```npm install``` to install the Web Editor dependencies and finally run ```npm run buildAndDeploy``` to build the Web Editor and copy 
-3. In Android Studio import the phonk folder and build the project.
+In order to compile PHONK you also need to:
+1. Copy the examples into the main app assets folder. In PHONK-examples run ```npm run cleanAndDeploy```
+2. Build and copy the WebEditor into the main app assets folder. In PHONK-editor ```npm run cleanBuildAndDeploy```
+3. Run the Android project using Android studio
 
 Once you've done that, there is no necessity to do the first steps anymore unless you want to update the Web Editor or the examples.
 
