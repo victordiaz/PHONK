@@ -13,23 +13,13 @@ export default {
   props: {
     src: String
   },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    arrowposition: function () {
-    }
-  },
   methods: {
     play: function () {
-      console.log('play')
       this.audioPlayer.play()
     }
   },
   mounted () {
     this.$nextTick(function () {
-      console.log(this.$el)
       this.audioPlayer = this.$el.querySelector('#audioplayer')
       this.play()
     })
@@ -41,7 +31,6 @@ export default {
 
 <style lang = "less">
 @import (reference) "../../assets/css/variables.less";
-
 
 .popover.right {
   min-height: auto;

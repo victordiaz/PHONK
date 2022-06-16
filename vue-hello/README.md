@@ -1,7 +1,5 @@
-# PHONK Web Editor
-This repository is part of the [PHONK project](https://github.com/victordiaz/phonk)
+# vue-hello
 
-It contains PHONK's Web Editor
 ## Project setup
 ```
 npm install

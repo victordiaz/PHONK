@@ -1,9 +1,10 @@
+/* eslint-disable */
 import Vue from 'vue'
 import { EventEmitter } from 'events'
 const store = new EventEmitter()
 export default store
 
-// var TAG = 'store'
+var TAG = 'store'
 var DEBUG = false
 
 // constants
@@ -78,11 +79,10 @@ store.project_list_all = function () {
   var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project/list/'), query).then(function (response) {
-    // console.log('project_list_got', response.data)
     Vue.set(store.state, 'projects', response.data)
     store.emit('project_listed_all')
   }, function (response) {
-    // console.log(TAG + ': project_list_all(status) > ' + response.status)
+    console.error(TAG + ': project_list_all(status) > ' + response.status)
   })
 }
 
@@ -96,7 +96,6 @@ store.project_load = function (uri) {
   store.emit('show_info', { id: id, icon: 'description', text: 'Loading Project...', status: 'progress' })
 
   Vue.axios.get(getUrlWebapp('/api/project' + uri + '/load'), query).then(function (response) {
-    // console.log(TAG + ': project_load(status) > ' + response.status)
     store.state.current_project = response.data
     store.emit('project_loaded', true)
     store.emit('project_files_list')
@@ -108,7 +107,7 @@ store.project_load = function (uri) {
     store.emit('project_loaded', false)
     store.emit('show_info', { id: id, icon: 'error', text: 'Loading project error', status: 'error' })
 
-    // console.log(TAG + ': project_load(status) > ' + response.status)
+    console.error(TAG + ': project_load(status) > ' + response.status)
   })
 }
 
@@ -122,7 +121,7 @@ store.load_project_preferences = function () {
       if (conf) store.state.current_project.conf = conf
     }
   }, function (response) {
-    // console.log(TAG + ': project_save(status) > ' + response.status)
+    console.error(TAG + ': project_save(status) > ' + response.status)
   })
 }
 
@@ -140,6 +139,7 @@ store.list_files_in_path = function (p) {
     store.emit('project_files_list', true)
   }, function (response) {
     store.emit('project_files_list', false)
+    console.error(response)
   })
 }
 
@@ -157,7 +157,7 @@ store.project_files_move = function (files) {
     store.emit('project_files_action_completed', true)
   }, function (response) {
     store.emit('project_files_action_completed', false)
-    // console.log('list_files_in_path(status) > ' + response.status)
+    console.error('list_files_in_path(status) > ' + response.status)
   })
 }
 
@@ -174,7 +174,7 @@ store.project_files_delete = function (files) {
     store.emit('project_files_action_completed', true)
   }, function (response) {
     store.emit('project_files_action_completed', false)
-    // console.log('list_files_in_path(status) > ' + response.status)
+    console.error('list_files_in_path(status) > ' + response.status)
   })
 }
 
@@ -183,15 +183,12 @@ store.project_files_delete = function (files) {
  */
 store.load_file = function (file) {
   var query = {}
-  // console.log('load_file', file)
-  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(function (response) {
-    // console.log(response)
-    file.code = response.data.files[0].code
 
-    // console.log('load_file(status) > ' + response.status, file.code)
+  Vue.axios.get(this.getUrlForCurrentProject() + 'files/load/' + file.path, query).then(function (response) {
+    file.code = response.data.files[0].code
     store.emit('file_loaded', file)
   }, function (response) {
-    // console.log(TAG + ': project_save(status) > ' + response.status)
+    console.error(TAG + ': project_save(status) > ' + response.status)
   }
   )
 }
@@ -200,16 +197,14 @@ store.load_file = function (file) {
  * Create a file
  */
 store.create_file = function (filetype, filename) {
-  // console.log('create file ' + filetype + ' ' + filename)
   var query = {}
   query.files = [{ name: filename, path: store.state.current_project.current_folder, type: filetype }]
 
   Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/files/create'), query).then(function (response) {
-    // console.log('create_file(status) OK > ' + response.status)
     store.emit('project_files_action_completed', true)
     store.list_files_in_path(store.state.current_project.current_folder)
   }, function (response) {
-    // console.log('create_file(status) NOP > ' + response.status)
+    console.error('create_file(status) NOP > ' + response.status)
     store.emit('project_files_action_completed', false)
   })
 }
@@ -229,7 +224,7 @@ store.project_create = function (projectName) {
   }, function (response) {
     store.emit('show_info', { id: id, icon: 'error', text: 'Creating project error', status: 'error' })
     store.emit('project_created', false)
-    console.log('project_create(status) > ' + response.status)
+    console.error('project_create(status) > ' + response.status)
   })
 }
 
@@ -246,7 +241,7 @@ store.project_clone = function (uri, newName) {
   }, function (response) {
     store.emit('project_created', false)
     store.emit('show_info', { id: id, icon: 'error', text: 'Cloning project error', status: 'error' })
-    console.log('project_create(status) > ' + response.status)
+    console.error('project_create(status) > ' + response.status)
   })
 }
 
@@ -265,7 +260,7 @@ store.project_rename = function (uri, newName) {
   }, function (response) {
     store.emit('project_created', false)
     store.emit('show_info', { id: id, icon: 'error', text: 'Renamming project error', status: 'error' })
-    // console.log('project_create(status) > ' + response.status)
+    console.error('project_create(status) > ' + response.status)
   })
 }
 
@@ -279,7 +274,7 @@ store.project_delete = function (uri) {
     store.emit('show_info', { id: id, icon: 'description', text: 'Project Deleted', status: 'done' })
   }, function (response) {
     store.emit('project_created', false)
-    console.log('project_create(status) > ' + response.status)
+    console.error('project_create(status) > ' + response.status)
     store.emit('show_info', { id: id, icon: 'description', text: 'Deleting project error', status: 'error' })
   })
 }
@@ -300,7 +295,6 @@ store.project_save = function (files) {
   store.emit('show_info', { id: id, icon: 'save', text: 'Saving...', status: 'progress' })
 
   Vue.axios.post(getUrlWebapp('/api/project' + this.get_current_project() + '/save'), query).then(function (response) {
-    // console.log('project_save(status) OK > ' + response.status)
     store.emit('show_info', { id: id, icon: 'save', text: 'Saved', status: 'done' })
 
     store.emit('project_saved')
@@ -309,11 +303,10 @@ store.project_save = function (files) {
     if (!store.state.current_project.conf) return
 
     if (store.state.current_project.conf.execute_on_save) {
-      // console.log(store.state.current_project.conf.execute_on_save)
       store.execute_code(store.state.current_project.conf.execute_on_save)
     }
   }, function (response) {
-    console.log('project_save(status) NOP > ' + response.status)
+    console.error('project_save(status) NOP > ' + response.status)
     if (!response.status) {
       store.emit('show_info', { id: id, icon: 'error', text: 'Cannot save! Check the connection', status: 'error' })
     }
@@ -338,29 +331,12 @@ store.project_action = function (action) {
   store.emit('show_info', { id: id, icon: icon, text: msg, status: 'progress' })
 
   Vue.axios.get(getUrlWebapp('/api/project' + this.get_current_project() + action), query).then(function (response) {
-    // console.log('project_action', response.status)
     store.emit('show_info', { id: id, icon: icon, text: msg, status: 'done' })
   }, function (response) {
-    // console.log('project_action error', response.status)
+    console.error('project_action error', response.status)
     store.emit('show_info', { id: id, icon: icon, text: 'Error ' + msg + '...', status: 'error' })
   })
 }
-
-/*
- * Run a project
- */
-/*
-
-store.project_run = function (project) {
-  var query = {}
-
-  Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/run'), query).then(function (response) {
-    console.log('project_run', response.status)
-  }, function (response) {
-    console.log('project_run', response.status)
-  })
-}
-*/
 
 /*
  * Project stop all and run
@@ -379,18 +355,16 @@ store.project_stop_all_and_run = function (project) {
  * Execute a code line
  */
 store.execute_code = function (code) {
-  // console.log('execute_code ' + code)
   let id = store.state.lastNotificationId++
 
   var query = { code: code }
   store.emit('show_info', { id: id, icon: 'autorenew', text: 'Live...', status: 'progress' })
 
   Vue.axios.post(getUrlWebapp('/api/project/execute_code'), query).then(function (response) {
-    // console.log(response.status)
     store.emit('show_info', { id: id, icon: 'autorenew', text: 'Live...', status: 'done' })
   }, function (response) {
     store.emit('show_info', { id: id, icon: 'autorenew', text: 'Live...', status: 'error' })
-    // console.log(response.status)
+    console.error(response.status)
   })
 }
 
@@ -685,11 +659,12 @@ store.mydragg = function () {
 
 store.loadSettings = function () {
   var savedSettings = localStorage.getItem('preferences')
-  // console.log('loadSettings', savedSettings)
+  // console.log('savedSettings', savedSettings)
   if (typeof savedSettings === 'undefined' || !savedSettings || savedSettings === 'null') {
-    console.log('not loading settings')
+    // console.log('not loading settings')
+    store.clearSettings()
   } else {
-    console.log('loadingSettings')
+    // console.log('loadingSettings')
     let parsedPreferences = JSON.parse(savedSettings)
     if (parsedPreferences.hasOwnProperty('savedTime')) {
       delete parsedPreferences.savedTime

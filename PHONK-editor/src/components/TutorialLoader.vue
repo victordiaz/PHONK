@@ -2,7 +2,13 @@
   <div id = "tutorial" class = "proto_panel">
     <div class = "actionbar">
       <div class = "tutorial_chooser">
-        <a v-for = "t in tutorial_files" v-on:click = "fetchTutorial(t.id)" v-bind:class = "{ 'selected': false }">Tutorial {{t.id}}</a>
+        <a
+          v-for = "t in tutorial_files"
+          v-on:click = "fetchTutorial(t.id)"
+          v-bind:class = "{ 'selected': false }"
+          :key="t.id">
+            Tutorial {{t.id}}
+          </a>
       </div>
     </div>
     <div class = "content">
@@ -40,7 +46,6 @@ export default {
     }
   },
   computed: {
-
   },
   methods: {
     fetchTutorial: function (selected) {
@@ -48,7 +53,7 @@ export default {
         this.loaded_tutorial = { name: selected, text: response.data }
         // console.log(data)
       }, function (response) {
-        // console.log(status)
+        console.error(response)
       })
     },
     marked: function (text) {
@@ -189,13 +194,12 @@ export default {
   }
 
   .video_wrapper iframe {
-  	position: absolute;
-  	top: 0;
-  	left: 0;
-  	width: 100%;
-  	height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
-
 }
 
 </style>

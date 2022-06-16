@@ -4,18 +4,14 @@ import { domain } from './filters'
 import App from './App'
 import VueRouter from 'vue-router'
 
-import Login from './components/views/Login.vue'
-import Editor from './components/Editor.vue'
-import TutorialLoader from './components/TutorialLoader'
-import About from './components/About'
-import Preferences from './components/Preferences'
-import UIEditor from './components/uieditor/UIEditor'
+import EditorPanel from './components/panels/EditorPanel.vue'
+// import TutorialLoader from './components/TutorialLoader'
+// import About from './components/About'
+// import Preferences from './components/Preferences'
+// import UIEditor from './components/uieditor/UIEditor'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-
-// import $ from 'jquery'
-// import Store from './Store'
 
 // register filters globally
 Vue.filter('domain', domain)
@@ -31,66 +27,42 @@ var router = new VueRouter({
       path: '/',
       redirect: { name: 'editor' }
     },
-    /*
-    {
-      path: '*',
-      component: {
-        template: '<div> not found </div>'
-      }
-    },
-    */
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
     {
       path: '/editor',
       name: 'editor',
-      component: Editor,
+      component: EditorPanel,
       title: 'PHONK'
     },
     {
       path: '/editor/:type/:folder/:project',
       name: 'editor.load',
-      component: Editor,
-      /*
-      component: function (resolve) {
-       require(['./components/Editor.vue'], resolve)
-      },
-      */
+      component: EditorPanel,
       title: 'PHONK'
     },
     {
       path: '/uieditor/',
       name: 'uieditor',
       title: 'UI Editor',
-      component: UIEditor
+      // component: UIEditor
     },
     {
       path: '/tutorial/:id',
       name: 'tutorial',
       title: 'Tutorial',
-      component: TutorialLoader
+      // component: TutorialLoader
     },
     {
       path: '/about',
       name: 'about',
-      component: About
+      // component: About
     },
     {
       path: '/preferences',
       name: 'preferences',
-      component: Preferences
+      // component: Preferences
     }
   ]
 })
-
-/*
-router.beforeEach(function () {
-  window.scrollTo(0, 0)
-})
-*/
 
 const app = new Vue({
   router,
@@ -100,4 +72,3 @@ const app = new Vue({
 export { app, router, store }
 
 app.$mount('app')
-// Vue.$mount(App, '#app')

@@ -18,12 +18,6 @@ export default {
   data () {
     return {
     }
-  },
-  computed: {
-    fn: function () {
-    }
-  },
-  methods: {
   }
 }
 </script>

@@ -17,17 +17,13 @@ export default {
       type: ''
     }
   },
-  computed: {
+  methods: {
     vtype: function () {
-      // console.log(this.src)
       if (this.getDomain(this.src).indexOf('youtube') !== -1) this.type = 'youtube'
       else if (this.getDomain(this.src).indexOf('vimeo') !== -1) this.type = 'vimeo'
       else this.type = 'served'
-      console.log(this.type)
       return this.type
-    }
-  },
-  methods: {
+    },
     // http://stackoverflow.com/questions/8498592/extract-root-domain-name-from-string
     getDomain: function (url) {
       var domain

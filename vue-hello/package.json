@@ -1,36 +1,19 @@
 {
-  "name": "PhonkEditor",
+  "name": "vue-hello",
   "version": "0.1.0",
-  "description": "PHONK web editor",
-  "author": "Victor Diaz <victormdb@gmail.com>",
-  "license": "GPL-3.0",
-  "repository": "https://github.com/victordiaz/phonk",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "deploy": "cp -r ./dist/* ../PHONK-android/phonk_app/src/main/assets/webide/",
-    "cleanBuildAndDeploy": "npm run build && npm run cleanInAndroid && npm run deploy ",
-    "clean": "rm -rf ./dist",
-    "cleanInAndroid": "rm -rf ../PHONK-android/phonk_app/src/main/assets/webide/*"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "ace-builds": "^1.6.0",
-    "axios": "^0.27.2",
     "core-js": "^3.8.3",
-    "less-loader": "^11.0.0",
-    "marked": "^4.0.17",
-    "vue": "^2.6.14",
-    "vue-axios": "^3.4.1",
-    "vue-router": "^3.5.4",
-    "vue-scrollto": "^2.20.0"
+    "vue": "^2.6.14"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
-    "@types/ace": "^0.0.48",
-    "@vue/babel-plugin-transform-vue-jsx": "^1.2.1",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

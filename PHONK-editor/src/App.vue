@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="top_container" class="container">
-      <toolbar></toolbar>
+      <main-toolbar></main-toolbar>
     </div>
 
     <div id="main_container">
@@ -10,26 +10,10 @@
       <div id="central_container" class="container">
         <project-checker v-show="false"></project-checker>
 
+        <!--
         <transition name="banneranim">
           <tutorial-loader v-show="false" transition="banner-anim"></tutorial-loader>
         </transition>
-
-        <!--
-      <interface-editor v-show = "false"></interface-editor>
-        -->
-
-        <!--  <calender></calender> -->
-
-        <!--
-
-      <webview url = "http://127.0.0.1" :showcontrols = "true"></webview>
-      <webview url = "http://www.slashdot.com" :showcontrols = "false"></webview>
-        -->
-
-        <!-- <p5></p5> -->
-
-        <!--
-      <gcanvas></gcanvas>
         -->
 
         <router-view
@@ -40,14 +24,9 @@
           transition-mode="out-in"
         ></router-view>
 
-        <!-- <editor></editor> -->
-
-        <!--
-      <banner v-if="$route.name === 'editor' " transition="banner-anim">qq<a href="https://www.google.es"> google.es </a></banner>
-        -->
       </div>
-      <handle orientation="vertical" container="right_container"></handle>
-
+      <panel-handle orientation="vertical" container="right_container"></panel-handle>
+      
       <div
         id="right_container"
         class="container"
@@ -60,89 +39,61 @@
             <li v-on:click = "changePanel('properties')" :class = "{'selected': panel === 'properties' }">Properties</li>
           </ul>
           <div v-if = "panel === 'general'" id = "editor_panels" class = "panels-container">
-            <documentation></documentation>
-            <handle orientation="horizontal" container="documentation"></handle>
-
-            <file-manager></file-manager>
-            <handle orientation="horizontal" color="dark" container="file_manager"></handle>
-
-            <console></console>
+            <documentation-panel></documentation-panel>
+            <panel-handle orientation="horizontal" container="documentation"></panel-handle>
+            <file-manager-panel></file-manager-panel>
+            <panel-handle orientation="horizontal" color="dark" container="file_manager"></panel-handle>
+            <console-panel></console-panel>
           </div>
           <div v-else id = "uieditor_panels" class = "panels-container">
-            <documentation></documentation>
+            <!--
+            <documentation-panel></documentation-panel>
+            -->
           </div>
         </div>
       </div>
 
-      <debug-panel v-show="false"></debug-panel>
+      <debug-panel v-if="false"></debug-panel>
 
       <transition-group name="banneranim">
         <project-load v-if="sharedState.show_load_project" key="l_project"></project-load>
-        <dashboard v-show="sharedState.show_dashboard" key="dashboard"></dashboard>
+        <!-- <dashboard v-show="sharedState.show_dashboard" key="dashboard"></dashboard> -->
       </transition-group>
     </div>
 
-    <!--
-  <canvas id="myCanvas" width = "800px" height = "800px"></canvas>
-    -->
   </div>
 </template>
 
 <script>
 import Store from './Store'
 
-import DebugPanel from './components/DebugPanel'
+import MainToolbar from './components/panels/MainToolbar.vue'
 
-import Toolbar from './components/Toolbar'
-import Handle from './components/Handle'
+import PanelHandle from './components/panels/PanelHandle'
+import DebugPanel from './components/panels/DebugPanel'
+import FileManagerPanel from './components/panels/FileManagerPanel'
+import ConsolePanel from './components/panels/ConsolePanel'
 
-import Editor from './components/Editor'
-import Banner from './components/views/Banner'
-
-import FileManager from './components/FileManager'
-import Console from './components/Console'
-import Dashboard from './components/Dashboard'
-import Documentation from './components/documentation/Documentation'
-
-import ProjectLoad from './components/ProjectLoad'
-import Preferences from './components/Preferences'
-import About from './components/About'
-import TutorialLoader from './components/TutorialLoader'
-
-import Gcanvas from './components/visual/Gcanvas'
-import Webview from './components/views/Webview'
-import P5 from './components/views/P5js'
-
-import Calender from './components/views/Calender'
-import InterfaceEditor from './components/InterfaceEditor'
-
-import ProjectChecker from './components/ProjectChecker'
-
-// import ResizeHandle from 'resize-handle'
+// import Dashboard from './components/Dashboard'
+import DocumentationPanel from './components/panels/documentation/DocumentationPanel'
+import ProjectLoad from './components/project/ProjectLoad'
+import ProjectChecker from './components/project/ProjectChecker'
+// import TutorialLoader from './components/TutorialLoader'
+// import InterfaceEditor from './components/InterfaceEditor'
 
 export default {
   components: {
+    PanelHandle,
+    MainToolbar,
     DebugPanel,
-    Toolbar,
-    Handle,
-    Editor,
     ProjectLoad,
-    TutorialLoader,
-    Preferences,
-    About,
-    Banner,
-
-    FileManager,
-    Console,
-    Dashboard,
-    Documentation,
-
-    Gcanvas,
-    Webview,
-    P5,
-    Calender,
     ProjectChecker,
-    InterfaceEditor
+    FileManagerPanel,
+    ConsolePanel,
+    DocumentationPanel,
+    // Dashboard,
+    // TutorialLoader,
+    // InterfaceEditor
   },
   data () {
     return {
@@ -157,7 +108,6 @@ export default {
   },
   methods: {
     changeTitle (vm) {
-      // console.log(vm)
       document.title = 'PHONK // ' + vm.title
     },
     handleDragEnter: function () {
@@ -170,16 +120,12 @@ export default {
       this.backdrop = !this.backdrop
       this.top_container = !this.top_container
     },
-    project_created: function (created) {
-      // if (created) this.panel_visibility.new_project = false
-    },
     resize: function () {
       this.isMobile =
         window
           .getComputedStyle(document.querySelector('body'), ':before')
           .getPropertyValue('content')
           .replace(/"/g, '') === 'mobile'
-      // console.log(this.isMobile)
       this.top_container = !this.isMobile
     },
     shortcutsHandler: function () {
@@ -195,10 +141,6 @@ export default {
   created () {
     var that = this
     Store.on('toggle_top_container', this.toggle_top_container)
-    // Store.emit('project_list_all')
-    Store.on('project_created', this.project_created)
-    // Store.on('toggle_dashboard', this.toggle_dashboard)
-
     this.resize()
     window.addEventListener('resize', function () {
       that.resize()
@@ -223,7 +165,6 @@ export default {
     Store.save_browser_config()
     Store.state.browser = {}
     Store.load_browser_config()
-    // console.log(Store.state.browser.editor_width)
 
     var keyShortcuts = [
       {
@@ -306,7 +247,7 @@ export default {
     // dashboard       ctrl + d // cmd + d
     // fullscreen editor ctrl + f // cmd + f
     window.addEventListener('keydown', function (e) {
-      console.log('key pressed', e)
+      // console.log('key pressed', e)
 
       for (let i in keyShortcuts) {
         if (
@@ -317,7 +258,7 @@ export default {
           keyShortcuts[i].key === e.code
         ) {
           Store.emit(keyShortcuts[i].execute[0], keyShortcuts[i].execute[1])
-          console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
+          // console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
           e.preventDefault()
           e.stopPropagation()
           window.event.cancelBubble = true
@@ -332,15 +273,8 @@ export default {
   },
   destroyed () {
     Store.removeListener('toggle', this.toggle_section)
-    Store.removeListener('project_created', this.project_created)
     Store.removeListener('toggle_sidepanel', this.toggle_sidepanel)
     window.removeEventListener('keydown', this.shortcutsHandler)
-  },
-  events: {
-    run: function (msg) {
-      // console.log('event parent run ' + msg)
-      return true
-    }
   }
 }
 </script>
@@ -369,7 +303,6 @@ export default {
 }
 
 body {
-  /* background: linear-gradient(180deg, @backgroundColor, @backgroundColor_second); */
   background: @mainColor;
   font-family: 'Roboto Mono', monospace, sans-serif;
   color: @primaryTextColor;
@@ -680,6 +613,7 @@ button {
 
       &:hover {
         .actionbar ul {
+          opacity: 1;
           box-sizing: border-box;
         }
       }
@@ -732,6 +666,7 @@ button {
 
         ul {
           display: block;
+          opacity: 0;
 
           li {
             display: inline-block;
