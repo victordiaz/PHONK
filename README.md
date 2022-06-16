@@ -9,7 +9,7 @@ Create scripts rapidly from your phone or using the *remote Web Editor* on your 
 
 [PHONK Website](https://phonk.app) — [Tutorial](https://phonk.app/docs/1_step_installation) — [Forum](https://github.com/victordiaz/PHONK/discussions) — [Discord](https://discord.gg/DgtyBKgp)
 
-# ![animation](./images/phonk_animation_white_bg.gif)
+# ![animation](./PHONK-android/images/phonk_animation_white_bg.gif)
 
 ## Features
 - Takes 1 min to set up on your phone
