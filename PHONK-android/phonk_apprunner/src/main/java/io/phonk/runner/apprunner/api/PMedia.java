@@ -68,7 +68,7 @@ import io.phonk.runner.apprunner.api.media.PAudioPlayer;
 import io.phonk.runner.apprunner.api.media.PAudioRecorder;
 import io.phonk.runner.apprunner.api.media.PCamera;
 import io.phonk.runner.apprunner.api.media.PMidi;
-import io.phonk.runner.apprunner.api.media.PMidiController;
+import io.phonk.runner.apprunner.api.media.midi.PMidiController;
 import io.phonk.runner.apprunner.api.media.PPureData;
 import io.phonk.runner.apprunner.api.media.PTextToSpeech;
 import io.phonk.runner.apprunner.api.media.PVideo;

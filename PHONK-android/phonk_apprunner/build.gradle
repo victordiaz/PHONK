@@ -113,6 +113,9 @@ dependencies {
     // tensorflow
     implementation project(path: ':transfer_api')
     implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
+
+    // Test
+    testImplementation 'junit:junit:4.13.2'
 }
 
 

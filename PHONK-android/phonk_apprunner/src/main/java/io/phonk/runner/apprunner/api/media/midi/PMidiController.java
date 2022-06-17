@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.runner.apprunner.api.media;
+package io.phonk.runner.apprunner.api.media.midi;
 
 import static android.content.Context.MIDI_SERVICE;
 
@@ -47,18 +47,28 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
+import io.phonk.runner.apprunner.api.widgets.midi.MidiUiFactory;
 import io.phonk.runner.base.utils.MLog;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-@PhonkClass
+@PhonkClass(description = "Class that helps communicate with a computer using midi")
 public class PMidiController extends ProtoBase {
     private static final String TAG = PMidiController.class.getSimpleName();
 
-    private static final byte STATUS_NOTE_OFF = (byte) 0x80;
-    private static final byte STATUS_NOTE_ON = (byte) 0x90;
-    private static final byte STATUS_PITCH_BEND = (byte) 0xE0;
-    private static final int DISABLE_PITCH_BEND_VALUE = 8191;  // max pitch bend (=16383) / 2
+    public static final int STATUS_NOTE_OFF = 0x80;
+    public static final int STATUS_NOTE_ON = 0x90;
+    public static final int STATUS_PITCH_BEND = 0xE0;
+    public static final int STATUS_CC = 0xB0;
+    public static final int DISABLE_PITCH_BEND_VALUE = 8192;  // max pitch bend (=16383) / 2
+    public static final int MIN_PITCH_BEND_VALUE = 0;
+    public static final int MAX_PITCH_BEND_VALUE = 16383;
+    public static final int MIN_CC_VALUE = 0;
+    public static final int MAX_CC_VALUE = 127;
+    public static final int MAX_VELOCITY_VALUE = 127;
+    public static final int MAX_PITCH_VALUE = 127;
 
+    public MidiUiFactory ui;
+    public MidiNotePlayer player;
     private MidiManager midiManager;
     private MidiInputPort midiInputPort;
     private MidiDevice midiDevice;
@@ -111,7 +121,15 @@ public class PMidiController extends ProtoBase {
             Toast.makeText(getContext(), "Unknown MIDI input id: " + midiInputId, Toast.LENGTH_LONG)
                     .show();
         }
+        ui = new MidiUiFactory(this);
+        player = new MidiNotePlayer(this);
         return this;
+    }
+
+    @PhonkMethod(description = "Plays a note", example = "")
+    @PhonkMethodParam(params = "channel [0-15], pitch[0-127], velocity[0-127]")
+    public void noteOn(final int channel, final int pitch, final int velocity) {
+        midiCommand(STATUS_NOTE_ON + channel, pitch, velocity);
     }
 
     @PhonkMethod(description = "Stop playing a note", example = "")
@@ -121,9 +139,17 @@ public class PMidiController extends ProtoBase {
     }
 
     @PhonkMethod(description = "Plays a note", example = "")
-    @PhonkMethodParam(params = "channel [0-15], pitch[0-127], velocity[0-127]")
-    public void noteOn(final int channel, final int pitch, final int velocity) {
+    @PhonkMethodParam(params = "channel [0-15], noteName['C4', 'C#3', 'Eb4'...], velocity[0-127]")
+    public void noteOn(final int channel, final String noteName, final int velocity) {
+        final int pitch = NoteNamePitchMapper.getPitch(noteName);
         midiCommand(STATUS_NOTE_ON + channel, pitch, velocity);
+    }
+
+    @PhonkMethod(description = "Stop playing a note", example = "")
+    @PhonkMethodParam(params = "channel [0-15], noteName['C4', 'C#3', 'Eb4'...], velocity[0-127]")
+    public void noteOff(final int channel, final String noteName, final int velocity) {
+        final int pitch = NoteNamePitchMapper.getPitch(noteName);
+        midiCommand(STATUS_NOTE_OFF + channel, pitch, velocity);
     }
 
     @PhonkMethod(description = "Pitch bend notes", example = "")
@@ -139,7 +165,7 @@ public class PMidiController extends ProtoBase {
     @PhonkMethod(description = "Disable pitch bend", example = "")
     @PhonkMethodParam(params = "channel [0-15]")
     public void stopPitchBend(final int channel) {
-        this.pitchBend(channel, DISABLE_PITCH_BEND_VALUE);
+        pitchBend(channel, DISABLE_PITCH_BEND_VALUE);
     }
 
     @PhonkMethod(description = "Sends a midi message you build yourself. Quite low level!", example = "")

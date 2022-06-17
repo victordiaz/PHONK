@@ -1,4 +1,4 @@
-package io.phonk.runner.apprunner.api.media;
+package io.phonk.runner.apprunner.api.media.midi;
 
 
 import android.media.midi.MidiDeviceInfo;

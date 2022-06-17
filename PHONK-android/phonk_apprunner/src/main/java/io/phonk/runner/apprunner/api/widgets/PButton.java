@@ -59,6 +59,9 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
+        // mandatory to have the backgroundSelected color working in any case
+        this.setOnClickListener(view -> {});
+
         styler = new ButtonStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("textStyle", props, "bold");
