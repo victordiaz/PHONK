@@ -63,114 +63,6 @@ import io.phonk.runner.apprunner.AppRunnerSettings;
 public class FileIO {
     private static final String TAG = FileIO.class.getSimpleName();
 
-    /**
-     * Write the data to the file indicate by fileName. The file is created if
-     * it doesn't exists.
-     */
-    public static void write(Activity activity, String data, String fileName) throws IOException {
-        FileOutputStream fo = activity.openFileOutput(fileName, 0);
-        BufferedWriter bf = new BufferedWriter(new FileWriter(fo.getFD()));
-        bf.write(data);
-        bf.flush();
-        bf.close();
-    }
-
-    /**
-     * Read the contents of the file indicated by fileName
-     */
-    public static String read(Context activity, String fileName) throws IOException {
-        if (fileName.contains("/0/")) {
-            fileName = fileName.replace("/0/", "/legacy/");
-        }
-        FileInputStream is = activity.openFileInput(fileName);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        while (br.ready()) {
-            String line = br.readLine();
-            sb.append(line);
-        }
-        String data = sb.toString();
-        return data;
-    }
-
-    /**
-     * Read the contents of mContext file in the assets directory indicated by fileName
-     */
-    public static String readFromAssets(Context activity, String fileName) throws IOException {
-        AssetManager am = activity.getAssets();
-        return read(am.open(fileName));
-    }
-
-    /**
-     * Read the contents of the file indicated by fileName
-     */
-    public static String read(InputStream is) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        while (br.ready()) {
-            String line = br.readLine();
-            sb.append("\n");
-            sb.append(line);
-        }
-        String data = sb.toString();
-        return data;
-    }
-
-    // Read mContext file in the assets directory into mContext string
-    public static String readAssetFile(Context c, String path) {
-        String out = null;
-        AssetManager am = c.getAssets();
-        try {
-            InputStream in = am.open(path);
-            ByteArrayOutputStream buf = new ByteArrayOutputStream();
-            int i;
-            try {
-                i = in.read();
-                while (i != -1) {
-                    buf.write(i);
-                    i = in.read();
-                }
-                in.close();
-            } catch (IOException ex) {
-            }
-            out = buf.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            MLog.e(TAG, e.toString());
-        }
-        return out;
-    }
-
-    // Write mContext string to mContext file
-    public static String writeStringToFile(String url, String name, String code) {
-        // MLog.d(TAG, "Writing string to file name: " + name + " code: " + code);
-        String filename = name.replaceAll("[^a-zA-Z0-9-_\\. ]", "_");
-        String baseDir = url + File.separator + filename;
-        File dir = new File(baseDir);
-        dir.mkdirs();
-        File f = new File(dir.getAbsoluteFile() + File.separator + "main.js");
-
-        try {
-            if (!f.exists()) {
-                f.createNewFile();
-            } else {
-                // We should probably do something here to handle multiple file
-                // cases
-            }
-            FileOutputStream fo = new FileOutputStream(f);
-            byte[] data = code.getBytes();
-            fo.write(data);
-            fo.flush();
-            fo.close();
-        } catch (FileNotFoundException ex) {
-            MLog.e(TAG, ex.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-            MLog.e(TAG, e.toString());
-        }
-        return f.getAbsolutePath();
-    }
-
     public static boolean copyAssetFolder(AssetManager assetManager, String fromAssetPath, String toPath) {
         try {
             String[] files = assetManager.list(fromAssetPath);
@@ -199,10 +91,8 @@ public class FileIO {
             out = new FileOutputStream(toPath);
             copyFile(in, out);
             in.close();
-            in = null;
             out.flush();
             out.close();
-            out = null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,67 +108,6 @@ public class FileIO {
         }
     }
 
-    public static void copyFileOrDir(Context c, String path) {
-        AssetManager assetManager = c.getAssets();
-        String[] assets = null;
-        try {
-            assets = assetManager.list(path);
-            if (assets.length == 0) {
-                copyFile(c, path);
-            } else {
-                String fullPath = AppRunnerSettings.getBaseDir() + path;
-                File dir = new File(fullPath);
-                if (!dir.exists()) {
-                    dir.mkdir();
-                }
-                for (String asset : assets) {
-                    copyFileOrDir(c, path + "/" + asset);
-                }
-            }
-        } catch (IOException ex) {
-            Log.e(TAG, ex.toString());
-        }
-    }
-
-    private static void copyFile(Context c, String filename) {
-        AssetManager assetManager = c.getAssets();
-
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            in = assetManager.open(filename);
-            String newFileName = AppRunnerSettings.getBaseDir() + filename;
-            out = new FileOutputStream(newFileName);
-
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-            in.close();
-            in = null;
-            out.flush();
-            out.close();
-            out = null;
-        } catch (Exception e) {
-            Log.e("tag", e.getMessage());
-        }
-    }
-
-    public static void copyFile(File src, File dst) throws IOException {
-        FileChannel inChannel = new FileInputStream(src).getChannel();
-        FileChannel outChannel = new FileOutputStream(dst).getChannel();
-        try {
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-        } finally {
-            if (inChannel != null) {
-                inChannel.close();
-            }
-            if (outChannel != null) {
-                outChannel.close();
-            }
-        }
-    }
 
     public static void deleteFileDir(String path) {
         // MLog.d(TAG, "deleting directory " + path);
@@ -325,6 +154,21 @@ public class FileIO {
         dir.delete();
     }
 
+    public static void copyFile(File src, File dst) throws IOException {
+        FileChannel inChannel = new FileInputStream(src).getChannel();
+        FileChannel outChannel = new FileOutputStream(dst).getChannel();
+        try {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        } finally {
+            if (inChannel != null) {
+                inChannel.close();
+            }
+            if (outChannel != null) {
+                outChannel.close();
+            }
+        }
+    }
+
     public static String loadStringFromFile(String path) {
         String out = null;
         File f = new File(path);
@@ -351,93 +195,6 @@ public class FileIO {
         return out;
     }
 
-    /*
-     * Method borrowed from Processing PApplet.java
-     */
-    public static InputStream createInput(String filename) {
-        InputStream input = createInputRaw(filename);
-
-        return input;
-    }
-
-    /*
-     * Method borrowed from Processing PApplet.java
-     */
-    public static InputStream createInputRaw(String filename) {
-        // Additional considerations for Android version:
-        // http://developer.android.com/guide/topics/resources/resources-i18n.html
-        InputStream stream = null;
-
-        if (filename == null) {
-            return null;
-        }
-
-        if (filename.length() == 0) {
-            // an error will be called by the parent function
-            // System.err.println("The filename passed to openStream() was empty.");
-            return null;
-        }
-
-        // Maybe this is an absolute path, didja ever think of that?
-        File absFile = new File(filename);
-        if (absFile.exists()) {
-            try {
-                stream = new FileInputStream(absFile);
-                if (stream != null) {
-                    return stream;
-                }
-            } catch (FileNotFoundException fnfe) {
-                // fnfe.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-    /*
-     * Method borrowed from Processing PApplet.java
-     */
-    static public InputStream createInput(File file) {
-        if (file == null) {
-            throw new IllegalArgumentException("File passed to createInput() was null");
-        }
-        try {
-            InputStream input = new FileInputStream(file);
-            if (file.getName().toLowerCase().endsWith(".gz")) {
-                return new GZIPInputStream(input);
-            }
-            return input;
-
-        } catch (IOException e) {
-            System.err.println("Could not createInput() for " + file);
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Takes mContext path and creates any in-between folders if they don't already
-     * exists. Useful when trying to save to mContext subfolder that may not actually
-     * exists.
-     */
-    static public void createPath(String path) {
-        createPath(new File(path));
-    }
-
-    static public void createPath(File file) {
-        try {
-            String parent = file.getParent();
-            if (parent != null) {
-                File unit = new File(parent);
-                if (!unit.exists()) {
-                    unit.mkdirs();
-                }
-            }
-        } catch (SecurityException se) {
-            System.err.println("You don't have permissions to create " + file.getAbsolutePath());
-        }
-    }
-
     static public void zipFolder(String src, String dst) throws Exception {
         File f = new File(dst);
         //make dirs if necessary
@@ -453,7 +210,6 @@ public class FileIO {
 
     static public void unZipFile(String src, String dst) throws ZipException {
         ZipFile zipFile = new ZipFile(src);
-        MLog.d(TAG, "--------------> " + src + " " + dst);
         zipFile.extractAll(dst);
     }
 
@@ -461,52 +217,6 @@ public class FileIO {
         ZipFile zipFile = new ZipFile(file);
         List list = zipFile.getFileHeaders();
         return list;
-    }
-
-    public static HashMap<String, List<String>> seeZipContent2(String path) {
-        File zipFile = new File(path);
-
-        HashMap<String, List<String>> contents = new HashMap<>();
-        try {
-            FileInputStream fin = new FileInputStream(zipFile);
-            ZipInputStream zin = new ZipInputStream(fin);
-            ZipEntry ze = null;
-            while ((ze = zin.getNextEntry()) != null) {
-                if (ze.isDirectory()) {
-                    String directory = ze.getName();
-                    MLog.d(TAG, "directory " + directory);
-                    if (!contents.containsKey(directory)) {
-                        contents.put(directory, new ArrayList<String>());
-                    }
-                } else {
-                    String file = ze.getName();
-                    int pos = file.lastIndexOf("/");
-                    if (pos != -1) {
-                        String directory = file.substring(0, pos + 1);
-                        String fileName = file.substring(pos + 1);
-                        if (!contents.containsKey(directory)) {
-                            contents.put(directory, new ArrayList<String>());
-                            List<String> fileNames = contents.get(directory);
-                            fileNames.add(fileName);
-                        } else {
-                            List<String> fileNames = contents.get(directory);
-                            fileNames.add(fileName);
-                        }
-                    } else {
-                        if (!contents.containsKey("root")) {
-                            contents.put("root", new ArrayList<String>());
-                        }
-                        List<String> fileNames = contents.get("root");
-                        fileNames.add(file);
-                    }
-                }
-                zin.closeEntry();
-            }
-            zin.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return contents;
     }
 
     static public void extractZip(String zipFile, String location) throws IOException {

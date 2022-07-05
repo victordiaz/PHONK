@@ -166,14 +166,15 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     public void installExamples() {
-        //create folder structure
+        // create folder structure
         new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER)).mkdirs();
+        new File(PhonkSettings.getFolderPath(PhonkSettings.DEMOS_FOLDER)).mkdirs();
         new File(PhonkSettings.getFolderPath(PhonkSettings.EXAMPLES_FOLDER)).mkdirs();
         new File(PhonkSettings.getBaseWebEditorsDir()).mkdirs();
         new File(PhonkSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        PhonkSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, () -> runOnUiThread(() -> goToStep(STEP_INSTALL_EXAMPLES_OK)));
+        PhonkSettingsHelper.installExamples(getApplicationContext(), () -> runOnUiThread(() -> goToStep(STEP_INSTALL_EXAMPLES_OK)));
     }
 
     public void ready() {

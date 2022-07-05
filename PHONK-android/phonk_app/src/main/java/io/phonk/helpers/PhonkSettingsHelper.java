@@ -61,11 +61,16 @@ public class PhonkSettingsHelper {
         void onReady();
     }
 
-    public static void installExamples(final Context c, final String assetsName, final InstallListener l) {
+    public static void installExamples(final Context c, final InstallListener l) {
         new Thread(() -> {
-            File dir = new File(PhonkSettings.getBaseDir() + assetsName);
-            FileIO.deleteDir(dir);
-            FileIO.copyFileOrDir(c, assetsName);
+            File examplesFolder = new File(PhonkSettings.getBaseDir() + PhonkSettings.EXAMPLES_FOLDER);
+            FileIO.deleteDir(examplesFolder);
+            FileIO.copyAssetFolder(c.getAssets(), PhonkSettings.EXAMPLES_FOLDER, examplesFolder.getAbsolutePath());
+
+            File demosFolder = new File(PhonkSettings.getBaseDir() + PhonkSettings.DEMOS_FOLDER);
+            FileIO.deleteDir(demosFolder);
+            FileIO.copyAssetFolder(c.getAssets(), "contributed_projects", demosFolder.getAbsolutePath());
+
             l.onReady();
         }).start();
     }

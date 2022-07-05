@@ -37,6 +37,8 @@ public class AppRunnerSettings {
     public final static String PHONK_FOLDER = "phonk_io";
     public static final String USER_PROJECTS_FOLDER = "playground";
     public static final String EXAMPLES_FOLDER = "examples";
+    public static final String DEMOS_FOLDER = "playground" + File.separator + "Demos";
+
     public static final String LOGS_FOLDER = "logs";
 
     public static final String LIBRARIES_FOLDER = "libraries";

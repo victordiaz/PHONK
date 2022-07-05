@@ -302,8 +302,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     .setCancelable(false).setPositiveButton("Yes", (dialog, which) -> {
                 progress.show();
 
-                PhonkSettingsHelper.installExamples(getActivity(), PhonkSettings.EXAMPLES_FOLDER,
-                        () -> progress.dismiss());
+                PhonkSettingsHelper.installExamples(getActivity(), () -> progress.dismiss());
                 dialog.cancel();
             }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
 

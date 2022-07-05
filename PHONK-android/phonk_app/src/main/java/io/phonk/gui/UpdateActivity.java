@@ -90,7 +90,7 @@ public class UpdateActivity extends BaseActivity {
 
             lLoading.setVisibility(View.VISIBLE);
 
-            PhonkSettingsHelper.installExamples(getApplicationContext(), PhonkSettings.EXAMPLES_FOLDER, () -> runOnUiThread(() -> {
+            PhonkSettingsHelper.installExamples(getApplicationContext(), () -> runOnUiThread(() -> {
                 lLoading.setVisibility(View.GONE);
                 btnDone.setVisibility(View.VISIBLE);
 

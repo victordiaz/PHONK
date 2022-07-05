@@ -108,8 +108,6 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }
-
-        MLog.d(TAG, "breakpoint");
     }
 
     private void listProjectsWithControlsThread() {
@@ -153,12 +151,6 @@ public class MainActivity extends BaseActivity {
             PhonkAppHelper.launchScript(this, p);
         }
 
-        // ComponentName component = new ComponentName("com.xxx.launcher.desktop", "com.xxx.launcher.desktop.testActivity");
-        // getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
-        HashMap<String, String> extras = new HashMap<>();
-        extras.put("qq1", "1");
-        extras.put("qq2", "2");
         // PhonkAppHelper.launchScript(this, new Project("playground/User Projects/activity"), extras);
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Basic Views"));
         // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Styling & Theming"));

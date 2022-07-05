@@ -62,13 +62,14 @@ public class LauncherActivity extends Activity {
          * Launch Update if there is a higher version code
          * or Launch the MainApp
          */
+
         if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
         } else if (BuildConfig.VERSION_CODE > userDetails.getInt("last_version_reinstalled", 125)) {
-            // Toast.makeText(this, "this needs to update", Toast.LENGTH_LONG).show();
             intent = new Intent(this, UpdateActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
+            // intent = new Intent(this, UpdateActivity.class);
             // intent = new Intent(this, NewMainActivity.class);
             // intent = new Intent(this, SharingDispatcherActivity.class);
             // intent = new Intent(this, SettingsActivity.class);
