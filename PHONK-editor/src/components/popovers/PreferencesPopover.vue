@@ -83,7 +83,7 @@ export default {
 @import (reference) "../../assets/css/variables.less";
 
 .popover {
-    ul, li {
+  ul, li {
     width: 100%;
   }
 }

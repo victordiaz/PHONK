@@ -84,6 +84,7 @@ export default {
 
     .value {
       font-weight: 500;
+      color: #a49573;
     }
   }
 

@@ -94,7 +94,7 @@ export default {
 
 ul {
   li {
-    padding-bottom: 0.4em;
+    padding-bottom: 0.5em;
   }
 }
 
