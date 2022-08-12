@@ -107,7 +107,6 @@ export default {
 .check_list {
   background: rgba(0, 0, 0, 0.55);
   margin-bottom: 12px;
-  font-family: 'Open Sans';
 
   h1 {
     color: @accentColor;

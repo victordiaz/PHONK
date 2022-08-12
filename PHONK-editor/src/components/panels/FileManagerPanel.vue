@@ -727,7 +727,6 @@ export default {
     top: 0;
     font-size: 0.8em;
     font-weight: 500;
-    font-family: 'Open Sans';
     box-sizing: content-box;
     vertical-align: middle;
     display: flex;
