@@ -131,6 +131,8 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
 
         UserPreferences.getInstance().load();
+
+        // UserPreferences.getInstance().set("webide_mode", false).save();
         mIsWebIdeMode = (boolean) UserPreferences.getInstance().get("webide_mode");
 
         if (savedInstanceState != null) {

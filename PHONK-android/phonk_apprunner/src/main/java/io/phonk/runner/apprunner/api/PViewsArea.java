@@ -24,6 +24,7 @@ package io.phonk.runner.apprunner.api;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -31,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
@@ -70,6 +72,7 @@ import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
 import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PViewsArea extends ProtoBase {

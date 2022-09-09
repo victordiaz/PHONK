@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import io.phonk.runner.AppRunnerActivity;
+import io.phonk.runner.AppRunnerFragment;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
@@ -79,13 +80,15 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject
 public class PMedia extends ProtoBase {
+    @Override
+    public void initForParentFragment(AppRunnerFragment fragment) {
+        super.initForParentFragment(fragment);
+    }
 
     String TAG = PMedia.class.getSimpleName();
 
     private HeadSetReceiver headsetPluggedReceiver;
     private ReturnInterface headsetCallbackfn;
-
-    boolean recording = false;
 
     public PMedia(AppRunner appRunner) {
         super(appRunner);

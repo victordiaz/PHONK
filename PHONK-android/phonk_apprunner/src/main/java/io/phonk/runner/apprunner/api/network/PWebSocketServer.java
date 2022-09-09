@@ -165,8 +165,6 @@ public class PWebSocketServer extends ProtoBase {
     public void __stop() {
         try {
             websocketServer.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

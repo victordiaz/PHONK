@@ -53,8 +53,6 @@ public class PhonkWebsocketServer extends WebSocketServer {
     private HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();
     private ConnectionCallback mConnectionCallback;
 
-    PDevice pDevice;
-
     public interface WebSocketListener {
         void onUpdated(JSONObject jsonObject);
     }
@@ -63,6 +61,7 @@ public class PhonkWebsocketServer extends WebSocketServer {
         super(new InetSocketAddress(port));
         mPort = port;
         mContext = c;
+        setReuseAddr(true);
     }
 
     public PhonkWebsocketServer(InetSocketAddress address, Draft d) {
@@ -77,8 +76,6 @@ public class PhonkWebsocketServer extends WebSocketServer {
     public void stop() {
         try {
             super.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
