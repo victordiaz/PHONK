@@ -37,7 +37,7 @@ During the first install, the app will
 2. Install the examples in the device "sdcard" folder. Doing this we can easily access the examples and self-made scripts from any other app.
 
 ## How to create your first script
-> Check the [Getting started guide](http://phonk.app/getstarted) for a more detailed explanation
+> Check the [Getting started guide](https://phonk.app/docs/1_step_installation) for a more detailed explanation
 
 Run the PHONK app in your Android device. You can create your first script within the device, although it might be a bit cumbersome using the device virtual keyboard.
 
