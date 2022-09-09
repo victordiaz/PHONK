@@ -8,14 +8,6 @@
       <div v-show="backdrop" id="backdrop" v-on:click="toggle_top_container"></div>
 
       <div id="central_container" class="container">
-        <project-checker v-show="false"></project-checker>
-
-        <!--
-        <transition name="banneranim">
-          <tutorial-loader v-show="false" transition="banner-anim"></tutorial-loader>
-        </transition>
-        -->
-
         <router-view
           class
           @route-data-loaded="changeTitle"
@@ -23,8 +15,8 @@
           transition="banner-anim"
           transition-mode="out-in"
         ></router-view>
-
       </div>
+
       <panel-handle orientation="vertical" container="right_container"></panel-handle>
       
       <div
@@ -45,11 +37,7 @@
             <panel-handle orientation="horizontal" color="dark" container="file_manager"></panel-handle>
             <console-panel></console-panel>
           </div>
-          <div v-else id = "uieditor_panels" class = "panels-container">
-            <!--
-            <documentation-panel></documentation-panel>
-            -->
-          </div>
+          <div v-else id = "uieditor_panels" class = "panels-container"></div>
         </div>
       </div>
 
@@ -66,20 +54,13 @@
 
 <script>
 import Store from './Store'
-
 import MainToolbar from './components/panels/MainToolbar.vue'
-
 import PanelHandle from './components/panels/PanelHandle'
 import DebugPanel from './components/panels/DebugPanel'
 import FileManagerPanel from './components/panels/FileManagerPanel'
 import ConsolePanel from './components/panels/ConsolePanel'
-
-// import Dashboard from './components/Dashboard'
 import DocumentationPanel from './components/panels/documentation/DocumentationPanel'
 import ProjectLoad from './components/project/ProjectLoad'
-import ProjectChecker from './components/project/ProjectChecker'
-// import TutorialLoader from './components/TutorialLoader'
-// import InterfaceEditor from './components/InterfaceEditor'
 
 export default {
   components: {
@@ -87,13 +68,9 @@ export default {
     MainToolbar,
     DebugPanel,
     ProjectLoad,
-    ProjectChecker,
     FileManagerPanel,
     ConsolePanel,
-    DocumentationPanel,
-    // Dashboard,
-    // TutorialLoader,
-    // InterfaceEditor
+    DocumentationPanel
   },
   data () {
     return {
@@ -160,11 +137,13 @@ export default {
     Store.state.browser = {
       editor_width: '300px',
       files_height: '200px',
-      console_height: '100px'
+      console_height: '100px',
+      bool: true
     }
     Store.save_browser_config()
     Store.state.browser = {}
     Store.load_browser_config()
+    Store.save_browser_config()
 
     var keyShortcuts = [
       {
@@ -181,7 +160,7 @@ export default {
         alt: false,
         meta: false,
         key: 'KeyR',
-        execute: ['project_run', '']
+        execute: ['project_action', '/stop_or_run']
       },
       {
         ctrl: true,
@@ -191,8 +170,6 @@ export default {
         key: 'KeyS',
         execute: ['project_editor_save', '']
       },
-      //
-      //
       {
         ctrl: true,
         shift: false,
@@ -258,7 +235,7 @@ export default {
           keyShortcuts[i].key === e.code
         ) {
           Store.emit(keyShortcuts[i].execute[0], keyShortcuts[i].execute[1])
-          // console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
+          console.log('keyshortcut is pressed ' + keyShortcuts[i].execute)
           e.preventDefault()
           e.stopPropagation()
           window.event.cancelBubble = true
@@ -303,13 +280,12 @@ export default {
 }
 
 body {
-  background: @mainColor;
-  font-family: 'Roboto Mono', monospace, sans-serif;
-  color: @primaryTextColor;
-  font-size: @defaultFontSize;
+  background: var(--color-main);
+  .font-main-400;
+  font-size: @font-size-default;
+  color: var(--color-text-light);
   overflow: hidden;
   height: 100vh;
-  font-size: 18px;
 }
 
 .loading {
@@ -353,10 +329,8 @@ body:before {
 }
 
 #top_bar {
-  color: black;
   font-size: 1em;
   width: 100%;
-  background: rgb(245, 211, 40);
   box-shadow: 0px 0px 3px 2px rgba(0, 0, 0, 0.29);
   display: none;
 
@@ -369,14 +343,10 @@ body:before {
   }
 
   p {
-    background: rgba(0, 0, 0, 0.2);
-    color: white;
     padding: 5px 20px;
     font-size: 1em;
     border-radius: 125px;
     margin: 10px;
-    font-weight: 600;
-    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -385,46 +355,13 @@ body:before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   z-index: 3;
-}
-
-.btn-toolbar {
-  display: none;
-  font-size: 2em;
-  color: @mainColor;
-  cursor: pointer;
-  z-index: 3;
-
-  &:hover {
-    color: darken(@accentColor, 10%);
-  }
-
-  &:active {
-    color: darken(@accentColor, 30%);
-  }
 }
 
 .btn-open {
   margin-left: 5px;
   margin-right: 12px;
-}
-
-.btn-close {
-  cursor: pointer;
-  color: @accentColor;
-  padding: 10px 15px;
-  position: absolute;
-  right: 0;
-
-  &:hover {
-    color: lighten(@accentColor, 10%);
-  }
-
-  &:active {
-    color: darken(@accentColor, 10%);
-  }
 }
 
 #main_container {
@@ -436,9 +373,6 @@ body:before {
   flex-flow: row;
   flex-flow: row nowrap;
   overflow: hidden;
-
-  .container {
-  }
 }
 
 #top_container {
@@ -481,56 +415,57 @@ button {
   padding: 12px 18px;
   margin: 0;
   border-radius: 1px;
-  border: 0px;
-  color: @primaryTextColor;
+  border: 0;
+  color: var(--color-text-light);
   text-transform: uppercase;
-  font-weight: 700;
-  font-size: 0.7em;
-  background: transparent;
 
   &.icon {
-    color: @iconColor;
+    color: var(--color-icon);
     background: transparent;
 
     &:hover {
       background: transparent;
-      color: white;
     }
   }
 
   &.boxed {
-    border: 1px solid @accentColor;
-    color: @accentColor;
+    border: 1px solid var(--color-lines);
+    color: var(--color-accent);
+    background-color: var(--color-transparent);
 
     &:hover {
-      background: @accentColor;
-      color: @backgroundColor;
+      background: var(--color-accent);
+      color: var(--color-main);
+    }
+  }
+
+  &.clean {
+    padding: 0;
+    color: var(--color-text-light);
+    background: var(--color-transparent);
+
+    &:hover {
+      background: transparent;
+      color: var(--color-accent);
     }
   }
 
   &:hover {
-    background-color: lighten(@accentColor, 10%);
-    @secondaryTextColor: @accentColor;
+    background-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   &:active {
-    background-color: darken(@accentColor, 10%);
-    @secondaryTextColor: @accentColor;
+    background-color: var(--color-accent);
+    color: var(--color-accent);
   }
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #474747;
-  border: 0px;
 }
 
 .editor_panel {
   position: relative;
   display: flex;
   flex-flow: row;
-  background: white;
-  color: @mainColor;
+  color: var(--color-main);
   padding: 5px 5px;
   border-radius: 1px;
   overflow: hidden;
@@ -554,24 +489,19 @@ button {
 #panels {
   width: 100%;
   height: 100%;
-  // overflow: hidden;
   box-sizing: border-box;
   padding: 0px;
-  border-left: 1px solid @secondaryColor;
+  border-left: 1px solid var(--color-lines);
 
   #panels-menu {
     display: flex;
-    background: #41423A;
 
     li {
       padding: 17px;
       font-size: 0.8em;
-      color: #f0f8ff30;
       cursor: pointer;
 
       &:hover, &.selected {
-        background: #272822;
-        color: white;
       }
     }
   }
@@ -588,13 +518,8 @@ button {
       width: 100%;
       border-radius: 0px;
       margin-bottom: 0px;
-      color: white;
-      border-bottom: 1px solid @secondaryColor;
+      border-bottom: 1px solid var(--color-lines);
       min-height: 45px;
-      // overflow: hidden;
-      // border-bottom: 1px solid rgba(88, 88, 88, 0.28);
-      /* transition: height 0.3 ease-in-out; */
-      // padding: 8px;
 
       &.expanded {
         height: 200px;
@@ -622,16 +547,11 @@ button {
       }
 
       .actionbar {
-        color: #828282;
         display: flex;
-        font-weight: 700;
         text-transform: uppercase;
-        font-size: 0.8em;
-        border-bottom: 0px solid rgba(255, 255, 255, 0.1);
         width: 100%;
         min-height: 45px;
         text-transform: uppercase;
-        font-weight: 700;
         font-size: 0.9em;
         box-sizing: border-box;
         user-select: none;
@@ -645,12 +565,11 @@ button {
           text-align: left;
           flex: 1;
           cursor: pointer;
-          font-weight: 700;
           font-size: 0.8em;
-          color: @accentColor;
+          color: var(--color-accent);
 
           &:hover {
-            color: darken(@accentColor, 10%);
+            color: darken(@color-accent, 10%);
           }
 
           .filename {
@@ -660,8 +579,14 @@ button {
 
         input {
           min-width: 25px;
-          color: @primaryTextColor;
+          color: var(--color-text-light);
           font-size: 0.8rem;
+        }
+
+        &.showIcons {
+          ul {
+            opacity: 1;
+          }
         }
 
         ul {
@@ -670,31 +595,30 @@ button {
 
           li {
             display: inline-block;
-            padding: 0px 5px;
+            padding: 5px;
             cursor: pointer;
             font-size: 1em;
 
             &:hover {
-              color: @accentColor;
+              color: var(--color-accent);
+            }
+
+            &.toggled {
+              background: var(--color-main-lighter);
+              color: var(--color-accent);
+              border-radius: 3px 3px 0 0;
             }
 
             &.enabled {
-              color: @accentColor;
+              color: var(--color-accent);
             }
           }
         }
       }
 
       .content {
-        color: black;
-        // overflow-y: hidden;
         overflow: auto;
         height: 100%;
-
-
-        & > * {
-          // padding: 10px;
-        }
       }
     }
   }
@@ -720,7 +644,7 @@ button {
 
 .scaleanim-enter-active,
 .scaleanim-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .upanim-enter,
@@ -733,6 +657,19 @@ button {
 .upanim-leave-active {
   transition: all 0.2s ease-in-out;
 }
+
+
+.downanim-enter,
+.downanim-leave-active {
+  opacity: 0;
+  transform: translate3d(0px, -5px, 0);
+}
+
+.downanim-enter-active,
+.downanim-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
 
 .upanim2-enter,
 .upanim2-leave-active {
@@ -786,18 +723,6 @@ button {
   opacity: 0;
 }
 
-.actionable {
-  button {
-    padding: 8px 8px;
-    margin-left: 3px;
-    // background: rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      color: @backgroundColor;
-    }
-  }
-}
-
 /* adjust to different sizes */
 @media screen and (max-width: 600px) {
   body:before {
@@ -823,6 +748,10 @@ button {
     button {
       max-width: 200px;
     }
+
+    .folder {
+      display: none;
+    }
   }
 }
 
@@ -834,6 +763,7 @@ button {
      }
      .project_actions button {
        min-width: 100px !important;
+       padding: 5px 0px;
      }
      .folder {
        display: none;
@@ -842,8 +772,8 @@ button {
 }
 
 .panel_above {
-  background: @mainColor;
-  border: 0px solid @accentColor;
+  background: var(--color-main);
+  border: 0px solid @color-accent;
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -858,26 +788,17 @@ button {
   font-size: 0.6em;
   box-sizing: border-box;
 
-  &:hover {
-    /* background: rgba(255, 255, 255, 0.1); */
-  }
-
   .title,
   h3 {
-    color: @accentColor;
+    color: var(--color-accent);
     text-transform: uppercase;
     font-size: 0.9em;
-    font-weight: 700;
     padding: 0px 5px;
   }
 }
 
-.bold {
-  font-weight: 600 !important;
-}
-
 .disabled {
-  opacity: 0.5;
+  opacity: 0.3;
   cursor: not-allowed;
   pointer-events: none;
 }

@@ -29,16 +29,17 @@ var state = {
     info: {
       network: { 'ip': 'none' },
       device: { 'model name': 'none' },
-      script: { 'running script': 'none' },
+      script: { 'running script': 'none', isRunning: false },
       other: { 'debugging': true },
       screen: { orientation: 'portrait' }
     }
   },
+  show_ui_editor: false,
   show_load_project: false,
   show_dashboard: false,
   show_device_info: false,
   show_preferences: false,
-  preferences: {
+  defaultPreferences: {
     'editor': {
       'text size': 18,
       /*
@@ -48,12 +49,13 @@ var state = {
       'tab bar': true,
       'sidebar': true
     },
-    'docs': {
-      'show advanced api': true,
-      'show documentation status': true,
-      'show TODO in documentation': false
-    }
+    'Show in docs': {
+      'advanced api': true,
+      'documentation status': true,
+      'TODO items': false
+    },
   },
+  preferences: {},
   webide: {
     'editor_width': '300px',
     'docs_height': '200px',
@@ -61,6 +63,8 @@ var state = {
   },
   lastNotificationId: 0
 }
+
+state.preferences = Object.assign({}, state.preferences, state.defaultPreferences)
 
 var vm = new Vue({
   data: {
@@ -90,6 +94,7 @@ store.project_list_all = function () {
  * Load a project
  */
 store.project_load = function (uri) {
+  // console.log('project_load')
   var query = {}
 
   let id = store.state.lastNotificationId++
@@ -134,8 +139,7 @@ store.list_files_in_path = function (p) {
 
     store.state.current_project.current_folder = '/' + p
     store.state.current_project.files = response.data
-    console.log(response.data)
-
+    
     store.emit('project_files_list', true)
   }, function (response) {
     store.emit('project_files_list', false)
@@ -283,14 +287,16 @@ store.project_delete = function (uri) {
  * Save a project
  */
 store.project_save = function (files) {
-  // console.log('project saving')
+  console.log('project saving', files)
 
+  // Query
   var query = {}
   query.project = Object.assign({}, store.state.current_project.project)
   query.project.files = null
   query.files = []
   query.files = Object.assign([], files)
 
+  // Notification
   let id = store.state.lastNotificationId++
   store.emit('show_info', { id: id, icon: 'save', text: 'Saving...', status: 'progress' })
 
@@ -325,6 +331,17 @@ store.project_action = function (action) {
   if (action === '/stop') {
     msg = 'Stopping'
     icon = 'stop'
+    state.device_properties.info.script.isRunning = false
+  } else if (action === '/stop_or_run') {
+    if (state.device_properties.info.script.isRunning) {
+      action = '/stop'
+      msg = 'Stopping'
+      icon = 'stop'
+      state.device_properties.info.script.isRunning = false
+    } else {
+      action = '/stop_all_and_run'
+      state.device_properties.info.script.isRunning = true
+    }
   }
 
   let id = store.state.lastNotificationId++
@@ -335,19 +352,6 @@ store.project_action = function (action) {
   }, function (response) {
     console.error('project_action error', response.status)
     store.emit('show_info', { id: id, icon: icon, text: 'Error ' + msg + '...', status: 'error' })
-  })
-}
-
-/*
- * Project stop all and run
- */
-store.project_stop_all_and_run = function (project) {
-  var query = {}
-
-  Vue.axios.get(getUrlWebapp('/api/project/' + project.gparent + '/' + project.parent + '/' + project.name + '/stop_all_and_run'), query).then(function (response) {
-    // console.log(response.status)
-  }, function (response) {
-    // console.log(response.status)
   })
 }
 
@@ -501,23 +505,10 @@ store.loadDocumentation = function () {
   var query = {}
 
   Vue.axios.get('/static/documentation.json', query).then(function (response) {
-    // console.log(TAG + ': project_load(status) > ' + response.status)
-    // console.log('loading documentation')
-    // console.log(response.data)
     store.state.documentation = response.data
     store.emit('documentation_loaded')
   }, function (response) {
   })
-}
-
-store.save_browser_config = function () {
-  localStorage.setItem('browser', JSON.stringify(state.preferences))
-  // console.log(state.preferences)
-}
-
-store.load_browser_config = function () {
-  state.preferences = JSON.parse(localStorage.getItem('browser') || '[]')
-  // console.log(state.preferences)
 }
 
 /*
@@ -541,7 +532,7 @@ store.websockets_init = function () {
     // console.log('ws connected')
     wsIsConnected = true
     clearInterval(reconnectionInterval) // _s the reconnection
-    store.emit('device', { connected: true })
+    state.device_properties.connected = true
 
     // restart
     store.emit('project_list_all')
@@ -550,7 +541,6 @@ store.websockets_init = function () {
   ws.onmessage = function (e) {
     // console.log('ws message', e)
     var data = JSON.parse(e.data)
-    // console.log(e.data)
 
     // getting console data
     switch (data.module) {
@@ -561,21 +551,21 @@ store.websockets_init = function () {
         break
 
       case 'console':
-        // console.log(e)
         store.emit('console', data)
         break
+
       // getting device data
       case 'device':
         data.connected = true
-        Vue.set(store.state, 'device_properties', data)
-        store.emit('device', data)
-        // store.device_properties = data
-
+        state.device_properties.connected = true
+        store.state.device_properties = Object.assign({}, store.state.device_properties, data)
         break
+        
       case 'dashboard':
         console.log('dashboard', data)
         store.emit('dashboard', data)
         break
+
       default:
     }
   }
@@ -588,7 +578,7 @@ store.websockets_init = function () {
 
     // try to reconnect
     reconnectionInterval = setTimeout(function () {
-      console.log('trying to reconnect')
+      console.log('trying to reconnect...')
       that.websockets_init()
     }, 200)
   }
@@ -603,12 +593,8 @@ store.websockets_init()
 store.mouse = function () {
   document.onmousemove = function (event) {
     event = event || window.event
-    // console.log(event.button)
-    // console.log(event.pageX, event.pageY)
   }
 }
-
-// store.mouse()
 
 store.mydragg = function () {
   return {
@@ -657,18 +643,28 @@ store.mydragg = function () {
   }
 }
 
+
+store.save_browser_config = function () {
+  localStorage.setItem('browser', JSON.stringify(state.browser))
+  // console.log(state.preferences)
+}
+
+store.load_browser_config = function () {
+  state.browser = JSON.parse(localStorage.getItem('browser') || '[]')
+  // console.log(state.preferences)
+}
+
 store.loadSettings = function () {
-  var savedSettings = localStorage.getItem('preferences')
-  // console.log('savedSettings', savedSettings)
+  var savedSettings = localStorage.getItem('editor_preferences')
+
   if (typeof savedSettings === 'undefined' || !savedSettings || savedSettings === 'null') {
-    // console.log('not loading settings')
     store.clearSettings()
   } else {
-    // console.log('loadingSettings')
     let parsedPreferences = JSON.parse(savedSettings)
+  
     if (parsedPreferences.hasOwnProperty('savedTime')) {
       delete parsedPreferences.savedTime
-      store.state.preferences = parsedPreferences
+      state.preferences = Object.assign({}, state.preferences, parsedPreferences)
     } else {
       store.clearSettings()
     }
@@ -679,7 +675,7 @@ store.loadSettings = function () {
     console.log('WebIDE is loaded within the app', settingsFromAndroid.isTablet())
     Vue.set(store.state.preferences['other'], 'WebIDE as default editor', settingsFromAndroid.getWebIde())
   } else {
-    console.log('WebIDE is not loaded within the app')
+    // console.log('WebIDE is not loaded within the app')
   }
 }
 
@@ -688,15 +684,18 @@ store.saveSettings = function () {
 
   let settings = JSON.parse(JSON.stringify(this.state.preferences))
   settings.savedTime = Date.now()
-  localStorage.setItem('preferences', JSON.stringify(settings))
+  localStorage.setItem('editor_preferences', JSON.stringify(settings))
 
-  // console.log('settingsFromAndroid', settingsFromAndroid)
-  if (settingsFromAndroid) {
+  try {
     settingsFromAndroid.setWebIde(store.state.preferences['other']['WebIDE as default editor'])
+  } catch(e) {
+    console.log('no settings coming from Android')
   }
 }
 
 store.clearSettings = function () {
   console.log('clearSettings')
-  localStorage.setItem('preferences', null)
+  state.preferences = Object.assign({}, state.preferences, state.defaultPreferences)
+
+  store.saveSettings()
 }

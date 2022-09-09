@@ -1,15 +1,24 @@
 <template>
   <div id = "uieditor">
     <div id = "view-area">
+
       <!-- View list -->
       <div id = "view-list" class = "block">
-        <button v-for = "v in viewTypes" @click = "addView(v)" draggable="true">{{ v }}</button>
+        <div class="view-list__section">
+          <h1>Simple</h1>
+          <div class="view-list__views-wrapper">
+            <button class="ui transparent" v-for = "v in viewTypes" @click = "addView(v)" draggable="true" :key="v">
+              <img :src="require('../../assets/view_icons/ICON_' + v.toUpperCase() + '.svg')"/>
+              <span>{{ v }}</span>
+            </button>
+          </div>
+        </div>
         <button @click = "clearViews()">x</button>
       </div>
 
       <!-- properties -->
       <div v-if = "viewSelected !== null" id = "properties" class = "block">
-        <div class = "view-property" v-for = "(p, k) in viewSelected.props">
+        <div class = "view-property" v-for = "(p, k) in viewSelected.props" :key="k">
           <label>{{k}}</label>
           <input
             :value = "viewSelected.props[k]"
@@ -22,9 +31,9 @@
 
       <!-- treeView -->
         <div id = "tree-view" class = "block">
-          <div v-for = "v in treeView">
+          <div v-for = "v in treeView" :key="v">
             <button class = "level-1">{{v.name}}</button>
-            <div v-for = "c in v.children">
+            <div v-for = "c in v.children" :key="c.props.id">
               <button class = "level-2" :class = "{ 'selected': c.props.id === viewSelected.props.id }" @click="viewSelected = c">{{ c.name }}</button>
             </div>
           </div>
@@ -42,6 +51,7 @@
         <div class = "placed-views">
           <div class = "view"
             v-for = "v in treeViewFlatten"
+            :key="v"
             :style = "viewStyle(v)"
             :class = "{ 'selected': v.props.id === viewSelected.props.id }"
             v-on:mousedown="selectView(v)"
@@ -62,7 +72,8 @@ export default {
   name: 'UIEditor',
   data () {
     return {
-      viewTypes: ['linearLayout', 'list', 'map', 'canvas', 'touchPad', 'plot', 'webView', 'image', 'radioButtonGroup', 'loader', 'matrix', 'knob', 'slider', 'pager', 'toggle', 'input', 'textArea', 'text', 'textList', 'button', 'imageButton'],
+      // viewTypes: ['linearLayout', 'list', 'map', 'canvas', 'touchPad', 'plot', 'webView', 'image', 'radioButtonGroup', 'loader', 'matrix', 'knob', 'slider', 'pager', 'toggle', 'input', 'textArea', 'text', 'textList', 'button', 'imageButton'],
+      viewTypes: ['button', 'input', 'text', 'toggle', 'dropdown', 'image', 'slider', 'knob', 'matrix', 'plot', 'touchpad', 'map', 'webview', 'canvas'],
       device: { width: '300', height: '500' },
       button: { x: 0, y: 0 },
       cursor: {
@@ -100,10 +111,7 @@ export default {
       return this.remoteViews.updateNum + 'o'
     },
     treeViewFlatten () {
-      // console.log('qq1', this.treeView.length)
       if (this.treeView.length === 0) return []
-
-      // console.log('qq2')
 
       let views = []
       views.push(this.treeView[0])
@@ -132,26 +140,13 @@ export default {
         console.log('ws connected')
         this.wsIsConnected = true
         clearInterval(this.reconnectionInterval)
-        /*
-        setInterval(() => {
-          this.send_ws_data({
-            cmd: 'getScreen'
-          })
-
-          this.send_ws_data({
-            cmd: 'getTree'
-          })
-        }, 2000)
-        */
       }
 
       this.ws.onmessage = e => {
-        // console.log('qq')
-        // console.log('ws message', e.data)
         var msg = JSON.parse(e.data)
-        // console.log(msg)
-
+    
         if (msg.cmd === 'getPing') {
+          console.log('ping')
         } else if (msg.cmd === 'getScreenResult') {
           if (this.remoteViews.updateNum % 2) {
             this.remoteViews.imageBytesEven = msg.data
@@ -164,7 +159,6 @@ export default {
             id: 'qq'
           }
           this.treeView = msg.data
-          // console.log('tree', this.treeView)
         }
       }
 
@@ -189,10 +183,9 @@ export default {
         cmd: 'createView',
         type: type
       })
-      // this.views.push({ type: type, props: { id: '', x: 0, y: 0.2, width: 0.5, height: 0.1 } })
     },
     editView (val, i) {
-      console.log('editView ', val, i) // JSON.stringify(this.viewSelected.props))
+      console.log('editView ', val, i)
 
       let castedVal
       switch (typeof this.viewSelected.props[i]) {
@@ -210,7 +203,6 @@ export default {
         cmd: 'editView',
         props: this.viewSelected.props
       })
-      // this.views.push({ type: type, props: { id: '', x: 0, y: 0.2, width: 0.5, height: 0.1 } })
     },
     clearViews () {
       this.views = []
@@ -222,9 +214,7 @@ export default {
       this.initialPos = this.cursor
     },
     viewStyle (v) {
-      // console.log('qq', v)
-
-      if (!v.hasOwnProperty('props')) return {}
+      if (!Object.prototype.hasOwnProperty.call(v,'props')) return {}
 
       return {
         top: v.props.y * this.device.height + 'px',
@@ -246,7 +236,7 @@ export default {
     q3 () {
       console.log('q3')
     },
-    move (e) {
+    move () {
       console.log('moving')
       this.isMoving = true
 
@@ -305,22 +295,18 @@ export default {
 @import (reference) '../../assets/css/variables.less';
 @import (reference) '../../assets/css/hacks.less';
 
-@mainColor: #6176AD;
-@mainColor: #1ca0e1;
-
 #uieditor {
   display: flex;
   width: 100%;
   height: 100%;
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='130' height='130' patternTransform='scale(0.3) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(0, 0%, 0%, 0)'/><path d='M11 6a5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5 5 5 0 015 5' stroke-width='1' stroke='none' fill='rgba(255, 255, 255, 0.1)'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
 
   button {
     text-transform: initial;
-
   }
 }
 
 #canvas {
-  background: @mainColor;
   height: 100%;
   display: flex;
   align-items: center;
@@ -337,22 +323,19 @@ export default {
 }
 
 #view-area {
-  width: 400px;
+  width: 350px;
   height: 100%;
-  background: @mainColor;
   padding: 24px;
-  box-shadow: 0 0 2px 2px #00000024;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 
   .block {
-     .scrollbar;
+    .scrollbar;
     flex: 1;
     margin: 12px 0;
-    box-shadow: 2px 2px 5px -3px #00000063;
-    border: 1px solid #ffffff29;
-    background: #ffffff24;
+    // border: 1px solid #ffffff29;
+    background: #02020230;
     border-radius: 5px;
     overflow: hidden;
   }
@@ -360,12 +343,49 @@ export default {
   #view-list {
     padding: 10px;
     overflow-y: auto;
+    flex: 2;
+
+    .view-list__section {
+      padding: 12px;
+    }
+
+    .view-list__section h1 {
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #ffffff3b;
+      margin-bottom: 9px;
+    }
+
+    .view-list__views-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
 
     button {
-      background: transparent;
+      background: #ffffff00;
       margin: 5px;
-      border: 1px solid #ffffff30;
-      padding: 8px 12px;
+      padding: 6px 8px;
+      border-radius: 3px;
+      color: #bbb;
+      text-transform: uppercase;
+      font-size: 10px;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-direction: column;
+
+      img {
+        width: 40px;
+      }
+
+      &:hover {
+        background-color: var(--color-transparent);
+        
+        img {
+          filter: grayscale(100%) brightness(120%) sepia(90%) hue-rotate(5deg) saturate(500%) contrast(0.7);
+        }
+      }
     }
   }
 
@@ -396,8 +416,7 @@ export default {
         padding: 10px;
         width: 100%;
         width: 148px;
-        font-weight: 800;
-        font-family: "Roboto Mono";
+        .font-mono-400;
         color: white;
 
         &:focus {

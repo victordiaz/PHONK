@@ -59,13 +59,11 @@ export default {
   width: 150px;
   height: 150px;
   border: 0px solid black;
-  color: #2E2E2E;
-  font-family: Roboto-Condensed-Regular, verdana, sans-serif;
+  .font-mono-400;
   overflow: hidden;
   margin: 5px 0px;
   border-radius: 2px;
   background: whitesmoke;
-  font-family: monospace;
   font-size: 8px;
 
   .info {
@@ -76,7 +74,6 @@ export default {
   }
 
   &:hover {
-    background: rgb(240, 240, 240);
   }
 
   h1 {

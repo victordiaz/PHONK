@@ -1,14 +1,19 @@
 <template>
   <div :id = "object.name" v-if = "sortedObject.nFound > 0" class="object">
     <h3>{{ sortedObject.name }}</h3>
-    <ul>
-      <!-- TODO filter and orderBy name-->
-      <li v-for="f in sortedObject.fields" :key="f.name">
-        <p v-on:click="$emit('onSelectMethod', { object: object, field: f, type: 'field' })">{{ f.name }}</p>
+
+    <!-- fields -->
+    <ul v-if="sortedObject.fields.length > 0">
+      <li
+        v-for="f in sortedObject.fields"
+        :key="f.name"
+        v-on:click="$emit('onSelectMethod', { object: object, field: f, type: 'field' })">
+          {{ f.name }}
       </li>
     </ul>
-    <ul>
-      <!-- TODO filter and orderBy name -->
+
+    <!-- methods -->
+    <ul v-if="sortedObject.methods.length > 0">
       <li
         v-for="m in sortedObject.methods"
         v-bind:class="{
@@ -19,8 +24,8 @@
           missing: m.status === 'missing',
         }"
         :key="m.name"
-      >
-        <p v-on:click="$emit('onSelectMethod', { object: object, method: m, type: 'method' })">{{ m.name }}()</p>
+        v-on:click="$emit('onSelectMethod', { object: object, method: m, type: 'method' })">
+          {{ m.name }}()
       </li>
     </ul>
   </div>

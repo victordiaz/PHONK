@@ -29,7 +29,5 @@ export default {
 <style lang = "less">
 @import (reference) "../assets/css/variables.less";
 
-}
-
 
 </style>

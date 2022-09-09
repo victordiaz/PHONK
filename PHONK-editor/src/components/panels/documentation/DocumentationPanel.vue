@@ -8,7 +8,7 @@
       <div class="actionbar">
         <h1 class="title" v-on:click="expanded = !expanded">Docs</h1>
         <input type="text" v-model="search" placeholder="type to filter..." />
-        <button id = "clearSearch" v-on:click = "clearSearch" v-if = "search !== ''"><i data-v-15cdbf56="" class="material-icons">close</i></button>
+        <button id = "clearSearch" class="clean" v-on:click = "clearSearch" v-if = "search !== ''"><i data-v-15cdbf56="" class="material-icons">close</i></button>
         <ul>
           <li title="Switch view" class="material-icons" v-on:click="switch_view">reorder</li>
         </ul>
@@ -32,11 +32,13 @@
             </div>
           </div>
         </div>
+
         <transition name="upanim2" mode="out-in">
           <div id="card" :class="{ inset: view_type === 'vertical' }" v-if="show_card">
             <documentation-card :data="selected" v-on:onGoToClass="goToClass" v-on:onCloseCard = "close_card"></documentation-card>
           </div>
         </transition>
+        
       </div>
     </div>
   </div>
@@ -92,7 +94,6 @@ export default {
     },
     performSearch: function (objs) {
       var that = this
-      console.log('qq', objs)
       return objs.filter(o => {
         return o.name.indexOf(that.search) !== -1
       })
@@ -162,7 +163,7 @@ export default {
 
 .inset {
   margin: 13px;
-  .main_shadow;
+  .shadow-main;
   margin-top: -10px;
   z-index: 10;
   background: white;
@@ -178,14 +179,16 @@ export default {
 
   #clearSearch {
     font-size: 0.5em;
-    color: #828282;
+    position: absolute;
+    right: 40px;
+    color: var(--color-text-light);
 
     i {
       font-size: 16.2px;
     }
 
     &:hover {
-      color: white;
+      color: var(--color-accent);
       background: transparent;
     }
   }
@@ -207,12 +210,16 @@ export default {
       width: 100%;
       font-size: 1em;
       box-sizing: border-box;
-      color: white;
+      border-bottom: 1px solid var(--color-transparent);
+
+
+      &:focus {
+        border-color: var(--color-lines);
+      }
     }
 
     .placeHolder {
-      color: rgba(255, 255, 255, 0.3);
-      font-family: 'Roboto Mono';
+      .font-mono-400;
       font-size: 0.8rem;
     }
 
@@ -240,14 +247,14 @@ export default {
     padding: 0px;
     overflow: hidden;
     position: relative;
+    background-color: var(--color-main-lighter);
 
     .btn-close {
-      color: gray;
       right: 10px;
       top: 0px;
+      position: absolute;
 
       :hover {
-        color: white;
       }
     }
 
@@ -275,11 +282,12 @@ export default {
     }
 
     #browser {
-      font-family: 'Roboto Mono';
+      .font-mono-400;
       flex: 1;
       overflow-y: scroll;
       overflow-x: hidden;
       padding: 10px;
+      background: var(--color-main);
 
       &.hide_debug {
         ul li {
@@ -294,7 +302,6 @@ export default {
       h1 {
         font-size: 1.1em;
         text-transform: uppercase;
-        font-weight: 700;
       }
 
       h2 {
@@ -303,17 +310,14 @@ export default {
         margin-bottom: 1em;
         padding-left: 4px;
         font-size: 0.8em;
-        font-weight: 600;
-        background: #52534f;
         padding: 10px;
       }
 
       h3 {
-        font-weight: 600;
-        font-size: 0.8em;
+        font-size: @font-size-s;
         display: inherit;
-        padding: 2px;
-        color: @accentColor;
+        padding: 0;
+        color: var(--color-text-light-faded);
         margin-bottom: 6px;
         margin-left: 2px;
         border-radius: 0px;
@@ -327,29 +331,24 @@ export default {
         box-sizing: border-box;
 
         ul {
-          column-count: auto;
-          -moz-column-count: auto;
-          column-gap: 25px;
-          -moz-column-gap: 25px;
-          column-width: 150px;
-          -moz-column-width: 150px;
-          font-size: 0.8em;
+          display: grid;
+          gap: 6px 12px;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          margin-bottom: 6px;
+          grid-template-columns: repeat( auto-fit, minmax(15ch, 1fr) );
         }
 
         li {
-          color: #f7f7f7;
-          font-weight: 300;
           letter-spacing: 1px;
-          font-size: 0.9em;
-
-          p {
-            cursor: pointer;
-            padding: 5px 4px;
-            display: inline-block;
-          }
-
-          p:hover {
-            color: @accentColor;
+          font-size: @font-size-xs;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          cursor: pointer;
+          padding: 2px;
+        
+          &:hover {
+            color: var(--color-accent);
           }
         }
       }
@@ -357,17 +356,15 @@ export default {
   }
 
   #card {
-    background: #32332d;
+    background: var(--color-main-lighter);
     flex: 1.5;
     overflow: hidden;
     overflow-y: auto;
     .scrollbar;
-    color: white;
   }
 }
 
 .debug {
   font-size: 0.8rem;
-  color: white;
 }
 </style>

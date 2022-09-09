@@ -14,33 +14,6 @@
 
       <div class="section">
         <h3>Load a project</h3>
-          <div v-show="showingAction" class="actionable">
-            <!-- <button>rename</button>-->
-            <transition name="scaleanim" mode="out-in">
-
-              <div v-if="showingAction === 'general'" key="general" class = "confirmation">
-                <button v-on:click="setAction('clone')">clone</button>
-                <button v-on:click="setAction('rename')">rename</button>
-                <button v-on:click="setAction('delete')">delete</button>
-                <button v-on:click="cancelActions">cancel</button>
-              </div>
-              <div v-else-if = "showingAction === 'delete'" class="confirmation" key="delete">
-                <p>Are you sure?</p>
-                <button v-on:click="deleteActionSubmit">delete</button>
-                <button v-on:click="backActions">cancel</button>
-              </div>
-              <div v-else-if = "showingAction === 'rename'" class = "confirmation" key = "rename">
-                <input v-model = "newName" placeholder="New name..." class = "project-input"/>
-                <button v-on:click="renameActionSubmit">rename</button>
-                <button v-on:click="backActions">cancel</button>
-              </div>
-              <div v-else-if = "showingAction === 'clone'" class = "confirmation" key = "clone">
-                <input v-model = "newName" placeholder="Clone name..." class = "project-input"/>
-                <button v-on:click="cloneActionSubmit">clone</button>
-                <button v-on:click="backActions">cancel</button>
-              </div>
-            </transition>
-          </div>
 
         <div v-if="store.state.projects" id="project-load">
           <div class="left">
@@ -65,28 +38,14 @@
             </div>
           </div>
           <div class="right">
-            <div class="project_info">
-              <p>Double click to open</p>
-              <div class="img-cover"></div>
-              <div class="actions">
-                <div class="action-element"></div>
-                <div class="action-element"></div>
-                <div class="action-element"></div>
-              </div>
-            </div>
             <ul v-if="pselected !== -1">
-              <li
-                v-bind:class="{ selected: actionOnProject === f }"
-                v-for="f in folder_chosen"
-                class="project_item"
-                :key="f"
-              >
-                <router-link class = "project_item" @click.native="load_project(f)" :to="{name: 'editor.load', params: {type: uri.type, folder: uri.folder, project: f.name} }">
-                  <span class="icon">{{ f.name.substr(0, 2) }}</span>
-                  <span>{{ f.name }}</span>
-                </router-link>
-                <i v-on:click.stop.prevent="openActions(f)" class="action material-icons">more_vert</i>
-              </li>
+              <ProjectItem
+                v-for="project in folder_chosen"
+                :project="project"
+                :uri="uri"
+                :key="project.name"
+                :isEditing="editingProject.name === project.name"
+              />
             </ul>
           </div>
         </div>
@@ -103,10 +62,12 @@
 import Store from '../../Store'
 import _ from 'lodash'
 import ProjectNew from './ProjectNew'
+import ProjectItem from './ProjectItem'
 
 export default {
   components: {
-    ProjectNew
+    ProjectNew,
+    ProjectItem
   },
   name: 'ProjectLoad',
   data () {
@@ -115,14 +76,12 @@ export default {
       id: Store.state.id,
       pselected: -1,
       selected: -1,
+      editingProject: { name: '' },
       uri: {
         type: '',
         folder: '',
         fullpath: ''
-      },
-      showingAction: null,
-      actionOnProject: null,
-      newName: ''
+      }
     }
   },
   computed: {
@@ -190,48 +149,12 @@ export default {
       this.store.state.show_load_project = false
       Store.emit('toggle', 'load_project')
     },
-    openActions: function (f) {
-      // console.log('openActions', f)
-      this.showingAction = 'general'
-      this.actionOnProject = f
-    },
-    cloneAction: function () {
-    },
-    setAction: function (action) {
-      this.showingAction = action
-    },
-    deleteActionSubmit: function () {
-      console.log('deleteSubmit')
-      Store.project_delete(this.actionOnProject.path)
-    },
-    renameActionSubmit: function () {
-      console.log('renameSubmit')
-
-      if (this.newName !== '') {
-        Store.project_rename(this.actionOnProject.path, this.newName)
-        this.backActions()
-      }
-    },
-    cloneActionSubmit: function () {
-      console.log('cloneSubmit')
-
-      if (this.newName !== '') {
-        Store.project_clone(this.actionOnProject.path, this.newName)
-        this.backActions()
-      }
-    },
-    backActions: function () {
-      this.showingAction = 'general'
-      this.newName = ''
-    },
-    cancelActions: function () {
-      this.showingAction = null
-      this.actionOnProject = null
-      this.newName = ''
+    setEditingProject: function (project) {
+      this.editingProject = project      
     }
   },
   mounted () {
-    this.cancelActions()
+    // this.cancelActions()
   },
   created () {
     Store.on('new_project', this.new_project)
@@ -254,7 +177,6 @@ export default {
   margin-bottom: 12px;
   padding: 0px;
   font-size: 1rem;
-  color: #222;
   overflow: auto;
   z-index: 5;
 
@@ -268,6 +190,7 @@ export default {
   #editor_panel_new,
   #project-load {
     margin: 8px 12%;
+    color: var(--color-text-light);
   }
 
   .project-input {
@@ -278,22 +201,15 @@ export default {
     border: none;
     width: 100%;
     box-sizing: border-box;
-    color: black;
     font-size: 1rem;
-    background: white;
-    padding: 10px;
-    border: 1px solid @accentColor_1;
+    padding: 0 12px; 
   }
 
   h3 {
-    // text-transform: uppercase;
-    font-weight: 400;
     font-size: 0.9rem;
-    color: #f3f4f182;
     margin-top: 50px;
     margin-bottom: 15px;
-    font-family: 'Roboto';
-    font-weight: 500;
+    .font-main-400;
   }
 
   .debug {
@@ -302,54 +218,20 @@ export default {
 
   .section {
     position: relative;
-
-    .actionable {
-      position: absolute;
-      top: -10px;
-      right: 12%;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      height: 38px;
-      overflow: hidden;
-      justify-content: flex-end;
-
-      button {
-        padding: 12px 8px;
-      }
-
-      p {
-        padding: 5px;
-      }
-
-      .confirmation {
-        align-items: center;
-        // background: @accentColor;
-        color: @accentColor;
-        display: flex;
-
-        input {
-          // color: white;
-        }
-      }
-    }
   }
 }
 
 #project-load {
   display: flex;
   flex-direction: row;
-  border: 1px solid @secondaryColor;
+  border: 1px solid var(--color-lines);
   font-size: 1em;
-  font-weight: 100;
-  // max-height: 100%;
   height: calc(100vh - 288px);
 
   .no-projects {
     p {
       font-size: 1.5em;
       line-height: 1.3em;
-      font-weight: 600;
       padding: 2em;
       text-align: center;
     }
@@ -360,28 +242,25 @@ export default {
     list-style: none;
     margin: 0;
     padding: 0;
-    cursor: pointer;
     user-select: none;
 
     li, .project_item {
-      color: @primaryTextColor;
+      position: relative;
+      color: var(--color-text-light);
       padding: 3px 10px;
-      font-weight: 400;
       display: flex;
       line-height: 1.4em;
       align-items: center;
       text-decoration: none;
-      font-family: Roboto;
-      width: 100%;
+      .font-main-400;
       box-sizing: border-box;
 
       .icon {
         max-width: 30px;
         min-width: 30px;
         height: 30px;
-        border: 1px solid @secondaryColor;
-        color: @accentColor;
-        font-weight: 800;
+        border: 1px solid var(--color-lines);
+        color: var(--color-text-light-faded);
         display: flex;
         justify-content: center;
         align-content: center;
@@ -393,7 +272,7 @@ export default {
         svg {
           width: 28px;
           height: 23px;
-          fill: #bdc2bc;
+          fill: var(--color-text-light-faded);
         }
       }
 
@@ -403,30 +282,22 @@ export default {
 
       &:hover,
       &.selected {
-        color: @accentColor;
-        border-radius: 1px;
+        color: var(--color-accent);
+        border-radius: 2px;
         position: relative;
-
-        .action {
-          display: block;
-          margin: 0;
-          position: absolute;
-          padding: 12px;
-          right: 0px;
-          // background: rgba(255, 255, 255, 0.5);
-        }
       }
 
       &.selected {
-        color: #664505;
-        background: @accentColor;
+        color: var(--color-accent);
+      }
+
+      &.selected {
+        background: var(--color-main-lighter);
 
         .icon {
-          color: #3c2e00;
-          border-color: #c8a427;
 
           svg {
-            fill: #3c2e00;
+            fill: var(--color-accent);
           }
         }
       }
@@ -437,48 +308,42 @@ export default {
     .scrollbar;
 
     h1 {
-      color: @accentColor;
-      font-weight: 600;
+      color: var(--color-accent);
       text-transform: uppercase;
       font-size: 0.7em;
       padding: 18px 18px;
       margin-bottom: 0px;
-
-      // border-bottom: 0px solid @accentColor;
     }
 
     .project_list {
       margin-bottom: 22px;
+
+      ul li {
+        cursor: pointer;
+      }
     }
   }
   .right {
     text-align: center;
-    border-left: 1px solid @secondaryColor;
+    border-left: 1px solid var(--color-lines);
     position: relative;
     overflow-y: auto;
     .scrollbar;
 
     .action {
-      display: none;
       opacity: 1;
       position: sticky;
       right: -10px;
-      color: white;
       padding: 2px 10px;
 
       &:hover {
-        color: @accentColor;
+        color: var(--color-accent);
       }
-    }
-
-    .project_info {
-      display: none;
     }
 
     .img-cover {
       width: 100px;
       height: 100px;
-      background-color: blue;
     }
 
     .actions {
@@ -487,32 +352,25 @@ export default {
       .action-element {
         width: 20px;
         height: 20px;
-        background-color: green;
         display: inline-block;
       }
     }
 
     ul {
-      font-weight: 500;
       height: 100%;
     }
   }
 
   #new_folder {
     font-size: 0.8em;
-    border: 1px dotted #bbbbbb;
     display: inline-block;
     border-radius: 2px;
     margin-left: 10px;
     margin-top: 28px;
-    color: #bbbbbb;
     padding: 8px;
     text-transform: uppercase;
-    font-weight: 600;
 
     &:hover {
-      color: #fff;
-      border-color: transparent;
     }
 
     i {

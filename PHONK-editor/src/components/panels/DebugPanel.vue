@@ -50,14 +50,12 @@ export default {
   right: 0;
   width: 200px;
   height: 200px;
-  background-color: rgba(0, 255, 255, 0.5);
   padding: 5px;
-  font-family: @editorFont;
+  .font-mono-400;
   box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.2);
   z-index: 10;
 
   h2 {
-    font-weight: 500;
     padding: 2px;
   }
 
@@ -66,7 +64,6 @@ export default {
 
     li {
       padding: 3px 0px;
-      border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
     }
   }
 }

@@ -38,7 +38,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #252525;
 
   span {
 
@@ -47,7 +46,6 @@ export default {
   input {
     border: 0px;
     background: transparent;
-    color: white;
     flex: 2;
     min-width: 20px;
     margin: 0px 10px;
@@ -59,8 +57,8 @@ export default {
     height: 100%;
     margin: 0px;
     border-radius: 0;
-    color: @secondaryTextColor;
-    background: @accentColor;
+    color: var(--color-text-dark);
+    background: var(--color-accent);
   }
 }
 

@@ -34,37 +34,26 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  background: @mainColor;
+  background: var(--color-main);
   width: 100%;
   height: 100%;
 
   p {
     padding: 8px 18px;
     margin: 20px;
-    color: @primaryTextColor;
+    color: var(--color-text-light);
     line-height: 1.5em;;
-    border: 1px solid #4c4f4b;
-    // font-weight: 300;
+    border: 1px solid var(--color-lines);
+    background: var(--color-main-lighter);
   }
 
   button {
-    // text-decoration: underline;
     padding-left: 12px;
     margin-left: 12px;
-    color: white;
-    font-weight: 700;
     text-transform: uppercase;
     background: none;
-    color: @accentColor;
+    color: var(--color-accent);
     font-size: 0.9rem;
-
-    &:hover {
-      color: lighten(@accentColor, 30%);
-    }
-
-    &:active {
-      color: darken(@accentColor, 30%);
-    }
   }
 }
 

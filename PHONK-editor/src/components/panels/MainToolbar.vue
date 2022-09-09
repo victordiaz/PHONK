@@ -8,7 +8,7 @@
       <div class="project_actions">
         <transition name="upanim" mode="out-in">
           <button
-            class="transparent"
+            class="clean"
             key="show"
             v-if="!sharedState.show_load_project"
             v-on:click="toggle_load_project"
@@ -19,7 +19,7 @@
                 {{ sharedState.current_project.project.name }}
               </span>
             </p>
-            <p v-else class="bold">
+            <p v-else>
               <!--
               <span title="Open project" class="material-icons">folder</span>
               -->
@@ -28,8 +28,8 @@
             <i class="material-icons closer">arrow_drop_down</i>
           </button>
 
-          <button class="transparent" key="hide" v-else v-on:click="toggle_load_project">
-            <p class="bold">back to editor</p>
+          <button class="clean" key="hide" v-else v-on:click="toggle_load_project">
+            <p class="name">back to editor</p>
             <i class="material-icons closer">arrow_drop_up</i>
           </button>
         </transition>
@@ -47,9 +47,16 @@
     <div class="right_side">
       <div class = "app_info_msg_wrapper">
         <transition-group name="info-anim" mode="out-in" tag="div">
-          <div v-for = "infoMsg in infoQueue" class="app_info_msg info-anim-item" :class = "{ 'progress': infoMsg['status'] === 'progress', 'done': infoMsg['status'] === 'done', 'error': infoMsg['status'] === 'error' }" :key="infoMsg.id">
-            <span class="icon_left material-icons">{{ infoMsg.icon }}</span>
-            <span class = "msg">{{ infoMsg.text }}</span>
+          <div
+            v-for = "infoMsg in infoQueue"
+            class="app_info_msg info-anim-item"
+            :class = "{
+              'progress': infoMsg['status'] === 'progress',
+              'done': infoMsg['status'] === 'done',
+              'error': infoMsg['status'] === 'error' }"
+            :key="infoMsg.id">
+              <span class="icon_left material-icons">{{ infoMsg.icon }}</span>
+              <span class = "msg">{{ infoMsg.text }}</span>
           </div>
         </transition-group>
       </div>
@@ -73,11 +80,11 @@
       >settings</button>
     </div>
 
-    <transition name="upanim">
+    <transition name="downanim">
       <device-info-popover v-show="sharedState.show_device_info"></device-info-popover>
     </transition>
 
-    <transition name="upanim">
+    <transition name="downanim">
       <preferences-popover v-show="sharedState.show_preferences"></preferences-popover>
     </transition>
   </div>
@@ -103,11 +110,9 @@ export default {
       isConnected: false,
       isError: false,
       runShortcut: false,
-      saveShortcut: false,
       saveAsShortcut: false,
       sharedState: Store.state,
       infoQueue: [],
-      // infoMsg: { text: 'message...', icon: null, isShowing: false },
       isProjectRunning: false,
       device_properties: {}
     }
@@ -195,7 +200,7 @@ export default {
   destroyed () {
     Store.removeListener('project_saved', this.project_saved)
     Store.removeListener('device', this.device_update)
-    Store.removeListener('show_info', this.showInfo)
+    Store.removeListener('show_info', this.show_info)
     // Store.removeListener('toggle_load_project', this.toggle_load_project)
     Store.removeListener('toggle_device_info', this.toggle_device_info)
   }
@@ -211,12 +216,12 @@ export default {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  color: @primaryTextColor;
+  color: var(--color-text-light);
   user-select: non;
   z-index: 2;
   height: 52px;
   font-size: 1.2em;
-  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--color-lines);
 
   > * {
     flex: 1;
@@ -227,12 +232,8 @@ export default {
   }
 
   .name {
-    color: @accentColor;
+    color: var(--color-accent);
     display: inline-block;
-  }
-
-  .bold {
-    color: @accentColor;
   }
 
   // statuses
@@ -256,43 +257,33 @@ export default {
   }
 
   .app_info_msg {
-    font-family: 'Roboto Mono';
+    .font-mono-400;
     font-size: 0.7em;
-    font-weight: 400;
     margin-bottom: 10px;
-    color: white;
     padding: 5px 15px;
-    // background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     display: inline-flex;
     align-items: center;
-    // width: 125px;
 
     font-size: 0.8rem;
 
     &.progress {
-      background: white;
-      color: #272822;
+      background: var(--color-text-light);
+      color: var(--color-text-dark);
     }
 
     &.done {
-      background: #ffc709;
-      color: #272822;
+      background: var(--color-accent);
+      color: var(--color-text-dark);
     }
 
     &.error {
-      background: @error;
+      background: var(--color-error);
     }
 
     .icon_left,
     .icon_right {
       padding-right: 10px;
-    }
-    .icon_left {
-      border-right: 1px solid #fff0;
-    }
-    .icon_right {
-      color: green;
     }
 
     .msg {
@@ -303,14 +294,12 @@ export default {
   }
 
   .transparent {
-    background: fade(@backgroundColor, 0%);
+    background: var(--color-transparent);
 
     &:hover {
-      background: lighten(@backgroundColor, 10%);
     }
 
     &:active {
-      background: darken(@backgroundColor, 0%);
     }
   }
 
@@ -340,7 +329,7 @@ export default {
       }
 
       &.enabled {
-        color: @accentColor;
+        color: var(--color-accent);
       }
 
       &.device_disabled {
@@ -356,7 +345,6 @@ export default {
     h1 {
       text-align: center;
       padding: 6px 15px;
-      font-weight: 600;
       width: 100%;
       text-transform: uppercase;
     }
@@ -368,9 +356,7 @@ export default {
     button {
       display: inline-flex;
       align-items: center;
-      font-family: @editorFont;
-      color: #ffffff77;
-      min-width: 300px;
+      .font-mono-400;
     }
 
     p {
@@ -378,7 +364,6 @@ export default {
       flex: 2;
       padding: 0px 5px;
       font-size: 1em;
-      font-weight: 500;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;

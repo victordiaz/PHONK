@@ -4,11 +4,11 @@ import { domain } from './filters'
 import App from './App'
 import VueRouter from 'vue-router'
 
-import EditorPanel from './components/panels/EditorPanel.vue'
+import Editor from './components/editor/Editor.vue'
 // import TutorialLoader from './components/TutorialLoader'
 // import About from './components/About'
 // import Preferences from './components/Preferences'
-// import UIEditor from './components/uieditor/UIEditor'
+import UIEditor from './components/uieditor/UIEditor'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -30,20 +30,20 @@ var router = new VueRouter({
     {
       path: '/editor',
       name: 'editor',
-      component: EditorPanel,
+      component: Editor,
       title: 'PHONK'
     },
     {
       path: '/editor/:type/:folder/:project',
       name: 'editor.load',
-      component: EditorPanel,
+      component: Editor,
       title: 'PHONK'
     },
     {
       path: '/uieditor/',
       name: 'uieditor',
       title: 'UI Editor',
-      // component: UIEditor
+      component: UIEditor
     },
     {
       path: '/tutorial/:id',

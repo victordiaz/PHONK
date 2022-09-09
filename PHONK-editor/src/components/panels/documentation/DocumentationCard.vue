@@ -1,8 +1,8 @@
 <template>
   <div class="info">
-    <div class="btn-sidebar btn-close" v-on:click="$emit('onCloseCard')">
+    <button class="clean btn-close" v-on:click="$emit('onCloseCard')">
       <i class="material-icons">close</i>
-    </div>
+    </button>
 
     <div class="usage">
       <ul>
@@ -66,10 +66,11 @@ function () {
     <div class="stub">
       <a href="http://" target="_blank">
         <span>Help improve this doc</span>
+        <i class="material-icons">launch</i>
       </a>
       <a v-bind:href="getGithubUrl(data.method)" target="_blank">
-        <i class="material-icons">link</i>
         <span>Show in sourcecode</span>
+        <i class="material-icons">launch</i>
       </a>
     </div>
   </div>
@@ -131,14 +132,6 @@ export default {
 <style lang="less" scoped>
 @import (reference) '../../../assets/css/variables.less';
 
-.vertical #card {
-  border-top: solid 0px #54524f;
-}
-
-.horizontal #card {
-  border-left: solid 0px #54524f;
-}
-
 .info {
   font-size: 0.8em;
   position: relative;
@@ -146,13 +139,12 @@ export default {
 
   & > * {
     padding: 10px 0px;
-    color: @primaryTextColor;
+    color: var(--color-text-light);
   }
 
   h2 {
-    font-family: @editorFont;
+    .font-mono-400;
     font-size: 1em;
-    font-weight: 600;
     display: inline-flex;
 
     * {
@@ -160,7 +152,7 @@ export default {
     }
 
     .method {
-      border-bottom: 2px solid @accentColor;
+      border-bottom: 2px solid var(--color-accent);
     }
 
     .field {
@@ -173,10 +165,9 @@ export default {
   }
   h3 {
     padding: 5px 0px;
-    color: @accentColor;
-    font-weight: 500;
     font-size: 0.9em;
     text-transform: uppercase;
+    color: var(--color-text-light-faded);
   }
 
   table {
@@ -185,7 +176,7 @@ export default {
 
   .returns {
     .type:hover {
-      color: @accentColor;
+      color: var(--color-accent);
       cursor: pointer;
     }
   }
@@ -196,7 +187,6 @@ export default {
     }
 
     .type {
-      color: gray;
     }
   }
 
@@ -221,7 +211,7 @@ export default {
   .param,
   .returns .type,
   .related {
-    font-family: @editorFont;
+    .font-mono-400;
     overflow: initial;
   }
 
@@ -230,7 +220,6 @@ export default {
   }
 
   .description {
-    font-weight: 300;
     line-height: 1.3em;
   }
 
@@ -241,27 +230,17 @@ export default {
   }
 
   .stub {
-    margin: 10px 0px;
-    display: block;
-    color: white;
     display: inline-flex;
-    /* animation: fadeIn 1s infinite alternate; */
+    border-top: 1px solid var(--color-lines);
+    margin-top: 18px;
+    padding-top: 18px;
+    gap: 12px;
 
     a {
-      padding: 3px 5px;
-      border-radius: 2px;
-      color: @accentColor;
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-block;
-      margin-right: 15px;
-      margin-bottom: 0px;
-      border: 1px solid @accentColor;
-      display: inline-flex;
-      line-height: 1.2rem;
-      font-size: 0.8rem;
+      color: var(--color-accent);
       display: flex;
       align-items: center;
+      text-decoration: none;
 
       span {
         padding: 5px;
@@ -279,7 +258,7 @@ export default {
 
   .example {
     a {
-      background: @accentColor;
+      background: var(--color-accent);
       display: block;
       position: absolute;
       bottom: 0;

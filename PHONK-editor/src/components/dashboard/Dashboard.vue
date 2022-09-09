@@ -109,15 +109,12 @@ export default {
 @import (reference) '../assets/css/variables.less';
 
 #dashboard .actionbar {
-  background: rgba(0, 0, 0, 0.28);
-  color: rgba(255, 255, 255, 0.34);
   display: flex;
   flex: 1;
 
   h1 {
     padding: 10px;
     font-size: 1.2em;
-    font-weight: 600;
     text-transform: uppercase;
     flex: 1;
   }
@@ -151,7 +148,6 @@ export default {
     font-size: 1em;
     line-height: 1.3em;
     text-align: center;
-    color: rgba(255, 255, 255, 1);
     margin: auto auto;
 
     * {
@@ -159,7 +155,6 @@ export default {
     }
 
     h1 {
-      font-weight: 700;
     }
   }
 

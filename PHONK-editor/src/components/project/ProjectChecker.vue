@@ -105,14 +105,12 @@ export default {
 @import (reference) '../../assets/css/variables.less';
 
 .check_list {
-  background: rgba(0, 0, 0, 0.55);
   margin-bottom: 12px;
 
   h1 {
-    color: @accentColor;
-    font-weight: 600;
+    color: var(--color-accent);
     padding: 5px 0px;
-    border-bottom: 0px solid @accentColor;
+    border-bottom: 0px solid var(--color-accent);
     margin-bottom: 5px;
     text-transform: uppercase;
   }
@@ -123,30 +121,23 @@ export default {
 
   ul {
     li {
-      background: rgba(255, 255, 255, 0);
       border-radius: 2px;
       padding: 3px 2px;
       margin: 2px;
       font-size: 1em;
-      font-weight: 300;
 
       .name {
-        font-weight: 600;
         margin-left: 5px;
       }
 
       &.selected {
-        background-color: rgba(255, 255, 255, 0.69);
         border-radius: 1px;
-        color: black;
       }
 
       &.ok {
-        background-color: green;
       }
 
       &.nop {
-        background-color: tomato;
       }
     }
   }
@@ -164,12 +155,10 @@ export default {
       }
     }
     .log {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 2px;
       margin: 10px 5px 0px 5px;
       font-size: 0.8em;
-      font-family: @editorFont;
+      .font-mono-400;
       height: 100%;
     }
   }
@@ -181,7 +170,6 @@ export default {
   right: 0;
   top: 0;
   bottom: 0;
-  background: black;
   width: 100%;
   height: 100%;
   z-index: 10;
