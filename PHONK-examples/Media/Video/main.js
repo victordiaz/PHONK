@@ -1,20 +1,17 @@
 /*
  * PHONK Example:	Video playback
- *
- * Big Buck Bunny video excerpt
- * Blender Foundation | www.blender.org
- *
  */
 
 ui.addTitle(app.name)
 
 var player = media.createVideoPlayer()
 
-player.load('bigbuckbunny.m4v')
+player.load('phonk.mkv')
 player.onLoaded(function () {
   var playerWidth = 0.8
   var playerHeight = playerWidth / player.getClipAspectRatio() + 'w'
   ui.add(player.getPreview(), 0.1, 0.15, playerWidth, playerHeight)
+  player.loop(true)
   player.play()
 })
 
