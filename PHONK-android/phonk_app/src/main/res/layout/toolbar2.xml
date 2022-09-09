@@ -42,7 +42,7 @@
         android:layout_marginTop="0dp"
         app:theme="@style/ToolBarApp.App"
         android:id="@+id/toolbar2"
-        android:navigationIcon="@drawable/phonk_icon"
+        android:navigationIcon="@drawable/square_icon"
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_below="@id/statusbarspacer"

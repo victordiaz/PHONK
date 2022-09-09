@@ -88,7 +88,7 @@ public class ProjectItem extends LinearLayout {
             mMenuButton.setVisibility(View.GONE);
         }
 
-        textViewName = mItemView.findViewById(R.id.txtProjectName);
+        textViewName = mItemView.findViewById(R.id.txtType);
         customIcon = mItemView.findViewById(R.id.iconImg);
     }
 

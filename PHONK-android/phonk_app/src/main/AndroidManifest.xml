@@ -44,7 +44,7 @@
         <activity
             android:name="io.phonk.LauncherActivity"
             android:label="@string/activity_name"
-            android:logo="@drawable/phonk_icon"
+            android:logo="@drawable/square_icon"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:resizeableActivity="true"
             >
@@ -66,9 +66,9 @@
         <!--android:stateNotNeeded="true"-->
         <activity
             android:name="io.phonk.MainActivity"
-            android:icon="@drawable/phonk_icon"
+            android:icon="@drawable/square_icon"
             android:label="@string/activity_name"
-            android:logo="@drawable/phonk_icon"
+            android:logo="@drawable/square_icon"
             android:theme="@style/PhonkAppTheme"
             android:resizeableActivity="true">
 
@@ -149,7 +149,7 @@
         <activity android:name="io.phonk.gui.PhonkAppInstallerActivity"
             android:label="@string/activity_name"
             android:theme="@style/PhonkAppTheme"
-            android:logo="@drawable/phonk_icon"
+            android:logo="@drawable/square_icon"
             >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

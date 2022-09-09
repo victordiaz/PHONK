@@ -30,6 +30,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import io.phonk.R;
 import io.phonk.events.Events;
@@ -47,9 +49,9 @@ public class EventManager {
         EventBus.getDefault().register(this);
     }
 
-    public void addEvent(String type, String detail) {
+    public void addEvent(String type, String detail, int icon) {
         // MLog.d(TAG, "addEvent: " + type + " " + detail);
-        mEventList.add(new EventLogItem(type, detail));
+        mEventList.add(new EventLogItem(type, detail, icon));
 
         // if (Looper.myLooper() == null) Looper.prepare();
         Handler handler = new Handler(Looper.getMainLooper());
@@ -63,16 +65,16 @@ public class EventManager {
 
         switch (action) {
             case "stopServers":
-                addEvent("server", "stopped");
+                addEvent("server", "server stopped", R.drawable.ic_public_24dp);
                 break;
             case "startServers":
-                addEvent("server", "started");
+                addEvent("server", "server started", R.drawable.ic_public_24dp);
                 break;
             case "version":
-                addEvent(action, (String) value);
+                addEvent(action, (String) value, -1);
                 break;
             case "welcome":
-                addEvent(mContext.getString(R.string.hello_emoji), (String) value);
+                addEvent("welcome", (String) value, R.drawable.ic_baseline_chat_bubble_24);
                 break;
 
         }
@@ -86,66 +88,63 @@ public class EventManager {
         Project p = e.getProject();
 
         if (action.equals(Events.PROJECT_RUN)) {
-            addEvent("run ", p.getSandboxPath());
+            addEvent(action, p.getSandboxPath(), R.drawable.ic_baseline_play_arrow_24);
         } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
-            addEvent("stop ", p.getSandboxPath());
+            addEvent(action, p.getSandboxPath(), R.drawable.ic_action_stop);
         } else if (action.equals(Events.PROJECT_STOP_ALL)) {
-            addEvent("stop", "all projects");
+           // addEvent("stop", "all projects", R.drawable.ic_action_stop, true);
         } else if (action.equals(Events.PROJECT_SAVE)) {
-            addEvent("save", p.getSandboxPath());
+            addEvent(action, p.getSandboxPath(), R.drawable.ic_save_24dp);
         } else if (action.equals(Events.PROJECT_NEW)) {
-            addEvent("create", p.name);
+            addEvent(action, p.name, -1);
         } else if (action.equals(Events.PROJECT_RENAME)) {
             // addEvent("rename", .);
         } else if (action.equals(Events.PROJECT_FILE_MOVE)) {
             // addEvent("move", .);
         } else if (action.equals(Events.PROJECT_DELETE)) {
-            addEvent("delete", p.name);
+            addEvent(action, p.name, -1);
         } else if (action.equals((Events.PROJECT_DELETE_FILE))) {
-            addEvent("delete", p.name);
+            addEvent(action, p.name, -1);
         } else if (action.equals(Events.PROJECT_UPDATE)) {
             // mProtocoder.protoScripts.listRefresh();
         } else if (action.equals(Events.PROJECT_EDIT)) {
-            addEvent("edit", p.getSandboxPath());
+            addEvent(action, p.getSandboxPath(), -1);
         } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
             // addTextToConsole("refreshing list");
         } else if (action.equals(Events.PROJECT_RUNNING)) {
             // addTextToConsole("run " + e.getProject().getSandboxPath());
-            addEvent("run", e.getProject().getSandboxPath());
+            addEvent(action, e.getProject().getSandboxPath(), R.drawable.ic_baseline_play_arrow_24);
         }
     }
 
     @Subscribe
     public void onEventMainThread(Events.ExecuteCodeEvent e) {
         String code = e.getCode();
-        addEvent("execute", code.substring(0, Math.min(code.length(), 10)));
+        addEvent("execute", code.substring(0, Math.min(code.length(), 10)), -1);
     }
 
     @Subscribe
     public void onEventMainThread(Events.UserConnectionEvent e) {
-        String str = "";
         String ip = e.getIp();
         if (e.getConnected()) {
-            str = ip + " connected";
-            addEvent("client connected", "from " + ip);
+            addEvent("connected", ip + " connected", R.drawable.ic_computer_24dp);
         } else {
-            str = ip + " disconnected";
-            addEvent("client diconnected", "from " + ip);
+            addEvent("disconnected", ip + " disconnected", R.drawable.ic_computer_24dp);
         }
     }
 
     @Subscribe
     public void onEventMainThread(Events.HTTPServerEvent e) {
         if (e.getWhat() == Events.PROJECT_LOAD) {
-            addEvent("load", e.getProject().getSandboxPath());
+            addEvent("load", e.getProject().getSandboxPath(), -1);
         } else if (e.getWhat() == Events.EDITOR_UPLOAD) {
-            addEvent("upload", e.getWhat());
+            addEvent("upload", e.getWhat(), -1);
         }
     }
 
     @Subscribe
     public void onEventMainThread(Events.FileEvent e) {
-        addEvent(e.getAction(), e.getFile());
+        addEvent(e.getAction(), e.getFile(), -1);
     }
 
     public ArrayList<EventLogItem> getEventsList() {
@@ -153,11 +152,16 @@ public class EventManager {
     }
 
     public class EventLogItem {
+        public final Calendar date;
         public String type;
         public String detail;
+        public int icon;
+        public boolean showType;
 
-        public EventLogItem(String type, String detail) {
+        public EventLogItem(String type, String detail, int icon) {
+            this.date = Calendar.getInstance();
             this.type = type;
+            this.icon = icon;
             this.detail = detail;
         }
     }

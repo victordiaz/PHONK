@@ -23,10 +23,10 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_project_list_view"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/view" />
     <item android:id="@+id/menu_project_list_delete"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/delete" />
     
 </menu>

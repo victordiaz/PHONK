@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:padding="2dip"
-        android:src="@drawable/phonk_icon"
+        android:src="@drawable/square_icon"
         android:contentDescription="lalal"/>
 
     <LinearLayout

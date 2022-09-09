@@ -39,7 +39,7 @@
             android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/phonk_icon" />
+            android:src="@drawable/square_icon" />
 
         <TextView
             android:id="@+id/txt_file_name"

@@ -32,53 +32,66 @@
     android:paddingRight="0dp"
     android:paddingBottom="0dp">
 
-    <TextView
-        android:id="@+id/txtProjectName"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/event_type"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
-        android:paddingLeft="8dp"
-        android:paddingTop="3dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="3dp"
-        android:text="What"
-        android:textAlignment="center"
-        android:textColor="@color/phonk_textColor_secondary"
-        android:textSize="12sp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="3dp"
+        android:paddingTop="1dp"
+        android:paddingRight="3dp"
+        android:paddingBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/txtEventDetail"
-        android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/imgEventDetail"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            app:srcCompat="@drawable/ic_public_24dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/eventDetails"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:maxLines="1"
-        android:text="Detail"
-        android:textAlignment="center"
-        android:textColor="@color/phonk_textColor_secondary"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/txtProjectName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtProjectName"
-        app:layout_constraintTop_toTopOf="@+id/txtProjectName"
-        app:layout_constraintVertical_bias="0.592" />
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/event_type"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txtEventDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="Detail"
+            android:textColor="@color/phonk_textColor_secondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="Type"
+            android:textColor="@color/phonk_textColor_secondary_shade"
+            android:textSize="12sp"
+            android:visibility="visible" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
