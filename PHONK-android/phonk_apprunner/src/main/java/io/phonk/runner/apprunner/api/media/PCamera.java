@@ -38,7 +38,7 @@ import io.phonk.runner.base.gui.CameraTexture;
 @PhonkClass
 public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*/ PCameraInterface {
     private final PCamera cam;
-    protected AppRunner mAppRunner;
+    protected final AppRunner mAppRunner;
 
     private LearnImages learnImages = null;
     private DetectImage detectImage = null;
@@ -73,7 +73,6 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
 
         return this;
     }
-
 
 
     @PhonkMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
@@ -216,18 +215,4 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
         super.focus(callback);
     }
 
-    /*
-    @Override
-    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
-
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-    */
 }

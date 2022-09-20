@@ -97,9 +97,6 @@ public class AbsolutePositionFragment extends BaseFragment {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-        }
         return true;
     }
 

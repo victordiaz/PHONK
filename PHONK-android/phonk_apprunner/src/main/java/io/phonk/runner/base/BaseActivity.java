@@ -57,7 +57,6 @@ public class BaseActivity extends AppCompatActivity {
 
     protected Toolbar mToolbar;
     public boolean isToolbarAllowed = true;
-    private boolean lightsOutMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +66,16 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // System.gc();
     }
 
     @Override
     protected void onResume() {
-        // System.gc();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // System.gc();
     }
 
     @Override
@@ -98,7 +94,6 @@ public class BaseActivity extends AppCompatActivity {
         if (!AndroidUtils.isWear(this)) {
             mToolbar = findViewById(R.id.toolbar2);
             setSupportActionBar(mToolbar);
-            // getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -113,7 +108,6 @@ public class BaseActivity extends AppCompatActivity {
 
     public void setImmersive() {
         isToolbarAllowed = false;
-        // getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -131,8 +125,7 @@ public class BaseActivity extends AppCompatActivity {
         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
         int statusBarHeight = rectangle.top;
         int contentViewTop = window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
-        int titleBarHeight = contentViewTop - statusBarHeight;
-        return titleBarHeight;
+        return contentViewTop - statusBarHeight;
     }
 
     public int getNavigationBarSize() {
@@ -153,27 +146,13 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showHomeBar(boolean b) {
-
         if (Build.VERSION.SDK_INT > AppRunnerSettings.MIN_SUPPORTED_VERSION) {
-            if (b == true) {
+            if (b) {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             } else {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
             }
         }
-    }
-
-    public void lightsOutMode() {
-        lightsOutMode = true;
-        final View rootView = getWindow().getDecorView();
-        rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
-        rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
-
-        rootView.setOnSystemUiVisibilityChangeListener(visibility -> {
-            MLog.d(TAG, "" + visibility);
-            rootView.setSystemUiVisibility(View.STATUS_BAR_VISIBLE);
-            rootView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
-        });
     }
 
     public void setScreenAlwaysOn(boolean b) {

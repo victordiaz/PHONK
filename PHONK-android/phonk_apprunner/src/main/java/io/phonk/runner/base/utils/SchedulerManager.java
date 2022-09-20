@@ -42,7 +42,7 @@ public class SchedulerManager {
 
     private static final java.lang.String TAG = SchedulerManager.class.getSimpleName();
     private final AlarmManager mAlarmManager;
-    private Context c;
+    private final Context c;
     private final Project mProject;
 
     private SharedPreferences mPreferences;
@@ -125,18 +125,18 @@ public class SchedulerManager {
     }
 
 
-    public class Task {
+    public static class Task {
         static final int TYPE_ALARM = 0;
         static final int TYPE_BOOT = 1;
         static final int TYPE_SMS = 1;
 
-        public int id;
-        public int type;
-        public Project project;
-        public Calendar time;
-        public int interval;
-        public boolean repeating;
-        public boolean wakeUpScreen;
+        public final int id;
+        public final int type;
+        public final Project project;
+        public final Calendar time;
+        public final int interval;
+        public final boolean repeating;
+        public final boolean wakeUpScreen;
 
         public Task(int id, Project p, int type, Calendar time, int interval, boolean repeating, boolean wakeUpScreen) {
             this.id = id;

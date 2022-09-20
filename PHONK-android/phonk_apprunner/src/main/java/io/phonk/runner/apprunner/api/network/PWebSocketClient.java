@@ -43,7 +43,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 public class PWebSocketClient extends ProtoBase {
     private static final String TAG = PWebSocketClient.class.getSimpleName();
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private WebSocketClient mWebSocketClient = null;
     private boolean mIsConnected = false;
     private ReturnInterface mCallbackNewData;
@@ -124,6 +124,7 @@ public class PWebSocketClient extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -135,6 +136,7 @@ public class PWebSocketClient extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -146,6 +148,7 @@ public class PWebSocketClient extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -157,6 +160,7 @@ public class PWebSocketClient extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -168,6 +172,7 @@ public class PWebSocketClient extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */

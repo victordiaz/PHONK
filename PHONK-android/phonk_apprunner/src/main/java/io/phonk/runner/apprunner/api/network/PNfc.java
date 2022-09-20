@@ -67,7 +67,6 @@ public class PNfc extends ProtoBase {
         getActivity().addNFCReadListener(o -> {
             callback.event(o);
         });
-
     }
 
     public interface onNFCWrittenListener {
@@ -81,12 +80,9 @@ public class PNfc extends ProtoBase {
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {"function(msg)"})
     public void onDataWritten(ReturnInterface callback) {
-        getActivity().addNFCWrittenListener(new onNFCWrittenListener() {
-            @Override
-            public void onDataWritten(ReturnObject o) {
-                MLog.d(TAG, "data written");
-                callback.event(o);
-            }
+        getActivity().addNFCWrittenListener(o -> {
+            MLog.d(TAG, "data written");
+            callback.event(o);
         });
     }
 
@@ -158,7 +154,7 @@ public class PNfc extends ProtoBase {
                     return false;
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         return false;

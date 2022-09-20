@@ -26,10 +26,10 @@ public class FolderAdapterData {
     static final int TYPE_TITLE = 0;
     static final int TYPE_FOLDER_NAME = 1;
 
-    int itemType;
-    String parentFolder;
-    String name;
-    int numSubfolders;
+    final int itemType;
+    final String parentFolder;
+    final String name;
+    final int numSubfolders;
 
     public FolderAdapterData(int itemType, String parentFolder, String name, int numSubfolders) {
         this.itemType = itemType;

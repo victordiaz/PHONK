@@ -87,19 +87,6 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        /*
-        int width = getDefaultSize(mWidth, widthMeasureSpec);
-        int height = getDefaultSize(mHeight, heightMeasureSpec);
-
-
-
-        if (width > height) height = width;
-        else width = height;
-
-        MLog.d(TAG, "onMeasure " + mWidth + " " + mHeight + " " + width + " " + height);
-
-        setMeasuredDimension(width, height);
-        */
     }
 
     public void setListener(OnEvent onEvent) {

@@ -116,7 +116,7 @@ public class PLocation extends ProtoBase {
         // criteria.setSpeedRequired(true);
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == false) {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             MLog.d(TAG, "GPS not enabled");
             showSettingsAlert();
         } else {
@@ -154,10 +154,6 @@ public class PLocation extends ProtoBase {
                         } else { // The fix has been lost.
                             // Do something.
                         }
-
-                        //for (CustomSensorListener l : listeners) {
-                        //	((GPSListener) l).onGPSStatus(isGPSFix);
-                        //}
 
                         break;
                     case GpsStatus.GPS_EVENT_FIRST_FIX:
@@ -205,37 +201,34 @@ public class PLocation extends ProtoBase {
         };
 
         locationManager.requestLocationUpdates(provider, 100, 0.1f, locationListener);
-        locationManager.addGpsStatusListener(new GpsStatus.Listener() {
-            @Override
-            public void onGpsStatusChanged(int i) {
-                int satellitesCount = 0;
-                int satellitesInFix = 0;
-                int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
-                MLog.d(TAG, "Time to first fix = " + timetofix);
-                ArrayList sats = new ArrayList();
+        locationManager.addGpsStatusListener(i -> {
+            int satellitesCount = 0;
+            int satellitesInFix = 0;
+            int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
+            MLog.d(TAG, "Time to first fix = " + timetofix);
+            ArrayList sats = new ArrayList();
 
-                for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
-                    if(sat.usedInFix()) {
-                        satellitesInFix++;
-                    }
-                    satellitesCount++;
-
-                    HashMap<String, Object> satItem = new HashMap<>();
-                    satItem.put("azimuth", sat.getAzimuth());
-                    satItem.put("elevation", sat.getAzimuth());
-                    satItem.put("prn", sat.getPrn());
-                    satItem.put("snr", sat.getSnr());
-                    sats.add(satItem);
-
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("satellites", sats);
-                    ret.put("satellitesInView", satellitesCount);
-                    ret.put("satellitesInFix", satellitesInFix);
-
-                    if (mSatellitesCallback != null) mSatellitesCallback.event(ret);
+            for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
+                if (sat.usedInFix()) {
+                    satellitesInFix++;
                 }
-                // MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
+                satellitesCount++;
+
+                HashMap<String, Object> satItem = new HashMap<>();
+                satItem.put("azimuth", sat.getAzimuth());
+                satItem.put("elevation", sat.getAzimuth());
+                satItem.put("prn", sat.getPrn());
+                satItem.put("snr", sat.getSnr());
+                sats.add(satItem);
+
+                ReturnObject ret = new ReturnObject();
+                ret.put("satellites", sats);
+                ret.put("satellitesInView", satellitesCount);
+                ret.put("satellitesInFix", satellitesInFix);
+
+                if (mSatellitesCallback != null) mSatellitesCallback.event(ret);
             }
+            // MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
         });
     }
 
@@ -306,8 +299,6 @@ public class PLocation extends ProtoBase {
     @PhonkMethodParam(params = {"startLatitude", "starLongitude", "endLatitude", "endLongitude"})
     public double distance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
         float[] results = null;
-        // Location.distanceBetween(startLatitude, startLongitude, endLatitude,
-        // endLongitude, results);
 
         Location locationA = new Location("point A");
 
@@ -319,9 +310,7 @@ public class PLocation extends ProtoBase {
         locationB.setLatitude(endLatitude);
         locationB.setLongitude(endLongitude);
 
-        float distance = locationA.distanceTo(locationB);
-
-        return distance;
+        return locationA.distanceTo(locationB);
     }
 
     public boolean isAvailable() {

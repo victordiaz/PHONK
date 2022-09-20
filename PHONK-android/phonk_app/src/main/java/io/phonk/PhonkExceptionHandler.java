@@ -38,9 +38,9 @@ import io.phonk.runner.base.utils.MLog;
 public class PhonkExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     private static final java.lang.String TAG = PhonkExceptionHandler.class.getSimpleName();
-    private Thread.UncaughtExceptionHandler defaultUEH;
+    private final Thread.UncaughtExceptionHandler defaultUEH;
 
-    private File localPath;
+    private final File localPath;
 
     /*
      * if any of the parameters is null, the respective functionality

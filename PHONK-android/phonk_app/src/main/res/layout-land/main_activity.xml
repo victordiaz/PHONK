@@ -67,12 +67,12 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 app:srcCompat="@drawable/phonk_logo_name"
-                tools:ignore="VectorDrawableCompat"></ImageView>
+                tools:ignore="VectorDrawableCompat" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_weight="2"></View>
+                android:layout_weight="2" />
 
             <ImageButton
                 android:id="@+id/btnHelp"
@@ -125,7 +125,7 @@
             <FrameLayout
                 android:id="@+id/infoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></FrameLayout>
+                android:layout_height="wrap_content" />
 
         </androidx.cardview.widget.CardView>
 
@@ -150,11 +150,11 @@
         android:layout_toRightOf="@id/header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/projectBrowserFragment"></FrameLayout>
+        android:id="@+id/projectBrowserFragment" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/webEditorFragment"></FrameLayout>
+        android:id="@+id/webEditorFragment" />
 
 </RelativeLayout>

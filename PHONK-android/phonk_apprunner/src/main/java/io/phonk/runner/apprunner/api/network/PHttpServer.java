@@ -49,7 +49,7 @@ public class PHttpServer extends NanoHTTPD {
     public static final String TAG = PHttpServer.class.getSimpleName();
 
     public Handler mHandler = new Handler(Looper.getMainLooper());
-    private AppRunner mAppRunner;
+    private final AppRunner mAppRunner;
 
     private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
         {
@@ -109,10 +109,9 @@ public class PHttpServer extends NanoHTTPD {
     @PhonkMethod(description = "Responds to the request with a given text", example = "")
     @PhonkMethodParam(params = {"boolean"})
     public Response response(String data) {
-        Response r = newFixedLengthResponse(data);
         // MLog.d(TAG, "responding with " + r);
 
-        return r;
+        return newFixedLengthResponse(data);
     }
 
     @PhonkMethod(description = "Responds to the request with a given text", example = "")
@@ -171,28 +170,6 @@ public class PHttpServer extends NanoHTTPD {
         if (res == null) {
             try {
                 // file upload
-                /*
-                if (!files.isEmpty()) {
-                    File src = new File(files.getProperty("pic").toString());
-                    File dst = new File(mProjectFolder + parms.getProperty("pic").toString());
-
-                    FileIO.copyFile(src, dst);
-
-                    JSONObject data = new JSONObject();
-                    data.put("result", "OK");
-
-                    return new Response("200", MIME_TYPES.get("txt"), data.toString());
-
-                    // normal file serving
-                } else {
-
-                    MLog.d(TAG, "received String" + uri + " " + method + " " + header + " " + " " + parms + " " + files);
-
-                    res[0] = serveFile(uri.substring(uri.lastIndexOf('/') + 1, uri.length()), header,
-                            new File(mProjectFolder), false);
-
-                }
-                */
 
             } catch (Exception e) {
                 MLog.d(TAG, "response error " + e.toString());

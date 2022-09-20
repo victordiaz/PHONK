@@ -37,8 +37,8 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 @PhonkClass
 public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox implements PViewMethodsInterface, PTextInterface {
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public Styler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final Styler styler;
 
     public PCheckBox(AppRunner appRunner) {
         super(appRunner.getAppContext());

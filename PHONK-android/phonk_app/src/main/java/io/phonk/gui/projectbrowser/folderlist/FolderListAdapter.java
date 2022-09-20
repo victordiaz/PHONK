@@ -47,7 +47,7 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
-        public ViewGroup mainView;
+        public final ViewGroup mainView;
         public TextView textNumProjects;
 
         public ViewHolder(int viewType, ViewGroup v) {

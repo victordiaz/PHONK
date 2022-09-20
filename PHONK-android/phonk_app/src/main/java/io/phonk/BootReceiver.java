@@ -25,10 +25,8 @@ package io.phonk;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import io.phonk.gui.settings.UserPreferences;
-import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.AppRunnerActivity;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;

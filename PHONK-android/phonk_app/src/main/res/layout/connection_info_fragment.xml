@@ -22,7 +22,6 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/update_layout"
     android:layout_width="match_parent"
     android:layout_height="200dp"
@@ -43,7 +42,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/connection_message"
         app:layout_constraintStart_toStartOf="@+id/connection_message"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"></io.phonk.runner.base.views.FitRecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/connection_message"

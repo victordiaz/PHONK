@@ -35,6 +35,7 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface PhonkField {
     String description() default "";
+
     String example() default "";
 
 }

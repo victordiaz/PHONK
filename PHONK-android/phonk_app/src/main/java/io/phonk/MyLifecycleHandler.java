@@ -33,7 +33,7 @@ import io.phonk.runner.base.utils.MLog;
 
 public class MyLifecycleHandler implements Application.ActivityLifecycleCallbacks {
 
-    private String TAG = MyLifecycleHandler.class.getSimpleName();
+    private final String TAG = MyLifecycleHandler.class.getSimpleName();
 
     // I use four separate variables here. You can, of course, just use two and
     // increment/decrement them instead of using four and incrementing them all.
@@ -42,7 +42,7 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
     private int started;
     private int stopped;
 
-    static ArrayList<Activity> mRunningScripts = new ArrayList<>();
+    static final ArrayList<Activity> mRunningScripts = new ArrayList<>();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -60,17 +60,7 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
         String activityName = activity.getClass().getSimpleName();
         MLog.d(TAG, activityName);
 
-        /*
-        boolean exist = false;
-        for (int i = 0; i < mRunningScripts.size(); i++) {
-            exist = exist | mRunningScripts.get(i).getClass().getSimpleName().equals(activityName);
-        }
-        */
-        // mRunningScripts.clear();
 
-
-        // if (activityName.equals(AppRunnerActivity.class.getSimpleName())) {
-        // }
     }
 
     @Override
@@ -106,10 +96,6 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
 
     public boolean isApplicationInForeground() {
         return resumed > paused;
-    }
-
-    public boolean isScriptRunning() {
-        return false;
     }
 
     public void closeAllScripts() {

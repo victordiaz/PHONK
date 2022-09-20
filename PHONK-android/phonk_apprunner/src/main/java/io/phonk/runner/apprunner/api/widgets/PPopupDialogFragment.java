@@ -73,8 +73,7 @@ public class PPopupDialogFragment extends DialogFragment {
 
     public static PPopupDialogFragment newInstance(FragmentManager fragmentManager) {
         mFragmentManager = fragmentManager;
-        PPopupDialogFragment frag = new PPopupDialogFragment();
-        return frag;
+        return new PPopupDialogFragment();
     }
 
     @Override

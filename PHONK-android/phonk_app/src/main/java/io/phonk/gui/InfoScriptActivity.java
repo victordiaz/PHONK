@@ -41,8 +41,6 @@ public class InfoScriptActivity extends BaseActivity {
 
     private static final String TAG = InfoScriptActivity.class.getSimpleName();
     private Project mCurrentProject;
-    private LinearLayout mLicenseList;
-    // private TextView mProjectNameTxt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,9 +55,7 @@ public class InfoScriptActivity extends BaseActivity {
             mCurrentProject = new Project(folder, name);
         }
 
-        mLicenseList = findViewById(R.id.properties_list);
-        // mProjectNameTxt = (TextView) findViewById(R.id.projectName);
-        // mProjectNameTxt.setText("Project Info: " + mCurrentProject.name);
+        LinearLayout listLencenses = findViewById(R.id.properties_list);
 
         getSupportActionBar().setTitle(mCurrentProject.name + " (app.conf)");
 
@@ -75,7 +71,7 @@ public class InfoScriptActivity extends BaseActivity {
                 txtKey.setText(entry.getKey());
                 txtValue.setText(entry.getValue().toString());
 
-                mLicenseList.addView(v);
+                listLencenses.addView(v);
             }
         }
     }

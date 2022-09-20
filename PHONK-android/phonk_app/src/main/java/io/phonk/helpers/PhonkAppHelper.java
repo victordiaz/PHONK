@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +73,7 @@ public class PhonkAppHelper {
         intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
         intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
 
-        for (Map.Entry <String, String> entry : extras.entrySet()) {
+        for (Map.Entry<String, String> entry : extras.entrySet()) {
             intent.putExtra(entry.getKey(), entry.getValue());
         }
 
@@ -230,7 +229,7 @@ public class PhonkAppHelper {
             return;
         }
 
-        List<String> requiredPermissions = new ArrayList<String>();
+        List<String> requiredPermissions = new ArrayList<>();
         requiredPermissions.add(Manifest.permission.INTERNET);
         requiredPermissions.add(Manifest.permission.ACCESS_WIFI_STATE);
         requiredPermissions.add(Manifest.permission.CHANGE_WIFI_STATE);

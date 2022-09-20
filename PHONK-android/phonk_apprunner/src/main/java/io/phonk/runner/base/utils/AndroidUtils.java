@@ -23,7 +23,6 @@
 package io.phonk.runner.base.utils;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +45,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -131,7 +132,7 @@ public class AndroidUtils {
     }
 
     public static float pixelsToSp(Context c, int px) {
-        return  px / c.getResources().getDisplayMetrics().scaledDensity;
+        return px / c.getResources().getDisplayMetrics().scaledDensity;
     }
 
     public static int spToPixels(Context c, int sp) {
@@ -172,8 +173,8 @@ public class AndroidUtils {
         }
     }
 
-    public static int CLIP_RECT = 0;
-    public static int CLIP_ROUND = 1;
+    public static final int CLIP_RECT = 0;
+    public static final int CLIP_ROUND = 1;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
@@ -209,9 +210,7 @@ public class AndroidUtils {
                 path.lineTo(100, 200);
                 path.lineTo(10, 10);
                 path.close();
-                //outline.setConvexPath(path);
 
-                // return;
             }
             v.setClipToOutline(true);
 
@@ -219,12 +218,6 @@ public class AndroidUtils {
                 v.setOutlineProvider(viewOutlineProvider);
             }
             v.invalidate();
-
-            //    RippleDrawable rippleDrawable = (RippleDrawable) v.getBackground();
-            //     GradientDrawable rippleBackground = (GradientDrawable) rippleDrawable.getDrawable(0);
-            //    rippleBackground.setColor(Color.parseColor("#FF0000"));
-            //     rippleDrawable.setColor(ColorStateList.valueOf(Color.WHITE));
-            // rippleDrawable.setHotspot(0, 0);
 
         }
     }
@@ -252,17 +245,15 @@ public class AndroidUtils {
 
     public static int calculateColor(float fraction, int startValue, int endValue) {
 
-        int startInt = startValue;
-        int startA = (startInt >> 24) & 0xff;
-        int startR = (startInt >> 16) & 0xff;
-        int startG = (startInt >> 8) & 0xff;
-        int startB = startInt & 0xff;
+        int startA = (startValue >> 24) & 0xff;
+        int startR = (startValue >> 16) & 0xff;
+        int startG = (startValue >> 8) & 0xff;
+        int startB = startValue & 0xff;
 
-        int endInt = endValue;
-        int endA = (endInt >> 24) & 0xff;
-        int endR = (endInt >> 16) & 0xff;
-        int endG = (endInt >> 8) & 0xff;
-        int endB = endInt & 0xff;
+        int endA = (endValue >> 24) & 0xff;
+        int endR = (endValue >> 16) & 0xff;
+        int endG = (endValue >> 8) & 0xff;
+        int endB = endValue & 0xff;
 
         return (startA + (int) (fraction * (endA - startA))) << 24
                 | (startR + (int) (fraction * (endR - startR))) << 16
@@ -289,9 +280,8 @@ public class AndroidUtils {
         int r = Color.red(c);
         int g = Color.green(c);
         int b = Color.blue(c);
-        String colorStr = "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
 
-        return colorStr;
+        return "rgba(" + r + "," + g + "," + b + "," + alpha + ")";
     }
 
     public static void setVolume(Context c, int value) {
@@ -308,11 +298,6 @@ public class AndroidUtils {
         PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
         return pm.isScreenOn();
     }
-
-    // public static void goToSleep(Context c) {
-    //PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-    //pm.goToSleep(100);
-    // }
 
     public static boolean isAirplaneMode(Context c) {
         return Settings.System.getInt(c.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
@@ -422,6 +407,7 @@ public class AndroidUtils {
         return buf.toString();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String sha1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         md.update(text.getBytes(StandardCharsets.ISO_8859_1), 0, text.length());

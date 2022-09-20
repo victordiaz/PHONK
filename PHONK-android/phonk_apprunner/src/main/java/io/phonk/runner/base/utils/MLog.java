@@ -29,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MLog {
-    private static String TAG = "MLog";
+    private static final String TAG = "MLog";
 
     private static final int LOG_D = 0;
     private static final int LOG_E = 1;
@@ -37,11 +37,11 @@ public class MLog {
     private static final int LOG_W = 3;
     private static final int LOG_V = 4;
 
-    public static boolean showClass = false;
-    public static boolean showMethod = true;
-    public static boolean network = false;
-    public static boolean device = true;
-    public static boolean verbose = true;
+    public static final boolean showClass = false;
+    public static final boolean showMethod = true;
+    public static final boolean network = false;
+    public static final boolean device = true;
+    public static final boolean verbose = true;
 
     public static void d(final String tag, final String msg) {
         generic(LOG_D, tag, msg);

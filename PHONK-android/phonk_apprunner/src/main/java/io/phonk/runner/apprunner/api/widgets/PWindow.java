@@ -26,7 +26,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,19 +37,14 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 public class PWindow extends RelativeLayout {
     private static final String TAG = PWindow.class.getSimpleName();
 
-    private final int currentColor;
-    private final int viewCount = 0;
-    private final Context c;
     private final RelativeLayout mBar;
     private final LinearLayout mMainContainer;
     private final PWindow mWindow;
-    private Button mBtnClose;
-    private TextView mTitle;
+    private final TextView mTitle;
 
     public PWindow(Context context) {
         super(context);
-        c = context;
-        currentColor = Color.argb(255, 255, 255, 255);
+        int currentColor = Color.argb(255, 255, 255, 255);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.pwidget_window, this, true);
@@ -58,10 +52,7 @@ public class PWindow extends RelativeLayout {
         mWindow = this;
         mBar = findViewById(R.id.pWidgetWindowBar);
         mTitle = findViewById(R.id.pWidgetWindowTitle);
-        mBtnClose = findViewById(R.id.pWidgetWindowClose);
         mMainContainer = findViewById(R.id.pWidgetWindowMainContainer);
-
-        //setOnTouchListener(this);
 
         WidgetHelper.setMovable(mBar, mWindow, null);
     }
@@ -71,6 +62,7 @@ public class PWindow extends RelativeLayout {
     @PhonkMethodParam(params = {"view"})
     public PWindow addWidget(View v) {
         v.setAlpha(0);
+        int viewCount = 0;
         v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
 
         mMainContainer.addView(v);
@@ -89,7 +81,6 @@ public class PWindow extends RelativeLayout {
         }
 
         return mWindow;
-
     }
 
 
@@ -99,7 +90,6 @@ public class PWindow extends RelativeLayout {
         mTitle.setText(text);
 
         return mWindow;
-
     }
 
 
@@ -128,6 +118,4 @@ public class PWindow extends RelativeLayout {
 
         return mWindow;
     }
-
-
 }

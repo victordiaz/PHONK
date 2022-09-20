@@ -28,6 +28,6 @@ import io.phonk.runner.base.utils.PhonkFonts;
  */
 public class EditorSettings {
     public float fontSize;
-    public String font = PhonkFonts.CODE;
-    public boolean extraKeysBarEnabled = true;
+    public final String font = PhonkFonts.CODE;
+    public final boolean extraKeysBarEnabled = true;
 }

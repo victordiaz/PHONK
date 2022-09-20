@@ -29,12 +29,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -50,26 +47,20 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui.settings.UserPreferences;
 import io.phonk.helpers.PhonkAppHelper;
-import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.FitRecyclerView;
 
 public class ConnectionInfoFragment extends Fragment {
 
     private final String TAG = ConnectionInfoFragment.class.getSimpleName();
 
-    private AppRunner mAppRunner;
-    private View rootView;
-
     private Switch mToggleServers;
     private TextView mTxtConnectionMessage;
     private TextView mTxtConnectionIp;
     private String mRealIp = "";
-    private String mMaskedIp = "XXX.XXX.XXX.XXX";
+    private final String mMaskedIp = "XXX.XXX.XXX.XXX";
     private String mLastConnectionMessage;
     private String mLastIp;
 
-    private FitRecyclerView mEventsRecyclerView;
     private EventsAdapter mEventsAdapter;
     private boolean mCardExpanded = false;
 
@@ -77,15 +68,14 @@ public class ConnectionInfoFragment extends Fragment {
     }
 
     public static ConnectionInfoFragment newInstance() {
-        ConnectionInfoFragment fragment = new ConnectionInfoFragment();
-        return fragment;
+        return new ConnectionInfoFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        rootView = inflater.inflate(R.layout.connection_info_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.connection_info_fragment, container, false);
 
         mTxtConnectionMessage = rootView.findViewById(R.id.connection_message);
         mTxtConnectionIp = rootView.findViewById(R.id.connection_ip);
@@ -121,10 +111,10 @@ public class ConnectionInfoFragment extends Fragment {
             handler.postDelayed(() -> mToggleServers.performClick(), 800);
         }
 
-        mEventsRecyclerView = rootView.findViewById(R.id.recyclerViewEventLog);
-        mEventsAdapter = new EventsAdapter(getActivity(), mEventsRecyclerView);
-        mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mEventsRecyclerView.setAdapter(mEventsAdapter);
+        FitRecyclerView recyclerViewEvents = rootView.findViewById(R.id.recyclerViewEventLog);
+        mEventsAdapter = new EventsAdapter(getActivity(), recyclerViewEvents);
+        recyclerViewEvents.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewEvents.setAdapter(mEventsAdapter);
 
         ConstraintLayout ul = rootView.findViewById(R.id.update_layout);
         ul.getLayoutTransition()
@@ -137,8 +127,7 @@ public class ConnectionInfoFragment extends Fragment {
             if (mCardExpanded) {
                 lp.height = 800;
                 btnExpand.animate().rotation(180);
-            }
-            else {
+            } else {
                 lp.height = 500;
                 btnExpand.animate().rotation(0);
             }

@@ -35,6 +35,7 @@ import io.phonk.runner.base.utils.GSONUtil;
 
 /**
  * Object returned from java to js using a callback
+ *
  * @see io.phonk.runner.apprunner.api.common.ReturnInterface#event(ReturnObject)
  */
 public class ReturnObject implements Scriptable, Map {

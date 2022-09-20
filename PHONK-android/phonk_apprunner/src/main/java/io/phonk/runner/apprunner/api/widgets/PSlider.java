@@ -47,7 +47,7 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PSlider extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PSlider.class.getSimpleName();
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
     public SliderStyler styler;
 
     private ReturnInterface callbackDrag;

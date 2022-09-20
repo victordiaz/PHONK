@@ -139,6 +139,6 @@
         android:layout_marginTop="0dp"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:scrollbarStyle="outsideInset"></androidx.recyclerview.widget.RecyclerView>
+        android:scrollbarStyle="outsideInset" />
 
 </RelativeLayout>

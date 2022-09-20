@@ -28,8 +28,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -47,19 +45,14 @@ import io.phonk.server.model.ProtoFile;
 public class FilePreviewerFragment extends BaseFragment {
     protected static final String TAG = FilePreviewerFragment.class.getSimpleName();
 
-    private Context mContext;
-    private EditText mEdit;
-    private Project mCurrentProject;
     private View v;
     private RelativeLayout mImageContainer;
     private RelativeLayout mVideoContainer;
     private RelativeLayout mTextContainer;
-    // private WebView mWebContainer;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext = context;
     }
 
     @Override
@@ -112,11 +105,9 @@ public class FilePreviewerFragment extends BaseFragment {
      * Bind the UI
      */
     private void bindUI() {
-        mEdit = v.findViewById(R.id.editText1);
         mImageContainer = v.findViewById(R.id.preview_image);
         mVideoContainer = v.findViewById(R.id.preview_video);
         mTextContainer = v.findViewById(R.id.preview_text);
-        // mWebContainer = v.findViewById(R.id.preview_web);
     }
 
 
@@ -135,7 +126,6 @@ public class FilePreviewerFragment extends BaseFragment {
         mVideoContainer.setVisibility(View.GONE);
         mImageContainer.setVisibility(View.GONE);
         mTextContainer.setVisibility(View.GONE);
-        // mWebContainer.setVisibility(View.GONE);
     }
 
     private void loadSound(String name) {
@@ -143,7 +133,6 @@ public class FilePreviewerFragment extends BaseFragment {
     }
 
     private void loadVideo(String name) {
-
     }
 
     private void loadImage(String file) {
@@ -162,9 +151,17 @@ public class FilePreviewerFragment extends BaseFragment {
 
             unloadAll();
 
-            if (type.equals("image")) loadImage(f.getFullPath());
-            else if (type.equals("video")) loadVideo(f.path);
-            else if (type.equals("sound")) loadSound(f.path);
+            switch (type) {
+                case "image":
+                    loadImage(f.getFullPath());
+                    break;
+                case "video":
+                    loadVideo(f.path);
+                    break;
+                case "sound":
+                    loadSound(f.path);
+                    break;
+            }
         }
     }
 

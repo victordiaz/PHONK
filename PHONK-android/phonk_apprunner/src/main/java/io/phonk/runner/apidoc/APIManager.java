@@ -55,7 +55,7 @@ public class APIManager {
     private static APIManager instance;
     private static int methodCount = 0;
 
-    HashMap<String, API> apis = new HashMap<String, API>();
+    HashMap<String, API> apis = new HashMap<>();
     APIManagerDoc doc = new APIManagerDoc();
 
     public APIManager() {
@@ -100,7 +100,7 @@ public class APIManager {
                 apiMethod.returnType = element.getReturnType().getSimpleName();
 
                 // get method information
-                if (apiMethod.name.contains("$") == false) {
+                if (!apiMethod.name.contains("$")) {
                     Annotation[] annotations = element.getDeclaredAnnotations();
                     // check if annotation exists and add apidocs
                     for (Annotation annotation2 : annotations) {
@@ -174,21 +174,20 @@ public class APIManager {
 
     public String getDocumentation() {
         Gson gson = new Gson();
-        String json = gson.toJson(doc);
 
-        return json;
+        return gson.toJson(doc);
     }
 
     public void clear() {
         apis.clear();
         doc = null;
-        apis = new HashMap<String, API>();
+        apis = new HashMap<>();
         doc = new APIManagerDoc();
     }
 
     class API {
-        public Class cls;
-        public Method[] methods;
+        public final Class cls;
+        public final Method[] methods;
 
         public API(Class cls, Method[] m) {
             this.cls = cls;

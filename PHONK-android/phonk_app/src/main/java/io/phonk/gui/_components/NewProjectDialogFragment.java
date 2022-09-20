@@ -36,7 +36,6 @@ import android.widget.TextView.OnEditorActionListener;
 import androidx.fragment.app.DialogFragment;
 
 import io.phonk.R;
-import io.phonk.runner.base.utils.MLog;
 
 public class NewProjectDialogFragment extends DialogFragment implements OnEditorActionListener {
 

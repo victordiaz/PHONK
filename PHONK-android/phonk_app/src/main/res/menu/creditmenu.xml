@@ -22,7 +22,9 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/opt1" android:title="Change Theme"></item>
+    <item
+        android:id="@+id/opt1"
+        android:title="Change Theme" />
     
 
 </menu>

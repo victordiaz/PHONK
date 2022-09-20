@@ -24,7 +24,6 @@ package io.phonk.runner.apprunner.api;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -32,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
@@ -72,15 +70,14 @@ import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
 import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
-import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PViewsArea extends ProtoBase {
     protected final AppRunner mAppRunner;
-    protected Context mContext;
+    protected final Context mContext;
 
     // contains a reference of all views added to the absolute layout
-    protected ArrayList<View> viewArray = new ArrayList<>();
+    protected final ArrayList<View> viewArray = new ArrayList<>();
 
     // UI
     private StylePropertiesProxy mTheme;
@@ -140,22 +137,6 @@ public class PViewsArea extends ProtoBase {
     }
 
     /**
-     * Changes the position cornerMode.
-     * By default, Phonk places the widgets using normalized coordinates (0 to 1)
-     * Sometimes we need a bit more control on how to create layouts so we can specify that the
-     * views will lay out using pixel or dp (density independent pixels) units
-     *
-     * @param type pixels/dp/normalized
-     * @exampleLink /examples/User Interface/Absolute Positioning
-     * @advanced
-     * @status OK
-     */
-    @PhonkMethod
-    public void positionMode(String type) {
-        uiAbsoluteLayout.mode(type);
-    }
-
-    /**
      * Adds a view created with new (newButton, newSlider, newText, etc) to the layout
      *
      * @param v view
@@ -172,7 +153,7 @@ public class PViewsArea extends ProtoBase {
 
         if (isAnimated) {
             v.setAlpha(0);
-            v.animate().alpha(1).setDuration(300).setStartDelay(100 * (1 + viewArray.size())).start();
+            v.animate().alpha(1).setDuration(300).setStartDelay(100L * (1 + viewArray.size())).start();
         }
 
         viewArray.add(v);
@@ -233,7 +214,8 @@ public class PViewsArea extends ProtoBase {
     @PhonkField
     public PToolbar toolbar;
 
-    public void statusBarColor(int color) { }
+    public void statusBarColor(int color) {
+    }
 
     /**
      * Changes the background color using grayscale
@@ -327,11 +309,11 @@ public class PViewsArea extends ProtoBase {
      * @return
      * @status TODO
     public PButton addButtonWithProperties(Map style) {
-        PButton b = newButton("hi");
-        b.setStyle(style);
-        addViewAbsolute(b, toFloat(style.get("x")), toFloat(style.get("y")), toFloat(style.get("width")), toFloat(style.get("height")));
+    PButton b = newButton("hi");
+    b.setStyle(style);
+    addViewAbsolute(b, toFloat(style.get("x")), toFloat(style.get("y")), toFloat(style.get("width")), toFloat(style.get("height")));
 
-        return b;
+    return b;
     }
      */
 
@@ -485,7 +467,7 @@ public class PViewsArea extends ProtoBase {
 
     @PhonkMethod
     public PToggle addToggle(String text, Object x, Object y, Object w, Object h) {
-        return addToggle(new String[]{ text }, x, y, w, h);
+        return addToggle(new String[]{text}, x, y, w, h);
     }
 
     /**

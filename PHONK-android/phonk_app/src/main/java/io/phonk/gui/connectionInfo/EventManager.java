@@ -31,7 +31,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import io.phonk.R;
 import io.phonk.events.Events;
@@ -41,19 +40,15 @@ import io.phonk.runner.base.utils.MLog;
 public class EventManager {
 
     private static final String TAG = EventManager.class.getSimpleName();
-    private final Context mContext;
-    public ArrayList<EventLogItem> mEventList = new ArrayList<>();
+    public final ArrayList<EventLogItem> mEventList = new ArrayList<>();
 
     public EventManager(Context c) {
-        mContext = c;
         EventBus.getDefault().register(this);
     }
 
     public void addEvent(String type, String detail, int icon) {
-        // MLog.d(TAG, "addEvent: " + type + " " + detail);
         mEventList.add(new EventLogItem(type, detail, icon));
 
-        // if (Looper.myLooper() == null) Looper.prepare();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> EventBus.getDefault().post(new Events.AppUiEvent(Events.NEW_EVENT, "")));
     }
@@ -87,33 +82,43 @@ public class EventManager {
         String action = e.getAction();
         Project p = e.getProject();
 
-        if (action.equals(Events.PROJECT_RUN)) {
-            addEvent(action, p.getSandboxPath(), R.drawable.ic_baseline_play_arrow_24);
-        } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
-            addEvent(action, p.getSandboxPath(), R.drawable.ic_action_stop);
-        } else if (action.equals(Events.PROJECT_STOP_ALL)) {
-           // addEvent("stop", "all projects", R.drawable.ic_action_stop, true);
-        } else if (action.equals(Events.PROJECT_SAVE)) {
-            addEvent(action, p.getSandboxPath(), R.drawable.ic_save_24dp);
-        } else if (action.equals(Events.PROJECT_NEW)) {
-            addEvent(action, p.name, -1);
-        } else if (action.equals(Events.PROJECT_RENAME)) {
-            // addEvent("rename", .);
-        } else if (action.equals(Events.PROJECT_FILE_MOVE)) {
-            // addEvent("move", .);
-        } else if (action.equals(Events.PROJECT_DELETE)) {
-            addEvent(action, p.name, -1);
-        } else if (action.equals((Events.PROJECT_DELETE_FILE))) {
-            addEvent(action, p.name, -1);
-        } else if (action.equals(Events.PROJECT_UPDATE)) {
-            // mProtocoder.protoScripts.listRefresh();
-        } else if (action.equals(Events.PROJECT_EDIT)) {
-            addEvent(action, p.getSandboxPath(), -1);
-        } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
-            // addTextToConsole("refreshing list");
-        } else if (action.equals(Events.PROJECT_RUNNING)) {
-            // addTextToConsole("run " + e.getProject().getSandboxPath());
-            addEvent(action, e.getProject().getSandboxPath(), R.drawable.ic_baseline_play_arrow_24);
+        switch (action) {
+            case Events.PROJECT_RUN:
+                addEvent(action, p.getSandboxPath(), R.drawable.ic_baseline_play_arrow_24);
+                break;
+            case Events.PROJECT_STOP_ALL_AND_RUN:
+                addEvent(action, p.getSandboxPath(), R.drawable.ic_action_stop);
+                break;
+            case Events.PROJECT_STOP_ALL:
+                // addEvent("stop", "all projects", R.drawable.ic_action_stop, true);
+                break;
+            case Events.PROJECT_SAVE:
+                addEvent(action, p.getSandboxPath(), R.drawable.ic_save_24dp);
+                break;
+            case Events.PROJECT_NEW:
+            case Events.PROJECT_DELETE:
+            case (Events.PROJECT_DELETE_FILE):
+                addEvent(action, p.name, -1);
+                break;
+            case Events.PROJECT_RENAME:
+                // addEvent("rename", .);
+                break;
+            case Events.PROJECT_FILE_MOVE:
+                // addEvent("move", .);
+                break;
+            case Events.PROJECT_UPDATE:
+                // mProtocoder.protoScripts.listRefresh();
+                break;
+            case Events.PROJECT_EDIT:
+                addEvent(action, p.getSandboxPath(), -1);
+                break;
+            case Events.PROJECT_REFRESH_LIST:
+                // addTextToConsole("refreshing list");
+                break;
+            case Events.PROJECT_RUNNING:
+                // addTextToConsole("run " + e.getProject().getSandboxPath());
+                addEvent(action, e.getProject().getSandboxPath(), R.drawable.ic_baseline_play_arrow_24);
+                break;
         }
     }
 
@@ -151,11 +156,11 @@ public class EventManager {
         return mEventList;
     }
 
-    public class EventLogItem {
+    public static class EventLogItem {
         public final Calendar date;
-        public String type;
-        public String detail;
-        public int icon;
+        public final String type;
+        public final String detail;
+        public final int icon;
         public boolean showType;
 
         public EventLogItem(String type, String detail, int icon) {

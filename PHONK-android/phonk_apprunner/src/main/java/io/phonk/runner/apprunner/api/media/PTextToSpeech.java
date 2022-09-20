@@ -92,7 +92,7 @@ public class PTextToSpeech {
     public PTextToSpeech voice(int num) {
         Set<Voice> voices = mTts.getVoices();
 
-        List<Voice> list = new ArrayList<Voice>(voices);
+        List<Voice> list = new ArrayList<>(voices);
         Voice voice = list.get(num);
 
         mTts.setVoice(voice);

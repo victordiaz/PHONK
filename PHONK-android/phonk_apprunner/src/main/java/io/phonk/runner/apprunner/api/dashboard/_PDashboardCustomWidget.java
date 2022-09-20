@@ -64,22 +64,6 @@ public class _PDashboardCustomWidget extends ProtoBase {
                 .put("values", values);
 
         //TODO change to events
-        /*
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
-        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-
-            @Override
-            public void onUpdated(final JSONObject jsonObject) {
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        callbackfn.event(jsonObject);
-                    }
-                });
-            }
-        });
-        */
 
     }
 

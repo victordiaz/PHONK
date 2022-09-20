@@ -52,7 +52,7 @@ import static com.welie.blessed.BluetoothPeripheral.GATT_SUCCESS;
 @SuppressLint("NewApi")
 @PhonkClass
 public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterface {
-    private Context mContext;
+    private final Context mContext;
     private final AppRunner mAppRunner;
 
     private final static String DISCONNECTED = "disconnected";
@@ -60,7 +60,7 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
     private final static String CONNECTED = "connected";
     private final static String DISCONNECTING = "disconnecting";
 
-    private BluetoothAdapter mBleAdapter;
+    private final BluetoothAdapter mBleAdapter;
     private BluetoothGatt mGatt;
 
     // private Boolean connected = false;
@@ -68,10 +68,10 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
     private ReturnInterface mCallbackDevice;
     private ReturnInterface mCallbackCharacteristic;
 
-    private String mConnectionStatus;
+    private final String mConnectionStatus;
 
-    private BluetoothCentral central;
-    private Handler handler = new Handler();
+    private final BluetoothCentral central;
+    private final Handler handler = new Handler();
 
     public PBluetoothLEClient(AppRunner appRunner, BluetoothAdapter bleAdapter) {
         super(appRunner);
@@ -81,8 +81,6 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         mConnectionStatus = DISCONNECTED;
 
         central = new BluetoothCentral(appRunner.getAppContext(), bluetoothCentralCallback, new Handler());
-        // central.startPairingPopupHack();
-        // central.scanForPeripherals();
         mAppRunner.whatIsRunning.add(this);
     }
 
@@ -157,32 +155,12 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         public void onServicesDiscovered(BluetoothPeripheral peripheral) {
             MLog.i(TAG, "discovered service " + peripheral.getServices());
 
-            /*
-            peripheral.getServices().forEach(bluetoothGattService -> {
-                MLog.d(TAG, "service: " + bluetoothGattService.getUuid());
-                bluetoothGattService.getCharacteristics().forEach(bluetoothGattCharacteristic -> {
-                    MLog.d(TAG, "\t c: " + bluetoothGattCharacteristic.getUuid());
-                });
-            });
-
-            // Request a new connection priority
-            peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
-
-            // Read manufacturer and model number from the Device Information Service
-            if (peripheral.getService(T1_SERVICE_UUID) != null) {
-                MLog.d(TAG, "reading...");
-                BluetoothGattCharacteristic characteristic = peripheral.getCharacteristic(T1_SERVICE_UUID, T1_CHARACTERISTIC_UUID);
-                peripheral.readCharacteristic(characteristic);
-                peripheral.setNotify(characteristic, true);
-                // peripheral.readCharacteristic(peripheral.getCharacteristic(DIS_SERVICE_UUID, MODEL_NUMBER_CHARACTERISTIC_UUID));
-            }
-             */
         }
 
         @Override
         public void onNotificationStateUpdate(BluetoothPeripheral peripheral, BluetoothGattCharacteristic characteristic, int status) {
             if (status == GATT_SUCCESS) {
-                if(peripheral.isNotifying(characteristic)) {
+                if (peripheral.isNotifying(characteristic)) {
                     MLog.d(TAG, "SUCCESS: Notify set to 'on' for %s " + characteristic.getUuid());
                 } else {
                     MLog.d(TAG, "SUCCESS: Notify set to 'off' for %s " + characteristic.getUuid());
@@ -297,31 +275,19 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
             // Reconnect to this device when it becomes available again if autoConnect is true
             if (!autoConnect) return;
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    central.autoConnectPeripheral(peripheral, peripheralCallback);
-                }
-            }, 5000);
+            handler.postDelayed(() -> central.autoConnectPeripheral(peripheral, peripheralCallback), 5000);
         }
 
         @Override
         public void onDiscoveredPeripheral(BluetoothPeripheral peripheral, ScanResult scanResult) {
             MLog.d(TAG, "Found peripheral " + peripheral.getName() + " " + peripheral.getAddress());
 
-            /*
-            if (peripheral.getAddress().equals(T1_MAC_ADDRESS)) {
-                MLog.d(TAG, "found mac");
-                central.connectPeripheral(peripheral, peripheralCallback);
-                central.stopScan();
-            }
-             */
         }
 
         @Override
         public void onBluetoothAdapterStateChanged(int state) {
             MLog.d(TAG, "bluetooth adapter changed state to %d " + state);
-            if(state == BluetoothAdapter.STATE_ON) {
+            if (state == BluetoothAdapter.STATE_ON) {
                 // Bluetooth is on now, start scanning again
                 // Scan for peripherals with a certain service UUIDs
                 central.startPairingPopupHack();

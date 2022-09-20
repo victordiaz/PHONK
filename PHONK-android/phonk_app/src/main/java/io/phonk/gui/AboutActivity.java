@@ -24,22 +24,15 @@ package io.phonk.gui;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import io.phonk.BuildConfig;
 import io.phonk.R;
-import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.runner.base.BaseActivity;
-import io.phonk.runner.base.utils.MLog;
 
 public class AboutActivity extends BaseActivity {
 
@@ -67,13 +60,9 @@ public class AboutActivity extends BaseActivity {
         videoView.setVideoURI(Uri.parse(videoURI));
         // videoView.setBackgroundColor(Color.WHITE);
 
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.setLooping(true);
-                videoView.setBackgroundColor(Color.TRANSPARENT);
-                // videoView.setZOrderOnTop(true);
-            }
+        videoView.setOnPreparedListener(mediaPlayer -> {
+            mediaPlayer.setLooping(true);
+            videoView.setBackgroundColor(Color.TRANSPARENT);
         });
         videoView.start();
     }

@@ -26,7 +26,6 @@ package io.phonk.runner.apprunner.api.media;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
@@ -37,7 +36,6 @@ import android.os.Looper;
 import org.tensorflow.lite.examples.transfer.api.TransferLearningModel;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
@@ -48,18 +46,18 @@ import io.phonk.runner.base.utils.MLog;
 
 public class LearnImages {
 
-    private static String TAG = LearnImages.class.getSimpleName();
+    private static final String TAG = LearnImages.class.getSimpleName();
 
     private final AppRunner mAppRunner;
     private TransferLearningModelWrapper mTlModel;
     private boolean mIsAnalyzerRunning = false;
-    public Handler mHandler = new Handler(Looper.getMainLooper());
+    public final Handler mHandler = new Handler(Looper.getMainLooper());
 
     // When the user presses the "add sample" button for some class,
     // that class will be added to this queue. It is later extracted by
     // InferenceThread and processed.
-    private final ConcurrentLinkedQueue<Frame> mLearnFrames = new ConcurrentLinkedQueue<Frame>();
-    private final ConcurrentLinkedQueue<Frame> mCameraFrames = new ConcurrentLinkedQueue<Frame>();
+    private final ConcurrentLinkedQueue<Frame> mLearnFrames = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Frame> mCameraFrames = new ConcurrentLinkedQueue<>();
 
     private final LoggingBenchmark mInferenceBenchmark = new LoggingBenchmark("InferenceBench");
     private String mNextFrameCategory = null;
@@ -144,13 +142,13 @@ public class LearnImages {
             if (predictions == null) return;
             // mInferenceBenchmark.endStage(imageId, "predict");
 
-            String p = "";
+            StringBuilder p = new StringBuilder();
             for (TransferLearningModel.Prediction prediction : predictions) {
                 MLog.d(TAG, prediction.getClassName() + " " + prediction.getConfidence());
-                p += prediction.getClassName() + " " + prediction.getConfidence() + '\n';
+                p.append(prediction.getClassName()).append(" ").append(prediction.getConfidence()).append('\n');
             }
 
-            String finalP = p;
+            String finalP = p.toString();
             mHandler.post(() -> mCallback.event(finalP));
         }
 
@@ -191,9 +189,9 @@ public class LearnImages {
     }
 
 
-    class Frame {
-        byte[] data;
-        Camera camera;
+    static class Frame {
+        final byte[] data;
+        final Camera camera;
         String category;
 
         Frame(byte[] data, Camera camera, String category) {
@@ -271,8 +269,7 @@ public class LearnImages {
         byte[] bytes = out.toByteArray();
         BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
         bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-        final Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
-        return bmp;
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
     }
 
 }

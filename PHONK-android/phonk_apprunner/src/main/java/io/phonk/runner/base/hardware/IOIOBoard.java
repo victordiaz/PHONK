@@ -29,17 +29,16 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import io.phonk.runner.base.utils.MLog;
-import ioio.lib.api.IOIO;
 
 public class IOIOBoard {
 
-    private static String TAG = IOIOBoard.class.getSimpleName();
+    private static final String TAG = IOIOBoard.class.getSimpleName();
 
     private final Context mContext;
     private IOIOBoardService mIOIOService;
     private Intent mServiceIntent;
     private Boolean mServiceBound = false;
-    protected HardwareCallback mHardwareCallback;
+    protected final HardwareCallback mHardwareCallback;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
         @Override

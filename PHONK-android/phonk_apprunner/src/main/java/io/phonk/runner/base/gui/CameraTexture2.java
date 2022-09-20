@@ -62,16 +62,16 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressWarnings("MissingPermission")
 public class CameraTexture2 extends TextureView implements TextureView.SurfaceTextureListener {
 
-    protected static String TAG = CameraTexture2.class.getSimpleName();
+    protected static final String TAG = CameraTexture2.class.getSimpleName();
 
-    private AppRunner mAppRunner;
-    private Context mContext;
+    private final AppRunner mAppRunner;
+    private final Context mContext;
 
     // camera
     public CameraDevice mCameraDevice;
     private CameraManager mCameraManager;
     private String mCameraId;
-    private Semaphore mCameraOpenCloseLock = new Semaphore(1);
+    private final Semaphore mCameraOpenCloseLock = new Semaphore(1);
     private ImageReader mImageReader;
     private Size mPreviewSize; // of the camera
     private CaptureRequest.Builder mPreviewRequestBuilder;
@@ -160,8 +160,8 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
 
         String[] cameras = mCameraManager.getCameraIdList();
 
-        for (int i = 0; i < cameras.length; i++) {
-            MLog.d(TAG, "camera " + cameras[i]);
+        for (String camera : cameras) {
+            MLog.d(TAG, "camera " + camera);
         }
 
         String cameraId = cameras[0];
@@ -258,7 +258,7 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
         }
     }
 
-    private CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback() {
+    private final CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback() {
 
         private void process(CaptureResult result) {
             MLog.d(TAG, "mCaptureCallback");
@@ -438,8 +438,6 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
 
     public void isFlashSupported() {
         // Check if the flash is supported.
-        // Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-        // mFlashSupported = available == null ? false : available;
     }
 
     private static Size chooseOptimalSize(Size[] choices, int textureViewWidth,

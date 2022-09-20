@@ -31,12 +31,11 @@ import java.util.Set;
 
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.GSONUtil;
-import io.phonk.runner.base.utils.MLog;
 
 public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     private static final java.lang.String TAG = StylePropertiesProxy.class.getSimpleName();
-    public ReturnObject values = new ReturnObject();
+    public final ReturnObject values = new ReturnObject();
     private OnChangeListener changeListener;
     public boolean eventOnChange = true;
 
@@ -181,7 +180,7 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     }
 
     @Override
-    public void putAll(Map<? extends String, ? extends Object> m) {
+    public void putAll(Map<? extends String, ?> m) {
         // MLog.d(TAG, "putAll: ");
 
         values.putAll(m);
@@ -215,12 +214,8 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
         void event(String name, Object value);
     }
 
-    public String apply(HashMap<String, Object> styleProps) {
-        for (Map.Entry<String, Object> entry : styleProps.entrySet()) {
-            this.put(entry.getKey(), entry.getValue());
-        }
-
-        return "qq";
+    public void apply(HashMap<String, Object> styleProps) {
+        this.putAll(styleProps);
     }
 
     public String toString() {

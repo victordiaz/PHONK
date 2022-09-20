@@ -28,8 +28,8 @@ public class Folder {
 
     private final String folderUrl;
     private final int numSubfolders;
-    private String name;
-    private String folder;
+    private final String name;
+    private final String folder;
     private int parent;
 
     public Folder(String folderUrl, String folder, String projectName, int numSubfolders) {
@@ -59,5 +59,7 @@ public class Folder {
         return parent;
     }
 
-    public int getNumSubfolders() { return numSubfolders; }
+    public int getNumSubfolders() {
+        return numSubfolders;
+    }
 }

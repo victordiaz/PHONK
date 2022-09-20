@@ -63,7 +63,6 @@ public class AppRunnerService extends Service {
 
     private static final String SERVICE_CLOSE = "service_close";
 
-    private AppRunnerService mContext;
     private AppRunner mAppRunner;
 
     private WindowManager windowManager;
@@ -72,16 +71,14 @@ public class AppRunnerService extends Service {
 
     private NotificationManager mNotifManager;
     private PendingIntent mRestartPendingIntent;
-    private Toast mToast;
 
     private boolean eventBusRegistered = false;
-    private boolean mOverlayIsEnabled = false;
+    private final boolean mOverlayIsEnabled = false;
     private NotificationManager mNotificationManager;
     private int mNotificationId;
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationChannel mChannel;
-    private String mNotificationChannelId = "phonk_script";
-    private CharSequence mNotificationText = "Notification text";
+    private final String mNotificationChannelId = "phonk_script";
 
     @Override
     public void onCreate() {
@@ -100,13 +97,12 @@ public class AppRunnerService extends Service {
             }
         }
 
-        mContext = this;
         registerEventBus();
         mainLayout = initLayout();
 
         AppRunnerSettings.SERVER_PORT = intent.getIntExtra(Project.SERVER_PORT, 0);
 
-        mAppRunner = new AppRunner(mContext);
+        mAppRunner = new AppRunner(this);
         mAppRunner.hasUserInterface = false;
         mAppRunner.initDefaultObjects(AppRunnerHelper.createSettings());
         mAppRunner.pApp.folder = intent.getStringExtra(Project.FOLDER);
@@ -114,9 +110,6 @@ public class AppRunnerService extends Service {
         mAppRunner.pDevice.deviceId = intent.getStringExtra(Project.DEVICE_ID);
 
         mAppRunner.loadProject(mAppRunner.pApp.folder, mAppRunner.pApp.name);
-        //  mAppRunner.mIntentPrefixScript = intent.getString(Project.PREFIX, "");
-        //  mAppRunner.mIntentCode = intent.getString(Project.INTENTCODE, "");
-        //  mAppRunner.mIntentPostfixScript = intent.getString(Project.POSTFIX, "");
         mAppRunner.initInterpreter();
 
         if (mOverlayIsEnabled) {
@@ -142,7 +135,7 @@ public class AppRunnerService extends Service {
             params.y = 0;
 
             if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(mContext)) {
+                if (!Settings.canDrawOverlays(this)) {
                     Intent intent2 = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     // startActivityForResult(intent, 1234);
                 }
@@ -153,8 +146,6 @@ public class AppRunnerService extends Service {
         // start / stop service
         startStopActivityBroadcastReceiver();
         executeCodeActivityBroadcastReceiver();
-
-        mToast = Toast.makeText(AppRunnerService.this, "Service crashed :(", Toast.LENGTH_LONG);
 
         // catch errors and send them to the WebIDE or the app console
         AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
@@ -190,35 +181,6 @@ public class AppRunnerService extends Service {
     }
 
     private void createNotification(final int notificationId, String scriptFolder, String scriptName) {
-        //RemoteViews remoteViews = new RemoteViews(getPackageName(),
-        //        R.layout.widget);
-
-        /*
-        Intent stopIntent = new Intent(SERVICE_CLOSE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.phonk_icon)
-                .setContentTitle(scriptName).setContentText("Running service: " + scriptFolder + " > " + scriptName)
-                .setOngoing(false)
-                .addAction(R.drawable.phonk_icon, "stop", pendingIntent)
-                .setDeleteIntent(pendingIntent);
-
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, AppRunnerActivity.class);
-
-        // The stack builder object will contain an artificial back stack for
-        // navigating backward from the Activity leads out your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(AppRunnerActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        mBuilder.setContentIntent(resultPendingIntent);
-        mNotificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationId, mBuilder.build());
-        */
 
 
         // close server intent
@@ -252,29 +214,15 @@ public class AppRunnerService extends Service {
         Thread.setDefaultUncaughtExceptionHandler(handler);
     }
 
-    Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+    final Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
         @Override
         public void uncaughtException(Thread thread, Throwable ex) {
-
             MLog.d(TAG, "exception" + ex.toString());
-
-            new Thread() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    Toast.makeText(AppRunnerService.this, "lalll", Toast.LENGTH_LONG);
-                    Looper.loop();
-                }
-            }.start();
-
-            //          handlerToast.post(runnable);
-
 
             AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mRestartPendingIntent);
 
             mNotifManager.cancelAll();
-
 
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(10);
@@ -346,7 +294,7 @@ public class AppRunnerService extends Service {
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
-    BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             stopSelf();
@@ -362,7 +310,7 @@ public class AppRunnerService extends Service {
         registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 
-    BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String code = intent.getStringExtra("code");

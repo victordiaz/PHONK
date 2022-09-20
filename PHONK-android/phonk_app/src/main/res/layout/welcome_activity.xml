@@ -49,12 +49,12 @@
             android:layout_marginStart="12dp"
             android:layout_marginLeft="12dp"
             app:srcCompat="@drawable/phonk_logo_name"
-            tools:ignore="VectorDrawableCompat"></ImageView>
+            tools:ignore="VectorDrawableCompat" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_weight="2"></View>
+            android:layout_weight="2" />
 
     </LinearLayout>
 

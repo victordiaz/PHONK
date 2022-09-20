@@ -32,18 +32,16 @@ import org.mozilla.javascript.NativeArray;
 
 import io.phonk.runner.apprunner.api.common.ReturnInterfaceWithReturn;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.base.utils.MLog;
 
 
 public class PViewItemAdapter extends RecyclerView.Adapter<PViewItemAdapter.ViewHolder> {
     private static final String TAG = PViewItemAdapter.class.getSimpleName();
-    private final Context mContext;
     private final ReturnInterfaceWithReturn mCreating;
     private final ReturnInterfaceWithReturn mBinding;
 
     public NativeArray mData;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
 
         public ViewHolder(View v) {
@@ -53,10 +51,7 @@ public class PViewItemAdapter extends RecyclerView.Adapter<PViewItemAdapter.View
     }
 
     public PViewItemAdapter(Context c, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
-        mContext = c;
         mData = data;
-
-        // MLog.d(TAG, "" + data);
 
         mCreating = creating;
         mBinding = binding;
@@ -79,28 +74,19 @@ public class PViewItemAdapter extends RecyclerView.Adapter<PViewItemAdapter.View
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MLog.d(TAG, "create 1");
-
         View v = (View) mCreating.event(null);
-        // MLog.d(TAG, "create 2" + v);
 
-        PViewItemAdapter.ViewHolder vh = new PViewItemAdapter.ViewHolder(v);
-
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // MLog.d(TAG, "bind " + position);
-
-        // Object o = mData.get(position);
 
         ReturnObject ro = new ReturnObject();
         ro.put("view", holder.mView);
         ro.put("position", position);
         mBinding.event(ro);
-
     }
 
     @Override

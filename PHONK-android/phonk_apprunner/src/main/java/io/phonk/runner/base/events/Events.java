@@ -34,8 +34,8 @@ public class Events {
 
 
     public static class ProjectEvent {
-        private Project project;
-        private String action;
+        private final Project project;
+        private final String action;
 
         public ProjectEvent(String action, Project project) {
             this.action = action;
@@ -58,7 +58,7 @@ public class Events {
 
 
     public static class LogEvent {
-        private String action;
+        private final String action;
         private final String time;
         private final String data;
 

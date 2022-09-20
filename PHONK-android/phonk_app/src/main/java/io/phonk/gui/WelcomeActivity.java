@@ -68,7 +68,6 @@ public class WelcomeActivity extends BaseActivity {
 
     private Button mNextStepButton;
     private ViewFlipper viewFlipper;
-    private int mCurrentStep = 0;
     private int mNextStep = 0;
     private LinearLayout mLoading;
 
@@ -131,37 +130,32 @@ public class WelcomeActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         boolean isPermissionWriteExternalGranted = false;
 
-        switch (requestCode) {
-            case REQUEST_CODE_SOME_FEATURES_PERMISSIONS: {
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        MLog.d("Permissions", "Permission Granted: " + permissions[i]);
-                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                        MLog.d("Permissions", "Permission Denied: " + permissions[i]);
-                    }
-
-                    if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        isPermissionWriteExternalGranted = true;
-                        MLog.d(TAG, "granted!");
-                    }
-                    // if is already granted we remove it from the list
-                    // requiredPermissions.remove(i);
+        if (requestCode == REQUEST_CODE_SOME_FEATURES_PERMISSIONS) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    MLog.d("Permissions", "Permission Granted: " + permissions[i]);
+                } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    MLog.d("Permissions", "Permission Denied: " + permissions[i]);
                 }
 
-                // we need permission to access the external storage
-                // if we dont have it we ask again
-                if (isPermissionWriteExternalGranted) {
-                    goToStep(STEP_ASK_PERMISSIONS_OK);
-                } else {
-                    goToStep(STEP_ASK_PERMISSIONS_ERROR);
-                    Toast.makeText(this, "External storage is required", Toast.LENGTH_LONG).show();
+                if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    isPermissionWriteExternalGranted = true;
+                    MLog.d(TAG, "granted!");
                 }
+                // if is already granted we remove it from the list
+                // requiredPermissions.remove(i);
             }
-            break;
 
-            default: {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            // we need permission to access the external storage
+            // if we dont have it we ask again
+            if (isPermissionWriteExternalGranted) {
+                goToStep(STEP_ASK_PERMISSIONS_OK);
+            } else {
+                goToStep(STEP_ASK_PERMISSIONS_ERROR);
+                Toast.makeText(this, "External storage is required", Toast.LENGTH_LONG).show();
             }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -187,8 +181,6 @@ public class WelcomeActivity extends BaseActivity {
 
     public void goToStep(int step) {
         MLog.d(TAG, "step " + step + " " + mNextStep);
-
-        mCurrentStep = step;
 
         switch (step) {
             case STEP_WELCOME:

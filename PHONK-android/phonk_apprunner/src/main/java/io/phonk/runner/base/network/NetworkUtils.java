@@ -30,7 +30,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.PowerManager;
-import android.text.format.Formatter;
 import android.util.Log;
 
 import java.io.FileOutputStream;
@@ -42,16 +41,12 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
-import java.util.Enumeration;
 
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
-import io.phonk.runner.base.utils.MLog;
 
 public class NetworkUtils {
 
@@ -183,14 +178,12 @@ public class NetworkUtils {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
-        // return (activeNetworkInfo != null &&
-        // activeNetworkInfo.isConnectedOrConnecting());
         return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
     }
 
     // Get broadcast Address
     public static InetAddress getBroadcastAddress(Context c) throws UnknownHostException {
-        WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         DhcpInfo dhcp = wifi.getDhcpInfo();
 
         if (dhcp == null) {
@@ -207,39 +200,10 @@ public class NetworkUtils {
         return InetAddress.getByAddress(quads);
     }
 
-    public static void getGatewayIpAddress(Context c) {
-        // get wifi ip
-
-        final WifiManager manager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-        final DhcpInfo dhcp = manager.getDhcpInfo();
-        final String address = Formatter.formatIpAddress(dhcp.gateway);
-
-        StringBuilder IFCONFIG = new StringBuilder();
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()
-                            && inetAddress.isSiteLocalAddress()) {
-                        IFCONFIG.append(inetAddress.getHostAddress() + "\n");
-                    }
-
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e("LOG_TAG", ex.toString());
-        }
-        MLog.d(TAG, "ifconfig " + IFCONFIG.toString());
-
-        MLog.d(TAG, "hotspot address is " + address);
-
-    }
-
     public static boolean isTetheringEnabled(Context c) {
         boolean isWifiAPenabled = false;
 
-        WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
         for (Method method : wmMethods) {
             if (method.getName().equals("isWifiApEnabled")) {
@@ -272,7 +236,7 @@ public class NetworkUtils {
             networkInfo.put("ip", "192.168.43.1");
         }
 
-        WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
         if (ipAddress != 0) {
 
@@ -294,34 +258,12 @@ public class NetworkUtils {
 
         return networkInfo;
 
-        // try {
-        // for (Enumeration<NetworkInterface> en =
-        // NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-        // NetworkInterface intf = en.nextElement();
-        // for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses();
-        // enumIpAddr.hasMoreElements();) {
-        // InetAddress inetAddress = enumIpAddr.nextElement();
-        // // if (!inetAddress.isLoopbackAddress() &&
-        // // !inetAddress.isLinkLocalAddress() &&
-        // // inetAddress.isSiteLocalAddress() ) {
-        // if (!inetAddress.isLoopbackAddress()
-        // && InetAddressUtils.isIPv4Address(inetAddress.getHostAddress())) {
-        // return inetAddress;
-        // }
-        // }
-        // }
-        // } catch (SocketException ex) {
-        // MLog.d(TAG, ex.toString());
-        // }
-        // return null;
-
     }
 
     public static WifiInfo getWifiInfo(Context c) {
-        WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
-        return wifiInfo;
+        return wifiManager.getConnectionInfo();
     }
 
 }

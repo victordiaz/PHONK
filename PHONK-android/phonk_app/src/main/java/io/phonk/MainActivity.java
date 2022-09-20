@@ -38,7 +38,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,7 +76,6 @@ public class MainActivity extends BaseActivity {
     private ProjectBrowserFragment mProjectBrowserFragment;
 
     private ImageButton mBtnHelp;
-    private CardView mConnectionInfo;
 
     private ConnectionInfoFragment mConnectionInfoFragment;
     private APIWebviewFragment mWebViewFragment;
@@ -97,7 +95,7 @@ public class MainActivity extends BaseActivity {
                 boolean isDeviceControl = (boolean) scriptSettings.get("device_control");
 
                 if (isDeviceControl) {
-                    MLog.d(TAG,  "yep: " + p.getFullPath() + " " + isDeviceControl + " : " + p.getFullPath());
+                    MLog.d(TAG, "yep: " + p.getFullPath() + " " + isDeviceControl + " : " + p.getFullPath());
                 } else {
                     // MLog.d(TAG, "nop: " + p.getFullPath() + " " + isDeviceControl + " : " + p.getFullPath());
                 }
@@ -221,7 +219,6 @@ public class MainActivity extends BaseActivity {
         mConnectionInfoFragment = ConnectionInfoFragment.newInstance();
         addFragment(mConnectionInfoFragment, R.id.infoLayout, false);
 
-        mConnectionInfo = findViewById(R.id.ip_container);
         mBtnHelp = findViewById(R.id.btnHelp);
         mBtnHelp.setOnClickListener(view -> PhonkAppHelper.launchHelp(MainActivity.this));
 
@@ -253,12 +250,12 @@ public class MainActivity extends BaseActivity {
             myPopup.show();
         });
 
-        // sendDelayedEvent("version", BuildConfig.VERSION_NAME, 500);
         String[] versionNameTemp = BuildConfig.VERSION_NAME.split("_");
         String friendlyVersionName = "(unknown version)";
         if (versionNameTemp.length > 1) {
             friendlyVersionName = versionNameTemp[0];
-            if (!versionNameTemp[1].equals("normal")) friendlyVersionName += " (" + versionNameTemp[1] + ").";
+            if (!versionNameTemp[1].equals("normal"))
+                friendlyVersionName += " (" + versionNameTemp[1] + ").";
         }
         sendDelayedEvent("welcome", "Welcome to PHONK " + friendlyVersionName + " Enjoy!", 0);
     }
@@ -315,7 +312,7 @@ public class MainActivity extends BaseActivity {
     /*
      * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
      */
-    BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String cmd = intent.getStringExtra("cmd");
@@ -403,7 +400,7 @@ public class MainActivity extends BaseActivity {
     /*
      * Network Connectivity listener
      */
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, "connectivity changed");

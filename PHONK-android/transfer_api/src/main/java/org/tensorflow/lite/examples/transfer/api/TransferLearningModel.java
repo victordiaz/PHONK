@@ -66,8 +66,8 @@ public final class TransferLearningModel implements Closeable {
   }
 
   private static class TrainingSample {
-    ByteBuffer bottleneck;
-    String className;
+    final ByteBuffer bottleneck;
+    final String className;
 
     TrainingSample(ByteBuffer bottleneck, String className) {
       this.bottleneck = bottleneck;
@@ -123,7 +123,7 @@ public final class TransferLearningModel implements Closeable {
   private final ByteBuffer[] modelGradients;
 
   // Where to store bottlenecks produced during inference.
-  private ByteBuffer inferenceBottleneck;
+  private final ByteBuffer inferenceBottleneck;
 
   // Used to spawn background threads.
   private final ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);

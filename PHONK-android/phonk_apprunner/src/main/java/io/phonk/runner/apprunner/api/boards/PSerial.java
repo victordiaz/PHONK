@@ -34,7 +34,6 @@ import android.hardware.usb.UsbManager;
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +62,7 @@ public class PSerial extends ProtoBase {
     private UsbSerialDevice mSerialPort;
 
     private boolean mSerialPortConnected = false;
-    private int mBaudsRate;
-    private boolean isReturningFullLine = true;
+    private final int mBaudsRate;
 
     public PSerial(AppRunner appRunner, int bauds) {
         super(appRunner);
@@ -78,8 +76,6 @@ public class PSerial extends ProtoBase {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USB_PERMISSION);
-        // filter.addAction(ACTION_USB_DETACHED);
-        // filter.addAction(ACTION_USB_ATTACHED);
         getContext().registerReceiver(usbReceiver, filter);
         findSerialPortDevice();
     }
@@ -188,19 +184,9 @@ public class PSerial extends ProtoBase {
             if (intent.getAction().equals(ACTION_USB_PERMISSION)) {
                 final boolean granted = intent.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
 
-                /*
-                mHandler.post(() -> {
-                    ReturnObject o = new ReturnObject();
-                    o.put("status", "serialGranted");
-                    if (mCallbackSerialStatus != null) mCallbackSerialStatus.event(o);
-                });
-                */
-
                 // User accepted our USB connection. Try to open the device as a serial port
                 if (granted) {
                     MLog.d(TAG, "onReceive granted " + granted);
-                    // Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
-                    // context.sendBroadcast(intent);
                     mConnection = mUsbManager.openDevice(mDevice);
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
@@ -210,25 +196,8 @@ public class PSerial extends ProtoBase {
                     new ConnectionThread().start();
                     // User not accepted our USB connection. Send an Intent to the Main Activity
                 } else {
-                    // Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
-                    // context.sendBroadcast(intent);
                 }
             }
-            /*
-            else if (intent.getAction().equals(ACTION_USB_ATTACHED)) {
-                if (!mSerialPortConnected) {
-                    findSerialPortDevice(); // A USB mDevice has been attached. Try to open it as a Serial port
-                }
-            } else if (intent.getAction().equals(ACTION_USB_DETACHED)) {
-                // Usb mDevice was disconnected. send an intent to the Main Activity
-                Intent intent = new Intent(ACTION_USB_DISCONNECTED);
-                context.sendBroadcast(intent);
-                if (mSerialPortConnected) {
-                    mSerialPort.close();
-                }
-                mSerialPortConnected = false;
-            }
-            */
         }
     };
 
@@ -300,7 +269,7 @@ public class PSerial extends ProtoBase {
      *  In this particular example. byte stream is converted to String and send to UI thread to
      *  be treated there.
      */
-    private UsbSerialInterface.UsbReadCallback mUSBReadCallback = new UsbSerialInterface.UsbReadCallback() {
+    private final UsbSerialInterface.UsbReadCallback mUSBReadCallback = new UsbSerialInterface.UsbReadCallback() {
         private String returnLine;
 
         @Override
@@ -308,6 +277,7 @@ public class PSerial extends ProtoBase {
             String data = new String(arg0, StandardCharsets.UTF_8);
             MLog.d(TAG, "--> " + data);
 
+            boolean isReturningFullLine = true;
             if (isReturningFullLine) {
                 returnLine = returnLine + data;
                 int newLineIndex = returnLine.indexOf('\n');
@@ -318,7 +288,7 @@ public class PSerial extends ProtoBase {
                     returnLine = returnLine.substring(newLineIndex + 1);
                 }
                 // MLog.d(TAG, msg);
-                if (msgReturn.trim().equals("") == false) {
+                if (!msgReturn.trim().equals("")) {
                     final String finalMsgReturn = msgReturn;
                     mHandler.post(() -> {
                         ReturnObject o = new ReturnObject();
@@ -335,7 +305,7 @@ public class PSerial extends ProtoBase {
     /*
      * State changes in the CTS line will be received here
      */
-    private UsbSerialInterface.UsbCTSCallback mCTSCallback = state -> {
+    private final UsbSerialInterface.UsbCTSCallback mCTSCallback = state -> {
         if (mHandler != null) {
             // mHandler.obtainMessage(CTS_CHANGE).sendToTarget();
         }
@@ -344,7 +314,7 @@ public class PSerial extends ProtoBase {
     /*
      * State changes in the DSR line will be received here
      */
-    private UsbSerialInterface.UsbDSRCallback mDSRCallback = state -> {
+    private final UsbSerialInterface.UsbDSRCallback mDSRCallback = state -> {
         if (mHandler != null) {
             // mHandler.obtainMessage(DSR_CHANGE).sendToTarget();
         }

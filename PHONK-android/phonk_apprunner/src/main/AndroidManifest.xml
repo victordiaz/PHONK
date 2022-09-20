@@ -101,12 +101,12 @@
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.CLOSE"></action>
+                <action android:name="io.phonk.runner.intent.CLOSE" />
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
+                <action android:name="io.phonk.runner.intent.EXECUTE_CODE" />
             </intent-filter>
         </activity>
 
@@ -122,16 +122,16 @@
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.CLOSE"></action>
+                <action android:name="io.phonk.runner.intent.CLOSE" />
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
+                <action android:name="io.phonk.runner.intent.EXECUTE_CODE" />
             </intent-filter>
 
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.WEBEDITOR_RECEIVER"></action>
+                <action android:name="io.phonk.runner.intent.WEBEDITOR_RECEIVER" />
             </intent-filter>
 
         </service>

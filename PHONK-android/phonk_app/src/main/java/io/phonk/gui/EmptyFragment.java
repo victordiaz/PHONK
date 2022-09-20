@@ -33,26 +33,18 @@ import io.phonk.runner.R;
 
 public class EmptyFragment extends Fragment {
 
-    private View v;
-
     public EmptyFragment() {
     }
 
     public static EmptyFragment newInstance() {
-        EmptyFragment fragment = new EmptyFragment();
-        // Bundle args = new Bundle();
-        // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        // fragment.setArguments(args);
-        return fragment;
+        return new EmptyFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        v = inflater.inflate(R.layout.fragment_empty, container, false);
-        return v;
-
+        return inflater.inflate(R.layout.fragment_empty, container, false);
     }
 
     @Override

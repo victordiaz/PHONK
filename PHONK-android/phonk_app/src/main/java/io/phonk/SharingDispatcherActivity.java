@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ import io.phonk.runner.base.utils.MLog;
 
 public class SharingDispatcherActivity extends BaseActivity {
 
-    HashMap<String, String> extras = new HashMap<>();
+    final HashMap<String, String> extras = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +112,7 @@ public class SharingDispatcherActivity extends BaseActivity {
             extras.put("shareContent", sharedText);
 
         } else if (type.startsWith("image/")) {
-            Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
             if (imageUri == null) return;
             extras.put("shareType", type);
             extras.put("shareContent", imageUri.toString());

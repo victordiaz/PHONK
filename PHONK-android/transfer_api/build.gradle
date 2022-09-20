@@ -28,7 +28,7 @@ android {
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 29
+        targetSdkVersion 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -55,7 +55,6 @@ android {
 
 repositories {
     mavenCentral()
-    jcenter()
     google()
 
     flatDir { dirs 'libs' }

@@ -67,11 +67,8 @@ public class PAccelerometer extends PCustomSensorManager {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
                 switch (accuracy) {
                     case SensorManager.SENSOR_STATUS_UNRELIABLE:
-                        break;
                     case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-                        break;
                     case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-                        break;
                     case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
                         break;
                 }

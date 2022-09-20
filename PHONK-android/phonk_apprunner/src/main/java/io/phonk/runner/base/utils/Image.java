@@ -32,8 +32,7 @@ public class Image {
         // Get the bitmap with appropriate options
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPurgeable = true;
-        Bitmap bmp = BitmapFactory.decodeFile(imagePath, options);
-        return bmp;
+        return BitmapFactory.decodeFile(imagePath, options);
     }
 
 

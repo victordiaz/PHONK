@@ -42,8 +42,6 @@ import io.phonk.runner.base.utils.SchedulerManager;
 public class SchedulerActivity extends BaseActivity {
 
     private static final String TAG = SchedulerActivity.class.getSimpleName();
-    private ArrayList<SchedulerManager.Task> tasks;
-    private ListView mScheduleTasks;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,11 +49,11 @@ public class SchedulerActivity extends BaseActivity {
         setContentView(R.layout.scheduler_activity);
 
         SchedulerManager schedulerManager = new SchedulerManager(this, null);
-        tasks = schedulerManager.loadTasks().getTasks();
+        ArrayList<SchedulerManager.Task> tasks = schedulerManager.loadTasks().getTasks();
 
-        mScheduleTasks = findViewById(R.id.task_list);
+        ListView listScheduleTasks = findViewById(R.id.task_list);
         final MyAdapter myAdapter = new MyAdapter(this, tasks);
-        mScheduleTasks.setAdapter(myAdapter);
+        listScheduleTasks.setAdapter(myAdapter);
 
         setupActivity();
     }
@@ -67,7 +65,7 @@ public class SchedulerActivity extends BaseActivity {
         enableBackOnToolbar();
     }
 
-    private class MyAdapter extends ArrayAdapter<SchedulerManager.Task> {
+    private static class MyAdapter extends ArrayAdapter<SchedulerManager.Task> {
 
         public MyAdapter(Context context, ArrayList<SchedulerManager.Task> task) {
             super(context, -1, -1, task);

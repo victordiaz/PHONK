@@ -29,8 +29,8 @@
         <shape android:shape="oval">
             <corners android:radius="2dp" />
             <solid android:color="@color/phonk_colorPrimary"/>
-            <size android:width="45dp"></size>
-            <size android:height="45dp"></size>
+            <size android:width="45dp" />
+            <size android:height="45dp" />
         </shape>
     </item>
 

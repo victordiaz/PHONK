@@ -30,12 +30,11 @@ import android.widget.Toast;
 
 import io.phonk.gui.UpdateActivity;
 import io.phonk.gui.WelcomeActivity;
-import io.phonk.gui.settings.SettingsActivity;
 
 public class LauncherActivity extends Activity {
 
     Intent intent = null;
-    private String TAG = LauncherActivity.class.getSimpleName();
+    private final String TAG = LauncherActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -43,7 +43,6 @@ import java.util.List;
 import io.phonk.BuildConfig;
 import io.phonk.MainActivity;
 import io.phonk.R;
-import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.BaseActivity;
@@ -75,7 +74,7 @@ public class UpdateActivity extends BaseActivity {
         LinearLayout lLoading = findViewById(R.id.loading);
 
         btnDone.setOnClickListener(view -> {
-           ready();
+            ready();
         });
 
         btnSkip.setOnClickListener(view -> {
@@ -114,12 +113,12 @@ public class UpdateActivity extends BaseActivity {
         mToolbar.setTitle("patata" + BuildConfig.VERSION_NAME);
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-        private List<ChangeLogItem> changeLogList = new ArrayList<>();
+    static class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+        private final List<ChangeLogItem> changeLogList = new ArrayList<>();
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-            public TextView txtVersion;
-            public TextView txtChanges;
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
+            public final TextView txtVersion;
+            public final TextView txtChanges;
 
             public MyViewHolder(LinearLayout v) {
                 super(v);
@@ -140,8 +139,7 @@ public class UpdateActivity extends BaseActivity {
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.update_activity_changelog_item, parent, false);
-            MyViewHolder vh = new MyViewHolder(v);
-            return vh;
+            return new MyViewHolder(v);
         }
 
         @Override
@@ -156,8 +154,8 @@ public class UpdateActivity extends BaseActivity {
         }
     }
 
-    class ChangeLogItem {
-        String version;
+    static class ChangeLogItem {
+        final String version;
         String changes;
 
         ChangeLogItem(String release) {

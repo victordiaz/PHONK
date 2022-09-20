@@ -101,24 +101,6 @@ public class PToolbar extends ProtoBase {
     }
 
 
-//    @ProtoMethod(description = "Changes the title text color", example = "")
-//    @ProtoMethodParam(params = {"r", "g", "b", "mContext"})
-//    public PToolbar textColor(int r, int g, int b, int alpha) {
-//        int c = Color.argb(alpha, r, g, b);
-//
-//        //int titleId = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-//        TextView textTitleView = (TextView) mContext.findViewById(titleId);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            mContext.getWindow().setStatusBarColor(c);
-//        } else {
-//            textTitleView.setTextColor(c);
-//        }
-//
-//        return this;
-//    }
-
-
     @PhonkMethod(description = "Sets an image rather than text as toolbar title", example = "")
     @PhonkMethodParam(params = {"imageName"})
     public PToolbar icon(String imagePath) {

@@ -42,7 +42,7 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PFtpClient extends ProtoBase {
-    String TAG = PFtpClient.class.getSimpleName();
+    final String TAG = PFtpClient.class.getSimpleName();
 
     public static String workDir;
 
@@ -132,7 +132,7 @@ public class PFtpClient extends ProtoBase {
         void event(ArrayList<ListDir> msg);
     }
 
-    class ListDir {
+    static class ListDir {
         public String type;
         public String name;
     }
@@ -142,14 +142,14 @@ public class PFtpClient extends ProtoBase {
     @PhonkMethodParam(params = {"dirname"})
     public void getFileList(final String dir_path, final GetFileListCb callback) {
         Thread t = new Thread(() -> {
-            ArrayList<ListDir> list = new ArrayList<ListDir>();
+            ArrayList<ListDir> list = new ArrayList<>();
             try {
                 FTPFile[] ftpFiles = mFTPClient.listFiles(dir_path);
                 int length = ftpFiles.length;
 
-                for (int i = 0; i < length; i++) {
-                    String name = ftpFiles[i].getName();
-                    boolean isFile = ftpFiles[i].isFile();
+                for (FTPFile ftpFile : ftpFiles) {
+                    String name = ftpFile.getName();
+                    boolean isFile = ftpFile.isFile();
 
                     ListDir listDir = new ListDir();
                     if (isFile) {
@@ -268,7 +268,7 @@ public class PFtpClient extends ProtoBase {
                 try {
                     mFTPClient.logout();
                     mFTPClient.disconnect();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
                 isConnected = false;

@@ -51,7 +51,7 @@ import io.phonk.runner.base.utils.MLog;
 public class PLiveCodingFeedback {
     private static final String TAG = PLiveCodingFeedback.class.getSimpleName();
 
-    protected Context mContext;
+    protected final Context mContext;
 
     private LinearLayout liveRLayout;
     float liveTextY = 0;
@@ -63,7 +63,7 @@ public class PLiveCodingFeedback {
     private String textColor = "#FFFFFFFF";
     private int textSize;
     private boolean autoHide = false; // OK
-    boolean hidingLiveText = true;
+    final boolean hidingLiveText = true;
 
     private final Handler h;
     private final Runnable r;
@@ -83,7 +83,7 @@ public class PLiveCodingFeedback {
         fontCode = Typeface.createFromAsset(context.getAssets(), "Inconsolata.otf");
 
         bgColor = mContext.getResources().getColor(R.color.phonk_colorPrimary_shade);
-        textSize = AndroidUtils.dpToPixels(mContext, 8);;
+        textSize = AndroidUtils.dpToPixels(mContext, 8);
         paddingLeft = paddingRight = paddingTop = paddingBottom = AndroidUtils.dpToPixels(mContext, 10);
 
         h = new Handler();
@@ -186,12 +186,16 @@ public class PLiveCodingFeedback {
     @PhonkMethod(description = "Aligns the text", example = "")
     @PhonkMethodParam(params = {"align={left,center,right}"})
     public PLiveCodingFeedback align(String alignment) {
-        if (alignment.equals("right")) {
-            this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
-        } else if (alignment.equals("center")) {
-            this.alignment = Gravity.CENTER;
-        } else if (alignment.equals("left")) {
-            this.alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
+        switch (alignment) {
+            case "right":
+                this.alignment = TextView.TEXT_ALIGNMENT_VIEW_START;
+                break;
+            case "center":
+                this.alignment = Gravity.CENTER;
+                break;
+            case "left":
+                this.alignment = TextView.TEXT_ALIGNMENT_VIEW_END;
+                break;
         }
 
         return this;
@@ -265,11 +269,6 @@ public class PLiveCodingFeedback {
         liveRLayout.setPadding(10, 10, 10, 10);
         liveRLayout.setVisibility(View.GONE);
         // liveRLayout.setLayoutTransition(transition)
-
-        // Animation spinin = AnimationUtils.loadAnimation(this,
-        // R.anim.slide_in_left);
-        // liveRLayout.setLayoutAnimation(new
-        // LayoutAnimationController(spinin));
 
         Animator appearingAnimation = ObjectAnimator.ofFloat(null, "translationY", 20, 0);
         appearingAnimation.addListener(new AnimatorListenerAdapter() {

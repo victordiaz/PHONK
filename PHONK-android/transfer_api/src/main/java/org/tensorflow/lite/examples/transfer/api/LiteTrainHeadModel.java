@@ -30,7 +30,7 @@ import java.util.TreeMap;
 class LiteTrainHeadModel implements Closeable {
   private static final int FLOAT_BYTES = 4;
 
-  private LiteModelWrapper modelWrapper;
+  private final LiteModelWrapper modelWrapper;
 
   LiteTrainHeadModel(LiteModelWrapper modelWrapper) {
     this.modelWrapper = modelWrapper;

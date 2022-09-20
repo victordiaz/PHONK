@@ -41,14 +41,10 @@ public class FileManagerListItem extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextView;
 
-    private WeakReference<View> v;
-    private Context c;
-
     public FileManagerListItem(Context context) {
         super(context);
-        this.c = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.v = new WeakReference<View>(inflater.inflate(R.layout.filemanager_file_view, this, true));
+        WeakReference<View> v = new WeakReference<>(inflater.inflate(R.layout.filemanager_file_view, this, true));
 
         mImageView = v.get().findViewById(R.id.img_file);
         mTextView = v.get().findViewById(R.id.txt_file_name);

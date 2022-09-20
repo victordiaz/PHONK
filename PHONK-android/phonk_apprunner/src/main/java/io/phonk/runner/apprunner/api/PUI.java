@@ -23,6 +23,7 @@
 package io.phonk.runner.apprunner.api;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -39,7 +40,6 @@ import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,15 +62,15 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkObject(mergeFrom = "ViewsArea")
 public class PUI extends PViewsArea {
     public StylePropertiesProxy theme;
-    public StylePropertiesProxy rootStyle = new StylePropertiesProxy();
+    public final StylePropertiesProxy rootStyle = new StylePropertiesProxy();
 
     private boolean isMainLayoutSetup = false;
     public View mainLayout;
-    public ArrayList viewTree = new ArrayList<ViewElement>();
+    public final ArrayList viewTree = new ArrayList<ViewElement>();
     public int screenWidth;
     public int screenHeight;
 
-    class ViewElement {
+    static class ViewElement {
         String id;
         String type;
         View ref;
@@ -103,10 +103,10 @@ public class PUI extends PViewsArea {
     /**
      * This method creates the basic layout where the user created views will lay out
      * It has to be programatically created since it might be used somewhere else without access to the R file
-     *   scriptedLayout
-     *     [rep]  uiHolderLayout -> common background
-     *       scrollView
-     *       absolutelayout
+     * scriptedLayout
+     * [rep]  uiHolderLayout -> common background
+     * scrollView
+     * absolutelayout
      */
     protected void initializeLayout() {
         if (isMainLayoutSetup) return;
@@ -148,6 +148,7 @@ public class PUI extends PViewsArea {
         return pViewsArea;
     }
 
+    @SuppressLint("ResourceType")
     private void setTheme() {
         theme = new StylePropertiesProxy();
 
@@ -214,6 +215,7 @@ public class PUI extends PViewsArea {
         // style.put("animIn", style, "this.animate().x(100)");
         // style.put("animOut", style, "this.animate().x(0)");
     }
+
     public StylePropertiesProxy getStyle() {
         return rootStyle;
     }
@@ -222,10 +224,6 @@ public class PUI extends PViewsArea {
         switch (mode) {
             case "fullscreen":
                 getActivity().setFullScreen();
-                break;
-
-            case "lightsout":
-                getActivity().lightsOutMode();
                 break;
 
             case "immersive":
@@ -311,9 +309,8 @@ public class PUI extends PViewsArea {
     @PhonkMethod
     public PPopupDialogFragment popup() {
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        PPopupDialogFragment pPopupCustomFragment = PPopupDialogFragment.newInstance(fm);
 
-        return pPopupCustomFragment;
+        return PPopupDialogFragment.newInstance(fm);
     }
 
     /**
@@ -410,8 +407,7 @@ public class PUI extends PViewsArea {
 
             ValueAnimator animH = ValueAnimator.ofInt(initHeight, h);
             animH.addUpdateListener(valueAnimator -> {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                v.getLayoutParams().height = val;
+                v.getLayoutParams().height = (int) (Integer) valueAnimator.getAnimatedValue();
                 v.setLayoutParams(v.getLayoutParams());
             });
             animH.setDuration(200);
@@ -419,8 +415,7 @@ public class PUI extends PViewsArea {
 
             ValueAnimator animW = ValueAnimator.ofInt(initWidth, w);
             animW.addUpdateListener(valueAnimator -> {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                v.getLayoutParams().width = val;
+                v.getLayoutParams().width = (int) (Integer) valueAnimator.getAnimatedValue();
                 v.setLayoutParams(v.getLayoutParams());
             });
             animW.setDuration(200);
@@ -454,7 +449,7 @@ public class PUI extends PViewsArea {
         WidgetHelper.removeMovable(viewHandler);
     }
 
-    class Touch {
+    static class Touch {
         int id;
         Object x, y;
         String action;
@@ -472,7 +467,7 @@ public class PUI extends PViewsArea {
     @PhonkMethod
     public void onTouches(View view, final ReturnInterface callback) {
         final PhonkNativeArray ar = new PhonkNativeArray(20);
-        final HashMap<Integer, Touch> touches = new HashMap<Integer, Touch>();
+        final HashMap<Integer, Touch> touches = new HashMap<>();
 
         view.setOnTouchListener((view1, motionEvent) -> {
 
@@ -588,9 +583,8 @@ public class PUI extends PViewsArea {
     }
 
     public PhonkNativeArray getViewTree() {
-        PhonkNativeArray ret = it(viewTree);
 
-        return ret;
+        return it(viewTree);
     }
 
     private PhonkNativeArray it(ArrayList tree) {
@@ -604,8 +598,8 @@ public class PUI extends PViewsArea {
                 Map props = ((PViewMethodsInterface) o).getProps();
                 ReturnObject qq = ((StylePropertiesProxy) props).values;
                 ob.put("props", qq);
-            } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass().getSimpleName().equals("PUI") ) {
-                if (((PViewsArea) o).viewArray.size() > 0){
+            } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass().getSimpleName().equals("PUI")) {
+                if (((PViewsArea) o).viewArray.size() > 0) {
                     ob.put("children", it(((PViewsArea) o).viewArray));
                 }
             }

@@ -73,7 +73,7 @@
             android:resizeableActivity="true">
 
             <intent-filter>
-                <action android:name="io.phonk.intent.EXECUTE"></action>
+                <action android:name="io.phonk.intent.EXECUTE" />
             </intent-filter>
 
             <!--
@@ -169,21 +169,21 @@
             android:exported="false">
 
             <intent-filter>
-                <action android:name="io.phonk.intent.CONSOLE"></action>
+                <action android:name="io.phonk.intent.CONSOLE" />
             </intent-filter>
 
             <intent-filter>
-                <action android:name="io.phonk.intent.WEBEDITOR_SEND"></action>
+                <action android:name="io.phonk.intent.WEBEDITOR_SEND" />
             </intent-filter>
 
             <!-- intent when apprunner is closed -->
             <intent-filter>
-                <action android:name="io.phonk.intent.CLOSED"></action>
+                <action android:name="io.phonk.intent.CLOSED" />
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.intent.VIEWS_UPDATE"></action>
+                <action android:name="io.phonk.intent.VIEWS_UPDATE" />
             </intent-filter>
         </service>
 

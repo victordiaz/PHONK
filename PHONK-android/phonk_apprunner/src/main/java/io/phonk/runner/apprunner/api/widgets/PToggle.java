@@ -40,8 +40,8 @@ import io.phonk.runner.base.utils.MLog;
 public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PToggle.class.getSimpleName();
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    private ToggleStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    private final ToggleStyler styler;
     private Typeface mFont;
 
     public PToggle(AppRunner appRunner, Map initProps) {
@@ -61,7 +61,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         props.put("textOff", props, "OFF");
         props.put("textOnColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("textOffColor", props, appRunner.pUi.theme.get("textPrimary"));
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -165,9 +165,6 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     }
 
     class ToggleStyler extends Styler {
-        private String textOn;
-        private String textOff;
-        private String text;
         private int textOnColor;
         private int textOffColor;
         private int backgroundColor;
@@ -182,9 +179,9 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
             super.apply();
 
             checked((boolean) mProps.get("checked"));
-            textOn = mProps.get("textOn").toString();
-            textOff = mProps.get("textOff").toString();
-            text = mProps.get("text").toString();
+            String textOn = mProps.get("textOn").toString();
+            String textOff = mProps.get("textOff").toString();
+            String text = mProps.get("text").toString();
 
             setText(text);
             setTextOn(textOn);

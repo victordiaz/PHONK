@@ -34,8 +34,8 @@ public class APIManagerList {
 
     class API {
 
-        public Class cls;
-        protected Method methods;
+        public final Class cls;
+        protected final Method methods;
 
         public API(Class cls, Object obj, String name, Method method) {
             this.cls = cls;
@@ -47,11 +47,11 @@ public class APIManagerList {
     private static final String TAG = "MethodsExtract";
 
     String methodAnnotationName = "JavaScriptInterface";
-    private Vector<API> apis;
+    private final Vector<API> apis;
 
     APIManagerList() {
         methodAnnotationName = "JavaScriptInterface";
-        apis = new Vector<API>();
+        apis = new Vector<>();
     }
 
     public void addObject(Object obj) {
@@ -63,18 +63,18 @@ public class APIManagerList {
         Field[] attr = cls.getDeclaredFields();
         MLog.d(TAG, "Declared annotations " + cls.getDeclaredAnnotations());
 
-        for (int i = 0; i < attr.length; i++) {
+        for (Field field : attr) {
 
-            attr[i].setAccessible(true);
-            Field url = attr[i];
-            String name = attr[i].getName();
-            Class<?> type = attr[i].getType();
+            field.setAccessible(true);
+            Field url = field;
+            String name = field.getName();
+            Class<?> type = field.getType();
 
             // foreach annotation in this object
-            Annotation[] a = attr[i].getAnnotations();
-            for (int j = 0; j < a.length; j++) {
+            Annotation[] a = field.getAnnotations();
+            for (Annotation annotation : a) {
 
-                String objectName = a[j].annotationType().getSimpleName();
+                String objectName = annotation.annotationType().getSimpleName();
 
                 // if (objectName.equals(annotationName)) {
                 //
@@ -91,17 +91,16 @@ public class APIManagerList {
         // ------------------ get declared methods
         Method[] methods = cls.getDeclaredMethods();
 
-        for (int i = 0; i < methods.length; i++) {
+        for (Method method : methods) {
 
-            Method method = methods[i];
             method.setAccessible(true);
-            String name = methods[i].getName();
+            String name = method.getName();
 
             // foreach annotation in this object
             Annotation[] a = method.getAnnotations();
-            for (int j = 0; j < a.length; j++) {
+            for (Annotation annotation : a) {
 
-                String objectName = a[j].annotationType().getSimpleName();
+                String objectName = annotation.annotationType().getSimpleName();
 
                 if (objectName.equals(methodAnnotationName)) {
 

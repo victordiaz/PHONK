@@ -41,20 +41,12 @@ import android.view.animation.LinearInterpolator;
 
 import com.welie.blessed.BluetoothBytesParser;
 
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.NativeObject;
-
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.PDelay;
 import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.apprunner.api.other.SignalUtils;
@@ -97,8 +89,7 @@ public class PUtil extends ProtoBase {
     public float dpToPixels(float dp) {
         Resources resources = getContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-        return px;
+        return dp * (metrics.densityDpi / 160f);
     }
 
     @PhonkMethod(description = "Convert given px to dp", example = "")
@@ -106,16 +97,14 @@ public class PUtil extends ProtoBase {
     public float pixelsToDp(float px) {
         Resources resources = getContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / (metrics.densityDpi / 160f);
-        return dp;
+        return px / (metrics.densityDpi / 160f);
     }
 
     @PhonkMethod(description = "Convert given mm to pixels", example = "")
     @PhonkMethodParam(params = {""})
     public float mmToPixels(float mm) {
-        float px = TypedValue
+        return TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, getContext().getResources().getDisplayMetrics());
-        return px;
     }
 
 
@@ -169,18 +158,25 @@ public class PUtil extends ProtoBase {
     @PhonkMethodParam(params = {"type", "min", "max", "time", "function(val)"})
     public ValueAnimator anim(String type, float min, float max, int time, final AnimCB callback) {
         TimeInterpolator interpolator = null;
-        if (type.equals("bounce")) {
-            interpolator = new BounceInterpolator();
-        } else if (type.equals("linear")) {
-            interpolator = new LinearInterpolator();
-        } else if (type.equals("decelerate")) {
-            interpolator = new DecelerateInterpolator();
-        } else if (type.equals("anticipate")) {
-            interpolator = new AnticipateInterpolator();
-        } else if (type.equals("aovershoot")) {
-            interpolator = new AnticipateOvershootInterpolator();
-        } else {
-            interpolator = new AccelerateDecelerateInterpolator();
+        switch (type) {
+            case "bounce":
+                interpolator = new BounceInterpolator();
+                break;
+            case "linear":
+                interpolator = new LinearInterpolator();
+                break;
+            case "decelerate":
+                interpolator = new DecelerateInterpolator();
+                break;
+            case "anticipate":
+                interpolator = new AnticipateInterpolator();
+                break;
+            case "aovershoot":
+                interpolator = new AnticipateOvershootInterpolator();
+                break;
+            default:
+                interpolator = new AccelerateDecelerateInterpolator();
+                break;
         }
 
         ValueAnimator va = ValueAnimator.ofFloat(min, max);
@@ -208,13 +204,12 @@ public class PUtil extends ProtoBase {
     public int detectFaces(Bitmap bmp, int num_faces) {
         FaceDetector face_detector = new FaceDetector(bmp.getWidth(), bmp.getHeight(), num_faces);
         FaceDetector.Face[] faces = new FaceDetector.Face[num_faces];
-        int face_count = face_detector.findFaces(bmp, faces);
 
-        return face_count;
+        return face_detector.findFaces(bmp, faces);
     }
 
     public String stringToBase64(String string) {
-        return Base64.encodeToString(string.getBytes(), Base64.DEFAULT).toString();
+        return Base64.encodeToString(string.getBytes(), Base64.DEFAULT);
     }
 
     public String base64ToString(String base64) {
@@ -226,9 +221,7 @@ public class PUtil extends ProtoBase {
         bmp.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        return encoded;
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     @PhonkMethod(description = "Converts byte array to bmp", example = "")
@@ -240,11 +233,9 @@ public class PUtil extends ProtoBase {
         BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
         bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
 
-        final Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, bitmap_options);
-
         // MLog.d(TAG, "bitmap --> " + bitmap);
 
-        return bitmap;
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length, bitmap_options);
     }
 
     public float map(float val, float istart, float istop, float ostart, float ostop) {

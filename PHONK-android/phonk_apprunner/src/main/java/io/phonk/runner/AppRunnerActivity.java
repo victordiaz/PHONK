@@ -32,7 +32,6 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -78,7 +77,6 @@ public class AppRunnerActivity extends BaseActivity {
 
     private static final String TAG = AppRunnerActivity.class.getSimpleName();
 
-    private Context mContext;
     private AppRunnerFragment mAppRunnerFragment;
 
     /*
@@ -109,7 +107,7 @@ public class AppRunnerActivity extends BaseActivity {
     private boolean mSettingWakeUpScreen = false;
     private boolean eventBusRegistered = false;
     private boolean debugFramentIsVisible;
-    private boolean orientationChanged = false;
+    private final boolean orientationChanged = false;
     private Bundle mBundle;
     private boolean isPortrait;
     private Map<String, Object> scriptSettings;
@@ -117,7 +115,6 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
 
         registerEventBus();
 
@@ -155,16 +152,19 @@ public class AppRunnerActivity extends BaseActivity {
          */
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
-        if (size.x > size.y) isPortrait = false;
-        else isPortrait = true;
+        isPortrait = size.x <= size.y;
 
-        if (orientation.equals("landscape")) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else if (orientation.equals("portrait")) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else if (orientation.equals("current")) {
-            if (isPortrait) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        switch (orientation) {
+            case "landscape":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+            case "portrait":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case "current":
+                if (isPortrait) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
         }
 
         // if we changed the orientation, we will wait for the orientation to change
@@ -305,7 +305,7 @@ public class AppRunnerActivity extends BaseActivity {
 
     public void initializeNFC() {
 
-        if (isNFCInitialized == false) {
+        if (!isNFCInitialized) {
             PackageManager pm = getPackageManager();
             nfcSupported = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
 
@@ -342,6 +342,7 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Override
     public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if (intent.getAction() != null) {
             MLog.d(TAG, "Discovered tag with intent: " + intent);
 
@@ -444,10 +445,8 @@ public class AppRunnerActivity extends BaseActivity {
     @Override
     public boolean onKeyShortcut(int keyCode, KeyEvent event) {
         if (event.isCtrlPressed()) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_R:
-                    finish();
-                    break;
+            if (keyCode == KeyEvent.KEYCODE_R) {
+                finish();
             }
         }
         return super.onKeyShortcut(keyCode, event);
@@ -458,15 +457,12 @@ public class AppRunnerActivity extends BaseActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-                finish();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -562,7 +558,7 @@ public class AppRunnerActivity extends BaseActivity {
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
-    BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             finish();
@@ -578,7 +574,7 @@ public class AppRunnerActivity extends BaseActivity {
         registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 
-    BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String code = intent.getStringExtra("code");

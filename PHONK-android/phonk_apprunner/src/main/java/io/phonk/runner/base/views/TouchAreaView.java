@@ -35,25 +35,23 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class TouchAreaView extends View {
     private static final String TAG = "TouchAreaView";
     // paint
-    private Paint mPaint = new Paint();
+    private final Paint mPaint = new Paint();
     private Canvas mCanvas = new Canvas();
     private Bitmap bitmap; // Cache
 
     // widget size
     private float mWidth;
     private float mHeight;
-    private float xPointer;
-    private float yPointer;
     private boolean touching = false;
     private OnTouchAreaListener mOnTouchAreaListener;
     private boolean showArea;
+    private Rect mCleanRect;
 
     public TouchAreaView(Context context, boolean showArea) {
         super(context);
@@ -85,6 +83,8 @@ public class TouchAreaView extends View {
         mWidth = w - 1;
         mHeight = h - 1;
 
+        mCleanRect = new Rect(0, 0, (int) mWidth, (int) mHeight);
+
         // create mContext bitmap for caching what was drawn
         if (bitmap != null) {
             bitmap.recycle();
@@ -103,38 +103,38 @@ public class TouchAreaView extends View {
         synchronized (this) {
 
             // saved
-            canvas.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
-                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()), null);
-
-            // paint
-            // mPaint.setStyle(Styler.STROKE);
+            canvas.drawBitmap(
+                    bitmap,
+                    mCleanRect,
+                    new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()),
+                    null
+            );
 
             if (showArea) {
                 mPaint.setColor(0x88FFFFFF);
                 mPaint.setStyle(Style.STROKE);
 
-                mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
+                mCanvas.drawRect(mCleanRect, mPaint);
 
                 if (touching) {
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setColor(0x880000FF);
-                    mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
                 } else {
                     mPaint.setStyle(Paint.Style.STROKE);
                     mCanvas.drawColor(0, Mode.CLEAR);
                     mPaint.setColor(0x88000000);
-                    mCanvas.drawRect(new RectF(0, 0, mWidth, mHeight), mPaint);
                 }
+                mCanvas.drawRect(mCleanRect, mPaint);
             }
         }
     }
 
-    public class TouchEvent {
-        String type;
-        int num;
-        int action;
-        int x;
-        int y;
+    public static class TouchEvent {
+        final String type;
+        final int num;
+        final int action;
+        final int x;
+        final int y;
 
         public TouchEvent(String type, int pointerId, int action2, int x, int y) {
             this.type = type;
@@ -149,21 +149,19 @@ public class TouchAreaView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // Convert coordinates to our internal coordinate system
-        xPointer = event.getX();
-        yPointer = event.getY();
+        float xPointer = event.getX();
+        float yPointer = event.getY();
         // MLog.d(TAG, xPointer + " " + yPointer);
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_CANCEL:
+
+            case MotionEvent.ACTION_UP:
                 touching = false;
                 break;
 
             case MotionEvent.ACTION_DOWN:
                 touching = true;
-                break;
-
-            case MotionEvent.ACTION_UP:
-                touching = false;
                 break;
 
             case MotionEvent.ACTION_MOVE:

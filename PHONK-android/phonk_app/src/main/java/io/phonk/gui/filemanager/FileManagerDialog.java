@@ -37,11 +37,10 @@ import io.phonk.R;
 
 public class FileManagerDialog extends DialogFragment {
 
-    private String TAG = FileManagerDialog.class.getSimpleName();
+    private final String TAG = FileManagerDialog.class.getSimpleName();
 
     public static FileManagerDialog newInstance() {
-        FileManagerDialog dialogFragment = new FileManagerDialog();
-        return dialogFragment;
+        return new FileManagerDialog();
     }
 
     @Override

@@ -26,19 +26,6 @@ import java.util.Map;
 
 public interface PViewMethodsInterface {
 
-    /*
-    public View color(String c);
-
-    public View background(String c);
-
-    public View html(String htmlText);
-
-    public View boxsize(int w, int h);
-
-
-    public View pos(int x, int y);
-    */
-
     void set(float x, float y, float w, float h);
 
     void setProps(Map style);

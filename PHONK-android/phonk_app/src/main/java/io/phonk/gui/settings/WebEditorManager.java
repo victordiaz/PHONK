@@ -51,7 +51,7 @@ public class WebEditorManager {
     public String[] listEditors() {
         String folderUrl = getBaseDir();
         //MLog.d(TAG, folderUrl);
-        ArrayList<String> editors = new ArrayList<String>();
+        ArrayList<String> editors = new ArrayList<>();
         editors.add("default");
         File dir = null;
 
@@ -64,7 +64,7 @@ public class WebEditorManager {
         Arrays.sort(all_projects);
 
         for (File file : all_projects) {
-            if (file.getName().equals(PhonkSettings.APP_FOLDER_CUSTOM_WEBEDITOR) == false) {
+            if (!file.getName().equals(PhonkSettings.APP_FOLDER_CUSTOM_WEBEDITOR)) {
                 //MLog.d(TAG, file.getName());
                 editors.add(file.getName());
             }

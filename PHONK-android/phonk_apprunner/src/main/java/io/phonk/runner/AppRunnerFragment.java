@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,6 @@ public class AppRunnerFragment extends Fragment {
     private static Map<String, Object> mScriptSettings;
 
     private AppRunner mAppRunner;
-    private AppRunnerActivity mActivity;
     private Context mContext;
     private FileObserver fileObserver;
 
@@ -83,7 +83,6 @@ public class AppRunnerFragment extends Fragment {
         super.onAttach(context);
 
         this.mContext = context;
-        mActivity = (AppRunnerActivity) getActivity();
     }
 
     @Override
@@ -250,11 +249,9 @@ public class AppRunnerFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.M)
     private void checkPermission(String... p) {
-        List<String> requiredPermissions = new ArrayList<String>();
+        List<String> requiredPermissions = new ArrayList<>();
 
-        for (int i = 0; i < p.length; i++) {
-            requiredPermissions.add(p[i]);
-        }
+        requiredPermissions.addAll(Arrays.asList(p));
 
         // check if permission is already granted
         for (int i = 0; i < requiredPermissions.size(); i++) {

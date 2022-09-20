@@ -36,14 +36,11 @@ import io.phonk.runner.base.gui.CameraTexture;
 import io.phonk.runner.base.gui.CameraTexture2;
 
 public class PCamera2 extends CameraTexture2 implements PCameraInterface {
-
-    private final PCamera2 cam;
-    protected AppRunner mAppRunner;
+    protected final AppRunner mAppRunner;
 
     public PCamera2(AppRunner appRunner) {
         super(appRunner);
         this.mAppRunner = appRunner;
-        cam = this;
 
         mAppRunner.whatIsRunning.add(this);
     }

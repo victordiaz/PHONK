@@ -95,7 +95,7 @@ public class Intents {
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{emailTo});
         emailIntent.putExtra(android.content.Intent.EXTRA_CC, new String[]{emailCC});
         // has to be an ArrayList
-        ArrayList<Uri> uris = new ArrayList<Uri>();
+        ArrayList<Uri> uris = new ArrayList<>();
         // convert from paths to Android friendly Parcelable Uri's
         for (String file : filePaths) {
             File fileIn = new File(file);

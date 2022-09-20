@@ -28,5 +28,5 @@ public class APIManagerClass {
     public String name;
     public String description;
     public boolean isMainObject;
-    public Vector<APIManagerMethod> apiMethods = new Vector<APIManagerMethod>();
+    public final Vector<APIManagerMethod> apiMethods = new Vector<>();
 }

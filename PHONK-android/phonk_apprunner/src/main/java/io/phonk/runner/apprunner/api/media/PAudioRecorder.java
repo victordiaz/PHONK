@@ -48,8 +48,6 @@ public class PAudioRecorder extends ProtoBase {
     }
 
     private void init() {
-        // ContentValues values = new ContentValues(3);
-        // values.put(MediaStore.MediaColumns.TITLE, fileName);
         recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -122,7 +120,7 @@ public class PAudioRecorder extends ProtoBase {
                 recorder.release();
                 recorder = null;
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
 

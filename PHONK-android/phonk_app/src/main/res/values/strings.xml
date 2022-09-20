@@ -144,9 +144,9 @@
     <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
     <string name="setting_show_html5_mode">Useful for tablets and ChromeOS devices</string>
     <string name="setting_show_webserver_title">Webserver port</string>
-    <string name="setting_show_webserver"></string>
+    <string name="setting_show_webserver" />
     <string name="setting_show_websocket_title">Websocket port</string>
-    <string name="setting_show_websocket"></string>
+    <string name="setting_show_websocket" />
     <string name="setting_device_id_title"> Device ID </string>
     <string name="setting_device_id_description">You can access this ID from your script. Handy when you code many devices</string>
 

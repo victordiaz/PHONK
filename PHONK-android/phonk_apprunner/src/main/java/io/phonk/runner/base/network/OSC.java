@@ -49,8 +49,8 @@ public class OSC {
         void onMessage(OSCMessage msg);
     }
 
-    public class Server {
-        public Handler mHandler = new Handler(Looper.getMainLooper());
+    public static class Server {
+        public final Handler mHandler = new Handler(Looper.getMainLooper());
 
         // OSC server
         OSCReceiver rcv;
@@ -58,7 +58,7 @@ public class OSC {
         DatagramChannel dch;
 
         SocketAddress inPort = null;
-        Vector<OSCServerListener> listeners = new Vector<OSCServerListener>();
+        final Vector<OSCServerListener> listeners = new Vector<>();
 
         public void start(String port) {
             rcv = null;
@@ -127,7 +127,7 @@ public class OSC {
         }
     }
 
-    public class Client {
+    public static class Client {
         // OSC client
         SocketAddress addr2;
         DatagramChannel dch2;
@@ -160,7 +160,7 @@ public class OSC {
 
         public void send(final String msg, final Object[] o) {
 
-            if (oscConnected == true) {
+            if (oscConnected) {
                 Thread t = new Thread(() -> {
                     MLog.d(TAG, "sending");
                     try {

@@ -39,23 +39,21 @@ import io.phonk.runner.base.utils.MLog;
 public class PMatrix extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PMatrix.class.getSimpleName();
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public MatrixStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final MatrixStyler styler;
 
     private ArrayList touches;
     private float x;
     private float y;
     private int[][] matrix;
     private int colorSelected;
-    private int colorUnselected;
+    private final int colorUnselected;
 
     int COLS = 20;
     int ROWS = 20;
 
     private float W;
     private float H;
-    private int mWidth;
-    private int mHeight;
     private static final int STATUS_DISABLED = 0;
     private static final int STATUS_ENABLED = 1;
 
@@ -81,7 +79,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         props.put("matrixCellBorderRadius", props, 0);
         props.put("background", props, "#00FFFFFF");
         props.put("backgroundPressed", props, "#00FFFFFF");
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -112,10 +110,8 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         int[][] newMatrix = new int[COLS][ROWS];
 
         for (int i = 0; i < this.matrix.length; i++) {
-            for (int j = 0; j < this.matrix[i].length; j++) {
-                // MLog.d(TAG, "matrix " + i + " " + j + " " + newMatrix[i][j]);
-                newMatrix[i][j] = matrix[i][j];
-            }
+            // MLog.d(TAG, "matrix " + i + " " + j + " " + newMatrix[i][j]);
+            System.arraycopy(matrix[i], 0, newMatrix[i], 0, this.matrix[i].length);
         }
 
         return newMatrix;
@@ -161,7 +157,8 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
 
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (!wasSelected /* matrix[tx][ty] != colorSelected */) matrix[tx][ty] = colorSelected;
+                if (!wasSelected /* matrix[tx][ty] != colorSelected */)
+                    matrix[tx][ty] = colorSelected;
                 else matrix[tx][ty] = colorUnselected;
                 // break;
 
@@ -197,16 +194,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         colorSelected = Color.parseColor(c);
     }
 
-    /*
-    public void selectColumn(int m) {
-        for (int i = 0; i < M; i++) matrix[m][i] = true;
-    }
-
-    public void selectRow(int n) {
-        for (int i = 0; i < N; i++) matrix[i][n] = true;
-    }
-     */
-
     public PMatrix highlightColumn(int column) {
         if (column < 0) column = -1;
         if (column > COLS) column = -1;
@@ -218,7 +205,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     }
 
     public PMatrix xy(int x, int y, boolean selected) {
-        if (!isInBoundaries(x, y)) return this;
+        if (isInBoundaries(x, y)) return this;
 
         if (selected) matrix[x][y] = colorSelected;
         else matrix[x][y] = colorUnselected;
@@ -228,36 +215,30 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     }
 
     public PMatrix xy(int x, int y, String color) {
-        if (!isInBoundaries(x, y)) return this;
+        if (isInBoundaries(x, y)) return this;
         matrix[x][y] = Color.parseColor(color);
         invalidate();
 
         return this;
     }
+
     public boolean xy(int x, int y) {
-        if (!isInBoundaries(x, y)) return false;
+        if (isInBoundaries(x, y)) return false;
         return matrix[x][y] == colorSelected;
     }
 
     private boolean isInBoundaries(int x, int y) {
-        if (x >= 0 && x < COLS && y >= 0 && y < ROWS) return true;
-        else return false;
+        return x < 0 || x >= COLS || y < 0 || y >= ROWS;
     }
 
-    OnDrawCallback mydraw = new OnDrawCallback() {
+    final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
-            mWidth = c.width;
-            mHeight = c.height;
-
             c.clear();
             c.cornerMode(true);
 
             W = (float) c.width / (float) COLS;
             H = (float) c.height / (float) ROWS;
-
-            // MLog.d(TAG, " " + W + " " + c.width + " " + M);
-            // MLog.d(TAG, " " + H + " " + c.height + " " + N);
 
             c.stroke(styler.matrixCellBorderColor);
             c.strokeWidth(styler.matrixCellBorderSize);
@@ -318,7 +299,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     }
 
 
-    class MatrixStyler extends Styler {
+    static class MatrixStyler extends Styler {
         int matrixCellColor;
         int matrixCellSelectedColor;
         float matrixCellBorderSize;

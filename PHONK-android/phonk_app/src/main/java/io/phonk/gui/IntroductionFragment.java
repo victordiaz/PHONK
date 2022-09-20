@@ -39,7 +39,7 @@ import io.phonk.runner.base.BaseFragment;
 @SuppressLint("NewApi")
 public class IntroductionFragment extends BaseFragment {
 
-    private String TAG = IntroductionFragment.class.getSimpleName();
+    private final String TAG = IntroductionFragment.class.getSimpleName();
     private Context mContext;
     private ViewPager mPager;
     private IntroductionPagerAdapter mPagerAdapter;
@@ -78,9 +78,8 @@ public class IntroductionFragment extends BaseFragment {
     }
 
     public static IntroductionFragment newInstance() {
-        IntroductionFragment myFragment = new IntroductionFragment();
 
-        return myFragment;
+        return new IntroductionFragment();
     }
 
     private class IntroductionPagerAdapter extends PagerAdapter {
@@ -91,9 +90,6 @@ public class IntroductionFragment extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
 //            View v = getActivity().getLayoutInflater().inflate(...);
-//            ((ViewPager) collection).addView(v,0);
-
-//            return v;
 
             int resId = 0;
             switch (position) {

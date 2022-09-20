@@ -49,7 +49,7 @@ public class APIWebviewFragment extends BaseFragment {
     final Handler myHandler = new Handler();
     protected View v;
     private String mUrl = null;
-    private String TAG = APIWebviewFragment.class.getSimpleName();
+    private final String TAG = APIWebviewFragment.class.getSimpleName();
     private boolean mIsTablet;
 
     public APIWebviewFragment(String file) {
@@ -104,9 +104,6 @@ public class APIWebviewFragment extends BaseFragment {
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        // settings.setGeolocationEnabled(true);
-        // settings.setAppCacheEnabled(false);
-        // settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setDomStorageEnabled(true);
         // WebView.setWebContentsDebuggingEnabled(true);

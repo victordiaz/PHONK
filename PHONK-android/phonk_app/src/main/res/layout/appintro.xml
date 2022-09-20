@@ -43,7 +43,7 @@
         app:layout_constraintBottom_toTopOf="@+id/quote"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"></TextView>
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/quote"

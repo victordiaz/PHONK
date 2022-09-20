@@ -23,7 +23,6 @@
 package io.phonk.gui;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -34,9 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import io.phonk.R;
@@ -47,7 +44,7 @@ public class LicenseActivity extends BaseActivity {
 
     private static final java.lang.String TAG = LicenseActivity.class.getSimpleName();
     private String[] mLicenseFiles;
-    private ArrayList<License> mLicenseFileContent = new ArrayList<>();
+    private final ArrayList<License> mLicenseFileContent = new ArrayList<>();
 
     private ListView mLicenseList;
 
@@ -69,8 +66,8 @@ public class LicenseActivity extends BaseActivity {
             // read mCurrentFileList
             try {
                 mLicenseFiles = getAssets().list("licenses");
-                for (int i = 0; i < mLicenseFiles.length; i++) {
-                    mLicenseFileContent.add(new License(mLicenseFiles[i], PhonkAppHelper.readFile(this, "licenses/" + mLicenseFiles[i])));
+                for (String mLicenseFile : mLicenseFiles) {
+                    mLicenseFileContent.add(new License(mLicenseFile, PhonkAppHelper.readFile(this, "licenses/" + mLicenseFile)));
                     // MLog.d(TAG, filecontent);
                 }
             } catch (IOException e) {
@@ -79,10 +76,10 @@ public class LicenseActivity extends BaseActivity {
 
             // show license in ui
             handler.post(() -> {
-                for (int i = 0; i < mLicenseFiles.length; i++) {
+                for (String mLicenseFile : mLicenseFiles) {
                     View v = getLayoutInflater().inflate(R.layout.license_view, null);
                     TextView txtView = v.findViewById(R.id.license_title);
-                    txtView.setText(mLicenseFiles[i].trim());
+                    txtView.setText(mLicenseFile.trim());
 
                     myAdapter.notifyDataSetChanged();
                     mLicenseList.invalidateViews();
@@ -100,9 +97,9 @@ public class LicenseActivity extends BaseActivity {
         enableBackOnToolbar();
     }
 
-    class License {
-        public String title;
-        public String body;
+    static class License {
+        public final String title;
+        public final String body;
         public boolean showing = false;
 
         public License(String name, String content) {
@@ -111,7 +108,7 @@ public class LicenseActivity extends BaseActivity {
         }
     }
 
-    private class MyAdapter extends ArrayAdapter<License> {
+    private static class MyAdapter extends ArrayAdapter<License> {
 
         public MyAdapter(Context context, ArrayList<License> strings) {
             super(context, -1, -1, strings);

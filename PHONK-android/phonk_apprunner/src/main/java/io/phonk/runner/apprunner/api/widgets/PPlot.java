@@ -43,11 +43,11 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     private final Runnable r;
     private final int mStrokeWeight;
 
-    StylePropertiesProxy props = new StylePropertiesProxy();
-    private PlotStyler styler;
+    final StylePropertiesProxy props = new StylePropertiesProxy();
+    private final PlotStyler styler;
 
-    private ArrayList<PlotPoint> arrayData = new ArrayList<>();
-    public ArrayList<PlotPoint> arrayViz = new ArrayList<>();
+    private final ArrayList<PlotPoint> arrayData = new ArrayList<>();
+    public final ArrayList<PlotPoint> arrayViz = new ArrayList<>();
 
     private float yMax = Float.MIN_VALUE;
     private float yMin = Float.MAX_VALUE;
@@ -66,12 +66,12 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
 
         styler = new PlotStyler(appRunner, this, props);
         props.eventOnChange = false;
-        props.put("plotColor", props, (String) appRunner.pUi.theme.get("primary"));
+        props.put("plotColor", props, appRunner.pUi.theme.get("primary"));
         props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
         props.put("textColor", props, "#ffffff");
         // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
-        props.put("background", props, (String) appRunner.pUi.theme.get("secondaryShade"));
-        styler.fromTo(initProps, props);
+        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -99,12 +99,10 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
                     for (int i = 0; i < arrayData.size(); i++) {
                         PlotPoint p = arrayData.get(i);
 
-                        float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 0 + 10, mWidth - 10);
-                        float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 0 + 20, mHeight - 20);
+                        float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 10, mWidth - 10);
+                        float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 20, mHeight - 20);
                         arrayViz.add(new PlotPoint(x, y));
 
-                        // MLog.d(TAG, width + " " + height);
-                        // MLog.d(TAG, "arrayData: " + i + " " + p.x + " " + p.y + " -> " + x + ", " + y);
                     }
                 }
 
@@ -122,7 +120,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     // rangeX [x1, x2]
     // rangeY [y1, y2]
 
-    OnDrawCallback mydraw = new OnDrawCallback() {
+    final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
             mWidth = c.width;
@@ -131,14 +129,6 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
 
             c.clear();
             c.cornerMode(false);
-
-            /*
-            Shader shader = new LinearGradient(0, 0, 0, c.height, new int[] {Color.parseColor("#00000000"), Color.parseColor("#000000") }, null, Shader.TileMode.MIRROR);
-            Matrix matrix = new Matrix();
-            matrix.setRotate(90);
-            shader.setLocalMatrix(matrix);
-            c.mPaintFill.setShader(shader);
-            */
 
             c.stroke("#55000000"); // styler.plotColor);
             c.strokeWidth(mStrokeWeight);           // center line
@@ -226,26 +216,11 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    /*
-    public void map(float[] xAxis, ReturnInterfaceWithReturn callback) {
-        ReturnObject r = new ReturnObject();
-
-        float[][] xyAxis = new float[xAxis.length][2];
-        for (int i = 0; i < xAxis.length; i++) {
-            xyAxis[i][0] = xAxis[i];
-        }
-
-        r.put("xyAxis", xyAxis);
-        array2d = (float[][]) callback.event(r);
-        invalidate();
-    }
-    */
-
     public void array2d(float[][] val) {
         arrayViz.clear();
 
-        for (int i = 0; i < val.length; i++) {
-            arrayData.add(new PlotPoint(val[i][0], val[i][1]));
+        for (float[] floats : val) {
+            arrayData.add(new PlotPoint(floats[0], floats[1]));
         }
 
         invalidate();
@@ -279,9 +254,9 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         return SystemClock.uptimeMillis();
     }
 
-    class PlotPoint {
-        float x;
-        float y;
+    static class PlotPoint {
+        final float x;
+        final float y;
 
         public PlotPoint(float x, float y) {
             this.x = x;
@@ -290,7 +265,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     }
 
 
-    class PlotStyler extends Styler {
+    static class PlotStyler extends Styler {
         int plotBackground = Color.parseColor("#22000000");
         int plotColor = Color.parseColor("#222222");
         int plotBorderColor = Color.parseColor("#222222");

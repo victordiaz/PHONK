@@ -24,7 +24,6 @@ package io.phonk.runner.apprunner.api.boards;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
@@ -65,7 +64,7 @@ public class PIOIO extends ProtoBase {
         mCallbackConnected = callback;
     }
 
-    IOIOBoard.HardwareCallback ioioCallback = new IOIOBoard.HardwareCallback() {
+    final IOIOBoard.HardwareCallback ioioCallback = new IOIOBoard.HardwareCallback() {
         @Override
         public void onConnect(Object ioio) {
             MLog.d(TAG, "ioio Connected " + ioio);
@@ -81,7 +80,8 @@ public class PIOIO extends ProtoBase {
         }
 
         @Override
-        public void setup() { }
+        public void setup() {
+        }
 
         @Override
         public void loop() {
@@ -89,7 +89,8 @@ public class PIOIO extends ProtoBase {
         }
 
         @Override
-        public void onComplete() { }
+        public void onComplete() {
+        }
     };
 
     public IOIO get() {

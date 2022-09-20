@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -67,13 +66,12 @@ public class EditorFragment extends BaseFragment {
     }
 
     private EditText mEdit;
-
-    private HorizontalScrollView mExtraKeyBar;
     private View v;
     private EditorFragmentListener listener;
+
     // settings
-    private EditorSettings mEditorSettings = new EditorSettings();
-    private HashMap<String, String> openedFiles = new HashMap<>();
+    private final EditorSettings mEditorSettings = new EditorSettings();
+    private final HashMap<String, String> openedFiles = new HashMap<>();
     private ProtoFile mCurrentFile;
 
     public EditorFragment() {
@@ -132,11 +130,6 @@ public class EditorFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     /**
      * Bind the UI
      */
@@ -159,7 +152,7 @@ public class EditorFragment extends BaseFragment {
                 String currentText = s.toString();
 
                 // check if text is changed
-                if (originalText.equals(currentText) == false) {
+                if (!originalText.equals(currentText)) {
                     // update current code string
                     openedFiles.put(mCurrentFile.getFullPath(), currentText);
 
@@ -186,9 +179,7 @@ public class EditorFragment extends BaseFragment {
      * Set the extra keys bar
      */
     private void setExtraKeysBar() {
-        if (mEditorSettings.extraKeysBarEnabled == false) return;
-
-        mExtraKeyBar = v.findViewById(R.id.extraKeyBar);
+        if (!mEditorSettings.extraKeysBarEnabled) return;
 
         mEdit.setOnClickListener(v -> {
             MLog.d(TAG, "line touched at " + getCurrentCursorLine(mEdit.getEditableText()));
@@ -201,7 +192,6 @@ public class EditorFragment extends BaseFragment {
         final RelativeLayout rootView = v.findViewById(R.id.rootEditor);
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-            // MLog.d(TAG, "" + heightDiff);
 
             if (heightDiff > 300) {
                 // mExtraKeyBar.setVisibility(View.VISIBLE);
@@ -323,20 +313,9 @@ public class EditorFragment extends BaseFragment {
     // load file in editor
     @Subscribe
     public void onEventMainThread(Events.EditorEvent e) {
-        switch (e.getAction()) {
-            case Events.EDITOR_FILE_LOAD:
-                ProtoFile f = e.getProtofile();
-                loadFile(e.getProtofile().path, e.getProtofile().name);
-
-                break;
-
-            case Events.EDITOR_FILE_SAVE:
-
-                break;
-
-            default:
-                break;
-
+        if (Events.EDITOR_FILE_LOAD.equals(e.getAction())) {
+            ProtoFile f = e.getProtofile();
+            loadFile(e.getProtofile().path, e.getProtofile().name);
         }
     }
 }

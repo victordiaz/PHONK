@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        app:layout_constraintTop_toTopOf="parent"></include>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtVersionLine"
@@ -169,7 +169,7 @@
             android:layout_marginLeft="10dp"
             android:text="Re-installing..."
             android:textColor="@color/white"
-            android:textSize="16sp"></TextView>
+            android:textSize="16sp" />
     </LinearLayout>
 
     <Button

@@ -49,7 +49,7 @@ public class PImageHelper {
      * This class lets us set images from a file asynchronously
      */
     public static class SetImageTask extends AsyncTask<String, Void, Object> {
-        private PImage image;
+        private final PImage image;
         private String imagePath;
         private String fileExtension;
 

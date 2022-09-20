@@ -38,7 +38,7 @@ import io.phonk.runner.base.utils.MLog;
 public class AppRunnerLauncherService extends Service {
 
     private static final String TAG = AppRunnerLauncherService.class.getSimpleName();
-    private static boolean multiWindowEnabled = true;
+    private static final boolean multiWindowEnabled = true;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -69,16 +69,9 @@ public class AppRunnerLauncherService extends Service {
         newIntent.putExtra(Project.DEVICE_ID, deviceId);
         newIntent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, wakeUpScreen);
 
-        /*
-        mBundle.putString(Project.PREFIX, intent.getStringExtra(Project.PREFIX));
-        mBundle.putString(Project.INTENTCODE, intent.getStringExtra(Project.INTENTCODE));
-        mBundle.putString(Project.POSTFIX, intent.getStringExtra(Project.POSTFIX));
-        */
-
         if (isService) {
             this.startService(newIntent);
         } else {
-            MLog.d(TAG, "qqqqqqq " + newIntent.toString());
             this.startActivity(newIntent);
         }
 

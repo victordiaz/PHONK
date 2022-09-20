@@ -49,21 +49,19 @@ public class ProjectItem extends LinearLayout {
 
     private static final String TAG = ProjectItem.class.getSimpleName();
 
-    public static int MODE_NORMAL = 0;
-    public static int MODE_SINGLE_PICK = 1;
+    public static final int MODE_NORMAL = 0;
+    public static final int MODE_SINGLE_PICK = 1;
     public static final int MODE_SINGLE_PICK_CLEAR = 2;
-    public static int MODE_MULTIPLE_PICK = 3;
+    public static final int MODE_MULTIPLE_PICK = 3;
 
     public final CheckBox checkbox;
-    private View mItemView;
+    private final View mItemView;
     private final Context mContext;
 
-    private String t;
-    private boolean highlighted = false;
     private Project mProject;
     private TextView txtProjectIcon;
-    private TextView textViewName;
-    private ImageView mMenuButton;
+    private final TextView textViewName;
+    private final ImageView mMenuButton;
     private final ImageView customIcon;
 
     public ProjectItem(Context context, boolean listMode, int pickMode) {
@@ -78,7 +76,7 @@ public class ProjectItem extends LinearLayout {
             this.mItemView = inflater.inflate(R.layout.projectlist_item_grid, this, true);
         }
 
-        checkbox = (CheckBox) findViewById(R.id.checkBoxPicker);
+        checkbox = findViewById(R.id.checkBoxPicker);
         mMenuButton = findViewById(R.id.card_menu_button);
 
         if (pickMode == MODE_MULTIPLE_PICK) {
@@ -99,7 +97,6 @@ public class ProjectItem extends LinearLayout {
     }
 
     public void setText(String text) {
-        this.t = text;
         textViewName.setText(text);
     }
 
@@ -169,10 +166,6 @@ public class ProjectItem extends LinearLayout {
         });
         myPopup.show();
 
-    }
-
-    public boolean isHighlighted() {
-        return highlighted;
     }
 
     public void setProjectInfo(Project p) {

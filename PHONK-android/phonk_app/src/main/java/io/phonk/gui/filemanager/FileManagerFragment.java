@@ -76,9 +76,6 @@ public class FileManagerFragment extends BaseFragment {
     protected FileManagerAdapter mProjectAdapter;
     protected RecyclerView mRecyclerFileList;
 
-    // private Project mProject;
-    // private int mCurrentSelected = -1;
-
     public ArrayList<ProtoFile> mCurrentFileList;
     private String mCurrentFolder = "";
     private String mRootFolder = "";
@@ -180,11 +177,6 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
@@ -217,18 +209,14 @@ public class FileManagerFragment extends BaseFragment {
             switch (menuItem.getItemId()) {
                 case R.id.filemanager_action_open:
 
+                case R.id.filemanager_action_copy:
+
+                case R.id.filemanager_action_cut:
+
                     return true;
 
                 case R.id.filemanager_action_open_with:
                     viewFile(index);
-
-                    return true;
-
-                case R.id.filemanager_action_copy:
-
-                    return true;
-
-                case R.id.filemanager_action_cut:
 
                     return true;
 
@@ -282,7 +270,6 @@ public class FileManagerFragment extends BaseFragment {
         String fileName = mCurrentFileList.get(index).name;
         String fileExt = PhonkScriptHelper.fileExt(fileName).substring(1);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
-        String path = (mCurrentFileList.get(index).path) + fileName;
         File file = new File(Environment.getExternalStorageDirectory(), "phonk_io/examples/User%20Interface/UI/patata2.png");
 
         MLog.d(TAG, "File path " + file.getAbsoluteFile() + " fileExtension " + fileExt + " mimeType " + mimeType);
@@ -295,15 +282,10 @@ public class FileManagerFragment extends BaseFragment {
         newIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         newIntent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
 
-        // newIntent.putExtra(Intent.EXTRA_STREAM, uri);
         newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         newIntent.setDataAndType(uri, mimeType);
-        // newIntent.setType(mimeType);
 
-        // AndroidUtils.debugIntent("qq", newIntent);
-
-        // Intent j = Intent.createChooser(newIntent, "Choose an application to open with:");
         startActivity(newIntent);
     }
 
@@ -316,7 +298,6 @@ public class FileManagerFragment extends BaseFragment {
             for (int i = 0; i < mCurrentFileList.size(); i++) {
                 if (mCurrentFileList.get(i).name == f.name) {
                     MLog.d(TAG, "is modified: " + f.name);
-                    // filesModified.put(i, true);
                 }
             }
         }

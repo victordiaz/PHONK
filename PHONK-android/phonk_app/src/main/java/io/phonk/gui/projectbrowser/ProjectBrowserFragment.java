@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.RotateAnimation;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,7 +38,6 @@ import io.phonk.events.Events;
 import io.phonk.gui.projectbrowser.folderlist.FolderListFragment;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.gui.settings.PhonkSettings;
-import io.phonk.runner.base.utils.MLog;
 
 public class ProjectBrowserFragment extends Fragment {
 

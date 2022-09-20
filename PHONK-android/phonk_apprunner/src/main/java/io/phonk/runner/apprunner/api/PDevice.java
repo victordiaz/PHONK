@@ -116,8 +116,8 @@ public class PDevice extends ProtoBase {
         ArrayList gameControllerDeviceIds = new ArrayList();
 
 
-        for (int i = 0; i < devicesId.length; i++) {
-            InputDevice device = inputManager.getInputDevice(devicesId[i]);
+        for (int j : devicesId) {
+            InputDevice device = inputManager.getInputDevice(j);
 
             MLog.d(TAG, "controller number: " + device.getControllerNumber());
             MLog.d(TAG, "keyboard type: " + device.getKeyboardType());
@@ -130,8 +130,8 @@ public class PDevice extends ProtoBase {
             // Verify that the device has gamepad buttons, control sticks, or both.
             if (((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) || ((sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK)) {
                 // This device is a game controller. Store its device ID.
-                if (!gameControllerDeviceIds.contains(devicesId[i])) {
-                    gameControllerDeviceIds.add(devicesId[i]);
+                if (!gameControllerDeviceIds.contains(j)) {
+                    gameControllerDeviceIds.add(j);
                 }
             }
         }
@@ -284,17 +284,17 @@ public class PDevice extends ProtoBase {
 
     /**
      * Makes the device vibrate
-     *
+     * <p>
      * [100, 200, 300, 100, 0, 100]
      *
      * @param pattern Duration pattern in milliseconds
-     * @param repeat Number of times that the pattern will repeat
-     *
+     * @param repeat  Number of times that the pattern will repeat
      * @status TODO_EXAMPLE
      */
-     @PhonkMethod public void vibrate(long[] pattern, int repeat) {
-         Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-         v.vibrate(pattern, repeat);
+    @PhonkMethod
+    public void vibrate(long[] pattern, int repeat) {
+        Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(pattern, repeat);
     }
 
 
@@ -416,12 +416,6 @@ public class PDevice extends ProtoBase {
     public boolean screenOff() {
         return AndroidUtils.isScreenOn(getContext());
     }
-
-    //
-    // @APIMethod(description = "", example = "")
-    //public void goToSleep() {
-    //	AndroidUtils.goToSleep(mContext);
-    //}
 
     /**
      * Sets the screen timeout
@@ -606,9 +600,6 @@ public class PDevice extends ProtoBase {
                 scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
                 temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
                 voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
-                // isCharging =
-                // intent.getBooleanExtra(BatteryManager.EXTRA_PLUGGED, false);
-                // status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
                 status = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
 
                 if (status == BatteryManager.BATTERY_PLUGGED_AC) {
@@ -667,10 +658,10 @@ public class PDevice extends ProtoBase {
         String orientationStr = "";
 
         switch (orientation) {
-            case 1:
+            case Configuration.ORIENTATION_PORTRAIT:
                 orientationStr = "portrait";
                 break;
-            case 2:
+            case Configuration.ORIENTATION_LANDSCAPE:
                 orientationStr = "landscape";
                 break;
             default:
@@ -812,7 +803,7 @@ public class PDevice extends ProtoBase {
      */
     @PhonkMethod
     public List listInstalledApps() {
-        ArrayList<ApplicationInfo> mApplications = new ArrayList<ApplicationInfo>();
+        ArrayList<ApplicationInfo> mApplications = new ArrayList<>();
 
         // get installed apps
         PackageManager pm = getContext().getPackageManager();
@@ -840,24 +831,10 @@ public class PDevice extends ProtoBase {
 
                 application.iconBitmap = ((BitmapDrawable) application.iconDrawable).getBitmap();
 
-                // Bitmap icon =
-                // BitmapFactory.decodeResource(this.getResources(),
-                // application.icon);
-
 
                 /*
                 save icon in path
                  */
-                /*
-                String path = Environment.getExternalStorageDirectory().toString();
-                application.iconURL = path + "/" + application.packageName + ".png";
-
-                try {
-                    FileOutputStream out = new FileOutputStream(application.iconURL);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
 
                 mApplications.add(application);
             }
@@ -875,7 +852,7 @@ public class PDevice extends ProtoBase {
             mCamera = Camera.open();
             Camera.Parameters parameters = mCamera.getParameters();
             if (b) parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            else parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            else parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             mCamera.setParameters(parameters);
             mCamera.startPreview();
         }

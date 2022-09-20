@@ -21,6 +21,7 @@
  */
 
 package io.phonk.runner.apprunner.api.network;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -61,11 +62,12 @@ public class PMqtt extends ProtoBase {
     /**
      * Connect to a broker. I needs an object as follows
      * {
-     *     broker: 'tcp://192.168.1.10',
-     *     clientId: 'phonk',
-     *     user: 'myuser',
-     *     password: 'mypassword'
+     * broker: 'tcp://192.168.1.10',
+     * clientId: 'phonk',
+     * user: 'myuser',
+     * password: 'mypassword'
      * }
+     *
      * @param connectionSettings
      * @return
      */
@@ -79,7 +81,7 @@ public class PMqtt extends ProtoBase {
 
             if (connectionSettings.containsKey("user") && connectionSettings.containsKey("password")) {
                 connOpts.setUserName((String) connectionSettings.get("user"));
-                connOpts.setPassword(((String)connectionSettings.get("password")).toCharArray());
+                connOpts.setPassword(((String) connectionSettings.get("password")).toCharArray());
             }
 
             if (connectionSettings.containsKey("autoReconnect")) {
@@ -102,8 +104,8 @@ public class PMqtt extends ProtoBase {
             }
 
             if (connectionSettings.containsKey("connectionTimeout")) {
-                Double connectionTimeout = (double) connectionSettings.get("connectionTimeout");
-                connOpts.setConnectionTimeout(connectionTimeout.intValue());
+                double connectionTimeout = (double) connectionSettings.get("connectionTimeout");
+                connOpts.setConnectionTimeout((int) connectionTimeout);
             }
 
             connOpts.setCleanSession(true);
@@ -176,12 +178,12 @@ public class PMqtt extends ProtoBase {
                     });
                 }
             });
-        } catch(MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
+        } catch (MqttException me) {
+            System.out.println("reason " + me.getReasonCode());
+            System.out.println("msg " + me.getMessage());
+            System.out.println("loc " + me.getLocalizedMessage());
+            System.out.println("cause " + me.getCause());
+            System.out.println("excep " + me);
             me.printStackTrace();
         }
 
@@ -228,6 +230,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns data from a subscribed topic
+     *
      * @param callback
      * @return
      */
@@ -238,6 +241,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -248,6 +252,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -259,6 +264,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -272,6 +278,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -283,6 +290,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -293,6 +301,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */
@@ -303,6 +312,7 @@ public class PMqtt extends ProtoBase {
 
     /**
      * Callback that returns connection status
+     *
      * @param callback
      * @return
      */

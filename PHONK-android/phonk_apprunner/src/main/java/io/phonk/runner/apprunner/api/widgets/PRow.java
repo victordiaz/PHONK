@@ -31,10 +31,10 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PRow {
-    int n;
+    final int n;
 
-    LinearLayout ll;
-    LinearLayout.LayoutParams lParams;
+    final LinearLayout ll;
+    final LinearLayout.LayoutParams lParams;
 
     public PRow(Context c, LinearLayout cardLl, int n) {
         this.n = n;

@@ -58,8 +58,7 @@ import io.phonk.runner.base.views.FitRecyclerView;
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
 
-    private String TAG = ProjectListFragment.class.getSimpleName();
-    private Context mContext;
+    private final String TAG = ProjectListFragment.class.getSimpleName();
 
     private FitRecyclerView mGrid;
     private ConstraintLayout mEmptyGrid;
@@ -68,20 +67,16 @@ public class ProjectListFragment extends BaseFragment {
     public ProjectItemAdapter mProjectAdapter;
 
     public String mProjectFolder;
-    boolean mListMode = true;
+    final boolean mListMode = true;
     public boolean mOrderByName = true;
 
-    private ImageButton mBackToFolderButton;
     private TextView mTxtParentFolder;
     private TextView mTxtProjectFolder;
-    private boolean mIsTablet = false;
 
-    private LinearLayout mBottomBar;
     private LinearLayout mFolderPath;
 
     private ProjectSelectedListener mListener;
     private BackClickedListener mClickBackListener;
-    private int mMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,9 +84,8 @@ public class ProjectListFragment extends BaseFragment {
 
         mProjectFolder = getArguments().getString("folderName", "");
         mOrderByName = getArguments().getBoolean("orderByName");
-        mMode = getArguments().getInt("mode");
 
-        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode, mMode);
+        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode, getArguments().getInt("mode"));
         mProjectAdapter.setListener(mListener);
     }
 
@@ -113,7 +107,9 @@ public class ProjectListFragment extends BaseFragment {
 
     public interface ProjectSelectedListener {
         void onProjectSelected(Project p);
+
         void onMultipleProjectsSelected(HashMap<Project, Boolean> projects);
+
         void onActionClicked(String action);
     }
 
@@ -128,8 +124,6 @@ public class ProjectListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContext = getActivity();
-
         View v;
         if (mListMode) {
             v = inflater.inflate(R.layout.projectlist_list, container, false);
@@ -146,22 +140,14 @@ public class ProjectListFragment extends BaseFragment {
         // checkEmptyState();
         registerForContextMenu(mGrid);
 
-        // if (mProjectFolder != "") loadFolder(mProjectFolder);
-
-        mBackToFolderButton = v.findViewById(R.id.backToFolders);
         mTxtParentFolder = v.findViewById(R.id.parentFolder);
         mTxtProjectFolder = v.findViewById(R.id.folder);
         mFolderPath = v.findViewById(R.id.folderPath);
 
-        mBackToFolderButton.setOnClickListener(view -> {
+        ImageButton btnBackToFolder = v.findViewById(R.id.backToFolders);
+        btnBackToFolder.setOnClickListener(view -> {
             mClickBackListener.onBackSelected();
         });
-
-        mIsTablet = getResources().getBoolean(R.bool.isTablet);
-        LinearLayout llFolderLocation = v.findViewById(R.id.folderLocation2);
-
-        mBottomBar = v.findViewById(R.id.bottombar);
-        mBottomBar.setVisibility(View.GONE);
 
         return v;
     }
@@ -191,8 +177,7 @@ public class ProjectListFragment extends BaseFragment {
         }
 
         //if empty we show, hey! there is no projects!
-        if (mListProjects.isEmpty()) showProjectList(false);
-        else showProjectList(true);
+        showProjectList(!mListProjects.isEmpty());
     }
 
     private void showProjectList(boolean b) {
@@ -229,8 +214,6 @@ public class ProjectListFragment extends BaseFragment {
         mListProjects = PhonkScriptHelper.listProjects(mProjectFolder, mOrderByName);
         mProjectAdapter.setArray(mListProjects);
         mGrid.setAdapter(mProjectAdapter);
-        // mGrid.clearAnimation();
-        // mGrid.startAnimation(mAnim);
 
         notifyAddedProject();
 
@@ -256,20 +239,6 @@ public class ProjectListFragment extends BaseFragment {
     }
 
     //TODO reenable this
-    /*
-    public void resetHighlighting() {
-        for (int i = 0; i < mListProjects.size(); i++) {
-            //mListProjects.get(i).selected = false;
-        }
-
-        for (int i = 0; i < mGrid.getChildCount(); i++) {
-            ProjectItem v = (ProjectItem) mGrid.getChildAt(i);
-            if (v.isHighlighted()) {
-                v.setHighlighted(false);
-            }
-        }
-    }
-    */
 
     public View highlight(String projectName, boolean b) {
         View v = mGrid.findViewWithTag(projectName);
