@@ -25,7 +25,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/update_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:animateLayoutChanges="true"
     android:gravity="bottom"
     android:orientation="horizontal"
@@ -37,20 +37,19 @@
     <io.phonk.runner.base.views.FitRecyclerView
         android:id="@+id/recyclerViewEventLog"
         android:layout_width="0dp"
-        android:layout_height="@dimen/log_height"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="12dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/connection_message"
         app:layout_constraintStart_toStartOf="@+id/connection_message"
-        app:layout_constraintTop_toBottomOf="@+id/connection_ip"></io.phonk.runner.base.views.FitRecyclerView>
-
+        app:layout_constraintTop_toBottomOf="@+id/textView7"></io.phonk.runner.base.views.FitRecyclerView>
 
     <TextView
         android:id="@+id/connection_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:fontFamily="@string/primary_font"
@@ -78,31 +77,6 @@
         app:layout_constraintEnd_toEndOf="@+id/connection_message"
         app:layout_constraintStart_toStartOf="@+id/connection_message"
         app:layout_constraintTop_toBottomOf="@+id/connection_message" />
-
-
-    <!-- android:background="?attr/selectableItemBackgroundBorderless" -->
-
-    <ToggleButton
-        android:id="@+id/webide_connection_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:height="28dp"
-        android:foreground="?attr/selectableItemBackground"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="2dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="2dp"
-        android:textAllCaps="true"
-        android:textOff="Start"
-        android:textOn="Stop"
-        android:textSize="10sp"
-        android:textStyle="normal"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/textView8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView8" />
 
     <Button
         android:id="@+id/connect_to_wifi"
@@ -137,11 +111,57 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="12dp"
-        android:fontFamily="@string/secondary_font"
-        android:text="WebEditor"
+        android:fontFamily="monospace"
+        android:text="Web IDE"
+        android:textAllCaps="true"
         android:textColor="@color/phonk_colorTertiary"
-        android:textSize="14dp"
+        android:textSize="12dp"
+        android:textStyle="normal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/switch_webeditor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
+
+    <ImageView
+        android:id="@+id/btn_expand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_baseline_expand_more_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/switch_webeditor"
+        app:layout_constraintStart_toStartOf="@+id/switch_webeditor" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="monospace"
+        android:text="ACTIONS"
+        android:textAllCaps="true"
+        android:textColor="@color/phonk_colorTertiary"
+        android:textSize="12dp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connection_ip" />
+
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/btn_expand"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:padding="2dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:srcCompat="@drawable/ic_baseline_expand_more_24" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

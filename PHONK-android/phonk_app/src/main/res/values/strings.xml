@@ -33,10 +33,7 @@
     <string name="connection_message_wifi">Use your 💻 web browser to access</string>
     <string name="connection_message_tethering">Start coding using your 💻</string>
 
-    <!--
-    <string name="connection_message_not_connected">To use the WebIDE, this device and your computer must be connected to the same network</string>
-    -->
-    <string name="connection_message_not_connected">To use the Web Editor connect this device and your computer to the same WIFI</string>
+    <string name="connection_message_not_connected">To use the Web IDE connect this device and your computer to the same WIFI network</string>
     <string name="menu_settings">Settings</string>
     <string name="BT_Home">Connect</string>
     <string name="title_activity_launcher">LauncherActivity</string>
@@ -63,7 +60,7 @@
     <string name="beam">NFC Share</string>
     <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>
     <string name="files_zero">\nNo files in the project</string>
-    <string name="start_the_server">Connect to a WIFI and start the server to edit via web-IDE</string>
+    <string name="start_the_server">Connect to a WIFI and start the server to edit via web IDE</string>
     <string name="new_project_name_hint">Project name</string>
 
     <!-- app drawer -->
@@ -137,7 +134,7 @@
     <string name="setting_enable_advertise_mdns_title">Advertise Web IDE using mDNS</string>
     <string name="setting_enable_advertise_mdns_description">You can access the WebIDE using http://android.local:8585 \nThe service will advertise in the network \nRestart PHONK after change this setting </string>
     <string name="setting_maskip_title">Mask the Web Editor address</string>
-    <string name="setting_maskip_description">The IP address will hidde as XXX.XXX.XXX.XXX in the main screen. Click to uncover it</string>
+    <string name="setting_maskip_description">The IP address will hide as XXX.XXX.XXX.XXX in the main screen. Click to uncover it</string>
     <string name="setting_reinstall_title">Reinstall examples</string>
     <string name="setting_reinstall_description">Overwrite all the examples with the default ones</string>
     <string name="setting_request_permissions_title">Request permissions</string>

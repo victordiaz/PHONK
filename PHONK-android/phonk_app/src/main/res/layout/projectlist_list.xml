@@ -29,11 +29,11 @@
     android:paddingTop="0dp">
 
     <include
+        android:id="@+id/folderLocation2"
         layout="@layout/projectlist_location_view"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/folderLocation2"/>
+        android:layout_alignParentTop="true" />
 
     <io.phonk.runner.base.views.FitRecyclerView
         android:id="@+id/gridprojects"

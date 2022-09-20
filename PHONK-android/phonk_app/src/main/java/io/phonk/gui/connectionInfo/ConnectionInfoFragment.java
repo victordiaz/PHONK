@@ -22,15 +22,21 @@
 
 package io.phonk.gui.connectionInfo;
 
+import android.animation.LayoutTransition;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
@@ -55,7 +61,7 @@ public class ConnectionInfoFragment extends Fragment {
     private AppRunner mAppRunner;
     private View rootView;
 
-    private ToggleButton mToggleServers;
+    private Switch mToggleServers;
     private TextView mTxtConnectionMessage;
     private TextView mTxtConnectionIp;
     private String mRealIp = "";
@@ -65,6 +71,7 @@ public class ConnectionInfoFragment extends Fragment {
 
     private FitRecyclerView mEventsRecyclerView;
     private EventsAdapter mEventsAdapter;
+    private boolean mCardExpanded = false;
 
     public ConnectionInfoFragment() {
     }
@@ -93,10 +100,11 @@ public class ConnectionInfoFragment extends Fragment {
             });
         }
 
-        mToggleServers = rootView.findViewById(R.id.webide_connection_toggle);
+        mToggleServers = rootView.findViewById(R.id.switch_webeditor);
+
         Button connectWifi = rootView.findViewById(R.id.connect_to_wifi);
         Button startHotspot = rootView.findViewById(R.id.start_hotspot);
-        // Button webide_connection_help = (Button) findViewById(R.id.webide_connection_help);
+        ImageView btnExpand = rootView.findViewById(R.id.btn_expand);
 
         connectWifi.setOnClickListener(view -> PhonkAppHelper.launchWifiSettings(getActivity()));
         startHotspot.setOnClickListener(view -> PhonkAppHelper.launchHotspotSettings(getActivity()));
@@ -107,7 +115,10 @@ public class ConnectionInfoFragment extends Fragment {
         });
 
         if ((boolean) UserPreferences.getInstance().get("servers_enabled_on_start")) {
-            mToggleServers.performClick(); // startServers();
+            Handler handler = new Handler(getActivity().getMainLooper());
+
+            // add a small delay so we can see how it turns on
+            handler.postDelayed(() -> mToggleServers.performClick(), 800);
         }
 
         mEventsRecyclerView = rootView.findViewById(R.id.recyclerViewEventLog);
@@ -115,8 +126,24 @@ public class ConnectionInfoFragment extends Fragment {
         mEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mEventsRecyclerView.setAdapter(mEventsAdapter);
 
-        mEventsRecyclerView.setOnClickListener(view -> {
-            rootView.findViewById(R.id.update_layout).getLayoutParams().height = 500;
+        ConstraintLayout ul = rootView.findViewById(R.id.update_layout);
+        ul.getLayoutTransition()
+                .enableTransitionType(LayoutTransition.CHANGING);
+
+        btnExpand.setOnClickListener(view -> {
+            mCardExpanded = !mCardExpanded;
+
+            ViewGroup.LayoutParams lp = ul.getLayoutParams();
+            if (mCardExpanded) {
+                lp.height = 800;
+                btnExpand.animate().rotation(180);
+            }
+            else {
+                lp.height = 500;
+                btnExpand.animate().rotation(0);
+            }
+
+            ul.setLayoutParams(lp);
         });
 
         return rootView;

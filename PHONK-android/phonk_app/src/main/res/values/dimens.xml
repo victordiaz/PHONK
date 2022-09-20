@@ -50,5 +50,5 @@
     <dimen name="connection_info_fragment_margin_horizontal">8dp</dimen>
     <dimen name="connection_info_fragment_margin_vertical">0dp</dimen>
     <dimen name="desired_width">100dp</dimen>
-    <dimen name="log_height">55dp</dimen>
+    <dimen name="log_height">65dp</dimen>
 </resources>

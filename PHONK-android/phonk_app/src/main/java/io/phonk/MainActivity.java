@@ -23,20 +23,15 @@
 package io.phonk;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -81,7 +76,7 @@ public class MainActivity extends BaseActivity {
 
     private ProjectBrowserFragment mProjectBrowserFragment;
 
-    private ImageButton mToggleConnectionInfo;
+    private ImageButton mBtnHelp;
     private CardView mConnectionInfo;
 
     private ConnectionInfoFragment mConnectionInfoFragment;
@@ -227,7 +222,8 @@ public class MainActivity extends BaseActivity {
         addFragment(mConnectionInfoFragment, R.id.infoLayout, false);
 
         mConnectionInfo = findViewById(R.id.ip_container);
-        mToggleConnectionInfo = findViewById(R.id.toggleConnectionInfo);
+        mBtnHelp = findViewById(R.id.btnHelp);
+        mBtnHelp.setOnClickListener(view -> PhonkAppHelper.launchHelp(MainActivity.this));
 
         final ImageButton moreOptionsButton = findViewById(R.id.more_options);
         moreOptionsButton.setOnClickListener(view -> {
@@ -264,7 +260,7 @@ public class MainActivity extends BaseActivity {
             friendlyVersionName = versionNameTemp[0];
             if (!versionNameTemp[1].equals("normal")) friendlyVersionName += " (" + versionNameTemp[1] + ").";
         }
-        sendDelayedEvent("welcome", "Welcome to PHONK " + friendlyVersionName + " Enjoy!", 1000);
+        sendDelayedEvent("welcome", "Welcome to PHONK " + friendlyVersionName + " Enjoy!", 0);
     }
 
     public void sendDelayedEvent(String type, String message, int delay) {

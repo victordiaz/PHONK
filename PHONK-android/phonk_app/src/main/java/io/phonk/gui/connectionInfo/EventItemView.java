@@ -43,6 +43,7 @@ public class EventItemView extends LinearLayout {
     private final Context mContext;
     private TextView txtEventType;
     private TextView txtEventDetail;
+    private TextView txtEventDate;
     private ImageView imgIcon;
 
     public EventItemView(Context context) {
@@ -53,6 +54,7 @@ public class EventItemView extends LinearLayout {
         this.mItemView = inflater.inflate(R.layout.event_list_item, this, true);
         txtEventType = mItemView.findViewById(R.id.txtType);
         txtEventDetail = mItemView.findViewById(R.id.txtEventDetail);
+        txtEventDate = mItemView.findViewById(R.id.txtEventDate);
         imgIcon = mItemView.findViewById(R.id.imgEventDetail);
     }
 
@@ -61,10 +63,11 @@ public class EventItemView extends LinearLayout {
     }
 
     public void set(EventManager.EventLogItem event) {
+        String date = mFormat.format(event.date.getTime());
+
         txtEventType.setText(event.type);
         txtEventDetail.setText(event.detail);
-
-        String date = mFormat.format(event.date.getTime());
+        txtEventDate.setText("[" + date + "]");
 
         if (event.icon != -1) {
             imgIcon.setImageResource(event.icon);

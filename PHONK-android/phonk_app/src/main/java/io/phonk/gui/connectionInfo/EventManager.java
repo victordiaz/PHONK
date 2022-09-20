@@ -74,7 +74,7 @@ public class EventManager {
                 addEvent(action, (String) value, -1);
                 break;
             case "welcome":
-                addEvent("welcome", (String) value, R.drawable.ic_baseline_chat_bubble_24);
+                addEvent("welcome", (String) value, -1); // R.drawable.ic_baseline_chat_bubble_24);
                 break;
 
         }
