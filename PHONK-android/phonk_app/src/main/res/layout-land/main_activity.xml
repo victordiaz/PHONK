@@ -75,7 +75,7 @@
                 android:layout_weight="2"></View>
 
             <ImageButton
-                android:id="@+id/toggleConnectionInfo"
+                android:id="@+id/btnHelp"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="5dp"

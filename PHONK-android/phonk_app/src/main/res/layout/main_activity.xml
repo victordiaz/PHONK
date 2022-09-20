@@ -77,16 +77,16 @@
                 android:layout_weight="2"></View>
 
             <ImageButton
-                android:id="@+id/toggleConnectionInfo"
+                android:id="@+id/btnHelp"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_margin="5dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_computer_24dp"
+                android:src="@drawable/ic_baseline_help_outline_24"
                 android:text=""
                 android:textOff=""
                 android:textOn=""
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/more_options"
@@ -119,13 +119,14 @@
             android:paddingRight="10dp"
             android:paddingBottom="0dp"
             app:cardBackgroundColor="@color/phonk_backgroundColorAlternative"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="5dp">
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0dp">
 
             <FrameLayout
                 android:id="@+id/infoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></FrameLayout>
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"></FrameLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -148,6 +149,7 @@
 
     <FrameLayout
         android:layout_below="@id/header"
+        android:layout_marginTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/projectBrowserFragment"></FrameLayout>

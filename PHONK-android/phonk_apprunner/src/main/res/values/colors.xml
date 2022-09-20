@@ -24,14 +24,14 @@
 <resources>
 
     <color name="phonk_backgroundColor">#21211F</color>
-    <color name="phonk_backgroundColorAlternative">#1d1d1c</color>
-    <color name="phonk_colorPrimary">#FFB45C</color>
+    <color name="phonk_backgroundColorAlternative">#2C2C2A</color>
+    <color name="phonk_colorPrimary">#FFC700</color>
     <color name="phonk_colorSecondary">#FFFFFF</color>
     <color name="phonk_colorTertiary">#bdc2bc</color>
     <color name="phonk_colorPrimary_shade">#11FFFFFF</color>
     <color name="phonk_colorSecondary_shade">#33FFFFFF</color>
 
-    <color name="phonk_textColor_primary">#FFB45C</color>
+    <color name="phonk_textColor_primary">#FFC700</color>
     <color name="phonk_textColor_secondary">#ffffff</color>
     <color name="phonk_textColor_secondary_shade">#bbffffff</color>
     <color name="phonk_textColor_gray">#555</color>

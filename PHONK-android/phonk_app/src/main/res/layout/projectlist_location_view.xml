@@ -49,38 +49,37 @@
         android:id="@+id/folderPath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        >
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/parentFolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="folder"
-            android:textStyle="bold"
-            android:visibility="visible"
             android:fontFamily="@string/secondary_font"
-            android:textColor="@color/phonk_colorPrimary" />
+            android:text="folder"
+            android:textColor="@color/light_grey"
+            android:textStyle="bold"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/separator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@string/secondary_font"
             android:padding="8dp"
             android:text="/"
+            android:textColor="@color/phonk_colorPrimary"
             android:textStyle="bold"
-            android:fontFamily="@string/secondary_font"
-            android:visibility="visible"
-            android:textColor="@color/phonk_colorPrimary" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@string/secondary_font"
             android:text="subfolder"
             android:textColor="@color/phonk_colorPrimary"
             android:textStyle="bold"
-            android:fontFamily="@string/secondary_font"
             android:visibility="visible" />
 
     </LinearLayout>
