@@ -25,7 +25,7 @@
     android:id="@+id/rootEditor"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#272822"
+    android:background="@color/phonk_backgroundColor"
     android:orientation="vertical"
     android:fitsSystemWindows="false"
     android:animateLayoutChanges="true">

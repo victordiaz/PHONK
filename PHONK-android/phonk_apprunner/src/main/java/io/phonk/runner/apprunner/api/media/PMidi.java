@@ -224,16 +224,6 @@ public class PMidi extends ProtoBase {
                 // Toast.makeText(getContext(), "USB MIDI Output Device " + midiOutputDevice.getUsbDevice().getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
 
                 callbackConnection("output", "attached", midiOutputDevice);
-
-                /*
-                Set<MidiOutputDevice> midiOutputDevices = usbMidiDriver.getMidiOutputDevices(midiOutputDevice.getUsbDevice());
-                MLog.d(TAG, "midioutputdevices: " + midiOutputDevices.size());
-                if (midiOutputDevices.size() > 0) {
-                    midiOutputDevice = (MidiOutputDevice) midiOutputDevices.toArray()[0];
-                    MLog.d(TAG, "midiOutputDevice " + midiOutputDevice);
-                    midiOutputDevice.sendMidiNoteOn(0, 0, 50, 68);
-                }
-                */
             }
         };
 

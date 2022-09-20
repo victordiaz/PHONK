@@ -23,16 +23,16 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/more_options_new"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/menu_label_new" />
     <item android:id="@+id/more_options_settings"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/menu_label_settings" />
     <item android:id="@+id/more_options_help"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/menu_label_help" />
     <item android:id="@+id/more_options_about"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:visible="true"
           android:title="@string/menu_label_about" />
 

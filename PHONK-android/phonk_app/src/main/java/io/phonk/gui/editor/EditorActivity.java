@@ -156,7 +156,7 @@ public class EditorActivity extends BaseActivity {
         this.mMenu = menu;
         menu.clear();
         menu.add(1, MENU_RUN, 0, "Run Project").setIcon(R.drawable.ic_play_arrow_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, MENU_SAVE, 0, "Save File").setIcon(R.drawable.ic_save_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, MENU_SAVE, 0, "Save File").setIcon(R.drawable.ic_save_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         if (!isTablet)
             menu.add(1, MENU_FILES, 0, "Show Project Files").setIcon(R.drawable.ic_list_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         // menu.add(1, MENU_API, 0, "API").setIcon(R.drawable.ic_chrome_reader_mode_black_24dp).setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);

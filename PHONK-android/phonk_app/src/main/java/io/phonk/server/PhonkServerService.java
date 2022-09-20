@@ -82,7 +82,6 @@ public class PhonkServerService extends Service {
      * Servers
      */
     private PhonkHttpServer phonkHttpServer;
-    private PhonkFtpServer phonkFtpServer;
     private PhonkWebsocketServer phonkWebsockets;
     private ArrayList<String> mConnectedClients = new ArrayList<>();
 

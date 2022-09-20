@@ -5,14 +5,14 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:7.2.2'
     }
 }
 
 project.ext {
-    versionCode = 142
-    versionName = "1.4.2"
-    compileSdkVersion = 30
+    versionCode = 143
+    versionName = "1.4.3"
+    compileSdkVersion = 32
     targetSdkVersion = 29
     minSdkVersion = 16
 }

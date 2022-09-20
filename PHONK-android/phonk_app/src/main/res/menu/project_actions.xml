@@ -23,32 +23,32 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_project_list_run"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/run" />
     <item android:id="@+id/menu_project_list_edit"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/edit" />
     <item
         android:id="@+id/menu_project_webeditor"
         android:enabled="false"
-        android:icon="@drawable/phonk_icon"
+        android:icon="@drawable/square_icon"
         android:title="@string/webeditor" />
     <item android:id="@+id/menu_project_list_delete"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/delete" />
     <item android:id="@+id/menu_project_list_add_shortcut"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/add_shortcut" />
     <item android:id="@+id/menu_project_list_share_with"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/share" />
     <item
         android:id="@+id/menu_project_list_share_proto_file"
         android:enabled="false"
-        android:icon="@drawable/phonk_icon"
+        android:icon="@drawable/square_icon"
         android:title="@string/share_phonk_file" />
     <item android:id="@+id/menu_project_list_show_info"
-          android:icon="@drawable/phonk_icon"
+          android:icon="@drawable/square_icon"
           android:title="@string/show_project_info" />
 
     <!--  Bean is broken disabled till fixed

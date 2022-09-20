@@ -76,7 +76,7 @@
             android:layout_height="match_parent"
             android:minWidth="100dp"
             android:scaleType="center"
-            android:src="@drawable/app_icon"
+            android:src="@drawable/square_icon"
             />
 
     </RelativeLayout>

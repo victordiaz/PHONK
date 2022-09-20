@@ -79,7 +79,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         EventManager.EventLogItem event = mEventList.get(position);
-        holder.mView.set(event.type, event.detail);
+        holder.mView.set(event);
     }
 
     @Override
