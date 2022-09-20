@@ -34,18 +34,17 @@ export default {
 
 <style lang="less">
 @import (reference) '../../assets/css/variables.less';
-@popOverColor:#2e2f29;
 
 .popover {
-  background-color: @popOverColor;
-  color: @primaryTextColor;
+  background-color: var(--color-main-lighter);
+  color: var(--color-text-light);
   font-size: 1em;
   position: absolute;
   width: 300px;
   min-height: 100px;
   border-radius: 3px;
   z-index: 11;
-  border: 1px solid @secondaryColor;
+  border: 1px solid var(--color-lines);
   padding: 5px;
   filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.4))
     drop-shadow(0 3px 4px rgba(0, 0, 0, 0.4));
@@ -55,8 +54,7 @@ export default {
 
   #close {
     display: none;
-    color: @accentColor;
-    background: @backgroundColorSecondary;
+    color: var(--color-accent);
     position: absolute;
     top: 10px;
     right: 10px;
@@ -66,8 +64,8 @@ export default {
     padding: 0;
 
     &:hover {
-      background: @accentColor;
-      color: @primaryTextColor;
+      background: var(--color-accent);
+      color: var(--color-text-light);
     }
   }
 
@@ -79,12 +77,10 @@ export default {
     padding: 5px;
 
     .key {
-      // font-weight: 800;
     }
 
     .value {
-      font-weight: 500;
-      color: #a49573;
+      color: var(--color-text-dark-lighten);
     }
   }
 
@@ -97,8 +93,7 @@ export default {
     top: -9px;
     position: absolute;
     bottom: auto;
-    border-right-color: #000;
-    background-color: @popOverColor;
+    background-color: var(--color-main-lighter);
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     border-radius: 2px;
@@ -107,8 +102,8 @@ export default {
 
   &.top {
     &:before {
-      border-top: 1px solid @secondaryColor;
-      border-left: 1px solid @secondaryColor;
+      border-top: 1px solid var(--color-lines);
+      border-left: 1px solid var(--color-lines);
     }
   }
 
@@ -129,8 +124,8 @@ export default {
     &:before {
       right: -9px;
       top: 15px;
-      border-top: 1px solid @secondaryColor;
-      border-right: 1px solid @secondaryColor;
+      border-top: 1px solid var(--color-lines);
+      border-right: 1px solid var(--color-lines);
 
       /*
       box-shadow: 5px -3px 5px 0px rgba(0, 0, 0, 0.22);

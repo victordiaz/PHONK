@@ -85,25 +85,21 @@ export default {
     cursor: pointer;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
     }
 
     &.selected {
-      background-color: rgba(0, 0, 0, 0.2);
     }
   }
 }
 
 #tutorial {
   overflow-y: hidden;
-  color: #222;
-  background-color: white;
-  .main_shadow;
+  .shadow-main;
   line-height: 1.1em;
   font-size: 1em;
 
   code {
-    font-family: @editorFont;
+    .font-mono-400;
   }
 
   h1, h2, h3, h4, h5, h6, p, ul, ol, li, blockquote, table, pre {
@@ -113,11 +109,9 @@ export default {
 
   h1, h2, h3, h4, h5, h6 {
     margin: 1em 0em 0.5em 0em;
-    font-weight: bold;
   }
 
   h1, h2 {
-    border-bottom: 1px solid #ccc;
     padding-bottom: 0.3em;
   }
 
@@ -129,7 +123,6 @@ export default {
   h6 { font-size: 1.3em; }
 
   strong {
-    font-weight: bold;
   }
 
   em {
@@ -155,16 +148,13 @@ export default {
 
   pre {
     overflow: scroll;
-    background-color: #272822;
     border-radius: 2px;
     padding: 8px;
-    color: #ddd;
     font-size: 1.2em;
     line-height: 1.3em;
   }
 
   blockquote {
-    border-left: 3px solid #eee;
     margin: 0px;
     padding-left: 8px;
   }
@@ -173,15 +163,12 @@ export default {
     margin: 10px 0px;
 
     tr {
-      border-top: 1px solid #ccc;
 
       th, td {
         padding: 5px 12px;
-        border: 1px solid #ddd;
       }
 
       th {
-        font-weight: bold;
       }
     }
   }

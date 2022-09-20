@@ -84,11 +84,11 @@ export default {
 
     &:hover {
       cursor: col-resize;
-      background: @accentColor;
+      background: var(--color-accent);
     }
 
     &:active {
-      background: @accentColor_1;
+      background: var(--color-accent)_1;
     }
   }
 

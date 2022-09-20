@@ -2,7 +2,7 @@
   <div id = "console" class = "proto_panel">
     <div class = "wrapper">
       <div class = "actionbar">
-        <h1 v-on:dblclick = "hideshow">console</h1>
+        <h1>console</h1>
         <ul>
           <li title = "Show time" class = "material-icons" v-on:click="showTime()" v-bind:class="{'enabled':showingTime}">access_time</li>
           <li title = "Lock scrolling" class = "material-icons" v-on:click="toggleLock()" v-bind:class="{'enabled':lock}">lock</li>
@@ -50,23 +50,16 @@ export default {
     }
   },
   computed: {
-    // slicedLogs: function () {
-    //   return this.logs.slice(this.limitOffset, this.limitOffset + this.limitNum)
-    // }
   },
   methods: {
     console_log: function (data) {
-      // console.log('log', data, this.consoleIsStarted, this.consoleCanStart)
       if (!this.consoleIsStarted && this.consoleCanStart) {
-        // console.log('qq1')
         this.consoleIsStarted = true
         this.updateInterval = setInterval(() => {
           this.slicedLogs = this.$options.logsq.slice(this.limitOffset, this.limitOffset + this.limitNum)
-          // console.log('qq2')
         }, 100)
       }
 
-      // console.log(data)
       this.$options.logsq.push({action: data.action, time: data.time, text: data.data})
 
       if (this.$options.logsq.length > this.limitNum) {
@@ -79,7 +72,6 @@ export default {
       this.$nextTick(function () {
         setTimeout(() => {
           var ul = this.$refs.log
-          // console.log('ul', ul, this.i++)
           ul.scrollTop = ul.scrollHeight
         }, 300)
       })
@@ -104,9 +96,6 @@ export default {
         clearInterval(this.updateInterval)
         this.consoleIsStarted = false
       }
-    },
-    hideshow: function () {
-      // this.showing = !this.showing
     }
   },
   route: {
@@ -116,13 +105,6 @@ export default {
   created () {
     Store.on('console', this.console_log)
     Store.on('project_action', this.project_action)
-
-    /*
-    var that = this
-    setInterval(function () {
-      that.console({action: 'msg', data: 'data ' + ++that.count})
-    }, 200)
-    */
   },
   destroyed () {
     Store.removeListener('console', this.console_log)
@@ -143,7 +125,6 @@ export default {
   }
 
   .content {
-    color: white !important;
   }
 
   .content ul {
@@ -156,36 +137,27 @@ export default {
     li {
       padding: 10px;
       border-bottom: 1px dashed #333;
-      font-family: @editorFont;
+     .font-mono-400;
       line-height: 1.8em;
       word-break: break-all;
       font-size: 1rem;
-      // .anim-fast;
+      // .all-transitions;
 
       img {
         width: 100%;
         max-width: 320px;
       }
 
-      &.log_error {
-        // border-left: 3px solid @accentColor;
-        // padding-left: 3px;
-      }
-
       &.log_error::before {
         content: '😭 problem!';
         font-size: 0.8em;
-        background: @error;
+        background: var(--color-error);
         padding: 3px 5px;
         border-radius: 2px;
       }
 
       &.log_error:hover {
-        background: lighten(@error, 10%);
-      }
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
+        background: var(--color-error);
       }
 
       .time {
@@ -193,7 +165,6 @@ export default {
           display: none;
         }
 
-        color: rgba(255, 255, 255, 0.5);
         font-size: 0.8em;
       }
     }

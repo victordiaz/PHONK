@@ -29,11 +29,9 @@ export default {
 
 .dtext {
   height: 100%;
-  background: #252525;
   padding: 10px;
   box-sizing: border-box;
-  color: white;
-  font-family: @editorFont;
+  .font-mono-400;
 }
 
 </style>

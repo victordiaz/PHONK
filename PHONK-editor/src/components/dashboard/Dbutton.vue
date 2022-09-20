@@ -38,17 +38,14 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: @accentColor;
+  background-color: var(--color-accent);
   outline: none;
   border: none;
-  color: black;
 
   &:hover {
-    background: lighten(@accentColor, 20%);
   }
 
   &:active {
-    background: darken(@accentColor, 10%);
   }
 }
 </style>

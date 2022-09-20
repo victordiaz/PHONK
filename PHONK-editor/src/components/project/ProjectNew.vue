@@ -90,14 +90,15 @@ export default {
     text-align: center;
   }
 
+  input {
+    border: 0 !important;
+    border-radius: 2px;
+  }
+
   .submit {
     display: flex;
     align-items: center;
     margin-left: 12px;
-
-    button {
-      border-color: #f0f8ff30;
-    }
   }
 }
 </style>

@@ -34,7 +34,6 @@ export default {
 
 .dslider {
   height: 100%;
-  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +46,6 @@ export default {
   }
 
   input[type="range"]::-moz-range-thumb {
-    background-color: #ffbb33;
     width: 10px;
     height: 30px;
   }
