@@ -43,7 +43,7 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui.filemanager.FileManagerFragment;
-import io.phonk.gui.filepreviewer.FilePreviewerFragment;
+import io.phonk.gui.filemanager.FilePreviewerFragment;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;

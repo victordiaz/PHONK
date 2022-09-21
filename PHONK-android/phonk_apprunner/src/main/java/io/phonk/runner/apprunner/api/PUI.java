@@ -596,8 +596,8 @@ public class PUI extends PViewsArea {
 
             if (o instanceof PViewMethodsInterface) {
                 Map props = ((PViewMethodsInterface) o).getProps();
-                ReturnObject qq = ((StylePropertiesProxy) props).values;
-                ob.put("props", qq);
+                ReturnObject returnObject = ((StylePropertiesProxy) props).values;
+                ob.put("props", returnObject);
             } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass().getSimpleName().equals("PUI")) {
                 if (((PViewsArea) o).viewArray.size() > 0) {
                     ob.put("children", it(((PViewsArea) o).viewArray));

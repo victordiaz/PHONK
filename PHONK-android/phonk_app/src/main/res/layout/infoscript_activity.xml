@@ -27,7 +27,7 @@
 
 
     <include
-        layout="@layout/toolbar2"
+        layout="@layout/toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/include4" />

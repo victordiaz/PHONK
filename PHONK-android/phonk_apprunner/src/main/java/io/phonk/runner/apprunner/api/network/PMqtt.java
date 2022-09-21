@@ -92,7 +92,6 @@ public class PMqtt extends ProtoBase {
                 Map willOptions = (Map) connectionSettings.get("will");
                 String topic = (String) willOptions.get("topic");
                 String payload = (String) willOptions.get("payload");
-                MLog.d("qq", "qq1");
                 Double qos = (Double) willOptions.get("qos");
                 boolean retained = (boolean) willOptions.get("retained");
 

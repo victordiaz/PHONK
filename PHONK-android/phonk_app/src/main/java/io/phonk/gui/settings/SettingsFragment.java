@@ -46,7 +46,7 @@ import java.util.HashMap;
 
 import io.phonk.BuildConfig;
 import io.phonk.R;
-import io.phonk.gui.LicenseActivity;
+import io.phonk.gui.info.LicenseActivity;
 import io.phonk.gui.projectbrowser.ProjectBrowserDialogFragment;
 import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;

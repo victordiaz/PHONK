@@ -302,13 +302,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) return true;
-        return super.onOptionsItemSelected(item);
-    }
-
     /*
      * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
      */
@@ -338,7 +331,6 @@ public class MainActivity extends BaseActivity {
     private void startServers() {
         MLog.d(TAG, "starting servers");
         mServerIntent = new Intent(this, PhonkServerService.class);
-        //serverIntent.putExtra(Project.FOLDER, folder);
         startService(mServerIntent);
     }
 

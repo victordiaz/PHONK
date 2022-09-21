@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui;
+package io.phonk.gui.welcome;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

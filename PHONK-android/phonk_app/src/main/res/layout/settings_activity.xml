@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Part of Phonk http://www.phonk.io
   ~ A prototyping platform for Android devices
@@ -20,19 +21,25 @@
   ~
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:id="@+id/Cred"
-        android:title="Credits" />
-    <item
-        android:id="@+id/Options"
-        android:title="Settings" />
-    <item
-        android:id="@+id/Disconnect"
-        android:title="Disconnect"
-        android:visible="false" />
-    <item
-        android:id="@+id/Exit"
-        android:title="Exit" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true">
 
-</menu>
+    <include layout="@layout/toolbar"
+        android:id="@+id/header"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <FrameLayout
+        android:layout_below="@id/header"
+        android:id="@+id/pref_container"
+        android:layout_alignParentLeft="true"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    </FrameLayout>
+
+
+</RelativeLayout>

@@ -47,10 +47,10 @@ import java.util.Map;
 
 import io.phonk.MainActivity;
 import io.phonk.events.Events;
-import io.phonk.gui.AboutActivity;
-import io.phonk.gui.HelpActivity;
-import io.phonk.gui.InfoScriptActivity;
-import io.phonk.gui.LicenseActivity;
+import io.phonk.gui.info.AboutActivity;
+import io.phonk.gui.info.HelpActivity;
+import io.phonk.gui.info.InfoScriptActivity;
+import io.phonk.gui.info.LicenseActivity;
 import io.phonk.gui.SchedulerActivity;
 import io.phonk.gui._components.NewProjectDialogFragment;
 import io.phonk.gui.editor.EditorActivity;

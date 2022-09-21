@@ -51,7 +51,7 @@ public class EventItemView extends LinearLayout {
         this.mContext = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        this.mItemView = inflater.inflate(R.layout.event_list_item, this, true);
+        this.mItemView = inflater.inflate(R.layout.connection_info_item, this, true);
         txtEventType = mItemView.findViewById(R.id.txtType);
         txtEventDetail = mItemView.findViewById(R.id.txtEventDetail);
         txtEventDate = mItemView.findViewById(R.id.txtEventDate);

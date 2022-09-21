@@ -248,16 +248,6 @@ public class CameraTexture2 extends TextureView implements TextureView.SurfaceTe
         }
     }
 
-    public void qq() {
-        mPreviewRequestBuilder.set(CaptureRequest.CONTROL_EFFECT_MODE, CaptureResult.CONTROL_EFFECT_MODE_MONO);
-        mPreviewRequest = mPreviewRequestBuilder.build();
-        try {
-            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, null);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
     private final CameraCaptureSession.CaptureCallback mCaptureCallback = new CameraCaptureSession.CaptureCallback() {
 
         private void process(CaptureResult result) {

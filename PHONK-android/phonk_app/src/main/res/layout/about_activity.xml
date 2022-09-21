@@ -29,7 +29,7 @@
 
     <include
         android:id="@+id/header"
-        layout="@layout/toolbar2"
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

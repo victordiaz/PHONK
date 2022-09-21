@@ -81,19 +81,16 @@ public class AppRunnerLauncherService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        MLog.d("qq", "42");
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        MLog.d("qq", "41");
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        MLog.d("qq", "43");
 
         return null;
     }

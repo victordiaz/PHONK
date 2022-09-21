@@ -76,7 +76,6 @@ public class SharingDispatcherActivity extends BaseActivity {
         projectBrowserDialogFragment.setListener(new ProjectListFragment.ProjectSelectedListener() {
             @Override
             public void onProjectSelected(Project p) {
-                MLog.d("qq", "project clicked " + p.getFullPath());
                 projectBrowserDialogFragment.dismiss();
                 PhonkAppHelper.launchScript(SharingDispatcherActivity.this, new Project(p.getSandboxPath()), extras);
                 // PhonkAppHelper.launchScript(this, new Project("examples/Graphical User Interface/Basic Views"));
@@ -90,7 +89,6 @@ public class SharingDispatcherActivity extends BaseActivity {
                 for (Map.Entry<Project, Boolean> entry : projects.entrySet()) {
                     Project project = entry.getKey();
                     boolean selection = entry.getValue();
-                    MLog.d("qq2", "selected " + project.getFullPath());
                 }
             }
 

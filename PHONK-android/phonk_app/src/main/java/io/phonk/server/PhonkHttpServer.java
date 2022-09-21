@@ -512,7 +512,6 @@ public class PhonkHttpServer extends NanoHTTPD {
                         FileIO.copyFile(fileSrc, fileDst);
                         EventBus.getDefault().post(new Events.HTTPServerEvent(Events.EDITOR_UPLOAD, p));
                     } catch (IOException e) {
-                        // MLog.d(TAG, "qq5");
                         e.printStackTrace();
                     }
 

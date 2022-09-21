@@ -58,256 +58,256 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint("NewApi")
 public class AppRunnerFragment extends Fragment {
 
-    private static final String TAG = AppRunnerFragment.class.getSimpleName();
-    private static Map<String, Object> mScriptSettings;
+	private static final String TAG = AppRunnerFragment.class.getSimpleName();
+	private static Map<String, Object> mScriptSettings;
 
-    private AppRunner mAppRunner;
-    private Context mContext;
-    private FileObserver fileObserver;
+	private AppRunner mAppRunner;
+	private Context mContext;
+	private FileObserver fileObserver;
 
-    // Layout stuff
-    public RelativeLayout mainLayout;
-    private RelativeLayout parentScriptedLayout;
-    private RelativeLayout infoLayout;
+	// Layout stuff
+	public RelativeLayout mainLayout;
+	private RelativeLayout parentScriptedLayout;
+	private RelativeLayout infoLayout;
 
-    public PLiveCodingFeedback liveCoding;
-    private View mMainView;
-    private TextView txtTitle;
-    private TextView txtSubtitle;
+	public PLiveCodingFeedback liveCoding;
+	private View mMainView;
+	private TextView txtTitle;
+	private TextView txtSubtitle;
 
-    private String name = "defaultName";
-    private String folder = "defaulFolder";
+	private String name = "defaultName";
+	private String folder = "defaulFolder";
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
-        this.mContext = context;
-    }
+		this.mContext = context;
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 
-        // init the layout and pass it to the activity
-        mMainView = initLayout();
+		// init the layout and pass it to the activity
+		mMainView = initLayout();
 
-        // create the apprunner
-        mAppRunner = new AppRunner(mContext);
-        mAppRunner.initDefaultObjects(this, mScriptSettings);
+		// create the apprunner
+		mAppRunner = new AppRunner(mContext);
+		mAppRunner.initDefaultObjects(this, mScriptSettings);
 
-        // get parameters and set them in the AppRunner
-        Bundle bundle = getArguments();
+		// get parameters and set them in the AppRunner
+		Bundle bundle = getArguments();
 
-        // if there is not intent data we close the activity
-        if (bundle == null) {
-            Toast.makeText(getContext(), "No project to load", Toast.LENGTH_LONG).show();
-            getActivity().finish();
-        }
-        mAppRunner.pApp.setIntentData(bundle);
+		// if there is not intent data we close the activity
+		if (bundle == null) {
+			Toast.makeText(getContext(), "No project to load", Toast.LENGTH_LONG).show();
+			getActivity().finish();
+		}
+		mAppRunner.pApp.setIntentData(bundle);
 
-        folder = bundle.getString(Project.FOLDER, "");
-        name = bundle.getString(Project.NAME, "");
-        // String settings = bundle.getString(Project.SETTINGS, "");
+		folder = bundle.getString(Project.FOLDER, "");
+		name = bundle.getString(Project.NAME, "");
+		// String settings = bundle.getString(Project.SETTINGS, "");
 
-        MLog.d("11 -->", folder + " " + name);
-        mAppRunner.loadProject(folder, name);
+		MLog.d("11 -->", folder + " " + name);
+		mAppRunner.loadProject(folder, name);
 
-        mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
-        mAppRunner.mIntentCode = bundle.getString(Project.INTENTCODE, "");
-        mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
+		mAppRunner.mIntentPrefixScript = bundle.getString(Project.PREFIX, "");
+		mAppRunner.mIntentCode = bundle.getString(Project.INTENTCODE, "");
+		mAppRunner.mIntentPostfixScript = bundle.getString(Project.POSTFIX, "");
 
-        mAppRunner.initInterpreter();
+		mAppRunner.initInterpreter();
 
-        mAppRunner.pDevice.deviceId = bundle.getString(Project.DEVICE_ID, "");
-        // mAppRunner.pUi.screenOrientation("portrait");
-        mAppRunner.pUi.updateScreenSizes();
-        mAppRunner.pUi.toolbar.title(name);
-        mAppRunner.pUi.toolbar.show(false);
-        mAppRunner.pApp.folder = folder;
-        mAppRunner.pApp.name = name;
+		mAppRunner.pDevice.deviceId = bundle.getString(Project.DEVICE_ID, "");
+		// mAppRunner.pUi.screenOrientation("portrait");
+		mAppRunner.pUi.updateScreenSizes();
+		mAppRunner.pUi.toolbar.title(name);
+		mAppRunner.pUi.toolbar.show(false);
+		mAppRunner.pApp.folder = folder;
+		mAppRunner.pApp.name = name;
 
-        return mMainView;
-    }
+		return mMainView;
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-        // catch errors and send them to the WebIDE or the app console
-        AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
-        mAppRunner.interp.addListener(appRunnerCb);
+		// catch errors and send them to the WebIDE or the app console
+		AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
+		mAppRunner.interp.addListener(appRunnerCb);
 
-        mAppRunner.initProject();
+		mAppRunner.initProject();
 
-        // file observer will notify project file changes
-        // startFileObserver();
+		// file observer will notify project file changes
+		// startFileObserver();
 
-        // Call the onCreate JavaScript function.
-        if (mAppRunner.interp != null)
-            mAppRunner.interp.callJsFunction("onCreate"); // , savedInstanceState);
-    }
+		// Call the onCreate JavaScript function.
+		if (mAppRunner.interp != null)
+			mAppRunner.interp.callJsFunction("onCreate"); // , savedInstanceState);
+	}
 
-    public static AppRunnerFragment newInstance(Bundle bundle, Map<String, Object> scriptSettings) {
-        mScriptSettings = scriptSettings;
-        AppRunnerFragment myFragment = new AppRunnerFragment();
-        myFragment.setArguments(bundle);
+	public static AppRunnerFragment newInstance(Bundle bundle, Map<String, Object> scriptSettings) {
+		mScriptSettings = scriptSettings;
+		AppRunnerFragment myFragment = new AppRunnerFragment();
+		myFragment.setArguments(bundle);
 
-        return myFragment;
-    }
+		return myFragment;
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onResume");
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onResume");
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MLog.d(TAG, "onPause");
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onPause");
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		MLog.d(TAG, "onPause");
+		if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onPause");
+	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        MLog.d(TAG, "onDestroy");
-        if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
-        if (fileObserver != null) fileObserver.stopWatching();
-        mAppRunner.byebye();
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		MLog.d(TAG, "onDestroy");
+		if (mAppRunner.interp != null) mAppRunner.interp.callJsFunction("onDestroy");
+		if (fileObserver != null) fileObserver.stopWatching();
+		mAppRunner.byebye();
+	}
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+	}
 
-    public void addScriptedLayout(View scriptedUILayout) {
-        parentScriptedLayout.addView(scriptedUILayout);
-    }
+	public void addScriptedLayout(View scriptedUILayout) {
+		parentScriptedLayout.addView(scriptedUILayout);
+	}
 
-    public RelativeLayout initLayout() {
-        View v = getLayoutInflater(null).inflate(R.layout.apprunner_fragment, null);
+	public RelativeLayout initLayout() {
+		View v = getLayoutInflater(null).inflate(R.layout.apprunner_fragment, null);
 
-        // add main layout
-        mainLayout = v.findViewById(R.id.main);
+		// add main layout
+		mainLayout = v.findViewById(R.id.main);
 
-        // set the parent
-        parentScriptedLayout = v.findViewById(R.id.scriptedLayout);
+		// set the parent
+		parentScriptedLayout = v.findViewById(R.id.scriptedLayout);
 
-        liveCoding = new PLiveCodingFeedback(mContext);
-        mainLayout.addView(liveCoding.add());
+		liveCoding = new PLiveCodingFeedback(mContext);
+		mainLayout.addView(liveCoding.add());
 
-        infoLayout = v.findViewById(R.id.infoLayout);
-        txtTitle = v.findViewById(R.id.txtTitle);
-        txtSubtitle = v.findViewById(R.id.txtSubtitle);
+		infoLayout = v.findViewById(R.id.infoLayout);
+		txtTitle = v.findViewById(R.id.txtTitle);
+		txtSubtitle = v.findViewById(R.id.txtSubtitle);
 
-        return mainLayout;
-    }
+		return mainLayout;
+	}
 
-    public void startFileObserver() {
+	public void startFileObserver() {
 
-        if (mAppRunner.mIsProjectLoaded) {
-            // set up a file observer to watch this directory on sd card
-            fileObserver = new FileObserver(mAppRunner.getProject().getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
+		if (mAppRunner.mIsProjectLoaded) {
+			// set up a file observer to watch this directory on sd card
+			fileObserver = new FileObserver(mAppRunner.getProject().getFullPath(), FileObserver.CREATE | FileObserver.DELETE) {
 
-                @Override
-                public void onEvent(int event, String file) {
-                    JSONObject msg = new JSONObject();
-                    String action = null;
+				@Override
+				public void onEvent(int event, String file) {
+					JSONObject msg = new JSONObject();
+					String action = null;
 
-                    if ((FileObserver.CREATE & event) != 0) {
-                        MLog.d(TAG, "created " + file);
-                        action = "new_files_in_project";
+					if ((FileObserver.CREATE & event) != 0) {
+						MLog.d(TAG, "created " + file);
+						action = "new_files_in_project";
 
-                    } else if ((FileObserver.DELETE & event) != 0) {
-                        MLog.d(TAG, "deleted file " + file);
-                        action = "deleted_files_in_project";
-                    }
+					} else if ((FileObserver.DELETE & event) != 0) {
+						MLog.d(TAG, "deleted file " + file);
+						action = "deleted_files_in_project";
+					}
 
-                    try {
-                        msg.put("action", action);
-                        msg.put("type", "ide");
-                        //TODO change to events
-                        //IDEcommunication.getInstance(mActivity).send(msg);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-        }
-    }
+					try {
+						msg.put("action", action);
+						msg.put("type", "ide");
+						//TODO change to events
+						//IDEcommunication.getInstance(mActivity).send(msg);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+		}
+	}
 
-    public PLiveCodingFeedback liveCodingFeedback() {
-        return liveCoding;
-    }
+	public PLiveCodingFeedback liveCodingFeedback() {
+		return liveCoding;
+	}
 
-    public AppRunner getAppRunner() {
-        return mAppRunner;
-    }
+	public AppRunner getAppRunner() {
+		return mAppRunner;
+	}
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private void checkPermission(String... p) {
-        List<String> requiredPermissions = new ArrayList<>();
+	@TargetApi(Build.VERSION_CODES.M)
+	private void checkPermission(String... p) {
+		List<String> requiredPermissions = new ArrayList<>();
 
-        requiredPermissions.addAll(Arrays.asList(p));
+		requiredPermissions.addAll(Arrays.asList(p));
 
-        // check if permission is already granted
-        for (int i = 0; i < requiredPermissions.size(); i++) {
-            String permissionName = requiredPermissions.get(i);
-            int isGranted1 = getActivity().checkSelfPermission(permissionName);
-            int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
+		// check if permission is already granted
+		for (int i = 0; i < requiredPermissions.size(); i++) {
+			String permissionName = requiredPermissions.get(i);
+			int isGranted1 = getActivity().checkSelfPermission(permissionName);
+			int isGranted2 = isGranted1 & PackageManager.PERMISSION_GRANTED;
 
-            MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
-        }
+			MLog.d(TAG, permissionName + " " + isGranted1 + " " + isGranted2);
+		}
 
-    }
+	}
 
-    public TextView changeTitle(String title, String color) {
-        txtTitle.setTextColor(Color.parseColor(color));
-        txtTitle.setText(title);
-        txtTitle.setVisibility(View.VISIBLE);
-        txtTitle.setAlpha(0.0f);
-        txtTitle.setX(-100f);
-        txtTitle.animate().translationX(0f).alpha(1.0f).setStartDelay(300);
-        txtTitle.setEnabled(false);
+	public TextView changeTitle(String title, String color) {
+		txtTitle.setTextColor(Color.parseColor(color));
+		txtTitle.setText(title);
+		txtTitle.setVisibility(View.VISIBLE);
+		txtTitle.setAlpha(0.0f);
+		txtTitle.setX(-100f);
+		txtTitle.animate().translationX(0f).alpha(1.0f).setStartDelay(300);
+		txtTitle.setEnabled(false);
 
-        return txtTitle;
-    }
+		return txtTitle;
+	}
 
-    public TextView changeSubtitle(final String subtitle) {
-        txtSubtitle.setText(subtitle);
-        txtSubtitle.setX(-100f);
-        txtSubtitle.setAlpha(0.0f);
-        txtSubtitle.setVisibility(View.VISIBLE);
-        txtSubtitle.setEnabled(false);
+	public TextView changeSubtitle(final String subtitle) {
+		txtSubtitle.setText(subtitle);
+		txtSubtitle.setX(-100f);
+		txtSubtitle.setAlpha(0.0f);
+		txtSubtitle.setVisibility(View.VISIBLE);
+		txtSubtitle.setEnabled(false);
 
-        // invalidating the text because sometimes when overlaying OpenGL surfaces the view is not fully rendered
-        txtSubtitle.animate().translationX(0f).alpha(1.0f).setStartDelay(500).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
+		// invalidating the text because sometimes when overlaying OpenGL surfaces the view is not fully rendered
+		txtSubtitle.animate().translationX(0f).alpha(1.0f).setStartDelay(500).setListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationStart(Animator animator) {
 
-            }
+			}
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                txtSubtitle.setText(subtitle);
-                // txtSubtitle.invalidate();
-            }
+			@Override
+			public void onAnimationEnd(Animator animator) {
+				txtSubtitle.setText(subtitle);
+				// txtSubtitle.invalidate();
+			}
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
+			@Override
+			public void onAnimationCancel(Animator animator) {
 
-            }
+			}
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
+			@Override
+			public void onAnimationRepeat(Animator animator) {
 
-            }
-        });
-        txtSubtitle.setEnabled(false);
+			}
+		});
+		txtSubtitle.setEnabled(false);
 
-        return txtSubtitle;
-    }
+		return txtSubtitle;
+	}
 }

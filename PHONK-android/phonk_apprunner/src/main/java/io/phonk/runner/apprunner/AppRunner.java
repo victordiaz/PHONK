@@ -166,7 +166,6 @@ public class AppRunner {
 
         // run the script
         if (null != mScript) {
-            MLog.d(TAG, "evaluate qq");
             evaluate(mScript, mProject.getName());
         }
         // can accept intent code if no project is loaded

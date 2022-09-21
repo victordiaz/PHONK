@@ -384,7 +384,6 @@ public class PMedia extends ProtoBase {
         boolean existsCameraBack = (boolean) getAppRunner().pDevice.info().get("cameraBack");
 
         boolean cameraIsAvailable = camera.equals("front") & existsCameraFront | camera.equals("back") & existsCameraBack;
-        // MLog.d("qq", existsCameraFront + " " + existsCameraBack + " " + cameraIsAvailable);
 
         if (!cameraIsAvailable) {
             return null;

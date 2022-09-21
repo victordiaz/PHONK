@@ -205,7 +205,6 @@ public class AppRunnerInterpreter {
                 return super.doTopCall(callable, cx, scope, thisObj, args);
             } catch (WrappedException e) {
                 MLog.e(TAG, "ContextFactory catched error: " + e);
-                // mAppRunnerInterpretter.stop();
 
                 if (e.getWrappedException() instanceof PermissionNotGrantedException) {
                     String message = ((Throwable) e).getMessage();
@@ -223,18 +222,13 @@ public class AppRunnerInterpreter {
                 String message = ((Throwable) e).getMessage();
                 message = message.replace("io.phonk.runner.apprunner.api.P", "");
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, message);
-                // mAppRunnerInterpretter.stop();
                 return e;
             } catch (org.mozilla.javascript.EvaluatorException e) {
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, e.getMessage());
 
                 return e;
             } finally {
-                // observingDebugger.setDisconnected(true);
-                // mAppRunnerInterpretter.stop();
-                // observingDebugger.setDisconnected(true);
-                MLog.d("stop", "bye bye");
-                // mAppRunner.byebye();
+                MLog.e("finally", "bye bye");
             }
         }
     }

@@ -84,8 +84,6 @@ public class PConsole extends ProtoBase {
     }
 
     public PConsole p_error(int type, Object outputs) {
-        // MLog.d("qq", "" + type);
-
         switch (type) {
             case AppRunnerInterpreter.RESULT_ERROR:
                 base_log("log_error", outputs);

@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui;
+package io.phonk.gui.info;
 
 import android.os.Bundle;
 import android.view.View;

@@ -28,8 +28,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import io.phonk.gui.UpdateActivity;
-import io.phonk.gui.WelcomeActivity;
+import io.phonk.gui.info.UpdateActivity;
+import io.phonk.gui.welcome.WelcomeActivity;
 
 public class LauncherActivity extends Activity {
 

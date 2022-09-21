@@ -20,7 +20,7 @@
  *
  */
 
-package io.phonk.gui.filepreviewer;
+package io.phonk.gui.filemanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

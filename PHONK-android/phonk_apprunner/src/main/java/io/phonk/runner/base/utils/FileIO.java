@@ -317,7 +317,6 @@ public class FileIO {
         try {
             appSpecificInternalDirUuid = storageManager.getUuidForPath(c.getFilesDir());
             long availableBytes = storageManager.getAllocatableBytes(appSpecificInternalDirUuid);
-            MLog.d(TAG, "qqq" + FileUtils.byteCountToDisplaySize(availableBytes));
         } catch (IOException e) {
             e.printStackTrace();
         }

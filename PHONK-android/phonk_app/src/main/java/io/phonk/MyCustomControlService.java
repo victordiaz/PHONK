@@ -108,7 +108,7 @@ public class MyCustomControlService extends ControlsProviderService {
 
         // For each controlId in controlIds
         for (String controlId : controlIds) {
-            MLog.d(TAG, "qqq" + controlId);
+            MLog.d(TAG, "controlId" + controlId);
 
             Project p = new Project(controlId);
 
@@ -145,8 +145,7 @@ public class MyCustomControlService extends ControlsProviderService {
          */
         Project p = new Project(controlId);
 
-        MLog.d("qq", "" + controlAction.getActionType());
-        MLog.d("qq", "" + controlAction.getActionType());
+        MLog.d("getActionType", "" + controlAction.getActionType());
 
         if (controlAction instanceof FloatAction) {
             FloatAction floatAction = (FloatAction) controlAction;

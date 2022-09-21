@@ -72,8 +72,8 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
         this.mData = data;
 
         ArrayList<String> data_ = new ArrayList<>();
-        data_.add("qq1");
-        data_.add("qq2");
+        data_.add("1");
+        data_.add("2");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, data_);
         // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -273,8 +273,6 @@ public class AppRunnerActivity extends BaseActivity {
     }
 
     private void addDebugFragment() {
-        MLog.d("qq", "adding debug fragment");
-
         mDebugFragment = DebugFragment.newInstance();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         FrameLayout fl = findViewById(R.id.debug_fragment);
@@ -542,7 +540,6 @@ public class AppRunnerActivity extends BaseActivity {
         i.putExtra("data", data);
         sendBroadcast(i);
 
-        MLog.d("qq action", action + " " + data);
         if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible)
             addDebugFragment();
         else if (action == "show") addDebugFragment();

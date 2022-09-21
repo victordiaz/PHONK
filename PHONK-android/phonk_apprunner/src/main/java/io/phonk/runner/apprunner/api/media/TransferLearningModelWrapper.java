@@ -62,7 +62,7 @@ public class TransferLearningModelWrapper implements Closeable {
                 try {
                     model.train(1, lossConsumer).get();
                 } catch (ExecutionException e) {
-                    MLog.d("qq", "cannot train");
+                    MLog.d("TF", "cannot train");
                     // throw new RuntimeException("Exception occurred during model training", e.getCause());
                 } catch (InterruptedException e) {
                     // no-op

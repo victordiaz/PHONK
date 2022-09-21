@@ -45,8 +45,6 @@ public class PSqLite extends ProtoBase {
     public PSqLite(AppRunner appRunner, String dbName) {
         super(appRunner);
 
-        MLog.d(TAG, "qq3 " + getActivity());
-
         open(dbName);
     }
 

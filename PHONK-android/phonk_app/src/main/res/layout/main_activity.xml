@@ -132,21 +132,6 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/appintro"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:padding="0dp"
-        android:visibility="gone">
-
-        <include
-            layout="@layout/appintro"
-            tools:visibility="visible" />
-    </RelativeLayout>
-
     <FrameLayout
         android:layout_below="@id/header"
         android:layout_marginTop="0dp"

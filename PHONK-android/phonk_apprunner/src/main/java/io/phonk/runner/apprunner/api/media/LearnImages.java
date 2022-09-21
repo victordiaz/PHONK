@@ -81,12 +81,12 @@ public class LearnImages {
             return;
         }
 
-        MLog.d("qq", "mCameraFramesSize: " + mCameraFrames.size());
+        MLog.d(TAG, "mCameraFramesSize: " + mCameraFrames.size());
         if (mCameraFrames.size() < 10) {
-            MLog.d("qq", "add frame");
+            MLog.d(TAG, "add frame");
             mCameraFrames.add(f);
         } else {
-            MLog.d("qq", "drop frame");
+            MLog.d(TAG, "drop frame");
             mCameraFrames.poll();
         }
     }
@@ -113,7 +113,7 @@ public class LearnImages {
     }
 
     public void inferenceAnalyzer() {
-        MLog.d("qq", "analyzing");
+        MLog.d(TAG, "analyzing");
 
         // Learn frames size
         Frame learnFrame = mLearnFrames.poll();
@@ -170,7 +170,7 @@ public class LearnImages {
         // dont enable training if not enought samples
         if (mTlModel.getNumberSamples() < mTlModel.getTrainBatchSize()) return;
 
-        mTlModel.enableTraining((epoch, loss) -> MLog.d("qq", "" + epoch + " " + loss));
+        mTlModel.enableTraining((epoch, loss) -> MLog.d(TAG, "" + epoch + " " + loss));
     }
 
     public void disableTraining() {
@@ -260,7 +260,6 @@ public class LearnImages {
         int height = parameters.getPreviewSize().height;
 
         // get support preview format
-        // MLog.d("qq", );
         YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

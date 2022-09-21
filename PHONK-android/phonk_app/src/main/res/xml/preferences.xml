@@ -174,7 +174,7 @@
         <Preference
             android:key="ftp_enabled"
             android:checked="false"
-            android:summary="Protocoder starts with a ftp server in the port 8589 that can be used to transfer files to it"
+            android:summary="PHONK starts with a ftp server in the port 8589 that can be used to transfer files to it"
             android:title="Enable ftp" />
     </PreferenceCategory>
     -->
