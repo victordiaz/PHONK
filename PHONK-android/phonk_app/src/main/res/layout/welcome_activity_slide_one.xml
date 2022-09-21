@@ -24,7 +24,6 @@
 
 <!-- 1 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/gravity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -35,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome_1_title"
-        style="@style/WelcomeTextTitle"></TextView>
+        style="@style/WelcomeTextTitle" />
 
     <TextView
         android:id="@+id/welcome_body"

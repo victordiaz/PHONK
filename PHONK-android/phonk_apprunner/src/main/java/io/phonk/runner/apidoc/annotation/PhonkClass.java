@@ -35,7 +35,10 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface PhonkClass {
     String description() default "";
+
     String example() default "";
+
     String mergeWith() default "";
+
     String mergeFrom() default "";
 }

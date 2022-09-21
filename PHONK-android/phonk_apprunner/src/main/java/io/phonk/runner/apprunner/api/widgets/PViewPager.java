@@ -22,38 +22,35 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.api.PViewsArea;
 
 @PhonkClass
 public class PViewPager extends ViewPager implements PViewMethodsInterface {
-    MyAdapter mAdapter;
+    final MyAdapter mAdapter;
 
     // this is a props proxy for the user
-    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
 
     // the props are transformed / accessed using the styler object
-    public Styler styler;
+    public final Styler styler;
 
     public PViewPager(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
         styler = new Styler(appRunner, this, props);
         props.eventOnChange = false;
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
         setPageMargin(0);
@@ -74,8 +71,8 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
         return this;
     }
 
-    class MyAdapter extends PagerAdapter {
-        ArrayList<View> list = new ArrayList<>();
+    static class MyAdapter extends PagerAdapter {
+        final ArrayList<View> list = new ArrayList<>();
 
         MyAdapter() {
         }
@@ -109,7 +106,9 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
     }
 
     @Override
-    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
     @Override
     public void setProps(Map style) {

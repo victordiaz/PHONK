@@ -41,9 +41,9 @@ public class VideoPlayerFragment extends VideoView {
 
     private View v;
     private VideoView mVideoView;
-    Vector<VideoListener> listeners = new Vector<VideoListener>();
+    final Vector<VideoListener> listeners = new Vector<>();
     Runnable r;
-    protected Handler handler;
+    protected final Handler handler;
     protected MediaPlayer mp_;
     private final Context c;
 
@@ -88,9 +88,6 @@ public class VideoPlayerFragment extends VideoView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        // super.onDestroy();
-
-        // mp_.stop();
         for (VideoListener l : listeners) {
             l = null;
         }
@@ -130,9 +127,6 @@ public class VideoPlayerFragment extends VideoView {
                 mp_ = mp;
                 mp_.setLooping(true);
 
-                // mVideoView.animate().rotation(200).alpha((float) 0.5)
-                // .scaleX(0.2f).scaleY(0.2f).setDuration(2000);
-
                 r = new Runnable() {
 
                     @Override
@@ -141,7 +135,7 @@ public class VideoPlayerFragment extends VideoView {
                             try {
                                 l.onTimeUpdate(mp_.getCurrentPosition(), mp_.getDuration());
 
-                            } catch (Exception e) {
+                            } catch (Exception ignored) {
                             }
 
                         }

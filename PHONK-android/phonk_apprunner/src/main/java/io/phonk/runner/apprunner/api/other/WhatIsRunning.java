@@ -31,10 +31,10 @@ import io.phonk.runner.base.utils.MLog;
 public class WhatIsRunning {
 
     private static final String TAG = WhatIsRunning.class.getSimpleName();
-    private Vector<Object> runners;
+    private final Vector<Object> runners;
 
     public WhatIsRunning() {
-        runners = new Vector<Object>();
+        runners = new Vector<>();
         // MLog.d(TAG, "instancing WhatIsRunning...");
     }
 
@@ -44,8 +44,8 @@ public class WhatIsRunning {
 
             try {
                 method = o.getClass().getMethod("__stop");
-            } catch (SecurityException e) {
-            } catch (NoSuchMethodException e) {
+            } catch (SecurityException ignored) {
+            } catch (NoSuchMethodException ignored) {
             }
 
             MLog.d(TAG, "stopping " + o.getClass().getCanonicalName() + " " + o + " " + method);

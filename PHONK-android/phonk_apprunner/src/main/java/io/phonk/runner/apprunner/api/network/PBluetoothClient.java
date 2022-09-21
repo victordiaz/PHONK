@@ -59,7 +59,7 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
 
     private BluetoothDevice mDevice;
 
-    private int status;
+    private final int status;
 
 
     public PBluetoothClient(PBluetooth pBluetooth, AppRunner appRunner) {

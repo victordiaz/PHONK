@@ -42,13 +42,13 @@ public class PCustomView extends View implements PViewMethodsInterface {
     private PCanvas mPCanvas;
 
     // this is a props proxy for the user
-    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
 
     // the props are transformed / accessed using the styler object
-    public Styler styler;
+    public final Styler styler;
 
     @PhonkField(description = "Time interval between draws", example = "")
-    private int drawInterval = 35;
+    private final int drawInterval = 35;
     protected boolean mAutoDraw = false;
     private PLooper loop;
     protected int canvasWidth;
@@ -73,20 +73,14 @@ public class PCustomView extends View implements PViewMethodsInterface {
         styler = new Styler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("background", "#00FFFFFF");
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
-        // this.setZOrderOnTop(true); //necessary
-        // getHolder().setFormat(PixelFormat.TRANSPARENT);
-        // prepareLooper();
         init();
     }
 
     private void init() {
-        // mTransparentPaint = new Paint();
-        // mTransparentPaint.setStyle(Paint.Style.FILL);
-        // mTransparentPaint.setColor(Color.BLUE);
         mPCanvas = new PCanvas(mAppRunner);
     }
 
@@ -96,51 +90,12 @@ public class PCustomView extends View implements PViewMethodsInterface {
         invalidate();
     }
 
-    /*
-    private void prepareLooper() {
-        loop = mAppRunner.pUtil.loop(drawInterval, new PLooper.LooperCB() {
-            @Override
-            public void event() {
-                if (draw != null) {
-                    draw.event(mPCanvas);
-                    invalidate();
-                }
-            }
-        });
-        loop.speed(drawInterval);
-    }
-
-    private void startLooper() {
-        loop.start();
-        mAutoDraw = true;
-    }
-
-    public void drawInterval(int ms) {
-        loop.speed(ms);
-    }
-
-    public void post_init() {
-        mPCanvas = new Canvas();
-
-        if (setup != null) setup.event(PCustomView.this);
-        // startLooper();
-    }
-    */
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         MLog.d(TAG, "new size --> " + w + " " + h);
         mPCanvas.prepare(w, h);
 
-        /*
-        if (!absoluteMode) {
-            width = w;
-            height = h;
-            post_init();
-            invalidate();
-        }
-        */
     }
 
     public void onDraw(OnDrawCallback callback) {
@@ -153,34 +108,16 @@ public class PCustomView extends View implements PViewMethodsInterface {
         super.onDraw(canvas);
         MLog.d(TAG, "onDraw");
 
-        /*
-        mCanvasBuffer.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), mTransparentPaint);
-        canvas.drawBitmap(mTransparentBmp,
-                new Rect(0,0, mTransparentBmp.getWidth(), mTransparentBmp.getHeight()),
-                new Rect(0,0, mTransparentBmp.getWidth(), mTransparentBmp.getHeight()), null);
-
-        */
-
         mPCanvas.setCanvas(canvas);
         draw.event(mPCanvas);
         mPCanvas.drawAll();
-        // if (!mAutoDraw && draw != null) draw.event(mPCanvas);
-        // layers.drawAll(canvas);
     }
-
-    /*
-    @ProtoMethod(description = "For each change in the canvas it will redraw it self. Have in mind that mainly to try out things as is not very fast.", example = "")
-    @ProtoMethodParam(params = {"boolean"})
-    public PCustomView autoDraw(boolean b) {
-        mAutoDraw = b;
-        loop.start();
-        return this;
-    }
-    */
 
 
     @Override
-    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
     @Override
     public void setProps(Map style) {

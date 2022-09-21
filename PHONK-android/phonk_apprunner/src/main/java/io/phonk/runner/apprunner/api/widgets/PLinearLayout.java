@@ -39,16 +39,16 @@ public class PLinearLayout extends LinearLayout {
     private final AppRunner mAppRunner;
     private final LayoutParams mLp;
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public Styler styler;
-    private HashMap<String, View> mViews = new HashMap<>();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final Styler styler;
+    private final HashMap<String, View> mViews = new HashMap<>();
 
     public PLinearLayout(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
         styler = new Styler(appRunner, this, props);
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         styler.apply();
 
         mLp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
@@ -59,10 +59,8 @@ public class PLinearLayout extends LinearLayout {
 
     public void orientation(String orientation) {
         int mode = VERTICAL;
-        switch (orientation) {
-            case "horizontal":
-                mode = HORIZONTAL;
-                break;
+        if ("horizontal".equals(orientation)) {
+            mode = HORIZONTAL;
         }
         setOrientation(mode);
 

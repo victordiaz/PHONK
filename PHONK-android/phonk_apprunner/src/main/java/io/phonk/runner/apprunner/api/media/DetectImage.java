@@ -70,7 +70,7 @@ public class DetectImage {
         final List<Classifier.Recognition> results = detector.recognizeImage(bitmap);
         for (Classifier.Recognition result : results) {
             if (result.getConfidence() > 0.5) {
-                MLog.d("qqqqq", result.getId() + " " + " " + result.getTitle() + " " + result.getConfidence());
+                MLog.d("recognition", result.getId() + " " + " " + result.getTitle() + " " + result.getConfidence());
             }
         }
     }

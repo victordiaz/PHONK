@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.content.Context;
 import android.widget.RadioGroup;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -42,8 +41,6 @@ public class PRadioButtonGroup extends RadioGroup {
         int o = RadioGroup.HORIZONTAL;
         switch (orientation) {
             case "horizontal":
-                o = RadioGroup.VERTICAL;
-                break;
             case "vertical":
                 o = RadioGroup.VERTICAL;
                 break;

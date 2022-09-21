@@ -24,12 +24,12 @@ package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.core.widget.TextViewCompat;
 
@@ -41,9 +41,9 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
-public class PText extends TextView implements PViewMethodsInterface, PTextInterface {
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public TextStyler styler;
+public class PText extends androidx.appcompat.widget.AppCompatTextView implements PViewMethodsInterface, PTextInterface {
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final TextStyler styler;
     private Typeface currentFont;
 
     public PText(AppRunner appRunner, Map initProps) {
@@ -55,7 +55,7 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         // textStyle.put("textSize", textStyle, 12);
         props.put("textAlign", props, "left");
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
     }
@@ -98,17 +98,16 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
     @PhonkMethod(description = "Changes the text to the given text", example = "")
     @PhonkMethodParam(params = {"text, text, ..., text"})
     public PText text(String... txt) {
-        String joinedText = "";
-        for (int i = 0; i < txt.length; i++) {
-            joinedText += " " + txt[i];
+        StringBuilder joinedText = new StringBuilder();
+        for (String s : txt) {
+            joinedText.append(" ").append(s);
         }
-        this.setText(joinedText);
+        this.setText(joinedText.toString());
 
         return this;
     }
 
 
-    @SuppressWarnings("deprecation")
     @PhonkMethod(description = "Changes the text to the given html text", example = "")
     @PhonkMethodParam(params = {"htmlText"})
     public PText html(String html) {
@@ -149,6 +148,8 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
     @PhonkMethod(description = "Fits the text to the bounding box", example = "")
     @PhonkMethodParam(params = {"w", "h"})
     public PText autoFitText(boolean b) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return this;
+
         if (b) TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_UNIFORM);
         else TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_NONE);
         return this;
@@ -238,7 +239,7 @@ public class PText extends TextView implements PViewMethodsInterface, PTextInter
         return props;
     }
 
-    class TextStyler extends Styler {
+    static class TextStyler extends Styler {
         TextStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
         }

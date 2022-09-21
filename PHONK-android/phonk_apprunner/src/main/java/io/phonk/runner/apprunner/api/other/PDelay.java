@@ -32,7 +32,7 @@ import io.phonk.runner.apprunner.AppRunner;
 public class PDelay implements WhatIsRunningInterface {
     private final AppRunner mAppRunner;
     private final int delay;
-    private DelayCB mCallbackfn;
+    private final DelayCB mCallbackfn;
     Runnable task;
     private final Handler handler;
     boolean mCancelJob = false;

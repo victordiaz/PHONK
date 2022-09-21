@@ -48,7 +48,7 @@ public class AppRunnerInterpreter {
 
     //rhino stuff
     private static ScriptContextFactory mScriptContextFactory;
-    AppRunner mAppRunner;
+    final AppRunner mAppRunner;
     private Context rhino = null;
     private Scriptable scope;
     private InterpreterInfo mInterpreterListener;
@@ -96,9 +96,6 @@ public class AppRunnerInterpreter {
             processResult(RESULT_ERROR, e.getMessage());
         } catch (Exception e) {
             processResult(RESULT_ERROR, e.getMessage());
-        } finally {
-            // processResult(RESULT_ERROR, "kabum!");
-            // stop();
         }
     }
 
@@ -112,8 +109,7 @@ public class AppRunnerInterpreter {
     }
 
     public Object getJsFunction(String name) {
-        Object function = scope.get(name, scope);
-        return function;
+        return scope.get(name, scope);
     }
 
     public void callJsFunction(String name, Object... params) {
@@ -142,8 +138,6 @@ public class AppRunnerInterpreter {
                 break;
             //basically we throw here the exception errors
             case RESULT_ERROR:
-                if (mInterpreterListener != null) mInterpreterListener.onError(resultType, message);
-                break;
             case RESULT_PERMISSION_ERROR:
                 if (mInterpreterListener != null) mInterpreterListener.onError(resultType, message);
                 break;
@@ -181,7 +175,7 @@ public class AppRunnerInterpreter {
         Context.exit();
     }
 
-    public class ScriptContextFactory extends ContextFactory {
+    public static class ScriptContextFactory extends ContextFactory {
         private AppRunnerInterpreter mAppRunnerInterpretter;
 
         ScriptContextFactory() {
@@ -193,7 +187,6 @@ public class AppRunnerInterpreter {
 
             switch (featureIndex) {
                 case Context.FEATURE_STRICT_EVAL:
-                    return true;
 
                 case Context.FEATURE_STRICT_VARS:
                     return true;
@@ -212,7 +205,6 @@ public class AppRunnerInterpreter {
                 return super.doTopCall(callable, cx, scope, thisObj, args);
             } catch (WrappedException e) {
                 MLog.e(TAG, "ContextFactory catched error: " + e);
-                // mAppRunnerInterpretter.stop();
 
                 if (e.getWrappedException() instanceof PermissionNotGrantedException) {
                     String message = ((Throwable) e).getMessage();
@@ -230,18 +222,13 @@ public class AppRunnerInterpreter {
                 String message = ((Throwable) e).getMessage();
                 message = message.replace("io.phonk.runner.apprunner.api.P", "");
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, message);
-                // mAppRunnerInterpretter.stop();
                 return e;
             } catch (org.mozilla.javascript.EvaluatorException e) {
                 mAppRunnerInterpretter.processResult(RESULT_ERROR, e.getMessage());
 
                 return e;
             } finally {
-                // observingDebugger.setDisconnected(true);
-                // mAppRunnerInterpretter.stop();
-                // observingDebugger.setDisconnected(true);
-                MLog.d("stop", "bye bye");
-                // mAppRunner.byebye();
+                MLog.e("finally", "bye bye");
             }
         }
     }

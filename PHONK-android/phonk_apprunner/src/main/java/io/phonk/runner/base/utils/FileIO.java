@@ -22,7 +22,6 @@
 
 package io.phonk.runner.base.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.storage.StorageManager;
@@ -37,28 +36,19 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import io.phonk.runner.apprunner.AppRunnerSettings;
 
 public class FileIO {
     private static final String TAG = FileIO.class.getSimpleName();
@@ -119,13 +109,6 @@ public class FileIO {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            MLog.d(TAG, "deleting directory " + dir.getAbsolutePath());
-//			String[] children = dir.list();
-//			for (String element : children) {
-//				File f = new File(dir, element);
-//				f.delete();
-//				MLog.d(TAG, "deleting directory done" + f.getAbsolutePath());
-//			}
         } else {
             dir.delete();
         }
@@ -144,7 +127,7 @@ public class FileIO {
                 } else {
                     // MLog.d("DeleteRecursive", "Delete File" + temp.getPath());
                     boolean b = temp.delete();
-                    if (b == false) {
+                    if (!b) {
                         // MLog.d("DeleteRecursive", "DELETE FAIL");
                     }
                 }
@@ -155,17 +138,8 @@ public class FileIO {
     }
 
     public static void copyFile(File src, File dst) throws IOException {
-        FileChannel inChannel = new FileInputStream(src).getChannel();
-        FileChannel outChannel = new FileOutputStream(dst).getChannel();
-        try {
+        try (FileChannel inChannel = new FileInputStream(src).getChannel(); FileChannel outChannel = new FileOutputStream(dst).getChannel()) {
             inChannel.transferTo(0, inChannel.size(), outChannel);
-        } finally {
-            if (inChannel != null) {
-                inChannel.close();
-            }
-            if (outChannel != null) {
-                outChannel.close();
-            }
         }
     }
 
@@ -185,12 +159,10 @@ public class FileIO {
                 }
 
                 in.close();
-            } catch (IOException ex) {
+            } catch (IOException ignored) {
             }
             out = buf.toString();
-        } catch (IOException e) {
-            // MLog.d(TAG, "no file in " + path);
-            // e.printStackTrace();
+        } catch (IOException ignored) {
         }
         return out;
     }
@@ -215,8 +187,7 @@ public class FileIO {
 
     static public List seeZipContent(String file) throws ZipException {
         ZipFile zipFile = new ZipFile(file);
-        List list = zipFile.getFileHeaders();
-        return list;
+        return zipFile.getFileHeaders();
     }
 
     static public void extractZip(String zipFile, String location) throws IOException {
@@ -233,8 +204,7 @@ public class FileIO {
             if (!f.isDirectory()) {
                 f.mkdirs();
             }
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), BUFFER_SIZE));
-            try {
+            try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), BUFFER_SIZE))) {
                 ZipEntry ze = null;
                 while ((ze = zin.getNextEntry()) != null) {
                     String path = location + ze.getName();
@@ -268,8 +238,6 @@ public class FileIO {
                         }
                     }
                 }
-            } finally {
-                zin.close();
             }
         } catch (Exception e) {
             Log.e(TAG, "Unzip exception", e);
@@ -349,7 +317,6 @@ public class FileIO {
         try {
             appSpecificInternalDirUuid = storageManager.getUuidForPath(c.getFilesDir());
             long availableBytes = storageManager.getAllocatableBytes(appSpecificInternalDirUuid);
-            MLog.d(TAG, "qqq" + FileUtils.byteCountToDisplaySize(availableBytes));
         } catch (IOException e) {
             e.printStackTrace();
         }

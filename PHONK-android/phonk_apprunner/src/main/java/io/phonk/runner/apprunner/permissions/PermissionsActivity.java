@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.phonk.runner.base.BaseActivity;
@@ -72,11 +73,9 @@ public class PermissionsActivity extends BaseActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     private void checkPermission(boolean request, String... p) {
-        List<String> requiredPermissions = new ArrayList<String>();
+        List<String> requiredPermissions = new ArrayList<>();
 
-        for (int i = 0; i < p.length; i++) {
-            requiredPermissions.add(p[i]);
-        }
+        requiredPermissions.addAll(Arrays.asList(p));
 
         // check if permission is already granted
         for (int i = 0; i < requiredPermissions.size(); i++) {
@@ -94,7 +93,7 @@ public class PermissionsActivity extends BaseActivity {
     }
 
     private void checkAllPermissions(boolean request) {
-        List<String> requiredPermissions = new ArrayList<String>();
+        List<String> requiredPermissions = new ArrayList<>();
 
         requiredPermissions.add(Manifest.permission.INTERNET);
         requiredPermissions.add(Manifest.permission.ACCESS_WIFI_STATE);
@@ -111,7 +110,9 @@ public class PermissionsActivity extends BaseActivity {
         requiredPermissions.add(Manifest.permission.NFC);
         requiredPermissions.add(Manifest.permission.RECEIVE_SMS);
         requiredPermissions.add(Manifest.permission.SEND_SMS);
-        requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            requiredPermissions.add(Manifest.permission.INSTALL_SHORTCUT);
+        }
         requiredPermissions.add(Manifest.permission.CAMERA);
         // requiredPermissions.add(Manifest.permission.FLASHLIGHT);
         requiredPermissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -137,36 +138,16 @@ public class PermissionsActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        boolean isPermissionWriteExternalGranted = false;
-
-        switch (requestCode) {
-            case REQUEST_CODE_SOME_FEATURES_PERMISSIONS: {
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        MLog.d("Permissions", "Permission Granted: " + permissions[i]);
-                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                        MLog.d("Permissions", "Permission Denied: " + permissions[i]);
-                    }
-
-                    if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        isPermissionWriteExternalGranted = true;
-                        MLog.d(TAG, "granted!");
-                    }
-                    // if is already granted we remove it from the list
-                    // requiredPermissions.remove(i);
-                }
-
-                // if ok go next step otherwise repeat step
-                if (isPermissionWriteExternalGranted) {
-                    // goToStep(STEP_ASK_PERMISSIONS_OK);
-                } else {
-                    // goToStep(STEP_ASK_PERMISSIONS_ERROR);
+        if (requestCode == REQUEST_CODE_SOME_FEATURES_PERMISSIONS) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    MLog.d("Permissions", "Permission Granted: " + permissions[i]);
+                } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    MLog.d("Permissions", "Permission Denied: " + permissions[i]);
                 }
             }
-            break;
-            default: {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

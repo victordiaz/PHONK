@@ -30,9 +30,9 @@ import java.io.IOException;
 
 public class AppRunnerSettings {
 
-    public static boolean DEBUG = false;
+    public static final boolean DEBUG = false;
 
-    public static String MAIN_FILENAME = "main.js";
+    public static final String MAIN_FILENAME = "main.js";
     public static final String CONF_FILENAME = "app.conf";
     public final static String PHONK_FOLDER = "phonk_io";
     public static final String USER_PROJECTS_FOLDER = "playground";
@@ -42,7 +42,7 @@ public class AppRunnerSettings {
     public static final String LOGS_FOLDER = "logs";
 
     public static final String LIBRARIES_FOLDER = "libraries";
-    public static int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static final int MIN_SUPPORTED_VERSION = Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     public static int animGeneralSpeed = 500;
     public static int SERVER_PORT;
 

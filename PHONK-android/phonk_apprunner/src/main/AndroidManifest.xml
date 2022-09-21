@@ -56,6 +56,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -73,7 +74,8 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECORD_VIDEO" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
 
     <application
         android:allowBackup="false"
@@ -86,7 +88,8 @@
             android:windowSoftInputMode="stateUnchanged"
             android:theme="@style/PhonkAppRunnerTheme"
             android:label="@string/runner_name"
-            android:launchMode="standard">
+            android:launchMode="standard"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="io.phonk.runner.AppRunnerActivity" />
@@ -101,12 +104,12 @@
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.CLOSE"></action>
+                <action android:name="io.phonk.runner.intent.CLOSE" />
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
+                <action android:name="io.phonk.runner.intent.EXECUTE_CODE" />
             </intent-filter>
         </activity>
 
@@ -118,20 +121,21 @@
         <service
             android:name="io.phonk.runner.AppRunnerService"
             android:process=":AppRunner"
-            android:label="AppRunnerService" >
+            android:label="AppRunnerService"
+            android:exported="true">
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.CLOSE"></action>
+                <action android:name="io.phonk.runner.intent.CLOSE" />
             </intent-filter>
 
             <!-- intent to close the runner -->
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.EXECUTE_CODE"></action>
+                <action android:name="io.phonk.runner.intent.EXECUTE_CODE" />
             </intent-filter>
 
             <intent-filter>
-                <action android:name="io.phonk.runner.intent.WEBEDITOR_RECEIVER"></action>
+                <action android:name="io.phonk.runner.intent.WEBEDITOR_RECEIVER" />
             </intent-filter>
 
         </service>
@@ -141,15 +145,19 @@
             android:name="org.puredata.android.service.PdService"
             android:process=":AppRunner"/>
 
-        <service android:name="io.phonk.runner.base.services.NotificationService"
-                 android:label="@string/app_name"
-                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+        <service
+            android:name="io.phonk.runner.base.services.NotificationService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
 
-        <receiver android:name="io.phonk.runner.base.services.SmsReceiver" >
+        <receiver
+            android:name="io.phonk.runner.base.services.SmsReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>

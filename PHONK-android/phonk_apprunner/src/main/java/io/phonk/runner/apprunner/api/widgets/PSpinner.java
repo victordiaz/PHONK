@@ -41,15 +41,12 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner implements PViewMethodsInterface, PTextInterface {
     private String[] mData;
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
     // public Styler styler;
     private Typeface mFont;
 
     public PSpinner(AppRunner appRunner) {
         super(appRunner.getAppContext());
-        // styler = new Styler(appRunner, this, props);
-        // styler.apply();
-        // setTypeface(mFont);
     }
 
     public PSpinner onSelected(final ReturnInterface callback) {
@@ -75,10 +72,10 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
         this.mData = data;
 
         ArrayList<String> data_ = new ArrayList<>();
-        data_.add("qq1");
-        data_.add("qq2");
+        data_.add("1");
+        data_.add("2");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, data_);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, data_);
         // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.setAdapter(adapter);
         adapter.notifyDataSetChanged();

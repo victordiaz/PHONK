@@ -32,6 +32,16 @@
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:colorPrimary">@color/phonk_colorPrimary</item>
 
-    </style>-->
+    </style>
+
+    <style name="PrefTheme" parent="@style/PreferenceThemeOverlay">
+        <item name="android:textColor">@color/theme_bg_blue</item>
+        <item name="android:fontFamily">@string/primary_font</item>
+        <item name="editTextPreferenceStyle">@style/editTextPref</item>
+        <item name="preferenceCategoryTitleTextAppearance">@style/catTitle</item>
+
+        <item name="android:colorAccent">@color/theme_bg_magenta</item>
+    </style>
+    -->
 
 </resources>

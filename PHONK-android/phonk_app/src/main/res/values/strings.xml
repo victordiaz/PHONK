@@ -48,7 +48,7 @@
     <string name="webeditor">Open in WebEditor</string>
     <string name="delete">Delete</string>
     <string name="open">Open</string>
-    <string name="open_with">Open With...</string>
+    <string name="open_with">Open With…</string>
     <string name="cut_file">Cut File</string>
     <string name="copy_file">Copy File</string>
 
@@ -56,7 +56,7 @@
     <string name="share">Share main.js code</string>
     <string name="share_phonk_file">Share project as .phonk file</string>
     <string name="show_project_info">Show Project info</string>
-    <string name="send_to">Send to...</string>
+    <string name="send_to">Send to…</string>
     <string name="beam">NFC Share</string>
     <string name="projects_zero">\nPress + to get started or slide to the right to check the examples</string>
     <string name="files_zero">\nNo files in the project</string>
@@ -144,9 +144,9 @@
     <string name="setting_show_html5_mode_title">WebIDE as main interface</string>
     <string name="setting_show_html5_mode">Useful for tablets and ChromeOS devices</string>
     <string name="setting_show_webserver_title">Webserver port</string>
-    <string name="setting_show_webserver"></string>
+    <string name="setting_show_webserver" />
     <string name="setting_show_websocket_title">Websocket port</string>
-    <string name="setting_show_websocket"></string>
+    <string name="setting_show_websocket" />
     <string name="setting_device_id_title"> Device ID </string>
     <string name="setting_device_id_description">You can access this ID from your script. Handy when you code many devices</string>
 

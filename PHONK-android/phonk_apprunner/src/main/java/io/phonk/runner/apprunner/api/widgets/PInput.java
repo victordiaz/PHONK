@@ -42,15 +42,14 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PInput extends EditText implements PViewMethodsInterface, PTextInterface {
+public class PInput extends androidx.appcompat.widget.AppCompatEditText implements PViewMethodsInterface, PTextInterface {
     private final AppRunner mAppRunner;
-    private EditText mInput;
+    private final EditText mInput;
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public InputStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final InputStyler styler;
     private Typeface mFont;
 
     public PInput(AppRunner appRunner, Map initProps) {
@@ -73,7 +72,7 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("hintColor", props, appRunner.pUi.theme.get("secondaryShade"));
         props.put("hint", props, "");
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -88,12 +87,6 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
     }
 
     public void text(String txt) {
-        /*
-        String joinedText = "";
-        for (int i = 0; i < txt.length; i++) {
-            joinedText += txt[i];
-        }
-        */
         this.setText(txt);
     }
 
@@ -136,13 +129,13 @@ public class PInput extends EditText implements PViewMethodsInterface, PTextInte
     }
 
     public View multiline(boolean isMultiline) {
-      if (isMultiline) {
-        this.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        this.setSingleLine(false);
-        this.setGravity(Gravity.TOP);
-      }
-      // this.setInputType(InputType.TYPE_CLASS_NUMBER);
-      return this;
+        if (isMultiline) {
+            this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            this.setSingleLine(false);
+            this.setGravity(Gravity.TOP);
+        }
+        // this.setInputType(InputType.TYPE_CLASS_NUMBER);
+        return this;
     }
 
     @Override

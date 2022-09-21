@@ -28,6 +28,8 @@ import android.graphics.Typeface;
 import android.view.Gravity;
 import android.widget.Switch;
 
+import androidx.appcompat.widget.SwitchCompat;
+
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -39,9 +41,9 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 @SuppressLint("NewApi")
 @PhonkClass
-public class PSwitch extends Switch implements PViewMethodsInterface {
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public Styler styler;
+public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final Styler styler;
     private Typeface currentFont;
 
     public PSwitch(AppRunner appRunner) {
@@ -100,12 +102,4 @@ public class PSwitch extends Switch implements PViewMethodsInterface {
         return props;
     }
 
-    /*
-    public PSwitchView center(String how) {
-        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_START);
-        this.setTextAlignment(TEXT_ALIGNMENT_CENTER);
-        this.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
-        this.setTextAlignment(TEXT_ALIGNMENT);
-    }
-    */
 }

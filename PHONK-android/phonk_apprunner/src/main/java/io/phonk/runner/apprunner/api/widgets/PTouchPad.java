@@ -40,8 +40,8 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PTouchPad.class.getSimpleName();
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public TouchPadStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final TouchPadStyler styler;
     private PhonkNativeArray touches;
     private ReturnInterface onTouchCallback;
     private int mWidth;
@@ -63,7 +63,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         props.put("padColor", props, appRunner.pUi.theme.get("primary"));
         props.put("padBorderColor", props, appRunner.pUi.theme.get("primary"));
         props.put("padBorderSize", props, appRunner.pUtil.dpToPixels(2));
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -122,7 +122,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    PLooper looper = new PLooper(mAppRunner, 5, () -> {
+    final PLooper looper = new PLooper(mAppRunner, 5, () -> {
         invalidate();
         // MLog.d("touches", "size " + touches.size());
     });
@@ -133,7 +133,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         }
     }
 
-    OnDrawCallback mydraw = new OnDrawCallback() {
+    final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
             mWidth = c.width;
@@ -172,8 +172,6 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     }
 
     public void value(int index, String action, float valX, float valY) {
-        float mappedXVal = valX;
-        float mappedYVal = valY;
 
         float unmappedXVal = CanvasUtils.map(valX, rangeXFrom, rangeXTo, 0, mWidth);
         float unmappedYVal = CanvasUtils.map(valY, rangeYFrom, rangeYTo, 0, mHeight);
@@ -198,7 +196,7 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     }
 
 
-    class TouchPadStyler extends Styler {
+    static class TouchPadStyler extends Styler {
         float padSize;
         int padColor;
         int padBorderColor;

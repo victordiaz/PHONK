@@ -50,7 +50,6 @@ import org.osmdroid.views.overlay.Polyline;
 import java.util.ArrayList;
 import java.util.Map;
 
-import io.phonk.runner.BuildConfig;
 import io.phonk.runner.R;
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
@@ -67,18 +66,18 @@ public class PMap extends MapView implements PViewMethodsInterface {
     private IMapController mapController = null;
     private MapView mapView = null;
     // MyLocationNewOverlay myLocationOverlay;
-    ItemizedOverlayWithFocus<OverlayItem> iconOverlay;
+    final ItemizedOverlayWithFocus<OverlayItem> iconOverlay;
     private final boolean firstMarker = false;
     private ArrayList<OverlayItem> markerList = null;
 
-    private AppRunner mAppRunner;
-    private Context mContext;
+    private final AppRunner mAppRunner;
+    private final Context mContext;
 
     // this is a props proxy for the user
-    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
 
     // the props are transformed / accessed using the styler object
-    public Styler styler;
+    public final Styler styler;
 
     public PMap(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -88,7 +87,7 @@ public class PMap extends MapView implements PViewMethodsInterface {
 
         styler = new Styler(appRunner, this, props);
         props.eventOnChange = false;
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -108,27 +107,10 @@ public class PMap extends MapView implements PViewMethodsInterface {
 
         mapController = mapView.getController();
 
-        /*
-        mapView.setMapListener(new DelayedMapListener(new MapListener() {
-            @Override
-            public boolean onZoom(final ZoomEvent e) {
-                // do something
-                MLog.d("map", "zoom " + e.getZoomLevel());
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(final ScrollEvent e) {
-                Log.i("zoom", e.getX() + " " + e.getY());
-                return true;
-            }
-        }, 1000));
-        */
-
-        markerList = new ArrayList<OverlayItem>();
+        markerList = new ArrayList<>();
 
         Drawable icon = mContext.getResources().getDrawable(R.drawable.icon);
-        iconOverlay = new ItemizedOverlayWithFocus<OverlayItem>(markerList,
+        iconOverlay = new ItemizedOverlayWithFocus<>(markerList,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemLongPress(int arg0, OverlayItem arg1) {
@@ -150,30 +132,8 @@ public class PMap extends MapView implements PViewMethodsInterface {
         iconOverlay.setFocusItemsOnTap(true);
 
 
-        // myLocationOverlay = new MyLocationNewOverlay(mContext, mapView);
-        // mapView.getOverlays().add(myLocationOverlay);
         mapView.getOverlays().add(iconOverlay);
 
-        /*
-        mapView.setMapListener(new DelayedMapListener(new MapListener() {
-            @Override
-            public boolean onScroll(ScrollEvent event) {
-                // mapView.getBoundingBox().getCenter();
-
-                return true;
-            }
-
-            @Override
-            public boolean onZoom(ZoomEvent event) {
-                // mapView.getBoundingBox().getCenter();
-
-                return true;
-            }
-        }, 500));
-        */
-
-        // myLocationOverlay.enableMyLocation();
-        // myLocationOverlay.setDrawAccuracyEnabled(true);
     }
 
     /**
@@ -300,11 +260,6 @@ public class PMap extends MapView implements PViewMethodsInterface {
 
         String title = (String) params.get("title");
         if (title != null) m.title(title);
-
-        /*
-        String subTitle = (String) map.get("title");
-        if (subTitle != null) m.setSubDescription(subTitle);
-        */
 
         String description = (String) params.get("description");
         if (description != null) m.description(description);
@@ -473,80 +428,6 @@ public class PMap extends MapView implements PViewMethodsInterface {
      * OSMbonus methods
      */
 
-    /*
-    public void getRoadPath(double lat1, double lon1, double lat2, double lon2) {
-        RoadManager roadManager = new OSRMRoadManager(mContext);
-
-        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-        waypoints.add(new GeoPoint(lat1, lon1));
-        waypoints.add(new GeoPoint(lat2, lon2));
-
-        Road road = roadManager.getRoad(waypoints);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, mContext);
-        roadOverlay.setWidth(2);
-        mapView.getOverlays().add(roadOverlay);
-        mapView.invalidate();
-    }
-
-    public void addGroundOverlay(double lat, double lon) {
-        GroundOverlay myGroundOverlay = new GroundOverlay(mContext);
-        myGroundOverlay.setPosition(new GeoPoint(lat, lon));
-        myGroundOverlay.setImage(getResources().getDrawable(R.drawable.protocoder_icon).mutate());
-        myGroundOverlay.setDimensions(2000.0f);
-        mapView.getOverlays().add(myGroundOverlay);
-        mapView.invalidate();
-    }
-    */
-
-    /*
-    public GeoPoint createPoint(double lat, double lon) {
-        return new GeoPoint(lat, lon);
-    }
-
-    public void loadKml(final String url, final boolean center) {
-        final KmlDocument kmlDocument = new KmlDocument();
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                kmlDocument.parseKMLUrl(url);
-
-                mapView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        FolderOverlay kmlOverlay = (FolderOverlay) kmlDocument.mKmlRoot.buildOverlay(mapView, null, null, kmlDocument);
-                        mapView.getOverlays().add(kmlOverlay);
-                        mapView.invalidate();
-                        //if (center) mapView.zoomToBoundingBox(kmlDocument.mKmlRoot.getBoundingBox());
-
-                    }
-                });
-            }
-        });
-        t.start();
-    }
-    */
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        int action = ev.getAction();
-//        switch (action) {
-//            case MotionEvent.ACTION_DOWN:
-//                // Disallow ScrollView to intercept touch events.
-//                this.getParent().requestDisallowInterceptTouchEvent(true);
-//                break;
-//
-//            case MotionEvent.ACTION_UP:
-//                // Allow ScrollView to intercept touch events.
-//                this.getParent().requestDisallowInterceptTouchEvent(false);
-//                break;
-//        }
-//
-//        // Handle MapView's touch events.
-//        super.onTouchEvent(ev);
-//        return true;
-//    }
-
     public class PMapMarker extends Marker {
 
         public PMapMarker(MapView mapView) {
@@ -597,14 +478,11 @@ public class PMap extends MapView implements PViewMethodsInterface {
         }
 
         public PMapMarker onClick(final ReturnInterface callbackfn) {
-            this.setOnMarkerClickListener(new OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    ReturnObject o = new ReturnObject();
-                    o.put("marker", PMapMarker.this);
-                    callbackfn.event(o);
-                    return false;
-                }
+            this.setOnMarkerClickListener((marker, mapView) -> {
+                ReturnObject o = new ReturnObject();
+                o.put("marker", PMapMarker.this);
+                callbackfn.event(o);
+                return false;
             });
 
             return this;
@@ -628,7 +506,9 @@ public class PMap extends MapView implements PViewMethodsInterface {
     }
 
     @Override
-    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
     @Override
     public void setProps(Map style) {

@@ -42,13 +42,12 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PButton.class.getSimpleName();
-    private final AppRunner mAppRunner;
 
     // this is a props proxy for the user
-    public StylePropertiesProxy props = new StylePropertiesProxy();
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
 
     // the props are transformed / accessed using the styler object
-    public ButtonStyler styler;
+    public final ButtonStyler styler;
 
     private Typeface mFont;
 
@@ -57,7 +56,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     public PButton(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
-        mAppRunner = appRunner;
 
         styler = new ButtonStyler(appRunner, this, props);
         props.eventOnChange = false;
@@ -65,7 +63,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         props.put("textAlign", props, "center");
         // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
         props.put("text", props, "");
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -88,7 +86,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
                 }
                 break;
             case MotionEvent.ACTION_UP:
-            // should be considerer as ACTION_UP according to https://developer.android.com/reference/android/view/MotionEvent#ACTION_CANCEL
+                // should be considerer as ACTION_UP according to https://developer.android.com/reference/android/view/MotionEvent#ACTION_CANCEL
             case MotionEvent.ACTION_CANCEL:
                 if (hasReleaseCallback) {
                     onReleaseCallback.event(r);
@@ -96,8 +94,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
                 }
                 break;
         }
-        boolean hasToContinueProcessingFutureEvents = isEventAlreadyHandled || isEventHandled || hasReleaseCallback;
-        return hasToContinueProcessingFutureEvents;
+        return isEventAlreadyHandled || isEventHandled || hasReleaseCallback;
     }
 
     public PButton text(String label) {
@@ -239,7 +236,9 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     @Override
-    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
     @Override
     public void setProps(Map style) {

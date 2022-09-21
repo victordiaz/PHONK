@@ -26,7 +26,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
-    <include layout="@layout/toolbar2"
+    <include layout="@layout/toolbar"
         android:id="@+id/header"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content"

@@ -47,7 +47,7 @@ import io.phonk.runner.base.models.Project;
  */
 public class PPhonk extends ProtoBase {
 
-    public String id;
+    public final String id;
 
     public PPhonk(AppRunner appRunner) {
         super(appRunner);
@@ -58,52 +58,23 @@ public class PPhonk extends ProtoBase {
     }
 
     //TODO enable this after refactor
-//
-//	@APIMethod(description = "", example = "")
-//	public String getId() {
-//		return PrefsFragment.getId(mContext);
-//
-//	}
-
-//
-//	@APIMethod(description = "", example = "")
-//	@APIParam(params = { "id" })
-//	public void setId(String id) {
-//		PrefsFragment.setId(mContext, id);
-//	}
 
 
     @PhonkMethod(description = "get the current project HTTP URL", example = "")
     public String urlForFiles() {
         Project p = getAppRunner().getProject();
-        String url = getAppRunner().getServingUrl() + "api/project/" + p.getSandboxPath() + "files/view/";
-        return url;
+        return getAppRunner().getServingUrl() + "api/project/" + p.getSandboxPath() + "files/view/";
     }
 
     //TODO reenable?
     @PhonkMethod(description = "Returns an object to manipulate the device app webIDE", example = "")
     @PhonkMethodParam(params = {})
     public PWebEditor webEditor() {
-        PWebEditor pWebEditor = new PWebEditor(getAppRunner());
 
-        return pWebEditor;
+        return new PWebEditor(getAppRunner());
     }
 
 //TODO reenable this
-//
-//	@APIMethod(description = "Launch another script given its name and type", example = "")
-//	@APIParam(params = { "folder", "name" })
-//	@APIVersion(minLevel = "2")
-//	@APIRequires("android.permission.INTERNET")
-//	public void launchScript(String folder, String name) {
-//		Intent intent = new Intent(mContext, AppRunnerFragment.class);
-//		intent.putExtra(Project.FOLDER, name);
-//		intent.putExtra(Project.NAME, name);
-//
-//		// mContext.startActivity(intent);
-//		// String code = StrUtils.generateUUID();
-//		contextUi.get().startActivityForResult(intent, 22);
-//	}
 
     //TODO this is a place holder
     //
@@ -113,8 +84,6 @@ public class PPhonk extends ProtoBase {
     public void returnValueToScript(String returnValue) {
         Intent output = new Intent();
         output.putExtra("return", returnValue);
-        //contextUi.get().setResult(22, output);
-        //contextUi.get().finish();
     }
 
 
@@ -127,8 +96,6 @@ public class PPhonk extends ProtoBase {
         conData.putString("param_result", data);
         Intent intent = new Intent();
         intent.putExtras(conData);
-        // contextUi.get().setResult(contextUi.get().RESULT_OK, intent);
-        // contextUi.get().finish();
 
     }
 
@@ -180,8 +147,6 @@ public class PPhonk extends ProtoBase {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Project.FOLDER, folder);
         intent.putExtra(Project.NAME, scriptName);
-        // intent.putExtra(Project.SERVER_PORT, ProtocoderSettings.HTTP_PORT);
-        // intent.putExtra("device_id", (String) NewUserPreferences.getInstance().get("device_id"));
         getContext().startActivity(intent);
     }
 

@@ -27,10 +27,12 @@
 
     <item android:left="0dp" android:right="0dp">
         <shape android:shape="oval">
-            <size android:width="45dp"></size>
-            <size android:height="45dp"></size>
-            <solid android:color="@color/transparent"></solid>
-            <stroke android:width="2dp" android:color="@color/white"></stroke>
+            <size android:width="45dp" />
+            <size android:height="45dp" />
+            <solid android:color="@color/transparent" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/white" />
         </shape>
     </item>
 

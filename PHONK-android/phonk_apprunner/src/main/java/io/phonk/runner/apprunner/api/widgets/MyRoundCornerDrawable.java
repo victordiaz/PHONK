@@ -34,21 +34,14 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
-import io.phonk.runner.base.utils.AndroidUtils;
-
 public class MyRoundCornerDrawable extends Drawable {
 
-    private Paint mPaintBg;
+    private final Paint mPaintBg;
     private final Paint mPaintBorder;
     private float mRadius = 22;
     private int mBorderWidth = 0;
 
     public MyRoundCornerDrawable(/* Bitmap bitmap */) {
-        /*
-        BitmapShader shader;
-        shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP,
-                Shader.TileMode.CLAMP);
-        */
 
         // background
         mPaintBg = new Paint();
@@ -60,9 +53,7 @@ public class MyRoundCornerDrawable extends Drawable {
         // border
         mPaintBorder = new Paint();
         mPaintBorder.setStyle(Paint.Style.STROKE);
-        // mPaintBorder.setAntiAlias(true);
 
-        // mPaintBg.setShader(shader);
     }
 
     @Override

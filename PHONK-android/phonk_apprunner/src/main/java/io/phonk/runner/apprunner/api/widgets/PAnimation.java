@@ -27,7 +27,7 @@ import android.view.ViewPropertyAnimator;
 
 public class PAnimation {
 
-    View mView;
+    final View mView;
     private final ViewPropertyAnimator mAnim;
 
     public PAnimation(View view) {

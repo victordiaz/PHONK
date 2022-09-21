@@ -20,10 +20,9 @@
  *
  */
 
-package io.phonk.gui;
+package io.phonk.gui.welcome;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,15 +36,12 @@ import io.phonk.R;
 import io.phonk.runner.base.BaseFragment;
 
 @SuppressLint("NewApi")
-public class IntroductionFragment extends BaseFragment {
+public class WelcomeFragment extends BaseFragment {
 
-    private String TAG = IntroductionFragment.class.getSimpleName();
-    private Context mContext;
     private ViewPager mPager;
     private IntroductionPagerAdapter mPagerAdapter;
 
-
-    public IntroductionFragment() {
+    public WelcomeFragment() {
     }
 
     @Override
@@ -55,9 +51,7 @@ public class IntroductionFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContext = getActivity();
-
-        View v = inflater.inflate(R.layout.introduction_fragment, container, false);
+        View v = inflater.inflate(R.layout.welcome_fragment, container, false);
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = v.findViewById(R.id.pager);
@@ -77,10 +71,9 @@ public class IntroductionFragment extends BaseFragment {
         super.onResume();
     }
 
-    public static IntroductionFragment newInstance() {
-        IntroductionFragment myFragment = new IntroductionFragment();
+    public static WelcomeFragment newInstance() {
 
-        return myFragment;
+        return new WelcomeFragment();
     }
 
     private class IntroductionPagerAdapter extends PagerAdapter {
@@ -91,9 +84,6 @@ public class IntroductionFragment extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
 //            View v = getActivity().getLayoutInflater().inflate(...);
-//            ((ViewPager) collection).addView(v,0);
-
-//            return v;
 
             int resId = 0;
             switch (position) {

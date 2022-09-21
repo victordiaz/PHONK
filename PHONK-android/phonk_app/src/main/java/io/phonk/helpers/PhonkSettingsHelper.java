@@ -38,11 +38,9 @@ import io.phonk.runner.base.utils.FileIO;
 
 public class PhonkSettingsHelper {
 
-    private static String PHONK_EXTENSION = ".phonk";
+    private static final String PHONK_EXTENSION = ".phonk";
 
     public static void showRestartMessage(final Context mContext, View view) {
-        // Toast.makeText(mContext, "Restarting the app is recommended after changing the mode", Toast.LENGTH_LONG).show();
-        // EventBus.getDefault().post(new Events.AppUiEvent("recreate", ""));
 
         Snackbar.make(view, "Close the app to see the changes", Snackbar.LENGTH_LONG)
                 .setAction("RESTART", view1 -> {

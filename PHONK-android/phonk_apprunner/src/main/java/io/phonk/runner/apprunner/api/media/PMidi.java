@@ -66,7 +66,7 @@ public class PMidi extends ProtoBase {
         });
     }
 
-    private UsbMidiDriver usbMidiDriver;
+    private final UsbMidiDriver usbMidiDriver;
 
     public PMidi(AppRunner appRunner) {
         super(appRunner);
@@ -241,16 +241,6 @@ public class PMidi extends ProtoBase {
 
         return this;
     }
-
-    /*
-    public void sendNoteOn(int cable, int channel, int note, int velocity) {
-        mMidiOutputDevice.sendMidiNoteOn(cable, channel, note, velocity);
-    }
-
-    public void sendNoteOff(int cable, int channel, int note, int velocity) {
-        mMidiOutputDevice.sendMidiNoteOff(cable, channel, note, velocity);
-    }
-    */
 
 
     @Override

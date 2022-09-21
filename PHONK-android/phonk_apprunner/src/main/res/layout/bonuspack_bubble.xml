@@ -74,7 +74,7 @@
             android:maxEms="17"
             android:text="Description"
             android:textColor="@color/phonk_backgroundColor"
-            android:textSize="12dp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/bubble_subdescription"
@@ -83,7 +83,7 @@
             android:maxEms="17"
             android:text="Address"
             android:textColor="#ffffff"
-            android:textSize="10dp"
+            android:textSize="10sp"
             android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>

@@ -65,29 +65,6 @@ public class _PDashboardInput extends ProtoBase {
                 .put("values", values);
 
         //TODO change to events
-        /*
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
-
-        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-            @Override
-            public void onUpdated(JSONObject jsonObject) {
-                try {
-
-                    final String val = jsonObject.getString("val");
-                    mHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (mCallback != null) mCallback.event(val);
-                        }
-                    });
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        });
-        */
 
     }
 

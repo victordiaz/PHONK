@@ -43,18 +43,16 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.TwoStatePreference;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.phonk.BuildConfig;
 import io.phonk.R;
-import io.phonk.gui.LicenseActivity;
+import io.phonk.gui.info.LicenseActivity;
 import io.phonk.gui.projectbrowser.ProjectBrowserDialogFragment;
 import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.helpers.PhonkSettingsHelper;
 import io.phonk.runner.base.models.Project;
-import io.phonk.runner.base.utils.MLog;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -81,8 +79,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
-        return fragment;
+        return new SettingsFragment();
     }
 
     //twostatepreference(boolean)->action/action edittextpreference(text)->action preference->action
@@ -104,7 +101,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_PHONK_START)) {
                     prefLaunchScriptOnStart.setSummary(p.getSandboxPath());
                     mUserPreferences.set(TAG_PROJECT_LAUNCH_ON_PHONK_START, p.getSandboxPath()).save();
-                } else if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_BOOT)){
+                } else if (projectBrowserDialogFragment.getTag().equals(TAG_PROJECT_LAUNCH_ON_BOOT)) {
                     prefLaunchScriptOnBoot.setSummary(p.getSandboxPath());
                     mUserPreferences.set(TAG_PROJECT_LAUNCH_ON_BOOT, p.getSandboxPath()).save();
                 }
@@ -133,7 +130,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        final EditTextPreference prefDeviceId = (EditTextPreference) findPreference("device_id");
+        final EditTextPreference prefDeviceId = findPreference("device_id");
         prefDeviceId.setOnPreferenceChangeListener((preference, newValue) -> {
             prefDeviceId.setText((String) newValue);
             mUserPreferences.set("device_id", newValue).save();
@@ -142,7 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefDeviceId.setText((String) UserPreferences.getInstance().get("device_id"));
 
         // Screen always on mode
-        final TwoStatePreference prefScreenOn = (TwoStatePreference) findPreference("screen_always_on");
+        final TwoStatePreference prefScreenOn = findPreference("screen_always_on");
         prefScreenOn.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
             mUserPreferences.set("screen_always_on", isChecked).save();
@@ -151,7 +148,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefScreenOn.setChecked((Boolean) mUserPreferences.get("screen_always_on"));
 
         // Start servers on launch
-        final TwoStatePreference prefStartServers = (TwoStatePreference) findPreference("servers_enabled_on_start");
+        final TwoStatePreference prefStartServers = findPreference("servers_enabled_on_start");
         prefStartServers.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
             mUserPreferences.set("servers_enabled_on_start", isChecked).save();
@@ -160,7 +157,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefStartServers.setChecked((Boolean) mUserPreferences.get("servers_enabled_on_start"));
 
         // Wake up device on play
-        final TwoStatePreference prefWakeUpOnPlay = (TwoStatePreference) findPreference("device_wakeup_on_play");
+        final TwoStatePreference prefWakeUpOnPlay = findPreference("device_wakeup_on_play");
         prefWakeUpOnPlay.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
             mUserPreferences.set("device_wakeup_on_play", isChecked).save();
@@ -169,7 +166,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefWakeUpOnPlay.setChecked((Boolean) mUserPreferences.get("device_wakeup_on_play"));
 
         // Start servers on launch
-        final TwoStatePreference prefMaskIp = (TwoStatePreference) findPreference("servers_mask_ip");
+        final TwoStatePreference prefMaskIp = findPreference("servers_mask_ip");
         prefMaskIp.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
             mUserPreferences.set("servers_mask_ip", isChecked).save();
@@ -178,7 +175,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         prefMaskIp.setChecked((Boolean) mUserPreferences.get("servers_mask_ip"));
 
         // Advertise mDNS
-        final TwoStatePreference prefMDNS = (TwoStatePreference) findPreference("advertise_mdns");
+        final TwoStatePreference prefMDNS = findPreference("advertise_mdns");
         prefMDNS.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
             mUserPreferences.set("advertise_mdns", isChecked).save();
@@ -212,7 +209,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         */
 
         // WebIDE mode
-        final TwoStatePreference prefWebIdeMode = (TwoStatePreference) findPreference("webide_mode");
+        final TwoStatePreference prefWebIdeMode = findPreference("webide_mode");
         prefWebIdeMode.setOnPreferenceChangeListener((preference, o) -> {
             boolean isChecked = (Boolean) o;
             mUserPreferences.set("webide_mode", isChecked).save();
@@ -227,7 +224,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
          * Launch PHONK on boot
          */
         // Launch on device boot mode
-        final TwoStatePreference prefLaunchOnBoot = (TwoStatePreference) findPreference("launch_on_device_boot");
+        final TwoStatePreference prefLaunchOnBoot = findPreference("launch_on_device_boot");
         prefLaunchOnBoot.setOnPreferenceChangeListener((preference, o) -> {
             boolean drawOverlayIsAllowed = launchSettingsDrawOverlay();
 
@@ -246,12 +243,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
          * Launch script when PHONK starts
          */
         prefLaunchScriptOnStart = findPreference("launch_script_on_app_launch");
-        prefLaunchScriptOnStart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                projectBrowserDialogFragment.show(fm, TAG_PROJECT_LAUNCH_ON_PHONK_START);
-                return true;
-            }
+        prefLaunchScriptOnStart.setOnPreferenceClickListener(preference -> {
+            projectBrowserDialogFragment.show(fm, TAG_PROJECT_LAUNCH_ON_PHONK_START);
+            return true;
         });
         String scriptOnStartSummary = (String) mUserPreferences.get(TAG_PROJECT_LAUNCH_ON_PHONK_START);
         if (!scriptOnStartSummary.isEmpty()) {
@@ -262,19 +256,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
          * Launch script when PHONK boots
          */
         prefLaunchScriptOnBoot = findPreference("launch_script_on_boot");
-        prefLaunchScriptOnBoot.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                launchSettingsDrawOverlay();
-                boolean drawOverlayIsAllowed = launchSettingsDrawOverlay();
+        prefLaunchScriptOnBoot.setOnPreferenceClickListener(preference -> {
+            launchSettingsDrawOverlay();
+            boolean drawOverlayIsAllowed = launchSettingsDrawOverlay();
 
-                if (drawOverlayIsAllowed) {
-                    projectBrowserDialogFragment.show(fm, TAG_PROJECT_LAUNCH_ON_BOOT);
-                } else {
-                    Toast.makeText(getActivity(), "You need to allow the permission first", Toast.LENGTH_LONG).show();
-                }
-                return true;
+            if (drawOverlayIsAllowed) {
+                projectBrowserDialogFragment.show(fm, TAG_PROJECT_LAUNCH_ON_BOOT);
+            } else {
+                Toast.makeText(getActivity(), "You need to allow the permission first", Toast.LENGTH_LONG).show();
             }
+            return true;
         });
         String scriptOnBootSummary = (String) mUserPreferences.get(TAG_PROJECT_LAUNCH_ON_BOOT);
         if (!scriptOnBootSummary.isEmpty()) {
@@ -300,11 +291,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
                     .setCancelable(false).setPositiveButton("Yes", (dialog, which) -> {
-                progress.show();
+                        progress.show();
 
-                PhonkSettingsHelper.installExamples(getActivity(), () -> progress.dismiss());
-                dialog.cancel();
-            }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
+                        PhonkSettingsHelper.installExamples(getActivity(), () -> progress.dismiss());
+                        dialog.cancel();
+                    }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
 
             return true;
         });
@@ -315,21 +306,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
 
-
-        /*
-        // Connection alert mode
-        final TwoStatePreference connectionAlertPreference = (TwoStatePreference) findPreference("pref_connection_alert");
-        if (connectionAlertPreference != null) {
-            connectionAlertPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    boolean isChecked = (Boolean) o;
-                    // mSettings.setConnectionAlert(isChecked);
-                    return true;
-                }
-            });
-        }
-        */
 
         //load webIDE
         // TODO enable again
@@ -347,62 +323,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
             });
         }
-
-        Preference btnFtp = findPreference("pref_ftp");
-        btnFtp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                alertDialog.setTitle("FTP settings");
-                final View mParentView = getActivity().getLayoutInflater().inflate(R.layout.preferences_ftp_dialog, null);
-                //alertDialog.setView(R.layout.preferences_ftp_dialog);
-
-
-                final EditText userName = (EditText) mParentView.findViewById(R.id.ftp_username);
-                final EditText userPassword = (EditText) mParentView.findViewById(R.id.ftp_userpassword);
-                final CheckBox check = (CheckBox) mParentView.findViewById(R.id.ftp_enable);
-
-                final boolean[] checked = {mSettings.getFtpChecked()};
-                final String[] userNameText = {mSettings.getFtpUserName()};
-                final String[] userPasswordText = {mSettings.getFtpUserPassword()};
-
-                userName.setText(userNameText[0]);
-                userPassword.setText(userPasswordText[0]);
-
-                check.setChecked(checked[0]);
-
-                alertDialog.setView(mParentView);
-
-                alertDialog.setCancelable(true);
-                alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int id) {
-                        checked[0] = check.isChecked();
-                        userNameText[0] = userName.getText().toString();
-                        userPasswordText[0] = userPassword.getText().toString();
-
-                        //sha-1 the userPassword to store it
-                        // String saltedPassword = null;
-                        // try {
-                        //   saltedPassword = AndroidUtils.sha1(userPasswordText[0]);
-                        //    MLog.d(TAG, " qq " + saltedPassword);
-
-                        mSettings.setFtp(checked[0], userNameText[0], userPasswordText[0]);
-                        // } catch (NoSuchAlgorithmException e) {
-                        //     e.printStackTrace();
-                        // } catch (UnsupportedEncodingException e) {
-                        //     e.printStackTrace();
-                        // }
-
-                    }
-                });
-
-                alertDialog.show();
-
-                return true;
-            }
-        });
         */
 
         return mParentView;
@@ -418,7 +338,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 startActivityForResult(myIntent, REQUEST_OVERLAY_PERMISSIONS);
 
                 return false;
-             }
+            }
         }
         return true;
     }

@@ -71,12 +71,12 @@ import io.phonk.runner.base.utils.SchedulerManager;
 public class PApp extends ProtoBase {
 
     @PhonkField
-    public Notification notification;
+    public final Notification notification;
 
     @PhonkField
     public Map<String, Object> settings;
 
-    PEvents pevents;
+    final PEvents pevents;
     public String folder;
     public String name;
     public ReturnObject intentData;
@@ -96,12 +96,6 @@ public class PApp extends ProtoBase {
         notification = new Notification();
         pevents = new PEvents(appRunner);
     }
-
-    //
-    //@APIMethod(description = "get the script runner context", example = "")
-    //public AppRunnerFragment getContext() {
-    //	return (AppRunnerFragment) mContext;
-    //}
 
     /**
      * @status TODO
@@ -188,7 +182,7 @@ public class PApp extends ProtoBase {
     }
 
     public class Notification {
-        private NotificationManager mNotificationManager;
+        private final NotificationManager mNotificationManager;
         int id;
         NotificationCompat.Builder mBuilder;
 
@@ -325,8 +319,7 @@ public class PApp extends ProtoBase {
      */
     @PhonkMethod
     public String path() {
-        String url = getAppRunner().getProject().getSandboxPath();
-        return url;
+        return getAppRunner().getProject().getSandboxPath();
     }
 
     /**
@@ -337,8 +330,7 @@ public class PApp extends ProtoBase {
      */
     @PhonkMethod
     public String fullPath() {
-        String url = getAppRunner().getProject().getFullPath();
-        return url;
+        return getAppRunner().getProject().getFullPath();
     }
 
     /**
@@ -456,7 +448,8 @@ public class PApp extends ProtoBase {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return versionName;    }
+        return versionName;
+    }
 
     /**
      * Start an activity
@@ -492,9 +485,6 @@ public class PApp extends ProtoBase {
         JSONObject component = (JSONObject) jsonParams.get("component");
         intent.setComponent(new ComponentName("com.example", "com.example.MyExampleActivity"));
 
-        // JSONArray flags = (JSONArray) jsonParams.get("flags");
-        // intent.setFlags(flags);
-
         getContext().startActivity(intent);
 
         // getActivity().startActivityForResult();
@@ -502,8 +492,9 @@ public class PApp extends ProtoBase {
 
     /**
      * Launch a PHONK script as follows
-     *
+     * <p>
      * app.launchScript('examples/Graphical User Interface/Basic Views')
+     *
      * @param path
      */
     @PhonkMethod

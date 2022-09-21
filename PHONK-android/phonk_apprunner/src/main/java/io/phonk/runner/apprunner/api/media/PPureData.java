@@ -49,7 +49,7 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PPureData extends ProtoBase {
 
-    private String TAG = PPureData.class.getSimpleName();
+    private final String TAG = PPureData.class.getSimpleName();
 
     public String path;
     private int mPatch;
@@ -88,11 +88,6 @@ public class PPureData extends ProtoBase {
         int tpb = (int) (0.001f * millis * srate / PdBase.blockSize()) + 1;
 
         MLog.d(TAG, "--> " + srate + " " + nic + " " + noc + " " + tpb);
-
-        /*
-        nic = 0;
-        tpb = 8;
-         */
 
         try {
             PdAudio.initAudio(srate, nic, noc, tpb, true);
@@ -180,7 +175,7 @@ public class PPureData extends ProtoBase {
 
     // TODO Activate listeners
 
-    PdUiDispatcher receiver = new PdUiDispatcher() {
+    final PdUiDispatcher receiver = new PdUiDispatcher() {
 
         public void sendBack(final ReturnObject o) {
             if (callback != null) {
@@ -309,7 +304,7 @@ public class PPureData extends ProtoBase {
     @PhonkMethodParam(params = {"name", "value"})
     public void sendFloat(String name, float value) {
         MLog.d(TAG, "--> " + value);
-        PdBase.sendFloat(name, (float) value);
+        PdBase.sendFloat(name, value);
     }
 
     @PhonkMethod(description = "Sends a note to PdLib", example = "")

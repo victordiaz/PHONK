@@ -39,10 +39,10 @@ import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 public abstract class PCustomSensorManager implements WhatIsRunningInterface {
     private final static String TAG = PCustomSensorManager.class.getSimpleName();
 
-    AppRunner mAppRunner;
+    final AppRunner mAppRunner;
 
     protected Sensor sensor;
-    protected SensorManager mSensormanager;
+    protected final SensorManager mSensormanager;
     protected SensorEventListener mListener;
     protected ReturnInterface mCallback;
     protected int speed = SensorManager.SENSOR_DELAY_FASTEST;
@@ -52,10 +52,6 @@ public abstract class PCustomSensorManager implements WhatIsRunningInterface {
     public PCustomSensorManager(AppRunner appRunner) {
         mAppRunner = appRunner;
         mSensormanager = (SensorManager) mAppRunner.getAppContext().getSystemService(Context.SENSOR_SERVICE);
-    }
-
-    public boolean isListening() {
-        return false;
     }
 
     @PhonkMethod(description = "Start the sensor", example = "")

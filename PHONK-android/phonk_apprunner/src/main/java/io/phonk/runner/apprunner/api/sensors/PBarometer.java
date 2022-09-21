@@ -62,12 +62,9 @@ public class PBarometer extends PCustomSensorManager implements WhatIsRunningInt
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
                 switch (accuracy) {
                     case SensorManager.SENSOR_STATUS_UNRELIABLE:
-                        break;
-                    case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-                        break;
-                    case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-                        break;
                     case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+                    case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+                    case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
                         break;
                 }
             }

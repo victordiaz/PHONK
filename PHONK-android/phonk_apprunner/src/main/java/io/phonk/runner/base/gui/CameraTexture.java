@@ -50,22 +50,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import org.mozilla.javascript.EvaluatorException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Vector;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.media.AutoFitTextureView;
-import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.TimeUtils;
 
@@ -76,13 +71,13 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     public static final int MODE_COLOR_COLOR = 3;
     private static int mCameraRotation = 0;
 
-    String modeColor;
-    String modeCamera;
+    final String modeColor;
+    final String modeCamera;
     private int cameraId;
 
-    protected String TAG = CameraTexture.class.getSimpleName();
+    protected final String TAG = CameraTexture.class.getSimpleName();
 
-    AppRunner mAppRunner;
+    final AppRunner mAppRunner;
 
     // camera
     protected Camera mCamera;
@@ -123,15 +118,15 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     }
 
     @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {}
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+    }
 
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {}
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+    }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        // mCamera.stopPreview();
-        // mCamera.release();
         return true;
     }
 
@@ -144,16 +139,11 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
                 MLog.d(TAG, "there is no camera");
             }
             mCamera = Camera.open(cameraId);
-        } else if (modeCamera.equals("back")){
+        } else if (modeCamera.equals("back")) {
             cameraId = 0;
             mCamera = Camera.open();
         }
         mParameters = mCamera.getParameters();
-
-        // SizePair siz = generateValidPreviewSize(camera, 480, 640);
-        // width = siz.mPicture.getWidth();
-        // height = siz.mPicture.getHeight();
-        // mParameters.setPreviewSize(640, 480);
 
         try {
             applyParameters();
@@ -222,7 +212,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     }
 
     public void startOnFrameProcessing() {
-        if (frameProcessing == false) {
+        if (!frameProcessing) {
             frameProcessing = true;
             Camera.Parameters parameters = mCamera.getParameters();
             int format = parameters.getPreviewFormat();
@@ -267,8 +257,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
                     final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
                     Bitmap fbitmap = Bitmap.createBitmap(bitmap, 0, 0, 300, 300, matrix, true);
 
-                    // MLog.d("qq", "img " + bitmap.getWidth() + " " + bitmap.getHeight());
-                    // MLog.d("qq", "resized img " + fbitmap.getWidth() + " " + fbitmap.getHeight());
                     callbackBmp.event(fbitmap);
                 }
                 if (callbackStream != null) {
@@ -313,23 +301,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         mCamera.takePicture(null, null, (data, camera) -> {
             Bitmap bitmapPicture = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-            /*
-            FileOutputStream outStream = null;
-            try {
-                file = new File(path);
-
-                outStream = new FileOutputStream(file);
-                outStream.write(data);
-                outStream.flush();
-                outStream.close();
-                MLog.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-            }
-             */
             ReturnObject ret = new ReturnObject();
             ret.put("bitmap", bitmapPicture);
             if (mPictureTakenCallback != null) mPictureTakenCallback.event(ret);
@@ -354,10 +325,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     public void recordVideo(String file) {
         MLog.d(TAG, "mCamera " + mCamera);
-        // Camera.Parameters parameters = mCamera.getParameters();
-        // MLog.d(TAG, "parameters " + parameters);
-        // parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
-        // mCamera.setParameters(parameters);
 
         recorder = new MediaRecorder();
         MLog.d(TAG, "recorder " + recorder);
@@ -371,14 +338,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         CamcorderProfile profile = CamcorderProfile.get(cameraId, CamcorderProfile.QUALITY_HIGH);
         recorder.setProfile(profile);
         MLog.d(TAG, "setting profile ");
-        // CamcorderProfile cpHigh = CamcorderProfile.get(cameraId,
-        // CamcorderProfile.QUALITY_HIGH);
-        // MLog.d(TAG, "profile set " + cpHigh);
-        // recorder.setProfile(cpHigh);
         MLog.d(TAG, "profile set 1 " + file);
-        // recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        // recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        // recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         recorder.setOutputFile(file);
         MLog.d(TAG, "profile set 2");
         // recorder.setMaxDuration(5000 * 1000); // 50 seconds
@@ -428,9 +388,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         File file = new File(_path);
         Uri outputFileUri = Uri.fromFile(file);
 
-        // Uri imageFileUri = getContentResolver().insert(
-        // Media.EXTERNAL_CONTENT_URI, new ContentValues());
-
         try {
             OutputStream imageFileOS = mAppRunner.getAppContext().getContentResolver().openOutputStream(outputFileUri);
             imageFileOS.write(data);
@@ -450,11 +407,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
         AudioManager mgr = (AudioManager) mAppRunner.getAppContext().getSystemService(Context.AUDIO_SERVICE);
         mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
-
-        // WindowManager.LayoutParams params = getWindow().getAttributes();
-        // params.flags |= LayoutParams.FLAG_KEEP_SCREEN_ON;
-        // params.screenBrightness = 0;
-        // getWindow().setAttributes(params);
 
         Log.i(TAG, "photo saved");
 
@@ -478,9 +430,8 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
     }
 
     public boolean isFlashAvailable() {
-        boolean b = mAppRunner.getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 
-        return b;
+        return mAppRunner.getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
     public void flash(boolean b) {
@@ -598,7 +549,7 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
 
     private static class SizePair {
-        private Size mPreview;
+        private final Size mPreview;
         private Size mPicture;
 
         public SizePair(Camera.Size previewSize, Camera.Size pictureSize) {

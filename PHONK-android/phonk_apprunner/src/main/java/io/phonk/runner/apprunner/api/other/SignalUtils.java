@@ -30,8 +30,8 @@ import io.phonk.runner.base.utils.FFT;
 
 public class SignalUtils extends ProtoBase {
 
-    FFT fft;
-    double[] im;
+    final FFT fft;
+    final double[] im;
 
     public SignalUtils(AppRunner appRunner, int n) {
         super(appRunner);
@@ -56,9 +56,9 @@ public class SignalUtils extends ProtoBase {
         return re;
     }
 
-    class LowPass {
-        int n;
-        float[] vals;
+    static class LowPass {
+        final int n;
+        final float[] vals;
         float sum = 0.0f;
 
         public LowPass(int n) {
@@ -69,7 +69,7 @@ public class SignalUtils extends ProtoBase {
         public float smooth(float newVal) {
 
             for (int i = 0; i < vals.length; i++) {
-                sum = +vals[i];
+                sum += vals[i];
 
                 // shift to the left
                 if (i < vals.length - 1) {

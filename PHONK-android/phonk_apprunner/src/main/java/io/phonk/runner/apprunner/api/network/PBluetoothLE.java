@@ -28,7 +28,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -47,13 +46,11 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint("NewApi")
 @PhonkClass
 public class PBluetoothLE extends ProtoBase {
-    private Context mContext;
+    private final Context mContext;
     private final AppRunner mAppRunner;
 
     public Handler mHandler;
 
-    // private List<BluetoothDevice> mDevices;
-    // private BluetoothDevice currentDevice;
     private BluetoothAdapter mBleAdapter;
     private ReturnInterface mCallbackScan;
 
@@ -83,7 +80,7 @@ public class PBluetoothLE extends ProtoBase {
      */
 
     // Callback that control the Functionality of scan devices.
-    private BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
+    private final BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
             MLog.d(TAG, "found device " + device.getAddress() + " " + rssi);

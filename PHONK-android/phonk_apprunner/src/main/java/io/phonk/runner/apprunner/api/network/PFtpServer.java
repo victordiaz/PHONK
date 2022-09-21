@@ -52,11 +52,9 @@ public class PFtpServer {
 
     private final int mPort;
     private final FtpServerCb mCallback;
-    //private final String mUserName;
-    //private final String mPassword;
 
-    PropertiesUserManagerFactory userManagerFactory;
-    UserManager um;
+    final PropertiesUserManagerFactory userManagerFactory;
+    final UserManager um;
     org.apache.ftpserver.FtpServer server;
 
 
@@ -67,8 +65,6 @@ public class PFtpServer {
     public PFtpServer(int port, FtpServerCb callback) {
         mCallback = callback;
         mPort = port;
-        //mUserName = userName;
-        //mPassword = password;
 
         userManagerFactory = new PropertiesUserManagerFactory();
         //userManagerFactory.setAdminName(mUserName);
@@ -89,7 +85,7 @@ public class PFtpServer {
 
         //check if user can write
         if (canWrite) {
-            List<Authority> auths = new ArrayList<Authority>();
+            List<Authority> auths = new ArrayList<>();
             Authority auth = new WritePermission();
             auths.add(auth);
             user.setAuthorities(auths);
@@ -138,15 +134,15 @@ public class PFtpServer {
         }
     }
 
-    private class CallbackFTP extends DefaultFtplet {
-        FtpServerCb callback;
+    private static class CallbackFTP extends DefaultFtplet {
+        final FtpServerCb callback;
 
         CallbackFTP(FtpServerCb callback) {
             this.callback = callback;
         }
 
         @Override
-        public void init(FtpletContext ftpletContext) throws FtpException {
+        public void init(FtpletContext ftpletContext) {
 
         }
 
@@ -156,33 +152,33 @@ public class PFtpServer {
         }
 
         @Override
-        public FtpletResult beforeCommand(FtpSession ftpSession, FtpRequest ftpRequest) throws FtpException, IOException {
+        public FtpletResult beforeCommand(FtpSession ftpSession, FtpRequest ftpRequest) throws IOException {
             if (callback != null)
                 callback.event("Requested command: " + ftpRequest.getCommand() + " " + ftpRequest.getArgument() + " " + ftpRequest.getRequestLine());
             return FtpletResult.DEFAULT;
         }
 
         @Override
-        public FtpletResult afterCommand(FtpSession ftpSession, FtpRequest ftpRequest, FtpReply ftpReply) throws FtpException, IOException {
+        public FtpletResult afterCommand(FtpSession ftpSession, FtpRequest ftpRequest, FtpReply ftpReply) throws IOException {
             return null;
         }
 
         @Override
-        public FtpletResult onConnect(FtpSession ftpSession) throws FtpException, IOException {
+        public FtpletResult onConnect(FtpSession ftpSession) throws IOException {
             if (callback != null)
                 callback.event("Connected from " + ftpSession.getClientAddress());
             return FtpletResult.DEFAULT;
         }
 
         @Override
-        public FtpletResult onLogin(FtpSession session, FtpRequest request) throws FtpException, IOException {
+        public FtpletResult onLogin(FtpSession session, FtpRequest request) throws IOException {
             if (callback != null)
                 callback.event("Logged in: " + session.getUser().getName());
             return FtpletResult.DEFAULT;
         }
 
         @Override
-        public FtpletResult onDisconnect(FtpSession ftpSession) throws FtpException, IOException {
+        public FtpletResult onDisconnect(FtpSession ftpSession) throws IOException {
             if (callback != null)
                 callback.event("Disconnected: " + ftpSession.getUser().getName());
 

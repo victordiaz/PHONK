@@ -44,7 +44,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         mDataSet = currentFileList;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final FileManagerListItem mView;
 
         public ViewHolder(FileManagerListItem v) {
@@ -61,9 +61,8 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         FileManagerListItem fileManagerListItem = new FileManagerListItem(mFragment.getContext());
-        ViewHolder vh = new ViewHolder(fileManagerListItem);
 
-        return vh;
+        return new ViewHolder(fileManagerListItem);
     }
 
     @Override

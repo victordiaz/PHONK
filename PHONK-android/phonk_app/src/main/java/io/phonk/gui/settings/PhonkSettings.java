@@ -34,7 +34,7 @@ public class PhonkSettings extends AppRunnerSettings {
      * Phonk app settings
      */
     public final static boolean DEBUG = true;
-    public static String PHONK_FILE_EXTENSION = ".phonk";
+    public static final String PHONK_FILE_EXTENSION = ".phonk";
 
     public static final String APP_FOLDER_CUSTOM_WEBEDITOR = "webeditors";
     public static final String EXPORTED_FOLDER = "exported";

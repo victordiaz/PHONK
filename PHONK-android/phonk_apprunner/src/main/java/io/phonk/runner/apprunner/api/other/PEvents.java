@@ -31,7 +31,7 @@ import io.phonk.runner.apprunner.api.ProtoBase;
 import io.phonk.runner.base.utils.StrUtils;
 
 public class PEvents extends ProtoBase {
-    ArrayList<EventItem> eventsList;
+    final ArrayList<EventItem> eventsList;
 
     public interface EventCB {
         void event(NativeObject obj);
@@ -40,7 +40,7 @@ public class PEvents extends ProtoBase {
 
     public PEvents(AppRunner appRunner) {
         super(appRunner);
-        eventsList = new ArrayList<EventItem>();
+        eventsList = new ArrayList<>();
     }
 
     public String add(String name, EventCB callback) {
@@ -69,7 +69,7 @@ public class PEvents extends ProtoBase {
         }
     }
 
-    class EventItem {
+    static class EventItem {
         public final String id;
         public final String name;
         public final PEvents.EventCB cb;

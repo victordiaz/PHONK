@@ -83,10 +83,10 @@ public class PhonkServerService extends Service {
      */
     private PhonkHttpServer phonkHttpServer;
     private PhonkWebsocketServer phonkWebsockets;
-    private ArrayList<String> mConnectedClients = new ArrayList<>();
+    private final ArrayList<String> mConnectedClients = new ArrayList<>();
 
-    private Gson gson = new Gson();
-    private int counter = 0;
+    private final Gson gson = new Gson();
+    private final int counter = 0;
     private Project mProjectRunning;
     private NotificationCompat.Builder mNotificationBuilder;
 
@@ -105,7 +105,7 @@ public class PhonkServerService extends Service {
         return Service.START_STICKY;
     }
 
-    BroadcastReceiver mNotificationReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver mNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, "received action: " + intent.getAction());
@@ -160,33 +160,31 @@ public class PhonkServerService extends Service {
 
         // close server intent
         Intent notificationIntent = new Intent(this, PhonkServerService.class).setAction(SERVICE_CLOSE);
-        PendingIntent pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
-        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        PendingIntent pendingIntentStopService;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
         String ip = NetworkUtils.getLocalIpAddress(PhonkServerService.this).get("ip") + ":" + PhonkSettings.HTTP_PORT;
         String msg = this.getString(R.string.notification_description) + " http://" + ip;
 
         mNotificationBuilder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.icon_phonk_service)
-                // .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                .setContentTitle(this.getString(R.string.app_name))
-                .setContentText(msg)
-                .setOngoing(false)
-                .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
-                // .setContentIntent(pendingIntent)
-                // .setOnlyAlertOnce(true)
-                .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
-        // .setContentInfo("1 Connection");
-        // mNotificationBuilder.build().flags = Notification.FLAG_ONGOING_EVENT;
+            .setSmallIcon(R.drawable.icon_phonk_service)
+            .setContentTitle(this.getString(R.string.app_name))
+            .setContentText(msg)
+            .setOngoing(false)
+            .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
+            .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
 
+        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         // damm annoying android pofkjpodsjf0ewiah
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            mChannel = new NotificationChannel(PhonkSettings.NOTIFICATION_CHANNEL_ID, this.getString(R.string.app_name), importance);
-            // mChannel.setDescription("lalalla");
+            mChannel = new NotificationChannel(PhonkSettings.NOTIFICATION_CHANNEL_ID, this.getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
             mChannel.enableLights(false);
             mNotificationManager.createNotificationChannel(mChannel);
-        } else {
         }
 
         startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
@@ -372,11 +370,9 @@ public class PhonkServerService extends Service {
     /*
      * FileObserver to notify when projects are added or removed
      */
-    FileObserver fileObserver = new FileObserver(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects/"), FileObserver.CREATE | FileObserver.DELETE | FileObserver.DELETE_SELF | FileObserver.MODIFY | FileObserver.MOVED_TO | FileObserver.MOVED_FROM) {
+    final FileObserver fileObserver = new FileObserver(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects/"), FileObserver.CREATE | FileObserver.DELETE | FileObserver.DELETE_SELF | FileObserver.MODIFY | FileObserver.MOVED_TO | FileObserver.MOVED_FROM) {
         @Override
         public void onEvent(int event, String file) {
-            // MLog.d(TAG, "event: " + event);
-            // MLog.d(TAG, "file: " + file);
 
             if ((FileObserver.CREATE & event) != 0) {
                 MLog.d(TAG, "File created [" + PhonkSettings.getBaseDir() + file + "]");
@@ -403,16 +399,6 @@ public class PhonkServerService extends Service {
         String jsonObject = gson.toJson(data);
         phonkWebsockets.send(jsonObject);
 
-        /*
-        final Handler handler = new Handler();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        };
-        handler.post(r);
-        */
     }
 
     /*
@@ -430,7 +416,7 @@ public class PhonkServerService extends Service {
     /**
      * send logs to WEBIDE
      */
-    BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, intent.getAction());
@@ -447,7 +433,7 @@ public class PhonkServerService extends Service {
     };
 
 
-    BroadcastReceiver webEditorBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver webEditorBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, "onReceive" + intent.getAction());
@@ -469,30 +455,39 @@ public class PhonkServerService extends Service {
         MLog.d(TAG, "connect -> " + e.getAction());
 
         String action = e.getAction();
-        if (action.equals(Events.PROJECT_RUN)) {
-            PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
-        } else if (action.equals(Events.PROJECT_STOP_ALL_AND_RUN)) {
-            Intent i = new Intent("io.phonk.runner.intent.CLOSE");
-            sendBroadcast(i);
-            PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
-        } else if (action.equals(Events.PROJECT_STOP_ALL)) {
-            Intent i = new Intent("io.phonk.runner.intent.CLOSE");
-            sendBroadcast(i);
-        } else if (action.equals(Events.PROJECT_SAVE)) {
-        } else if (action.equals(Events.PROJECT_NEW)) {
-            sendUpdatedProjectListToWebIDE();
-        } else if (action.equals(Events.PROJECT_DELETE)) {
-            sendUpdatedProjectListToWebIDE();
-        } else if (action.equals(Events.PROJECT_REFRESH_LIST)) {
-            sendUpdatedProjectListToWebIDE();
-        } else if (action.equals(Events.PROJECT_UPDATE)) {
-            //mProtocoder.protoScripts.listRefresh();
-        } else if (action.equals(Events.PROJECT_EDIT)) {
-            MLog.d(TAG, "edit " + e.getProject().getName());
-            PhonkAppHelper.launchEditor(getApplicationContext(), e.getProject());
-        } else if (action.equals(Events.PROJECT_RUNNING)) {
-            MLog.d(TAG, "running " + e.getProject().getName());
-            mProjectRunning = e.getProject();
+        switch (action) {
+            case Events.PROJECT_RUN:
+                PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
+                break;
+            case Events.PROJECT_STOP_ALL_AND_RUN: {
+                Intent i = new Intent("io.phonk.runner.intent.CLOSE");
+                sendBroadcast(i);
+                PhonkAppHelper.launchScript(getApplicationContext(), e.getProject());
+                break;
+            }
+            case Events.PROJECT_STOP_ALL: {
+                Intent i = new Intent("io.phonk.runner.intent.CLOSE");
+                sendBroadcast(i);
+                break;
+            }
+            case Events.PROJECT_SAVE:
+                break;
+            case Events.PROJECT_NEW:
+            case Events.PROJECT_REFRESH_LIST:
+            case Events.PROJECT_DELETE:
+                sendUpdatedProjectListToWebIDE();
+                break;
+            case Events.PROJECT_UPDATE:
+                //mProtocoder.protoScripts.listRefresh();
+                break;
+            case Events.PROJECT_EDIT:
+                MLog.d(TAG, "edit " + e.getProject().getName());
+                PhonkAppHelper.launchEditor(getApplicationContext(), e.getProject());
+                break;
+            case Events.PROJECT_RUNNING:
+                MLog.d(TAG, "running " + e.getProject().getName());
+                mProjectRunning = e.getProject();
+                break;
         }
     }
 
@@ -518,7 +513,7 @@ public class PhonkServerService extends Service {
         registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
-    BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             MLog.d(TAG, "stop_all 2");
@@ -538,7 +533,7 @@ public class PhonkServerService extends Service {
         registerReceiver(viewsUpdateBroadcastReceiver, filterSend);
     }
 
-    BroadcastReceiver viewsUpdateBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver viewsUpdateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String views = intent.getStringExtra("views");

@@ -173,16 +173,6 @@ public class PNetwork extends ProtoBase {
         Thread t = new Thread(() -> {
 
             // doesnt work! isReachable
-            //
-            // try {
-            // InetAddress in = InetAddress.getByName(host);
-            // boolean isReacheable = in.isReachable(5000);
-            // callback(callbackfn, isReacheable);
-            // } catch (UnknownHostException e) {
-            // e.printStackTrace();
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // }
 
         });
         t.start();
@@ -213,7 +203,7 @@ public class PNetwork extends ProtoBase {
     @PhonkMethodParam(params = {"port", "function(jsonData)"})
     public OSC.Server createOSCServer(String port) {
         OSC osc = new OSC();
-        OSC.Server server = osc.new Server();
+        OSC.Server server = new OSC.Server();
 
         server.start(port);
         getAppRunner().whatIsRunning.add(server);
@@ -225,7 +215,7 @@ public class PNetwork extends ProtoBase {
     @PhonkMethodParam(params = {"address", "port"})
     public OSC.Client connectOSC(String address, int port) {
         OSC osc = new OSC();
-        OSC.Client client = osc.new Client(address, port);
+        OSC.Client client = new OSC.Client(address, port);
         getAppRunner().whatIsRunning.add(client);
 
         return client;
@@ -250,17 +240,15 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Start a websocket server", example = "")
     @PhonkMethodParam(params = {"port", "function(status, socket, data)"})
     public PWebSocketServer createWebsocketServer(int port) {
-        PWebSocketServer pWebSocketServer = new PWebSocketServer(getAppRunner(), port);
 
-        return pWebSocketServer;
+        return new PWebSocketServer(getAppRunner(), port);
     }
 
     @PhonkMethod(description = "Connect to a websocket server", example = "")
     @PhonkMethodParam(params = {"uri", "function(status, data)"})
     public PWebSocketClient connectWebsocket(String uri) {
-        PWebSocketClient pWebSocketClient = new PWebSocketClient(getAppRunner(), uri);
 
-        return pWebSocketClient;
+        return new PWebSocketClient(getAppRunner(), uri);
     }
 
     @PhonkMethod
@@ -295,12 +283,15 @@ public class PNetwork extends ProtoBase {
                 RequestBody requestBody = null;
                 boolean dataExists = false;
 
-                if (data != null) { if (data.size() > 0) dataExists = true; }
+                if (data != null) {
+                    if (data.size() > 0) dataExists = true;
+                }
                 if (headers == null) {
                     headers = new NativeObject();
                 }
 
-                if (body != null) requestBody = RequestBody.create(MediaType.parse((String) body.get("type")), (String) body.get("data"));
+                if (body != null)
+                    requestBody = RequestBody.create(MediaType.parse((String) body.get("type")), (String) body.get("data"));
 
                 if (dataExists) {
                     MultipartBody.Builder formBody = new MultipartBody.Builder();
@@ -382,7 +373,7 @@ public class PNetwork extends ProtoBase {
     }
 
     @PhonkMethod
-    public String ssh(final String serverAddress, final int port, final String username, final String password) {
+    public void ssh(final String serverAddress, final int port, final String username, final String password) {
         MLog.d(TAG, "trying to connect");
 
         new Thread(() -> {
@@ -426,14 +417,12 @@ public class PNetwork extends ProtoBase {
             }
 
         }).start();
-
-        return "";
     }
 
     @PhonkMethod(description = "Enable/Disable the Wifi adapter", example = "")
     @PhonkMethodParam(params = {"boolean"})
     public void enableWifi(boolean enabled) {
-        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(enabled);
     }
 
@@ -441,7 +430,7 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Check if the Wifi adapter is enabled", example = "")
     @PhonkMethodParam(params = {})
     public boolean isWifiEnabled() {
-        WifiManager wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifiManager.isWifiEnabled();
     }
 
@@ -451,6 +440,7 @@ public class PNetwork extends ProtoBase {
     public String getNetworkType() {
         String type = "none";
         TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+
         switch (tm.getNetworkType()) {
             case TelephonyManager.NETWORK_TYPE_HSPAP:
                 type = "4G";
@@ -463,6 +453,38 @@ public class PNetwork extends ProtoBase {
                 break;
             case TelephonyManager.NETWORK_TYPE_EDGE:
                 type = "2G";
+                break;
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                break;
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                break;
+            case TelephonyManager.NETWORK_TYPE_GSM:
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                break;
+            case TelephonyManager.NETWORK_TYPE_IWLAN:
+                break;
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                break;
+            case TelephonyManager.NETWORK_TYPE_NR:
+                break;
+            case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                break;
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
                 break;
         }
 
@@ -477,18 +499,22 @@ public class PNetwork extends ProtoBase {
         conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
         // should contain ssid in quotes
 
-        if (type.equals("wep")) {
-            // wep
-            conf.wepKeys[0] = "\"" + networkPass + "\"";
-            conf.wepTxKeyIndex = 0;
-            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-        } else if (type.equals("wpa")) {
-            // wpa
-            conf.preSharedKey = "\"" + networkPass + "\"";
-        } else if (type.equals("open")) {
-            // open
-            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        switch (type) {
+            case "wep":
+                // wep
+                conf.wepKeys[0] = "\"" + networkPass + "\"";
+                conf.wepTxKeyIndex = 0;
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                break;
+            case "wpa":
+                // wpa
+                conf.preSharedKey = "\"" + networkPass + "\"";
+                break;
+            case "open":
+                // open
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                break;
         }
 
         WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -506,12 +532,9 @@ public class PNetwork extends ProtoBase {
         }
     }
 
-    private boolean mIsWifiAPEnabled = true;
-
     @PhonkMethod(description = "Enable/Disable a Wifi access point", example = "")
     @PhonkMethodParam(params = {"AP name, enabled"})
     public void wifiAP(String wifiName, boolean enabled) {
-
         WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
         Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
@@ -532,8 +555,6 @@ public class PNetwork extends ProtoBase {
                     if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
                         Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
                     }
-                    //MLog.d(TAG, "enableMobileAP enabled: ");
-                    mIsWifiAPEnabled = enabled;
                 } catch (Exception e) {
                     //MLog.e(TAG, "enableMobileAP failed: ", e);
                 }
@@ -542,6 +563,7 @@ public class PNetwork extends ProtoBase {
     }
 
     BroadcastReceiver wifiReceiver;
+
     public void wifiScan(ReturnInterface callback) {
         if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
 
@@ -576,30 +598,14 @@ public class PNetwork extends ProtoBase {
                 ret.put("networks", valuesArray);
                 callback.event(ret);
 
-                if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
+                if (wifiReceiver != null)
+                    getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
             }
         };
 
         wifi.startScan();
         getAppRunner().getAppContext().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
-
-    /*
-    @SuppressLint("MissingPermission")
-    public void getCellNeightbours() {
-        TelephonyManager manager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        List<CellInfo> cellInfoList = new ArrayList<>();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return cellInfoList;
-        }
-        cellInfoList = manager.getAllCellInfo();
-        if (cellInfoList != null) {
-            for (CellInfo info : cellInfoList) {
-                //
-            }
-        }
-    }
-     */
 
     // --------- RegisterServiceCB ---------//
     public interface RegisterServiceCB {
@@ -644,17 +650,15 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Connect to ftp", example = "")
     @PhonkMethodParam(params = {})
     public PFtpClient createFtpConnection() {
-        PFtpClient ftpClient = new PFtpClient(getAppRunner());
 
-        return ftpClient;
+        return new PFtpClient(getAppRunner());
     }
 
     @PhonkMethod(description = "Connect to a MQTT service", example = "")
     @PhonkMethodParam(params = {})
     public PMqtt createMQTTClient() {
-        PMqtt pMqtt = new PMqtt(getAppRunner());
 
-        return pMqtt;
+        return new PMqtt(getAppRunner());
     }
 
     @Override

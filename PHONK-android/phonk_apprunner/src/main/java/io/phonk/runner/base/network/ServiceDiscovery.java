@@ -59,7 +59,7 @@ public class ServiceDiscovery {
     public class Create {
         private final NsdManager mNsdManager;
         private final NsdServiceInfo serviceInfo;
-        private NsdManager.RegistrationListener mRegistrationListener;
+        private final NsdManager.RegistrationListener mRegistrationListener;
         private ReturnInterface mCallback;
 
         Create(Context a, String name, String serviceType, int port) {
@@ -152,7 +152,7 @@ public class ServiceDiscovery {
     public class Discover {
         final NsdManager mNsdManager;
         private final String mServiceType;
-        NsdManager.DiscoveryListener mDiscoveryListener;
+        final NsdManager.DiscoveryListener mDiscoveryListener;
         ReturnInterface mCallback;
 
         Discover(Context a, final String serviceType) {

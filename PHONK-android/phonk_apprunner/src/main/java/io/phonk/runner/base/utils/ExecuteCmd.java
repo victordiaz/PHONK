@@ -52,8 +52,6 @@ public class ExecuteCmd {
         mThread = new Thread(() -> {
             Looper.prepare();
 
-            int count = 0;
-            String str = "";
             try {
                 //execute the command
                 final Process process = Runtime.getRuntime().exec(cmd);
@@ -95,10 +93,7 @@ public class ExecuteCmd {
 
                 }
                 reader.close();
-
-                str = output.toString();
             } catch (IOException e) {
-                // Log.d(TAG, "Error");
                 e.printStackTrace();
             }
             Looper.loop();

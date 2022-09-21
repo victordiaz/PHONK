@@ -27,8 +27,8 @@ import java.nio.channels.FileChannel.MapMode;
 
 /** Handles loading various parts of the model stored as a directory under Android assets. */
 public class AssetModelLoader implements ModelLoader {
-  private AssetManager assetManager;
-  private String directoryName;
+  private final AssetManager assetManager;
+  private final String directoryName;
 
   /**
    * Create a loader for a transfer learning model under given directory.

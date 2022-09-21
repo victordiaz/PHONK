@@ -68,27 +68,6 @@ public class _PDashboardSlider extends ProtoBase {
 
         //TODO change to events
 
-        /*
-        CustomWebsocketServer.getInstance(getContext()).addListener(id, new WebSocketListener() {
-            @Override
-            public void onUpdated(JSONObject jsonObject) {
-                try {
-                    final double val = jsonObject.getDouble("val");
-                    mHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (mCallback != null) mCallback.event(val);
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        CustomWebsocketServer.getInstance(getContext()).send(msg);
-        */
     }
 
     public void onChange(final jDashboardSliderAddCB callbackfn) throws UnknownHostException {
@@ -112,8 +91,6 @@ public class _PDashboardSlider extends ProtoBase {
         msg.put("values", values);
 
         //TODO change to events
-        //CustomWebsocketServer ws = CustomWebsocketServer.getInstance(getContext());
-        //ws.send(msg);
     }
 
     @Override

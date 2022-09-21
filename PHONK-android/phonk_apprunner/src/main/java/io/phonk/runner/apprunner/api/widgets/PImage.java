@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
@@ -44,8 +43,8 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
 
     protected final AppRunner mAppRunner;
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    protected ImageStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    protected final ImageStyler styler;
 
     public PImage(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -58,7 +57,7 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
 
         addFromChild(props);
 
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
     }
@@ -75,9 +74,6 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
             imagePath = mAppRunner.getProject().getFullPathForFile(imagePath);
             Picasso.with(mAppRunner.getAppContext()).load(new File(imagePath)).resize(width, height).centerCrop().into(this);
         }
-
-        // MLog.d(TAG, "loading image from " + imagePath);
-        // new PHelper.SetImageTask(this).execute(imagePath);
 
         return this;
     }
@@ -103,9 +99,7 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         switch (mode) {
             case "tiled":
                 BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
-                // Bitmap bmp = bitmapDrawable .getBitmap();
 
-                // BitmapDrawable bd = new BitmapDrawable(bmp);
                 Shader.TileMode tileMode = Shader.TileMode.REPEAT;
                 bitmapDrawable.setTileModeXY(tileMode, tileMode);
 

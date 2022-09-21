@@ -32,7 +32,7 @@ import io.phonk.runner.base.utils.MLog;
  */
 public class EventsProxy {
 
-    String TAG = EventsProxy.class.getSimpleName();
+    final String TAG = EventsProxy.class.getSimpleName();
 
     public EventsProxy() {
         EventBus.getDefault().register(this);

@@ -32,7 +32,6 @@ import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import io.phonk.runner.apprunner.api.PDevice;
 import io.phonk.runner.base.utils.MLog;
 
 public class PhonkWebsocketServer extends WebSocketServer {
@@ -49,8 +47,8 @@ public class PhonkWebsocketServer extends WebSocketServer {
 
     private int mPort;
     private int mNumConnections = 0;
-    private final List<WebSocket> connections = new ArrayList<WebSocket>();
-    private HashMap<String, WebSocketListener> listeners = new HashMap<String, WebSocketListener>();
+    private final List<WebSocket> connections = new ArrayList<>();
+    private final HashMap<String, WebSocketListener> listeners = new HashMap<>();
     private ConnectionCallback mConnectionCallback;
 
     public interface WebSocketListener {
@@ -127,15 +125,13 @@ public class PhonkWebsocketServer extends WebSocketServer {
         try {
             JSONObject msg = new JSONObject(message);
             String module = (String) msg.get("module");
-            switch (module) {
-                case "dashboard":
-                    sendDashboardReceiver(msg);
-                    break;
+            if ("dashboard".equals(module)) {
+                sendDashboardReceiver(msg);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-            MLog.e(TAG, "Error in handleMessage" + e.toString());
+            MLog.e(TAG, "Error in handleMessage" + e);
             try {
                 response = response.put("error", e.toString());
             } catch (JSONException e1) {

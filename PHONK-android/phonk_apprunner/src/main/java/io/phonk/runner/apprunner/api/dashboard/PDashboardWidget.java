@@ -41,14 +41,14 @@ public abstract class PDashboardWidget extends ProtoBase {
     private static final String TAG = PDashboardWidget.class.getSimpleName();
     protected final PDashboard.DashboardServer mDashboardServer;
 
-    private Context mContext;
+    private final Context mContext;
 
     protected ReturnInterface mCallback;
 
     final String D_MODULE = "dashboard";
-    String mType;
+    final String mType;
 
-    protected String mId;
+    protected final String mId;
     protected String name;
 
     public PDashboardWidget(AppRunner appRunner, PDashboard.DashboardServer dashboardServer, String type) {

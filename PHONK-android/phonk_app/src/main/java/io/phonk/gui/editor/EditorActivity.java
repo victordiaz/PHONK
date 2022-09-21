@@ -43,7 +43,7 @@ import io.phonk.R;
 import io.phonk.events.Events;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui.filemanager.FileManagerFragment;
-import io.phonk.gui.filepreviewer.FilePreviewerFragment;
+import io.phonk.gui.filemanager.FilePreviewerFragment;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
@@ -82,7 +82,7 @@ public class EditorActivity extends BaseActivity {
     private Project mCurrentProject;
 
     // here we store the opened files with a flag that indicates if the file has been modified (true) or not (false)
-    HashMap<String, Boolean> openedFiles = new HashMap<>();
+    final HashMap<String, Boolean> openedFiles = new HashMap<>();
 
     @SuppressLint("NewApi")
     @Override
@@ -190,10 +190,6 @@ public class EditorActivity extends BaseActivity {
     public void save() {
         editorFragment.saveFile();
         EventBus.getDefault().post(new Events.EditorEvent(Events.EDITOR_ALL_FILE_STATUS, null));
-    }
-
-    public void saveAll() {
-        // editorFragment;
     }
 
     public void toggleFilesDrawer() {
@@ -316,11 +312,7 @@ public class EditorActivity extends BaseActivity {
                     ft.add(R.id.fragmentFileManager, fileFragment, FRAGMENT_FILE_PREVIEWER).addToBackStack("filemanager");
                 }
             } else {
-                if (isTablet) {
-                    filePreviewerFragment = (FilePreviewerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FILE_PREVIEWER);
-                } else {
-                    filePreviewerFragment = (FilePreviewerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FILE_PREVIEWER);
-                }
+                filePreviewerFragment = (FilePreviewerFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_FILE_PREVIEWER);
             }
 
         } else {

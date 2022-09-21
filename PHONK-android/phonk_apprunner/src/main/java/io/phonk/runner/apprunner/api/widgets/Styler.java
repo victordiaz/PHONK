@@ -31,9 +31,7 @@ import android.view.ViewGroup;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
@@ -43,25 +41,25 @@ import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
 public class Styler {
     private static final java.lang.String TAG = Styler.class.getSimpleName();
 
-    View mView;
-    AppRunner mAppRunner;
-    public StylePropertiesProxy mProps;
+    final View mView;
+    final AppRunner mAppRunner;
+    public final StylePropertiesProxy mProps;
 
-    MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
+    final MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
     // MyRoundCornerDrawable mActiveDrawable = new MyRoundCornerDrawable();
-    MyRoundCornerDrawable mPressedDrawable = new MyRoundCornerDrawable();
-    MyRoundCornerDrawable mSelectedDrawable = new MyRoundCornerDrawable();
-    MyRoundCornerDrawable mCheckedDrawable = new MyRoundCornerDrawable();
-    MyRoundCornerDrawable mHoveredDrawable = new MyRoundCornerDrawable();
-    StateListDrawable mStateListDrawable = new StateListDrawable();
+    final MyRoundCornerDrawable mPressedDrawable = new MyRoundCornerDrawable();
+    final MyRoundCornerDrawable mSelectedDrawable = new MyRoundCornerDrawable();
+    final MyRoundCornerDrawable mCheckedDrawable = new MyRoundCornerDrawable();
+    final MyRoundCornerDrawable mHoveredDrawable = new MyRoundCornerDrawable();
+    final StateListDrawable mStateListDrawable = new StateListDrawable();
 
     // String animInBefore;
     // String animIn;
     // String animOut;
 
     // common properties
-    String id;
-    String mViewName;
+    final String id;
+    final String mViewName;
     boolean enabled;
     String visibility;
     float opacity;
@@ -194,10 +192,22 @@ public class Styler {
         float paddingRight = padding;
         float paddingBottom = padding;
 
-        try { paddingLeft = toFloat(mProps.get("paddingLeft")); } catch (Exception e) { }
-        try { paddingTop = toFloat(mProps.get("paddingTop")); } catch (Exception e) { }
-        try { paddingRight = toFloat(mProps.get("paddingRight")); } catch (Exception e) { }
-        try { paddingBottom = toFloat(mProps.get("paddingBottom")); } catch (Exception e) { }
+        try {
+            paddingLeft = toFloat(mProps.get("paddingLeft"));
+        } catch (Exception ignored) {
+        }
+        try {
+            paddingTop = toFloat(mProps.get("paddingTop"));
+        } catch (Exception ignored) {
+        }
+        try {
+            paddingRight = toFloat(mProps.get("paddingRight"));
+        } catch (Exception ignored) {
+        }
+        try {
+            paddingBottom = toFloat(mProps.get("paddingBottom"));
+        } catch (Exception ignored) {
+        }
 
         /*
         src = props.get("src").toString();

@@ -53,7 +53,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         mEventsRecyclerView.scrollToPosition(mEventList.size() - 1);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final EventItemView mView;
 
         public ViewHolder(EventItemView v) {
@@ -71,9 +71,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         EventItemView projectItem = new EventItemView(mContext);
-        ViewHolder vh = new ViewHolder(projectItem);
 
-        return vh;
+        return new ViewHolder(projectItem);
     }
 
     @Override

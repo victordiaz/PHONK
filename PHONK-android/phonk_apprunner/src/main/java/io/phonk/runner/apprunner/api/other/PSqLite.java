@@ -38,14 +38,12 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PSqLite extends ProtoBase {
-    String TAG = PSqLite.class.getSimpleName();
+    final String TAG = PSqLite.class.getSimpleName();
 
     private SQLiteDatabase db;
 
     public PSqLite(AppRunner appRunner, String dbName) {
         super(appRunner);
-
-        MLog.d(TAG, "qq3 " + getActivity());
 
         open(dbName);
     }
@@ -70,9 +68,8 @@ public class PSqLite extends ProtoBase {
     public Cursor query(String table, String[] columns) {
         for (String column : columns) {
         }
-        Cursor c = db.query(table, columns, null, null, null, null, null);
 
-        return c;
+        return db.query(table, columns, null, null, null, null, null);
     }
 
     @PhonkMethod(description = "Close the database connection", example = "")
@@ -91,16 +88,16 @@ public class PSqLite extends ProtoBase {
     @PhonkMethodParam(params = {"table", "fields"})
     public void insert(String table, ArrayList<DBDataType> fields) {
 
-        String names = "";
-        String values = "";
+        StringBuilder names = new StringBuilder();
+        StringBuilder values = new StringBuilder();
 
         for (int i = 0; i < fields.size(); i++) {
             if (i != fields.size() - 1) {
-                names = names + " " + fields.get(i).name + ",";
-                values = values + " " + fields.get(i).obj.toString();
+                names.append(" ").append(fields.get(i).name).append(",");
+                values.append(" ").append(fields.get(i).obj.toString());
             } else {
-                names = names + "" + fields.get(i).name;
-                values = values + " " + fields.get(i).obj.toString();
+                names.append(fields.get(i).name);
+                values.append(" ").append(fields.get(i).obj.toString());
             }
         }
 
@@ -116,9 +113,9 @@ public class PSqLite extends ProtoBase {
         }
     }
 
-    public class DBDataType {
-        String name;
-        Object obj;
+    public static class DBDataType {
+        final String name;
+        final Object obj;
 
         public DBDataType(String name, Object obj) {
             this.name = name;

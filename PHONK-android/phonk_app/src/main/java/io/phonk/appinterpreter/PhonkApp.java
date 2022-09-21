@@ -28,7 +28,7 @@ public class PhonkApp {
     private final AppRunner mAppRunner;
 
     //public objects
-    public Network network;
+    public final Network network;
     // public UserSettings userSettings;
 
     public PhonkApp(AppRunnerCustom appRunner) {

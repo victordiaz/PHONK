@@ -31,8 +31,8 @@
             <!--
             <stroke android:width="1dp" android:color="@color/phonk_backgroundColor"/>
             -->
-            <size android:width="45dp"></size>
-            <size android:height="45dp"></size>
+            <size android:width="45dp" />
+            <size android:height="45dp" />
         </shape>
     </item>
 

@@ -63,8 +63,8 @@ public class Events {
     public static final String USER_CONNECTION_LEAVE = "user_conection_leave";
 
     public static class ProjectEvent {
-        private Project project;
-        private String action;
+        private final Project project;
+        private final String action;
 
         public ProjectEvent(String action, Project project) {
             this.action = action;
@@ -79,14 +79,15 @@ public class Events {
         public String getAction() {
             return action;
         }
+
         public Project getProject() {
             return project;
         }
     }
 
     public static class FileEvent {
-        private String action;
-        private String file;
+        private final String action;
+        private final String file;
 
         public FileEvent(String action, String file) {
             this.action = action;
@@ -96,13 +97,14 @@ public class Events {
         public String getAction() {
             return action;
         }
+
         public String getFile() {
             return file;
         }
     }
 
     public static class ExecuteCodeEvent {
-        private String code;
+        private final String code;
 
         public ExecuteCodeEvent(String code) {
             this.code = code;
@@ -114,8 +116,8 @@ public class Events {
     }
 
     public static class LogEvent {
-        private String msg;
-        private String tag;
+        private final String msg;
+        private final String tag;
 
         public LogEvent(final String aTag, final String aMsg) {
             msg = aMsg;
@@ -132,8 +134,8 @@ public class Events {
     }
 
     public static class SelectedProjectEvent {
-        private String folder;
-        private String name;
+        private final String folder;
+        private final String name;
 
         public SelectedProjectEvent(String folder, String name) {
             this.folder = folder;
@@ -188,7 +190,10 @@ public class Events {
         public String getWhat() {
             return what;
         }
-        public Project getProject() { return project; }
+
+        public Project getProject() {
+            return project;
+        }
     }
 
     public static class Connection {
@@ -260,7 +265,7 @@ public class Events {
     public static class UserConnectionEvent {
         private final boolean connected;
         private final String ip;
-        private ArrayList<String> users;
+        private final ArrayList<String> users;
 
         public UserConnectionEvent(boolean connected, String ip, ArrayList<String> users) {
             this.connected = connected;

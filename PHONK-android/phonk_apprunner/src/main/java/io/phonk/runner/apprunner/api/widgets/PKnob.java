@@ -43,20 +43,20 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PKnob extends PCustomView implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PKnob.class.getSimpleName();
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public KnobStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final KnobStyler styler;
 
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
 
-    private Typeface textStyle = Typeface.DEFAULT;
+    private final Typeface textStyle = Typeface.DEFAULT;
     private Typeface textFont;
 
     private ArrayList touches;
     private float firstY;
     private float prevVal = 0;
     private float val = 0;
-    private boolean autoTextSize = false;
+    private final boolean autoTextSize = false;
     private int mWidth;
     private int mHeight;
     private float mappedVal;
@@ -64,7 +64,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     private float rangeFrom = 0;
     private float rangeTo = 360;
 
-    private DecimalFormat df;
+    private final DecimalFormat df;
 
     public PKnob(AppRunner appRunner, Map initProps) {
         super(appRunner, initProps);
@@ -83,7 +83,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
         props.put("textFont", props, "monospace");
         props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
@@ -135,7 +135,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         if (callbackRelease != null) callbackRelease.event(ret);
     }
 
-    OnDrawCallback mydraw = new OnDrawCallback() {
+    final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
             mWidth = c.width;
@@ -163,33 +163,6 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
             float d = diameter - styler.knobBorderWidth - styler.knobProgressWidth - styler.knobProgressSeparation;
             c.arc(posX, posY, d, d, 180, unmappedVal, false);
-
-            /*
-            c.noFill();
-            c.strokeWidth(5);
-            c.stroke("#000000");
-
-            Path p1 = c.path();
-
-            int diameter = 0;
-            if (c.width >= c.height) diameter = c.height;
-            else diameter = c.width;
-            int halfdiameter = diameter / 2;
-
-            // mAppRunner.pUtil.
-            float val = CanvasUtils.map(y, 0, c.height, 0, 360);
-            p1.addArc(new RectF(0, 0, diameter, diameter), 180, val);
-            p1.lineTo(halfdiameter, halfdiameter);
-            // c.drawPath(p1);
-            Path p2 = c.path();
-            float r = diameter / 5;
-            p2.addCircle(halfdiameter, halfdiameter, r, Path.Direction.CCW);
-
-            c.mCanvasBuffer.save();
-            c.mCanvasBuffer.clipPath(p2, Region.Op.DIFFERENCE);
-            c.drawPath(p1);
-            c.mCanvasBuffer.restore();
-            */
 
             c.fill(styler.textColor);
             c.noStroke();
@@ -297,7 +270,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         return this;
     }
 
-    class KnobStyler extends Styler {
+    static class KnobStyler extends Styler {
         public float knobProgressSeparation;
         public float knobBorderWidth;
         public float knobProgressWidth;

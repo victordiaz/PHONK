@@ -22,8 +22,6 @@
 
 package io.phonk.runner.apprunner.api;
 
-import com.google.gson.Gson;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
@@ -35,15 +33,14 @@ import io.phonk.runner.apidoc.annotation.PhonkObject;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 import io.phonk.runner.base.events.Events;
-import io.phonk.runner.base.utils.GSONUtil;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.utils.StrUtils;
 
 @PhonkObject
 public class PConsole extends ProtoBase {
 
-    private boolean showTime = false;
-    private SimpleDateFormat s = new SimpleDateFormat("hh:mm:ss");
+    private final boolean showTime = false;
+    private final SimpleDateFormat s = new SimpleDateFormat("hh:mm:ss");
 
     public PConsole(AppRunner appRunner) {
         super(appRunner);
@@ -87,8 +84,6 @@ public class PConsole extends ProtoBase {
     }
 
     public PConsole p_error(int type, Object outputs) {
-        // MLog.d("qq", "" + type);
-
         switch (type) {
             case AppRunnerInterpreter.RESULT_ERROR:
                 base_log("log_error", outputs);

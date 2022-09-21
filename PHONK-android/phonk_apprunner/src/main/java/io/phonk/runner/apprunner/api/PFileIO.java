@@ -129,22 +129,6 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
-    /*
-    @ProtoMethod(description = "Move a directory to another directory", example = "")
-    @ProtoMethodParam(params = {"name", "destination"})
-    public void moveDirToDir(String name, String to) {
-        File fromDir = new File(getAppRunner().getProject().getFullPathForFile(name));
-        File dir = new File(getAppRunner().getProject().getFullPathForFile(to));
-
-        dir.mkdirs();
-        try {
-            FileUtils.moveDirectoryToDirectory(fromDir, dir, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    */
-
     @PhonkMethod(description = "Copy a file or directory", example = "")
     @PhonkMethodParam(params = {"name", "destination"})
     public void copy(String name, String to) {
@@ -163,27 +147,9 @@ public class PFileIO extends ProtoBase {
 
     }
 
-    /*
-    @ProtoMethod(description = "Copy a file or directory", example = "")
-    @ProtoMethodParam(params = {"name", "destination"})
-    public void copyDirToDir(String name, String to) {
-        File file = new File(getAppRunner().getProject().getFullPathForFile(name));
-        File dir = new File(getAppRunner().getProject().getFullPathForFile(to));
-        dir.mkdirs();
-
-        try {
-            FileUtils.copyDirectoryToDirectory(file, dir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    */
-
     @PhonkMethod(description = "Rename a file or directory", example = "")
     @PhonkMethodParam(params = {"name", "destination"})
     public void rename(String oldName, String newName) {
-        //File file = new File(AppRunnerSettings.get().project.getStoragePath() + File.separator + name);
-        //file.mkdirs();
 
         File origin = new File(getAppRunner().getProject().getFullPathForFile(oldName));
         String path = origin.getParentFile().toString();
@@ -375,7 +341,7 @@ public class PFileIO extends ProtoBase {
         else formatType = Bitmap.CompressFormat.PNG;
 
         File file = new File(filePath);
-        if (file.exists()) file.delete ();
+        if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
             finalBitmap.compress(formatType, quality, out);
@@ -389,9 +355,8 @@ public class PFileIO extends ProtoBase {
     @PhonkMethod(description = "Observer file changes in a folder", example = "")
     @PhonkMethodParam(params = {"path", "function(action, file"})
     public PFileObserver createFileObserver(String path) {
-        PFileObserver pFileObserver = new PFileObserver(getAppRunner(), path);
 
-        return pFileObserver;
+        return new PFileObserver(getAppRunner(), path);
     }
 
     private void returnValues(final ReturnObject ret, final ReturnInterface callback) {

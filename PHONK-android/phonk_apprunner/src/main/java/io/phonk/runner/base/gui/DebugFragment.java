@@ -50,17 +50,14 @@ public class DebugFragment extends Fragment {
 
     private static final String TAG = DebugFragment.class.getSimpleName();
 
-    private View v;
     private RecyclerView mListView;
-    private ArrayList<DebugFragment.LogData> mLogArray = new ArrayList<>();
+    private final ArrayList<DebugFragment.LogData> mLogArray = new ArrayList<>();
     private MyAdapter mArrayAdapter;
-    private LinearLayoutManager mLayoutManager;
     private boolean isLockPosition = false;
     private boolean eventBusRegistered = false;
 
     public static DebugFragment newInstance() {
-        DebugFragment myFragment = new DebugFragment();
-        return myFragment;
+        return new DebugFragment();
     }
 
     @Override
@@ -68,27 +65,26 @@ public class DebugFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         registerEventBus();
 
-        v = inflater.inflate(R.layout.debug_fragment, container, false);
+        View v1 = inflater.inflate(R.layout.debug_fragment, container, false);
 
-        mListView = v.findViewById(R.id.logwrapper);
+        mListView = v1.findViewById(R.id.logwrapper);
 
         mArrayAdapter = new MyAdapter();
         mListView.setAdapter(mArrayAdapter);
         mListView.setItemAnimator(null);
         mListView.setOnTouchListener((v, event) -> false);
 
-        ToggleButton toggleLock = v.findViewById(R.id.toogleLockList);
+        ToggleButton toggleLock = v1.findViewById(R.id.toogleLockList);
         toggleLock.setOnCheckedChangeListener((buttonView, isChecked) -> isLockPosition = isChecked);
 
-        Button close = v.findViewById(R.id.close);
+        Button close = v1.findViewById(R.id.close);
         close.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().remove(DebugFragment.this).commit());
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setStackFromEnd(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setStackFromEnd(true);
+        mListView.setLayoutManager(layoutManager);
 
-        mListView.setLayoutManager(mLayoutManager);
-
-        return v;
+        return v1;
     }
 
     @Override
@@ -121,7 +117,7 @@ public class DebugFragment extends Fragment {
         MLog.d(TAG, actionType + " " + log);
         mLogArray.add(new LogData(actionType, log));
 
-        if (isLockPosition == false) {
+        if (!isLockPosition) {
             mArrayAdapter.notifyItemInserted(mLogArray.size());
             mListView.scrollToPosition(mLogArray.size() - 1);
         }
@@ -133,16 +129,12 @@ public class DebugFragment extends Fragment {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-        }
         return true;
     }
 
     @Subscribe(sticky = true)
     public void onEventMainThread(Events.LogEvent e) {
         String logMsg = e.getData();
-        MLog.d("qq logMsg", logMsg);
 
         int actionType = AppRunnerInterpreter.RESULT_OK;
         if (e.getAction() == "log_error") actionType = AppRunnerInterpreter.RESULT_ERROR;
@@ -175,9 +167,8 @@ public class DebugFragment extends Fragment {
                     break;
 
             }
-            DebugFragment.ViewHolder vh = new DebugFragment.ViewHolder(viewType, ll);
 
-            return vh;
+            return new ViewHolder(viewType, ll);
         }
 
         @Override
@@ -202,9 +193,7 @@ public class DebugFragment extends Fragment {
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private final LinearLayout ll;
-        private final TextView consoleType = null;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView consoleText;
         private final int viewType;
         private Button btnGrantPermissions = null;
@@ -212,18 +201,17 @@ public class DebugFragment extends Fragment {
         public ViewHolder(int viewType, LinearLayout v) {
             super(v);
             this.viewType = viewType;
-            ll = v;
-            consoleText = ll.findViewById(R.id.console_text);
+            consoleText = v.findViewById(R.id.console_text);
 
             if (viewType == AppRunnerInterpreter.RESULT_PERMISSION_ERROR) {
-                btnGrantPermissions = ll.findViewById(R.id.grantPermissionsBtn);
+                btnGrantPermissions = v.findViewById(R.id.grantPermissionsBtn);
             }
         }
     }
 
-    public class LogData {
-        int type;
-        String data;
+    public static class LogData {
+        final int type;
+        final String data;
 
         public LogData(int actionType, String log) {
             this.type = actionType;

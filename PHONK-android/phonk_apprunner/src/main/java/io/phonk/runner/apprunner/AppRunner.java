@@ -56,7 +56,7 @@ public class AppRunner {
 
     private final Context mContext;
     public boolean hasUserInterface = false;
-    public WhatIsRunning whatIsRunning;
+    public final WhatIsRunning whatIsRunning;
 
     //Project properties
     private Project mProject;
@@ -66,7 +66,7 @@ public class AppRunner {
     public String mIntentCode = "";
     public String mIntentPostfixScript = "";
 
-    public boolean mIsProjectLoaded = false;
+    public final boolean mIsProjectLoaded = false;
 
     //Interpreter
     public AppRunnerInterpreter interp;
@@ -166,7 +166,6 @@ public class AppRunner {
 
         // run the script
         if (null != mScript) {
-            MLog.d(TAG, "evaluate qq");
             evaluate(mScript, mProject.getName());
         }
         // can accept intent code if no project is loaded
@@ -206,8 +205,6 @@ public class AppRunner {
         if (!finished) {
             finished = true;
             whatIsRunning.stopAll();
-            // interp.stop();
-            // interp = null;
         }
     }
 
@@ -219,8 +216,7 @@ public class AppRunner {
         ReturnObject networkInfo = NetworkUtils.getLocalIpAddress(getAppContext());
         String ip = (String) networkInfo.get("ip");
         MLog.d(TAG, ip);
-        String url = "http://" + ip + ":" + AppRunnerSettings.SERVER_PORT + File.separator;
 
-        return url;
+        return "http://" + ip + ":" + AppRunnerSettings.SERVER_PORT + File.separator;
     }
 }

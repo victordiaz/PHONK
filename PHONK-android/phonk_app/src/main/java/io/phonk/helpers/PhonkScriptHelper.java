@@ -152,7 +152,7 @@ public class PhonkScriptHelper {
     // List folders
     public static ArrayList<Folder> listFolders(String folder, boolean orderByName) {
         MLog.d(TAG, "--> " + folder);
-        ArrayList<Folder> folders = new ArrayList<Folder>();
+        ArrayList<Folder> folders = new ArrayList<>();
         File dir = new File(PhonkSettings.getFolderPath(folder));
 
         if (!dir.exists()) {
@@ -228,13 +228,12 @@ public class PhonkScriptHelper {
 
     // List folders in a tree structure
     public static ArrayList<ProtoFile> listProjectsInFolder(String folder, int levels) {
-        ArrayList<ProtoFile> files = listFilesInFolder(folder, levels, "*");
 
-        return files;
+        return listFilesInFolder(folder, levels, "*");
     }
 
     public static ArrayList<ProtoFile> listFilesInFolder(String folder, int levels, String extensionFilter) {
-        ArrayList<ProtoFile> foldersArray = new ArrayList<ProtoFile>();
+        ArrayList<ProtoFile> foldersArray = new ArrayList<>();
         File dir = new File(PhonkSettings.getFolderPath(folder));
 
         fileWalker(foldersArray, dir, levels, extensionFilter);
@@ -257,7 +256,7 @@ public class PhonkScriptHelper {
             protoFile.isDir = f.isDirectory();
             if (f.isDirectory()) {
                 protoFile.type = "folder";
-                protoFile.files = new ArrayList<ProtoFile>();
+                protoFile.files = new ArrayList<>();
             } else {
                 protoFile.type = "file";
                 protoFile.size = f.length();
@@ -279,14 +278,13 @@ public class PhonkScriptHelper {
     }
 
     public static String getAbsolutePathFromRelative(String relativePath) {
-        String absolutePath = PhonkSettings.getBaseDir() + relativePath;
-        return absolutePath;
+        return PhonkSettings.getBaseDir() + relativePath;
     }
 
     // List projects
     public static ArrayList<Project> listProjects(String folder, boolean orderByName) {
         MLog.d(TAG, "--> " + folder);
-        ArrayList<Project> projects = new ArrayList<Project>();
+        ArrayList<Project> projects = new ArrayList<>();
         File dir = new File(PhonkSettings.getFolderPath(folder));
 
         if (!dir.exists()) {
@@ -375,7 +373,7 @@ public class PhonkScriptHelper {
         File fo = new File(p.getFullPath());
         File fd = new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER) + "/User Projects/" + newName);
 
-        MLog.d(TAG, "rename_ " + fo.toString() + " - " + fd.toString());
+        MLog.d(TAG, "rename_ " + fo + " - " + fd);
         if (!fd.exists()) {
             try {
                 FileUtils.copyDirectory(fo, fd);
@@ -399,17 +397,17 @@ public class PhonkScriptHelper {
     }
 
     public static String fileExt(String url) {
-        if (url.indexOf("?") > -1) {
+        if (url.contains("?")) {
             url = url.substring(0, url.indexOf("?"));
         }
         if (url.lastIndexOf(".") == -1) {
             return null;
         } else {
             String ext = url.substring(url.lastIndexOf("."));
-            if (ext.indexOf("%") > -1) {
+            if (ext.contains("%")) {
                 ext = ext.substring(0, ext.indexOf("%"));
             }
-            if (ext.indexOf("/") > -1) {
+            if (ext.contains("/")) {
                 ext = ext.substring(0, ext.indexOf("/"));
             }
 

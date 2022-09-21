@@ -24,7 +24,7 @@ import java.util.TreeMap;
 class LiteInitializeModel implements Closeable {
   private static final int FLOAT_BYTES = 4;
 
-  private LiteModelWrapper modelWrapper;
+  private final LiteModelWrapper modelWrapper;
 
   LiteInitializeModel(LiteModelWrapper modelWrapper) {
     this.modelWrapper = modelWrapper;

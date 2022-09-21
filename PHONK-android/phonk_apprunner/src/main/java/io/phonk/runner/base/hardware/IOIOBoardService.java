@@ -27,7 +27,6 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import io.phonk.runner.base.utils.MLog;
-import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOService;
@@ -36,7 +35,7 @@ public class IOIOBoardService extends IOIOService {
     protected static final String TAG = IOIOBoardService.class.getSimpleName();
 
     private IOIOBoard.HardwareCallback mCallback;
-    protected Boolean mAbort = false;
+    protected final Boolean mAbort = false;
 
     // Binder given to clients
     private final IBinder mBinder = new IOIOServiceBinder();
@@ -52,7 +51,7 @@ public class IOIOBoardService extends IOIOService {
         MLog.d(TAG, "createIOIOLooper");
         return new BaseIOIOLooper() {
             @Override
-            protected void setup() throws ConnectionLostException, InterruptedException {
+            protected void setup() throws InterruptedException {
                 MLog.d(TAG, "Setup in IOIOLooper " + mCallback + " " + ioio_);
 
                 if (mCallback != null) {
@@ -62,7 +61,7 @@ public class IOIOBoardService extends IOIOService {
             }
 
             @Override
-            public void loop() throws ConnectionLostException, InterruptedException {
+            public void loop() throws InterruptedException {
                 MLog.d(TAG, "loop " + mCallback);
                 if (mAbort) {
                     this.disconnected();

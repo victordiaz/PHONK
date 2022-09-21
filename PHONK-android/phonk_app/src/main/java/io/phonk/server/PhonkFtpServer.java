@@ -35,7 +35,7 @@ public class PhonkFtpServer extends PFtpServer {
 
     private static PhonkFtpServer instance = null;
     private static boolean started = false;
-    private Context c;
+    private final Context c;
 
     public PhonkFtpServer(AppRunnerCustom appRunner, int port) {
         super(port, null);

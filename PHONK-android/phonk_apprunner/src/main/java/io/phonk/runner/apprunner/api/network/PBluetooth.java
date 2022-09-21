@@ -100,15 +100,13 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
                     onActivityResult(requestCode, resultCode, data);
 
                     // if OK bt is already enabled
-                    switch (requestCode) {
-                        case REQUEST_ENABLE_BT:
-                            if (resultCode == Activity.RESULT_OK) {
-                                MLog.d(TAG, "enabling BT");
-                                mBtStarted = true;
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
+                    if (requestCode == REQUEST_ENABLE_BT) {
+                        if (resultCode == Activity.RESULT_OK) {
+                            MLog.d(TAG, "enabling BT");
+                            mBtStarted = true;
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -125,17 +123,15 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
     @PhonkMethodParam(params = {""})
     public PBluetoothClient createClient() {
         start();
-        PBluetoothClient pBluetoothClient = new PBluetoothClient(this, getAppRunner());
-        return pBluetoothClient;
+        return new PBluetoothClient(this, getAppRunner());
     }
 
     @PhonkMethod(description = "")
     @PhonkMethodParam(params = {""})
     public PBluetoothServer createServer(String name) {
         start();
-        PBluetoothServer pBluetoothServer = new PBluetoothServer(this, getAppRunner(), name);
 
-        return pBluetoothServer;
+        return new PBluetoothServer(this, getAppRunner(), name);
     }
 
     @PhonkMethod(description = "Scan bluetooth networks. Gives back the name, mac and signal strength", example = "")

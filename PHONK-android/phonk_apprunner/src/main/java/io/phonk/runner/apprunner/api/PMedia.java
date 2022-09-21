@@ -73,7 +73,6 @@ import io.phonk.runner.apprunner.api.media.PMidiController;
 import io.phonk.runner.apprunner.api.media.PPureData;
 import io.phonk.runner.apprunner.api.media.PTextToSpeech;
 import io.phonk.runner.apprunner.api.media.PVideo;
-import io.phonk.runner.apprunner.api.media.PWave;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
@@ -85,7 +84,7 @@ public class PMedia extends ProtoBase {
         super.initForParentFragment(fragment);
     }
 
-    String TAG = PMedia.class.getSimpleName();
+    final String TAG = PMedia.class.getSimpleName();
 
     private HeadSetReceiver headsetPluggedReceiver;
     private ReturnInterface headsetCallbackfn;
@@ -117,24 +116,21 @@ public class PMedia extends ProtoBase {
     @PhonkMethod(description = "Play a sound file giving its filename", example = "media.playSound(fileName);")
     @PhonkMethodParam(params = {"fileName"})
     public PAudioPlayer createSoundPlayer() {
-        PAudioPlayer pAudioPlayer = new PAudioPlayer(getAppRunner());
 
-        return pAudioPlayer;
+        return new PAudioPlayer(getAppRunner());
     }
 
     @PhonkMethod(description = "Adds a video view and starts playing the fileName", example = "")
     @PhonkMethodParam(params = {"fileName"})
     public PVideo createVideoPlayer() {
-        final PVideo video = new PVideo(getAppRunner());
-        return video;
+        return new PVideo(getAppRunner());
     }
 
     @PhonkMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
     @PhonkMethodParam(params = {"fileName"})
     public PPureData initLibPd() {
-        PPureData pPureData = new PPureData(getAppRunner());
 
-        return pPureData;
+        return new PPureData(getAppRunner());
     }
 
     @PhonkMethod(description = "Record a sound with the microphone", example = "")
@@ -142,14 +138,6 @@ public class PMedia extends ProtoBase {
     public PAudioRecorder createRecorder() {
         return new PAudioRecorder(getAppRunner());
     }
-
-    /*
-    @ProtoMethod(description = "Says a text with voice", example = "media.textToSpeech('hello world');")
-    @ProtoMethodParam(params = {"text"})
-    public PTextToSpeech textToSpeech(String text) {
-        return createTextToSpeech().speak(text);
-    }
-    */
 
     @PhonkMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
     @PhonkMethodParam(params = {"text", "Locale"})
@@ -193,7 +181,9 @@ public class PMedia extends ProtoBase {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-            intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, "Tell me something!");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, "Tell me something!");
+            }
             getActivity().startActivityForResult(intent, AppRunnerActivity.VOICE_RECOGNITION_REQUEST_CODE);
         } else {
             final SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(getContext());
@@ -201,9 +191,9 @@ public class PMedia extends ProtoBase {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             // intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-            intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
-            // intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, 10);
-            // intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getClass().getPackage().getName());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
+            }
             sr.startListening(intent);
 
 
@@ -230,8 +220,6 @@ public class PMedia extends ProtoBase {
 
                 @Override
                 public void onEndOfSpeech() {
-                    // o.put("action", "ended");
-                    // callbackfn.event(o);
                 }
 
                 @Override
@@ -284,9 +272,8 @@ public class PMedia extends ProtoBase {
     @PhonkMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
     @PhonkMethodParam(params = {"function(recognizedText)"})
     public PMidi startMidi() {
-        PMidi pMidi = new PMidi(getAppRunner());
 
-        return pMidi;
+        return new PMidi(getAppRunner());
     }
 
     @PhonkMethod(description = "Start a midi controller to control a soft synth on a computer", example = "")
@@ -312,11 +299,6 @@ public class PMedia extends ProtoBase {
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         headsetPluggedReceiver = new HeadSetReceiver();
         getContext().registerReceiver(headsetPluggedReceiver, filter);
-    }
-
-    public PWave createWave() {
-        PWave pWave = new PWave(getAppRunner());
-        return pWave;
     }
 
     private class HeadSetReceiver extends BroadcastReceiver {
@@ -346,7 +328,7 @@ public class PMedia extends ProtoBase {
     public Bitmap generateQRCode(String text) {
         Bitmap bmp = null;
 
-        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
+        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); // H = 30% damage
 
         int size = 256;
@@ -359,7 +341,7 @@ public class PMedia extends ProtoBase {
             bmp = Bitmap.createBitmap(width, width, Bitmap.Config.RGB_565);
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < width; y++) {
-                    bmp.setPixel(y, x, bitMatrix.get(x, y) == true ? Color.BLACK : Color.WHITE);
+                    bmp.setPixel(y, x, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
                 }
             }
         } catch (WriterException e) {
@@ -384,9 +366,9 @@ public class PMedia extends ProtoBase {
             String text = result.getText();
 
             MLog.d(TAG, "result: " + text);
-        } catch (NotFoundException e) {
-        } catch (ChecksumException e) {
-        } catch (FormatException e) {
+        } catch (NotFoundException ignored) {
+        } catch (ChecksumException ignored) {
+        } catch (FormatException ignored) {
         }
     }
 
@@ -402,16 +384,12 @@ public class PMedia extends ProtoBase {
         boolean existsCameraBack = (boolean) getAppRunner().pDevice.info().get("cameraBack");
 
         boolean cameraIsAvailable = camera.equals("front") & existsCameraFront | camera.equals("back") & existsCameraBack;
-        // MLog.d("qq", existsCameraFront + " " + existsCameraBack + " " + cameraIsAvailable);
 
         if (!cameraIsAvailable) {
-            // MLog.d("qq", "no camera");
-            // getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, camera + " camera");
             return null;
         }
 
-        PCamera pCamera = new PCamera(getAppRunner(), camera);
-        return pCamera;
+        return new PCamera(getAppRunner(), camera);
     }
 
     @Override

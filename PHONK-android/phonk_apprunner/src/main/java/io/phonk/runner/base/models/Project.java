@@ -34,7 +34,6 @@ public class Project {
     private final String TAG = Project.class.getSimpleName();
 
     // we need this to serialize the data using intent bundles
-    //public final static String TYPE = "projectType";
     public static final String FOLDER = "projectFolder";
     public static final String NAME = "projectName";
     public static final String URL = "projectUrl";
@@ -104,7 +103,9 @@ public class Project {
         return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
     }
 
-    public String getParentParentFullPath() { return AppRunnerSettings.getBaseDir() + this.parentFolder; }
+    public String getParentParentFullPath() {
+        return AppRunnerSettings.getBaseDir() + this.parentFolder;
+    }
 
     public String getFullPath() {
         return AppRunnerSettings.getBaseDir() + getSandboxPath();

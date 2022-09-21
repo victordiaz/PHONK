@@ -39,7 +39,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     private final int mPickMode;
 
     public ArrayList<Project> mProjectList = new ArrayList<>();
-    public HashMap<Project, Boolean> mProjectSelection = new HashMap<>();
+    public final HashMap<Project, Boolean> mProjectSelection = new HashMap<>();
     private final boolean mListMode;
     private ProjectListFragment.ProjectSelectedListener mListener;
 
@@ -47,7 +47,7 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         mListener = listener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ProjectItem mView;
 
         public ViewHolder(ProjectItem v) {
@@ -114,9 +114,8 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ProjectItem projectItem = new ProjectItem(mContext, mListMode, mPickMode);
-        ViewHolder vh = new ProjectItemAdapter.ViewHolder(projectItem);
 
-        return vh;
+        return new ViewHolder(projectItem);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

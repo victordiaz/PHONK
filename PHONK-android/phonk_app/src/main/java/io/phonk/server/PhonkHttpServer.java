@@ -69,15 +69,15 @@ public class PhonkHttpServer extends NanoHTTPD {
 
     private static WeakReference<Context> mContext;
 
-    private static String WEBAPP_DIR = "webide/";
-    Gson gson;
+    private static final String WEBAPP_DIR = "webide/";
+    final Gson gson;
     private String views;
     private ConnectionCallback mConnectionCallback;
 
     public PhonkHttpServer(Context context, int port) { //} throws IOException {
         super(port);
 
-        mContext = new WeakReference<Context>(context);
+        mContext = new WeakReference<>(context);
         gson = new GsonBuilder().setPrettyPrinting().create();
 
         try {
@@ -102,7 +102,8 @@ public class PhonkHttpServer extends NanoHTTPD {
         String uri = session.getUri();
 
         if (uri.startsWith("/api")) res = serveAPI(session);
-        else if (uri.startsWith("/playground") || uri.startsWith("/examples")) res = serveFileFromStorage(session);
+        else if (uri.startsWith("/playground") || uri.startsWith("/examples"))
+            res = serveFileFromStorage(session);
         else res = serveWebIDE(session);
 
         //adding CORS mode for WebIDE debugging from the computer
@@ -148,9 +149,6 @@ public class PhonkHttpServer extends NanoHTTPD {
         HashMap<String, String> cmd;
 
         // debug the params
-        // for (int i = 0; i < uriSplitted.length; i++) {
-        //    MLog.d(TAG, uriSplitted.length + " " + i + " " + uriSplitted[i]);
-        // }
 
 
         /**
@@ -160,66 +158,75 @@ public class PhonkHttpServer extends NanoHTTPD {
          */
 
         if (uriSplitted.length >= 4 && uriSplitted.length <= 5) {
-            if (uriSplitted[COMMAND].equals("list")) {
-                HashMap<String, ArrayList> files = new HashMap<>();
+            switch (uriSplitted[COMMAND]) {
+                case "list":
+                    HashMap<String, ArrayList> files = new HashMap<>();
 
-                ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
-                ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
+                    ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
+                    ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
 
-                files.put(PhonkSettings.USER_PROJECTS_FOLDER, userFolder);
-                files.put(PhonkSettings.EXAMPLES_FOLDER, examplesFolder);
+                    files.put(PhonkSettings.USER_PROJECTS_FOLDER, userFolder);
+                    files.put(PhonkSettings.EXAMPLES_FOLDER, examplesFolder);
 
-                String jsonFiles = gson.toJson(files);
+                    String jsonFiles = gson.toJson(files);
 
-                // MLog.d("list", jsonFiles);
-                EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
+                    // MLog.d("list", jsonFiles);
+                    EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
-            } else if (uriSplitted[COMMAND].equals("execute_code")) {
-                // MLog.d(TAG, "run code");
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
+                    break;
+                case "execute_code": {
+                    // MLog.d(TAG, "run code");
 
-                // POST DATA
-                String json;
-                final HashMap<String, String> map = new HashMap<String, String>();
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                    // POST DATA
+                    String json;
+                    final HashMap<String, String> map = new HashMap<>();
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) return newFixedLengthResponse("BUG");
 
-                    json = map.get("postData");
-                    NEOProject neo = gson.fromJson(json, NEOProject.class);
-                    EventBus.getDefault().post(new Events.ExecuteCodeEvent(neo.code));
+                        json = map.get("postData");
+                        NEOProject neo = gson.fromJson(json, NEOProject.class);
+                        EventBus.getDefault().post(new Events.ExecuteCodeEvent(neo.code));
 
+                        res = newFixedLengthResponse("OK");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
+                    break;
+                }
+                case "stop_all":
+                    // MLog.d(TAG, "stop all");
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
                     res = newFixedLengthResponse("OK");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse("NOP");
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse("NOP");
-                }
-            } else if (uriSplitted[COMMAND].equals("stop_all")) {
-                // MLog.d(TAG, "stop all");
-                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
-                res = newFixedLengthResponse("OK");
 
-                /*
-                 * This is for the UI editor
-                 */
-            } else if (uriSplitted[COMMAND].equals("views_list_types")) {
-                ArrayList<String> arrayList = new ArrayList();
-                arrayList.add("button");
-                arrayList.add("slider");
-                arrayList.add("knob");
-                String json = gson.toJson(arrayList);
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
-            } else if (uriSplitted[COMMAND].equals("views_get_all")) {
-                if (views == null) {
-                    res = newFixedLengthResponse("NOP");
-                } else {
-                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), views);
+                    /*
+                     * This is for the UI editor
+                     */
+                    break;
+                case "views_list_types": {
+                    ArrayList<String> arrayList = new ArrayList();
+                    arrayList.add("button");
+                    arrayList.add("slider");
+                    arrayList.add("knob");
+                    String json = gson.toJson(arrayList);
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
+                    break;
                 }
-            } else if (uriSplitted[COMMAND].equals("views_set_all")) {
+                case "views_get_all":
+                    if (views == null) {
+                        res = newFixedLengthResponse("NOP");
+                    } else {
+                        res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), views);
+                    }
+                    break;
+                case "views_set_all":
 
+                    break;
             }
 
 
@@ -232,308 +239,336 @@ public class PhonkHttpServer extends NanoHTTPD {
         } else if (uriSplitted.length == 7) {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
 
-            if (uriSplitted[PROJECT_ACTION].equals("create")) {
-                // MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
+            switch (uriSplitted[PROJECT_ACTION]) {
+                case "create":
+                    // MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
 
-                if (!p.exists()) {
-                    String template = "default";
-                    // MLog.d(TAG, p.getParentPath());
-                    PhonkScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
-                    res = newFixedLengthResponse("OK");
-                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
-                }
-            } else if (uriSplitted[PROJECT_ACTION].equals("save")) {
-                // MLog.d(TAG, "project save");
-                String json;
-                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
-
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
-                    json = map.get("postData");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse("NOP");
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse("NOP");
-                }
-
-                // MLog.d(TAG, json);
-                NEOProject neo = gson.fromJson(json, NEOProject.class);
-
-                // saving all the files changed
-                for (ProtoFile file : neo.files) {
-                    PhonkScriptHelper.saveCodeFromSandboxPath(p, file.path, file.code);
-                }
-
-                res = newFixedLengthResponse("OK");
-
-            } else if (uriSplitted[PROJECT_ACTION].equals("load")) {
-                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, "/", 0);
-
-                // only load main.js & app.conf
-                for (int i = 0; i < files.size(); i++) {
-                    if (files.get(i).name.equals(PhonkSettings.MAIN_FILENAME)) {
-                        files.get(i).code = PhonkScriptHelper.getCode(p, files.get(i).name);
+                    if (!p.exists()) {
+                        String template = "default";
+                        // MLog.d(TAG, p.getParentPath());
+                        PhonkScriptHelper.createNewProject(mContext.get(), template, p.getSandboxPathParent(), p.name);
+                        res = newFixedLengthResponse("OK");
+                        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                     }
+                    break;
+                case "save": {
+                    // MLog.d(TAG, "project save");
+                    String json;
+                    final HashMap<String, String> map = new HashMap<>();  // POST DATA
+
+
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                        json = map.get("postData");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
+
+                    // MLog.d(TAG, json);
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
+
+                    // saving all the files changed
+                    for (ProtoFile file : neo.files) {
+                        PhonkScriptHelper.saveCodeFromSandboxPath(p, file.path, file.code);
+                    }
+
+                    res = newFixedLengthResponse("OK");
+
+                    break;
                 }
+                case "load": {
+                    ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, "/", 0);
 
-                NEOProject neo = new NEOProject();
-                neo.files = files;
-                neo.project = p;
-                neo.current_folder = "/";
+                    // only load main.js & app.conf
+                    for (int i = 0; i < files.size(); i++) {
+                        if (files.get(i).name.equals(PhonkSettings.MAIN_FILENAME)) {
+                            files.get(i).code = PhonkScriptHelper.getCode(p, files.get(i).name);
+                        }
+                    }
 
-                String json = gson.toJson(neo);
+                    NEOProject neo = new NEOProject();
+                    neo.files = files;
+                    neo.project = p;
+                    neo.current_folder = "/";
 
-                EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_LOAD, p));
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
+                    String json = gson.toJson(neo);
 
-            } else if (uriSplitted[PROJECT_ACTION].equals("delete")) {
-                MLog.d(TAG, "delete");
-                PhonkScriptHelper.deleteFileOrFolder(p.getFullPath());
-                res = newFixedLengthResponse("OK");
-            } else if (uriSplitted[PROJECT_ACTION].equals("rename")) {
-                MLog.d(TAG, "rename");
+                    EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_LOAD, p));
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
 
-                String json;
-                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+                    break;
+                }
+                case "delete":
+                    MLog.d(TAG, "delete");
+                    PhonkScriptHelper.deleteFileOrFolder(p.getFullPath());
+                    res = newFixedLengthResponse("OK");
+                    break;
+                case "rename": {
+                    MLog.d(TAG, "rename");
 
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) {
+                    String json;
+                    final HashMap<String, String> map = new HashMap<>();  // POST DATA
+
+
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) {
+                            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                        }
+                        json = map.get("postData");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
                         return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
                     }
-                    json = map.get("postData");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
-                }
 
-                NEOProject neo = gson.fromJson(json, NEOProject.class);
-                if (PhonkScriptHelper.renameProject(p, neo.newName)) {
-                    res = newFixedLengthResponse("OK");
-                } else {
-                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
-                }
-            } else if (uriSplitted[PROJECT_ACTION].equals("clone")) {
-                MLog.d(TAG, "clone");
-
-                String json;
-                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
-
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) {
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
+                    if (PhonkScriptHelper.renameProject(p, neo.newName)) {
+                        res = newFixedLengthResponse("OK");
+                    } else {
                         return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
                     }
-                    json = map.get("postData");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    break;
                 }
+                case "clone": {
+                    MLog.d(TAG, "clone");
 
-                NEOProject neo = gson.fromJson(json, NEOProject.class);
-                if (PhonkScriptHelper.cloneProject(p, neo.newName)) {
-                    res = newFixedLengthResponse("OK");
-                } else {
-                    return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    String json;
+                    final HashMap<String, String> map = new HashMap<>();  // POST DATA
+
+
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) {
+                            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                        }
+                        json = map.get("postData");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
+
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
+                    if (PhonkScriptHelper.cloneProject(p, neo.newName)) {
+                        res = newFixedLengthResponse("OK");
+                    } else {
+                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    }
+                    break;
                 }
-            } else if (uriSplitted[PROJECT_ACTION].equals("run")) {
-                MLog.d(TAG, "run --> " + p.getFolder());
-                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
-                res = newFixedLengthResponse("OK");
-            } else if (uriSplitted[PROJECT_ACTION].equals("stop_all_and_run")) {
-                MLog.d(TAG, "stop_all_and_run --> ");
-                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
-                res = newFixedLengthResponse("STOP_AND_RUN");
-            } else if (uriSplitted[PROJECT_ACTION].equals("stop")) {
-                MLog.d(TAG, "stop --> ");
-                EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
-                res = newFixedLengthResponse("OK");
+                case "run":
+                    MLog.d(TAG, "run --> " + p.getFolder());
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
+                    res = newFixedLengthResponse("OK");
+                    break;
+                case "stop_all_and_run":
+                    MLog.d(TAG, "stop_all_and_run --> ");
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
+                    res = newFixedLengthResponse("STOP_AND_RUN");
+                    break;
+                case "stop":
+                    MLog.d(TAG, "stop --> ");
+                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
+                    res = newFixedLengthResponse("OK");
+                    break;
             }
         } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
             // MLog.d(TAG, "-> files ");
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
-            if (uriSplitted[FILE_ACTION].equals("list")) {
+            switch (uriSplitted[FILE_ACTION]) {
+                case "list": {
 
-                MLog.d(TAG, "list_files");
-                String path = StringUtils.join(uriSplitted, "/", FILE_ACTION + 1, uriSplitted.length);
-                MLog.d(TAG, "getting folder -> " + p.getSandboxPath() + "------" + path);
+                    MLog.d(TAG, "list_files");
+                    String path = StringUtils.join(uriSplitted, "/", FILE_ACTION + 1, uriSplitted.length);
+                    MLog.d(TAG, "getting folder -> " + p.getSandboxPath() + "------" + path);
 
-                ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, path, 0);
-                String jsonFiles = gson.toJson(files);
+                    ArrayList<ProtoFile> files = PhonkScriptHelper.listFilesInProjectFolder(p, path, 0);
+                    String jsonFiles = gson.toJson(files);
 
-                MLog.d("list", ":/");
+                    MLog.d("list", ":/");
 
-                MLog.d("list", jsonFiles);
-                EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
+                    MLog.d("list", jsonFiles);
+                    EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
 
-            } else if (uriSplitted[FILE_ACTION].equals("view")) {
-                String fileName = uriSplitted[FILE_NAME];
-
-                String mime = getMimeType(fileName); // Get MIME type
-                InputStream fi = null;
-                try {
-                    fi = new FileInputStream(p.getFullPathForFile(fileName));
-                    res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    break;
                 }
+                case "view": {
+                    String fileName = uriSplitted[FILE_NAME];
 
-            } else if (uriSplitted[FILE_ACTION].equals("load")) {
-                // fetch file
-                // String fileName = uriSplitted[FILE_NAME];
+                    String mime = getMimeType(fileName); // Get MIME type
 
-                String[] fileNameArray = Arrays.copyOfRange(uriSplitted, FILE_NAME, uriSplitted.length);
-                String path = TextUtils.join(File.separator, fileNameArray);
-
-                File file = new File(path);
-
-                ProtoFile pFile = new ProtoFile(file.getName(), path);
-                pFile.code = PhonkScriptHelper.getCode(p, pFile.path);
-
-                NEOProject neo = new NEOProject();
-                neo.files.add(pFile);
-
-                String json = gson.toJson(neo);
-                // MLog.d(TAG, json);
-
-                // EventBus.getDefault().post(new Events.HTTPServerEvent("project_load", p));
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
-            } else if (uriSplitted[FILE_ACTION].equals("create")) {
-                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
-
-                String json = null;
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) {
-                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                    InputStream fi = null;
+                    try {
+                        fi = new FileInputStream(p.getFullPathForFile(fileName));
+                        res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    json = map.get("postData");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ResponseException e) {
-                    e.printStackTrace();
+
+                    break;
                 }
+                case "load": {
+                    // fetch file
+                    // String fileName = uriSplitted[FILE_NAME];
 
-                // MLog.d(TAG, json);
-                NEOProject neo = gson.fromJson(json, NEOProject.class);
+                    String[] fileNameArray = Arrays.copyOfRange(uriSplitted, FILE_NAME, uriSplitted.length);
+                    String path = TextUtils.join(File.separator, fileNameArray);
 
-                for (ProtoFile file : neo.files) {
-                    // MLog.d(TAG, "creating file in " + file.path + " " + file.name + " " + file.type);
-                    String path = p.getFullPathForFile(file.path + File.separator + file.name);
-                    // MLog.d(TAG, path);
+                    File file = new File(path);
 
-                    if (!new File(path).exists()) {
-                        switch (file.type) {
-                            case "folder":
-                                new File(path).mkdir();
-                                break;
-                            case "file":
-                                try {
-                                    new File(path).createNewFile();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                break;
+                    ProtoFile pFile = new ProtoFile(file.getName(), path);
+                    pFile.code = PhonkScriptHelper.getCode(p, pFile.path);
+
+                    NEOProject neo = new NEOProject();
+                    neo.files.add(pFile);
+
+                    String json = gson.toJson(neo);
+
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
+                    break;
+                }
+                case "create": {
+                    final HashMap<String, String> map = new HashMap<>();  // POST DATA
+
+
+                    String json = null;
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) {
+                            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
                         }
-                        res = newFixedLengthResponse("OK");
-
-                    } else {
-                        return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                        json = map.get("postData");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
                     }
+
+                    // MLog.d(TAG, json);
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
+
+                    for (ProtoFile file : neo.files) {
+                        // MLog.d(TAG, "creating file in " + file.path + " " + file.name + " " + file.type);
+                        String path = p.getFullPathForFile(file.path + File.separator + file.name);
+                        // MLog.d(TAG, path);
+
+                        if (!new File(path).exists()) {
+                            switch (file.type) {
+                                case "folder":
+                                    new File(path).mkdir();
+                                    break;
+                                case "file":
+                                    try {
+                                        new File(path).createNewFile();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    break;
+                            }
+                            res = newFixedLengthResponse("OK");
+
+                        } else {
+                            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_TYPES.get("txt"), "");
+                        }
+                    }
+
+                    break;
                 }
+                case "upload": {
+                    // MLog.d(TAG, "upload for " + p.getFullPath());
+                    final HashMap<String, String> files = new HashMap<>();  // POST DATA
 
-            } else if (uriSplitted[FILE_ACTION].equals("upload")) {
-                // MLog.d(TAG, "upload for " + p.getFullPath());
-                final HashMap<String, String> files = new HashMap<String, String>();  // POST DATA
-                try {
-                    // MLog.d(TAG, "parsing body");
-                    session.parseBody(files);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ResponseException e) {
-                    e.printStackTrace();
+                    try {
+                        // MLog.d(TAG, "parsing body");
+                        session.parseBody(files);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                    }
+
+                    // get the file and copy it to the project folder
+                    String fileName = session.getParameters().get("name").get(0);
+                    String fileType = session.getParameters().get("type").get(0);
+                    File fileSrc = new File(files.get("file"));
+                    String toFolder = session.getParameters().get("toFolder").get(0);
+                    File fileDst = new File(p.getFullPathForFile(toFolder + File.separator + fileName));
+
+                    try {
+                        FileIO.copyFile(fileSrc, fileDst);
+                        EventBus.getDefault().post(new Events.HTTPServerEvent(Events.EDITOR_UPLOAD, p));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("txt"), fileName);
+
+                    break;
                 }
+                case "delete": {
+                    final HashMap<String, String> map = new HashMap<>();  // POST DATA
 
-                // get the file and copy it to the project folder
-                String fileName = session.getParameters().get("name").get(0);
-                String fileType = session.getParameters().get("type").get(0);
-                File fileSrc = new File(files.get("file"));
-                String toFolder = session.getParameters().get("toFolder").get(0);
-                File fileDst = new File(p.getFullPathForFile(toFolder + File.separator + fileName));
 
-                // MLog.d(TAG, fileSrc.getAbsolutePath());
-                // MLog.d(TAG, fileDst.getAbsolutePath());
+                    String json = null;
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                        json = map.get("postData");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                    }
 
-                // if (fileDst.exists()) {
-                //    res = NanoHTTPD.newFixedLengthResponse(Response.Status.CONFLICT, MIME_PLAINTEXT, "File exist already");
-                // }
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
 
-                try {
-                    FileIO.copyFile(fileSrc, fileDst);
-                    EventBus.getDefault().post(new Events.HTTPServerEvent(Events.EDITOR_UPLOAD, p));
-                } catch (IOException e) {
-                    // MLog.d(TAG, "qq5");
-                    e.printStackTrace();
+                    for (ProtoFile file : neo.files) {
+                        PhonkScriptHelper.deleteFileInProject(p, file.path);
+                    }
+
+                    res = NanoHTTPD.newFixedLengthResponse("OK");
+                    break;
                 }
+                case "move": {
+                    final HashMap<String, String> map = new HashMap<>();  // POST DATA
 
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("txt"), fileName);
 
-            } else if (uriSplitted[FILE_ACTION].equals("delete")) {
-                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
+                    String json = null;
+                    try {
+                        session.parseBody(map);
+                        if (map.isEmpty()) return newFixedLengthResponse("BUG");
+                        json = map.get("postData");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                    }
 
-                String json = null;
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
-                    json = map.get("postData");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ResponseException e) {
-                    e.printStackTrace();
+                    NEOProject neo = gson.fromJson(json, NEOProject.class);
+                    for (ProtoFile file : neo.files) {
+                        PhonkScriptHelper.moveFileFromTo(p, file.formerPath, file.path);
+                        // EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_RENAME, file.formerName + " to " + file.path));
+                    }
+                    res = NanoHTTPD.newFixedLengthResponse("OK");
+                    break;
                 }
-
-                NEOProject neo = gson.fromJson(json, NEOProject.class);
-
-                for (ProtoFile file : neo.files) {
-                    PhonkScriptHelper.deleteFileInProject(p, file.path);
-                }
-
-                res = NanoHTTPD.newFixedLengthResponse("OK");
-            } else if (uriSplitted[FILE_ACTION].equals("move")) {
-                final HashMap<String, String> map = new HashMap<String, String>();  // POST DATA
-
-                String json = null;
-                try {
-                    session.parseBody(map);
-                    if (map.isEmpty()) return newFixedLengthResponse("BUG");
-                    json = map.get("postData");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ResponseException e) {
-                    e.printStackTrace();
-                }
-
-                NEOProject neo = gson.fromJson(json, NEOProject.class);
-                for (ProtoFile file : neo.files) {
-                    PhonkScriptHelper.moveFileFromTo(p, file.formerPath, file.path);
-                    // EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_RENAME, file.formerName + " to " + file.path));
-                }
-                res = NanoHTTPD.newFixedLengthResponse("OK");
-            } else {
-                res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
+                default:
+                    res = NanoHTTPD.newFixedLengthResponse(Response.Status.BAD_REQUEST, MIME_PLAINTEXT, ":(");
+                    break;
             }
         }
 
@@ -563,7 +598,8 @@ public class PhonkHttpServer extends NanoHTTPD {
         String uri = uri_.trim().replace(File.separatorChar, '/');
         if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
         if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
-        if (uri.charAt(0) == '/') uri = uri.substring(1); // using assets, so we can't have leading '/'
+        if (uri.charAt(0) == '/')
+            uri = uri.substring(1); // using assets, so we can't have leading '/'
 
         return uri;
     }

@@ -36,7 +36,6 @@ import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.models.Project;
-import io.phonk.runner.base.utils.MLog;
 
 public class NewMainActivity extends BaseActivity {
 

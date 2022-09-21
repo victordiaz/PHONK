@@ -38,16 +38,13 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 @PhonkClass
 public class PCard extends LinearLayout {
 
-    private final int currentColor;
-    private final int viewCount = 0;
     private final Context c;
-    LinearLayout cardLl;
-    TextView title;
+    final LinearLayout cardLl;
+    final TextView title;
 
     public PCard(Context context) {
         super(context);
         c = context;
-        currentColor = Color.argb(255, 255, 255, 255);
 
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
@@ -66,7 +63,7 @@ public class PCard extends LinearLayout {
     @PhonkMethodParam(params = {"view"})
     public void addView(View v) {
         v.setAlpha(0);
-        v.animate().alpha(1).setDuration(500).setStartDelay(100 * (1 + viewCount));
+        v.animate().alpha(1).setDuration(500).setStartDelay(100);
 
         // v.setPadding(0, 0, 0, AndroidUtils.pixelsToDp(c, 3));
         cardLl.addView(v);
@@ -76,16 +73,14 @@ public class PCard extends LinearLayout {
     @PhonkMethod(description = "Add a row of n columns", example = "")
     @PhonkMethodParam(params = {"columnNumber"})
     public PRow addRow(int n) {
-        PRow row = new PRow(c, cardLl, n);
-
-        return row;
+        return new PRow(c, cardLl, n);
     }
 
 
     @PhonkMethod(description = "Set the title of the card", example = "")
     @PhonkMethodParam(params = {"text"})
     public void setTitle(String text) {
-        if (text.isEmpty() == false) {
+        if (!text.isEmpty()) {
             title.setVisibility(View.VISIBLE);
             title.setText(text);
         }

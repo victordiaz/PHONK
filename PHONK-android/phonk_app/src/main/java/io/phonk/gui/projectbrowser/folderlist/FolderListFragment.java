@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -49,13 +48,13 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint("NewApi")
 public class FolderListFragment extends BaseFragment {
 
-    private String TAG = FolderListFragment.class.getSimpleName();
+    private final String TAG = FolderListFragment.class.getSimpleName();
 
-    ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<FolderAdapterData>();
+    final ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<>();
     private ResizableRecyclerView mFolderRecyclerView;
     private FolderListAdapter folderListAdapter;
 
-    private boolean isShown = true;
+    private final boolean isShown = true;
     private boolean mIsTablet = false;
 
     private ActionListener mListener;

@@ -47,10 +47,8 @@ public class PBluetoothServer extends ProtoBase {
     private final PBluetooth mPBluetooth;
     private final String name;
 
-    final Handler handler = new Handler();
-
     BluetoothServerSocket mBluetoothServer;
-    ArrayList<ConnectedDevice> mServerConnections = new ArrayList<>();
+    final ArrayList<ConnectedDevice> mServerConnections = new ArrayList<>();
     boolean mServerStarted = true;
 
     // server
@@ -168,11 +166,11 @@ public class PBluetoothServer extends ProtoBase {
 
     private class ConnectedDevice {
         private ConnectionThread connectionThread;
-        BluetoothSocket bluetoothSocket;
+        final BluetoothSocket bluetoothSocket;
         private InputStream inputStream;
         private OutputStream outputStream;
-        String name;
-        String mac;
+        final String name;
+        final String mac;
 
         ConnectedDevice(BluetoothSocket bluetoothSocketClient) {
             MLog.d(TAG, "bbt connected device");
@@ -266,8 +264,6 @@ public class PBluetoothServer extends ProtoBase {
 
                 try {
                     MLog.d(TAG, "bbt trying to readline");
-                    // final String line = reader.readLine();
-                    // dataInputStream.readFully(byteArray, 0, byteArray.length);
                     inputStream.read(byteArray);
 
                     String line = new String(byteArray);

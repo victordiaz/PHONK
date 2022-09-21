@@ -24,7 +24,8 @@ package io.phonk.runner.base.utils;
 
 
 public class FFT {
-    int n, m;
+    final int n;
+    final int m;
 
     // Lookup tables. Only need to recompute when size of FFT changes.
     double[] cos;

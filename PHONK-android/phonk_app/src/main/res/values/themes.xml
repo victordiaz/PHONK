@@ -23,7 +23,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ProtocoderThemeApp -->
+    <!-- PhonkThemeApp -->
     <style name="PhonkAppTheme.Base" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="titleTextColor">@color/phonk_textColor_secondary</item>
         <item name="subtitleTextColor">@color/phonk_textColor_primary</item>

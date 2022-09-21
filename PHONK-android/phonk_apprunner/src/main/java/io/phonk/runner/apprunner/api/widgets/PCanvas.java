@@ -49,8 +49,6 @@ public class PCanvas {
     private static final String TAG = PCustomView.class.getSimpleName();
     private final AppRunner mAppRunner;
 
-    // @ProtoField(description = "Object that contains the layers", example = "")
-    // public Layers layers;
     private Canvas mCanvasBuffer;
     public Canvas mCanvas;
 
@@ -69,7 +67,7 @@ public class PCanvas {
     private boolean strokeOn = false;
     private boolean mModeCorner = true;
 
-    private boolean absoluteMode = false;
+    private final boolean absoluteMode = false;
 
     PCanvas(AppRunner appRunner) {
         this.mAppRunner = appRunner;
@@ -322,9 +320,9 @@ public class PCanvas {
 
         path.moveTo(p[0][0], p[0][1]);
 
-        for (int i = 0; i < p.length; i++) {
+        for (float[] floats : p) {
             // MLog.d(TAG, "setting point in " + p[i][0] + " " + p[i][1]);
-            path.lineTo(p[i][0], p[i][1]);
+            path.lineTo(floats[0], floats[1]);
         }
 
         if (fillOn) mCanvasBuffer.drawPath(path, mPaintFill);
@@ -389,11 +387,6 @@ public class PCanvas {
     }
 
     // TODO this only works on api 21
-    //public PCanvas textSpacing(float spacing) {
-    //mPaintFill.setLetterSpacing(spacing);
-    //mPaintStroke.setLetterSpacing(spacing);
-    //    return this;
-    //}
 
     @PhonkMethod(description = "Writes text", example = "")
     @PhonkMethodParam(params = {"text", "x", "y"})
@@ -519,8 +512,7 @@ public class PCanvas {
     }
 
     public Camera getCamera() {
-        Camera camera = new Camera();
-        return camera;
+        return new Camera();
     }
 
     public Matrix getMatrix() {
@@ -564,8 +556,7 @@ public class PCanvas {
     public Shader linearShader(float x1, float y1, float x2, float y2, String c1, String c2) {
         Shader.TileMode mode = Shader.TileMode.REPEAT;
 
-        Shader shader = new LinearGradient(x1, y1, x2, y2, Color.parseColor(c1), Color.parseColor(c2), mode);
-        return shader;
+        return new LinearGradient(x1, y1, x2, y2, Color.parseColor(c1), Color.parseColor(c2), mode);
     }
 
     /**
@@ -598,65 +589,6 @@ public class PCanvas {
     /**
      * Layer class stuff
      */
-    /*
-    public class Layer {
-        public Bitmap bitmap;
-        public boolean visibility = true;
-
-        Layer() {
-            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        }
-    }
-
-    public class Layers {
-        ArrayList<Layer> layers = new ArrayList<>();
-
-        Layers() {
-            create(); //add default layer
-        }
-
-        public void create() {
-            create(layers.size());
-        }
-
-        public void create(int index) {
-            Layer layer = new Layer();
-            layers.add(index, layer);
-            setCurrent(layers.size() - 1);
-        }
-
-        public void move(int from, int to) {
-            Collections.swap(layers, from, to);
-        }
-
-        public void delete(int index) {
-            layers.remove(index);
-        }
-
-        public void clear() {
-            layers.clear();
-        }
-
-        public void setCurrent(int index) {
-            MLog.d(TAG, index + " " + layers.size());
-            mCanvasBuffer.setBitmap(layers.get(index).bitmap);
-        }
-
-        public void show(int index, boolean b) {
-            layers.get(index).visibility = b;
-        }
-
-        public int size() {
-            return layers.size();
-        }
-
-        public void drawAll(Canvas canvas) {
-            for (Layer layer : layers) {
-                if (layer.visibility) canvas.drawBitmap(layer.bitmap, 0, 0, null);
-            }
-        }
-    }
-    */
     public void refresh() {
 
     }

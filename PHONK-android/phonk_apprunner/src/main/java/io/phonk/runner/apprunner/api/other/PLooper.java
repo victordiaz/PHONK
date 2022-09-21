@@ -35,9 +35,9 @@ import io.phonk.runner.apprunner.AppRunner;
 public class PLooper implements WhatIsRunningInterface {
     private final AppRunner mAppRunner;
     private LooperCB mCallbackfn;
-    Runnable task;
+    final Runnable task;
     private final Handler handler;
-    ArrayList<Runnable> rl = new ArrayList<Runnable>();
+    final ArrayList<Runnable> rl = new ArrayList<>();
 
     public int speed;
     boolean isLooping = false;

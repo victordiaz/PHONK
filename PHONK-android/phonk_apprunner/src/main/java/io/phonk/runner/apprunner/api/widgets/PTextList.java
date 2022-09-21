@@ -37,10 +37,10 @@ import io.phonk.runner.base.utils.AndroidUtils;
 
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
-    int numCol = 1;
+    final int numCol = 1;
     private boolean mIsAutoScroll = false;
     PList list;
-    NativeArray data = new NativeArray(0);
+    final NativeArray data = new NativeArray(0);
     private ReturnInterfaceWithReturn mCreateCallback;
     private ReturnInterfaceWithReturn mUpdateCallback;
 

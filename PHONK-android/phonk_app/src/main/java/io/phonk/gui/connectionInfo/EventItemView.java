@@ -37,29 +37,25 @@ public class EventItemView extends LinearLayout {
 
     private static final String TAG = EventItemView.class.getSimpleName();
 
-    SimpleDateFormat mFormat = new SimpleDateFormat("hh:mm:ss");
+    final SimpleDateFormat mFormat = new SimpleDateFormat("hh:mm:ss");
 
-    private View mItemView;
+    private final View mItemView;
     private final Context mContext;
-    private TextView txtEventType;
-    private TextView txtEventDetail;
-    private TextView txtEventDate;
-    private ImageView imgIcon;
+    private final TextView txtEventType;
+    private final TextView txtEventDetail;
+    private final TextView txtEventDate;
+    private final ImageView imgIcon;
 
     public EventItemView(Context context) {
         super(context);
         this.mContext = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        this.mItemView = inflater.inflate(R.layout.event_list_item, this, true);
+        this.mItemView = inflater.inflate(R.layout.connection_info_item, this, true);
         txtEventType = mItemView.findViewById(R.id.txtType);
         txtEventDetail = mItemView.findViewById(R.id.txtEventDetail);
         txtEventDate = mItemView.findViewById(R.id.txtEventDate);
         imgIcon = mItemView.findViewById(R.id.imgEventDetail);
-    }
-
-    public void set(String type, String detail, int imageResource, boolean showType) {
-
     }
 
     public void set(EventManager.EventLogItem event) {

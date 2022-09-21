@@ -23,7 +23,6 @@
 package io.phonk;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.service.controls.Control;
@@ -34,7 +33,6 @@ import android.service.controls.actions.CommandAction;
 import android.service.controls.actions.ControlAction;
 import android.service.controls.actions.FloatAction;
 import android.service.controls.actions.ModeAction;
-import android.service.controls.templates.RangeTemplate;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -50,14 +48,13 @@ import java.util.function.Consumer;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.helpers.PhonkScriptHelper;
 import io.phonk.runner.apprunner.AppRunnerHelper;
-import io.phonk.runner.base.models.Folder;
 import io.phonk.runner.base.models.Project;
 import io.phonk.runner.base.utils.MLog;
 import io.phonk.server.model.ProtoFile;
 import io.reactivex.Flowable;
 import io.reactivex.processors.ReplayProcessor;
 
-public class  MyCustomControlService extends ControlsProviderService {
+public class MyCustomControlService extends ControlsProviderService {
     private ReplayProcessor updatePublisher;
 
     @Override
@@ -111,7 +108,7 @@ public class  MyCustomControlService extends ControlsProviderService {
 
         // For each controlId in controlIds
         for (String controlId : controlIds) {
-            MLog.d(TAG, "qqq" + controlId);
+            MLog.d(TAG, "controlId" + controlId);
 
             Project p = new Project(controlId);
 
@@ -148,8 +145,7 @@ public class  MyCustomControlService extends ControlsProviderService {
          */
         Project p = new Project(controlId);
 
-        MLog.d("qq", "" + controlAction.getActionType());
-        MLog.d("qq", "" + controlAction.getActionType());
+        MLog.d("getActionType", "" + controlAction.getActionType());
 
         if (controlAction instanceof FloatAction) {
             FloatAction floatAction = (FloatAction) controlAction;
@@ -157,23 +153,22 @@ public class  MyCustomControlService extends ControlsProviderService {
             MLog.d("floatAction", "" + value);
         }
 
-         if (controlAction instanceof CommandAction) {
+        if (controlAction instanceof CommandAction) {
             CommandAction commandAction = (CommandAction) controlAction;
             float type = commandAction.getActionType();
             MLog.d("commandAction", "" + commandAction.getChallengeValue());
-         }
+        }
 
-         if (controlAction instanceof ControlAction) {
-            ControlAction commandAction = (ControlAction) controlAction;
-            String type = commandAction.getChallengeValue();
+        if (controlAction instanceof ControlAction) {
+            String type = controlAction.getChallengeValue();
             MLog.d("commandAction", "" + type);
-         }
+        }
 
-         if (controlAction instanceof ModeAction) {
+        if (controlAction instanceof ModeAction) {
             ModeAction commandAction = (ModeAction) controlAction;
             int type = commandAction.getNewMode();
             MLog.d("modeAction", "" + type);
-         }
+        }
 
         if (controlAction instanceof BooleanAction) {
 

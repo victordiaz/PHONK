@@ -44,8 +44,8 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     private GridLayoutManager mGridLayoutManager;
     private PViewItemAdapter mViewAdapter;
 
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    public ListStyler styler;
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final ListStyler styler;
     private int nNumCols = 1;
 
     public PList(AppRunner appRunner, Map initProps) {
@@ -57,7 +57,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         props.eventOnChange = false;
 
         addFromChild(props);
-        styler.fromTo(initProps, props);
+        Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
     }
@@ -113,7 +113,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     }
 
 
-    class ListStyler extends Styler {
+    static class ListStyler extends Styler {
         ListStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
         }
@@ -125,7 +125,9 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     }
 
     @Override
-    public void set(float x, float y, float w, float h) { styler.setLayoutProps(x, y, w, h); }
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
 
     @Override
     public void setProps(Map style) {

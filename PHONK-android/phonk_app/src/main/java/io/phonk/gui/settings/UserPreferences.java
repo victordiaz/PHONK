@@ -37,7 +37,7 @@ public class UserPreferences {
     Map<String, Object> pref = null;
 
     private static UserPreferences instance;
-    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static UserPreferences getInstance() {
         if (instance == null) instance = new UserPreferences();
@@ -51,7 +51,7 @@ public class UserPreferences {
             }.getType();
             pref = gson.fromJson(json, stringStringMap);
         } else {
-            pref = new HashMap<String, Object>();
+            pref = new HashMap<>();
         }
 
         // AndroidUtils.prettyPrintMap(pref);
@@ -75,17 +75,6 @@ public class UserPreferences {
         resetIfEmpty("background_image", null);
 
 
-        /*
-        resetIfEmpty("http_username", "qq");
-        resetIfEmpty("http_password", "qq");
-        resetIfEmpty("http_port", 8585);
-        resetIfEmpty("websockets_port", 8587);
-
-        resetIfEmpty("ftp_enabled", false);
-        resetIfEmpty("ftp_port", 8589);
-        resetIfEmpty("ftp_username", "qq");
-        resetIfEmpty("ftp_password", "12345678");
-        */
     }
 
     public Object get(String key) {

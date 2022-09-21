@@ -38,10 +38,6 @@ public class App extends MultiDexApplication {
 
         MultiDex.install(this);
 
-        // TimerUtils.start();
-        // TimerUtils.stamp("start");
-        // TimerUtils.stamp("MultiDex.install");
-
         myLifecycleHandler = new MyLifecycleHandler();
         // TimerUtils.stamp("MyLifecycleHandler");
 
@@ -54,7 +50,5 @@ public class App extends MultiDexApplication {
 
         eventManager = new EventManager(getApplicationContext());
 
-        // EmojiCompat.Config config = new BundledEmojiCompatConfig(this);
-        // EmojiCompat.init(config);
     }
 }

@@ -10,9 +10,9 @@ buildscript {
 }
 
 project.ext {
-    versionCode = 143
-    versionName = "1.4.3"
-    compileSdkVersion = 32
+    versionCode = 149
+    versionName = "1.4.9"
+    compileSdkVersion = 33
     targetSdkVersion = 29
     minSdkVersion = 16
 }

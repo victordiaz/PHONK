@@ -71,7 +71,7 @@ public class AppRunnerHelper {
             }.getType();
             map = gson.fromJson(json, stringStringMap);
         } else {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
         }
 
         resetValues(map);
@@ -80,7 +80,7 @@ public class AppRunnerHelper {
     }
 
     public static HashMap<String, Object> createSettings() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         resetValues(map);
 
         return map;

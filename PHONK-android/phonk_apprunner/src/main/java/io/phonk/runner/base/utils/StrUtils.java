@@ -27,9 +27,8 @@ import java.util.UUID;
 public class StrUtils {
 
     public static String generateUUID() {
-        String id = UUID.randomUUID().toString();
 
-        return id;
+        return UUID.randomUUID().toString();
     }
 
     public static String bytetostring(byte[] b) {
