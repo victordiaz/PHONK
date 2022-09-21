@@ -23,15 +23,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
-
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 33
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {

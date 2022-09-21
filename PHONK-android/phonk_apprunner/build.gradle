@@ -13,7 +13,6 @@ android {
     defaultConfig {
         minSdkVersion project.minSdkVersion
         targetSdkVersion project.targetSdkVersion
-
     }
 
     compileOptions {
@@ -38,10 +37,6 @@ android {
         }
     }
 
-
-    dexOptions {
-        jumboMode true
-    }
     androidResources {
         noCompress 'tflite'
     }
