@@ -17,27 +17,27 @@
     "cleanInAndroid": "rm -rf ../PHONK-android/phonk_app/src/main/assets/webide/*"
   },
   "dependencies": {
-    "ace-builds": "^1.6.0",
+    "ace-builds": "^1.11.0",
     "axios": "^0.27.2",
-    "core-js": "^3.8.3",
+    "core-js": "^3.25.2",
     "less-loader": "^11.0.0",
-    "marked": "^4.0.17",
-    "vue": "^2.6.14",
+    "marked": "^4.1.0",
+    "vue": "^2.7.10",
     "vue-axios": "^3.4.1",
-    "vue-router": "^3.5.4",
+    "vue-router": "^3.6.5",
     "vue-scrollto": "^2.20.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
+    "@babel/core": "^7.19.1",
+    "@babel/eslint-parser": "^7.19.1",
     "@types/ace": "^0.0.48",
-    "@vue/babel-plugin-transform-vue-jsx": "^1.2.1",
+    "@vue/babel-plugin-transform-vue-jsx": "^1.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "vue-template-compiler": "^2.6.14"
+    "eslint-plugin-vue": "^8.7.1",
+    "vue-template-compiler": "^2.7.10"
   },
   "eslintConfig": {
     "root": true,
