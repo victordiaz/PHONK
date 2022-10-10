@@ -10,8 +10,6 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    // flavorDimensions "normal", "extended"
-    // flavorDimensions "default"
     flavorDimensions "version"
 
     compileSdkVersion project.compileSdkVersion

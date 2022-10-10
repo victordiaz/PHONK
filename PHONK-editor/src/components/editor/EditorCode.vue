@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import helpers from '../../Helpers'
 import * as ace from 'ace-builds/src-noconflict/ace'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/mode-javascript'
@@ -15,7 +16,7 @@ export default {
   name: 'EditorCode',
   components: {
   },
-  props: ['tabs', 'currentTab'],
+  props: ['tabs', 'currentTab', 'project'],
   watch: {
     tabs: function (newTabs) {
       let tabsArray = newTabs.map(tab => tab.path)
@@ -32,17 +33,21 @@ export default {
         this.sessions.splice(indexSession, -1)
       }
     },
-    currentTab: function (val) {
-      // console.log('(EditorCode) currentTab', val)
-      this.loadCode(val)
+    currentTab: function (tabPos) {
+      console.log('(EditorCode) currentTab', tabPos)
+      this.loadCode(tabPos)
+    },
+    project: function (newProject) {
+      console.log('newProject', newProject)
+      helpers.clearArray(this.sessions)
+      this.loadCode(0)
     }
   },
   data () {
     return {
       sharedState: store.state,
-      files: null,
+      files: [],
       sessions: [],
-      project: '',
       d: null,
       editor: '',
     }
@@ -55,12 +60,10 @@ export default {
   created () {
     store.on('font_changed', this.changeFontSize)
     store.on('live_execute', this.live_execute)
-    store.on('project_loaded', this.project_loaded)
   },
   destroyed () {
     store.removeListener('font_changed', this.changeFontSize)
     store.removeListener('live_execute', this.live_execute)
-    store.removeListener('project_loaded', this.project_loaded)
 
     this.editor.remove()
   },
@@ -150,22 +153,16 @@ export default {
 
       return session
     },
-    project_loaded: function (loaded) {
-      if (loaded) {
-        store.clearArray(this.sessions)
-        this.files = store.state.current_project.files
-      }
-    },
     loadCode: function (tabPos) {
       // get session if exist in currentTab (tabs[tabPos])
       let currentPath = this.tabs[tabPos].path
-      
       let session = this.sessions.filter(session => session.path === currentPath)[0]
      
       // Create a session if file is not yet opened
       if (!session) {
-        let f = this.files.filter(f => f.path == currentPath)[0]
-        // console.log('(EditorCode) loadCode', currentPath, f.path)
+        console.log('(EditorCode) loadCode', currentPath, this.project)
+
+        let f = this.project.files.filter(f => f.path == currentPath)[0]
 
         session = this.createSession(f)
         session.setValue(f.code)

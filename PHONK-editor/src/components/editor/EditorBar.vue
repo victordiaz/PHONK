@@ -35,7 +35,7 @@
 			</li>
 		</ul>
 
-		<div class="visual-editor-switcher">
+		<div v-if="false" class="visual-editor-switcher">
 			<div class="visual-editor-switcher__selection" :class="{selected: !sharedState.show_ui_editor}"></div>
 			<button
 				v-on:click="$parent.showUIEditor(true)"
@@ -125,7 +125,6 @@ export default {
 	align-items: center;
 
 	#project_run {
-		padding: 0 6px 0 14px;
 	}
 
 	button {

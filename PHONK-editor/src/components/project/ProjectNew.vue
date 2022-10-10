@@ -48,7 +48,6 @@ export default {
       if (status) {
         Store.state.show_load_project = false
         this.projectName = ''
-        Store.emit('project_list_all')
       }
     },
     close () {

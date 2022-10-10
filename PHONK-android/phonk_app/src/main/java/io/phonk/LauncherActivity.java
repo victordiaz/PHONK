@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import io.phonk.gui.info.UpdateActivity;
 import io.phonk.gui.welcome.WelcomeActivity;
+import io.phonk.runner.base.utils.MLog;
 
 public class LauncherActivity extends Activity {
 
@@ -62,6 +63,7 @@ public class LauncherActivity extends Activity {
          * or Launch the MainApp
          */
 
+        MLog.d(TAG, firstLaunch + "qq");
         if (firstLaunch) {
             intent = new Intent(this, WelcomeActivity.class);
         } else if (BuildConfig.VERSION_CODE > userDetails.getInt("last_version_reinstalled", 125)) {

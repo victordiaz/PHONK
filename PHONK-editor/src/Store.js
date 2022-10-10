@@ -79,14 +79,15 @@ store.vm = vm
  * List all projects
  */
 store.project_list_all = function () {
-  // console.log('project_list_all(query)')
+  console.log('project_list_all(query)')
   var query = {}
 
   Vue.axios.get(getUrlWebapp('/api/project/list/'), query).then(function (response) {
+    console.log('projects', response)
     Vue.set(store.state, 'projects', response.data)
     store.emit('project_listed_all')
   }, function (response) {
-    console.error(TAG + ': project_list_all(status) > ' + response.status)
+    console.error(TAG + ': project_list_all(status) > ' + response)
   })
 }
 
@@ -220,67 +221,91 @@ store.project_create = function (projectName) {
   let id = store.state.lastNotificationId++
   store.emit('show_info', { id: id, icon: 'description', text: 'Creating project...', status: 'progress' })
 
-  Vue.axios.get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), {}).then(function (response) {
-    var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName }
-    store.emit('project_created', true, data)
-    store.project_list_all()
-    store.emit('show_info', { id: id, icon: 'description', text: 'Project created', status: 'done' })
-  }, function (response) {
-    store.emit('show_info', { id: id, icon: 'error', text: 'Creating project error', status: 'error' })
-    store.emit('project_created', false)
-    console.error('project_create(status) > ' + response.status)
+  Vue.axios
+    .get(getUrlWebapp('/api/project' + this.get_userproject_url(projectName) + '/create'), {})
+    .then(function (response) {
+      var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': projectName }
+      store.emit('project_created', true, data)
+      store.project_list_all()
+      store.emit('show_info',{
+        id: id,
+        icon: 'description',
+        text: 'Project created',
+        status: 'done'
+      })
+    }, function (response) {
+      store.emit('show_info', {
+        id: id,
+        icon: 'error',
+        text: 'Creating project error',
+        status: 'error'
+      })
+      store.emit('project_created', false)
+      console.error('project_create(status) > ' + response.status)
+    })
+}
+
+store.project_edit = function (project, action, query) {
+  let notificationID = store.state.lastNotificationId++
+  
+  store.emit('show_info', {
+    id: notificationID,
+    icon: 'description',
+    text: action.notification_progress,
+    status: 'progress'
+  })
+
+  Vue.axios
+    .post(getUrlWebapp('/api/project' + '/' + project.path + '/' + action.type), query)
+    .then(function (response) {    
+ 
+      store.project_list_all()
+      store.emit('show_info',{
+          id: notificationID,
+          icon: 'description',
+          text: action.notification_sucess,
+          status: 'done'
+        })
+      }, function (response) {
+      store.emit('show_info', {
+        id: notificationID,
+        icon: 'error',
+        text: 'Failure to ' + action.type,
+        status: 'error'
+      })
+      console.error('project_create(status) > ' + response.status)
+
   })
 }
 
-store.project_clone = function (uri, newName) {
-  let query = { newName: newName }
-  let id = store.state.lastNotificationId++
-  store.emit('show_info', { id: id, icon: 'description', text: 'Cloning project...', status: 'progress' })
+store.project_clone = function (project, newName) {
+  let action = {
+    type: 'clone',
+    notification_progress: 'Cloning project...',
+    notification_sucess: 'Cloned in User Projects',
+  }
 
-  Vue.axios.post(getUrlWebapp('/api/project' + '/' + uri + '/clone'), query).then(function (response) {
-    var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': newName }
-    store.emit('project_cloned', true, data)
-    store.project_list_all()
-    store.emit('show_info', { id: id, icon: 'description', text: 'Cloned in User Projects', status: 'done' })
-  }, function (response) {
-    store.emit('project_created', false)
-    store.emit('show_info', { id: id, icon: 'error', text: 'Cloning project error', status: 'error' })
-    console.error('project_create(status) > ' + response.status)
-  })
+  store.project_edit(project, action, { newName: newName })
 }
 
-store.project_rename = function (uri, newName) {
-  console.log('rename', uri, newName)
-
-  let id = store.state.lastNotificationId++
-  store.emit('show_info', { id: id, icon: 'description', text: 'Renaming project...', status: 'progress' })
-
-  let query = { newName: newName }
-  Vue.axios.post(getUrlWebapp('/api/project' + '/' + uri + '/rename'), query).then(function (response) {
-    // var data = { 'type': store.userproject.type, 'folder': store.userproject.folder, 'name': newName }
-    store.emit('project_renamed')
-    store.project_list_all()
-    store.emit('show_info', { id: id, icon: 'description', text: 'Renamed', status: 'done' })
-  }, function (response) {
-    store.emit('project_created', false)
-    store.emit('show_info', { id: id, icon: 'error', text: 'Renamming project error', status: 'error' })
-    console.error('project_create(status) > ' + response.status)
-  })
+store.project_rename = function (project, newName) {
+  let action = {
+    type: 'rename',
+    notification_progress: 'Renaming project...',
+    notification_sucess: 'Project renamed',
+  }
+  
+  store.project_edit(project, action, { newName: newName })
 }
 
-store.project_delete = function (uri) {
-  let id = store.state.lastNotificationId++
-  store.emit('show_info', { id: id, icon: 'description', text: 'Deleting project...', status: 'progress' })
-
-  Vue.axios.get(getUrlWebapp('/api/project' + '/' + uri + '/delete'), {}).then(function (response) {
-    store.emit('project_deleted')
-    store.project_list_all()
-    store.emit('show_info', { id: id, icon: 'description', text: 'Project Deleted', status: 'done' })
-  }, function (response) {
-    store.emit('project_created', false)
-    console.error('project_create(status) > ' + response.status)
-    store.emit('show_info', { id: id, icon: 'description', text: 'Deleting project error', status: 'error' })
-  })
+store.project_delete = function (project) {
+  let action = {
+    type: 'delete',
+    notification_progress: 'Deleting project...',
+    notification_sucess: 'Project deleted',
+  }
+  
+  store.project_edit(project, action, { })
 }
 
 /*
@@ -394,26 +419,6 @@ store.uploadFile = function (file, folder) {
 }
 
 /*
-xhr: {
-  onprogress: function (e) {
-    // console.log(e)
-    // console.log('uploading')
-
-    if (e.lengthComputable) {
-      // var progress = (e.loaded / e.total) * 100
-      // console.log('p1 ' + progress)
-    }
-  },
-  onreadystatechange: function (e) {
-    // console.log(e + this.readyState)
-    if (this.readyState === 4) {
-      // console.log(e)
-    }
-  }
-}
-*/
-
-/*
  * List views
  */
 store.views_list_types = function (action) {
@@ -459,17 +464,6 @@ store.get_current_project = function () {
 store.userproject = { 'type': 'playground', 'folder': 'User Projects' }
 store.get_userproject_url = function (name) {
   return '/' + store.userproject.type + '/' + store.userproject.folder + '/' + name
-}
-
-store.clearArray = function (dst) {
-  while (dst.length) dst.pop()
-}
-
-store.copyArray = function (or, dst) {
-  this.clearArray(dst)
-  for (var i in or) {
-    dst.push(or[i])
-  }
 }
 
 /*
@@ -589,60 +583,6 @@ store.send_ws_data = function (data) {
 }
 
 store.websockets_init()
-
-store.mouse = function () {
-  document.onmousemove = function (event) {
-    event = event || window.event
-  }
-}
-
-store.mydragg = function () {
-  return {
-    move: function (divid, xpos, ypos) {
-      divid.style.left = xpos + 'px'
-      divid.style.top = ypos + 'px'
-    },
-    startMoving: function (divid, container, evt) {
-      evt = evt || window.event
-
-      var posX = evt.clientX
-      var posY = evt.clientY
-      var divTop = divid.style.top
-      var divLeft = divid.style.left
-
-      var eWi = parseInt(divid.style.width)
-      var eHe = parseInt(divid.style.height)
-      var cWi = parseInt(document.getElementById(container).style.width)
-      var cHe = parseInt(document.getElementById(container).style.height)
-
-      document.getElementById(container).style.cursor = 'move'
-      divTop = divTop.replace('px', '')
-      divLeft = divLeft.replace('px', '')
-      var diffX = posX - divLeft
-      var diffY = posY - divTop
-
-      document.onmousemove = function (evt) {
-        evt = evt || window.event
-        var posX = evt.clientX
-        var posY = evt.clientY
-        var aX = posX - diffX
-        var aY = posY - diffY
-
-        if (aX < 0) aX = 0
-        if (aY < 0) aY = 0
-        if (aX + eWi > cWi) aX = cWi - eWi
-        if (aY + eHe > cHe) aY = cHe - eHe
-
-        store.mydragg.move(divid, aX, aY)
-      }
-    },
-    stopMoving: function (container) {
-      document.getElementById(container).style.cursor = 'default'
-      document.onmousemove = function () { }
-    }
-  }
-}
-
 
 store.save_browser_config = function () {
   localStorage.setItem('browser', JSON.stringify(state.browser))

@@ -17,22 +17,22 @@
 
         <div v-if="store.state.projects" id="project-load">
           <div class="left">
-            <div class="project_list" v-for="(p, pindex) in projectsOrdered" :key="pindex">
-              <h1>{{ pindex }}</h1>
+            <div class="project_list" v-for="(folder, folderName) in projectsOrdered" :key="folderName">
+              <h1>{{ folderName }}</h1>
               <ul>
                 <li
-                  v-for="(f, index) in p"
+                  v-for="(project, index) in folder"
                   v-bind:class="{
-                    selected: selected == index && pselected == pindex,
+                    selected: selected == index && pselected == folderName,
                   }"
-                  v-on:click="choose_folder(pindex, index, $event)"
-                  v-bind:id="f.name"
+                  v-on:click="choose_folder(folderName, index, $event)"
+                  v-bind:id="project.name"
                   :key="index"
                 >
                   <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.17 6l2 2H20v10H4V6h5.17M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                   </span>
-                  {{ f.name }}
+                  {{ project.name }}
                 </li>
               </ul>
             </div>
@@ -119,23 +119,6 @@ export default {
       // console.log(this.uri.type, this.uri.folder)
       // console.log(this.state.projects[pindex][index].files)
     },
-    load_project: function (project) {
-      // this.uri.fullpath = this.uri.folder + '/' + folder.name
-      // Store.emit('project_action', '/run', this.uri.fullpath)
-      // Store.emit('project_load', this.uri.fullpath)
-      // console.log(this.uri.fullpath, this.uri.type, this.uri.folder, project.name)
-
-      this.close()
-      var to = {
-        name: 'editor.load',
-        params: {
-          type: this.uri.type,
-          folder: this.uri.folder,
-          project: project.name
-        }
-      }
-      this.$router.push(to)
-    },
     // load from app
     load_project_from_app: function (data) {
       console.log('loading... ' + data.type)
@@ -145,7 +128,7 @@ export default {
       }
       this.$router.push(to)
     },
-    close: function () {
+    close_load: function () {
       this.store.state.show_load_project = false
       Store.emit('toggle', 'load_project')
     },
@@ -245,6 +228,7 @@ export default {
     user-select: none;
 
     li, .project_item {
+      width: 100%;
       position: relative;
       color: var(--color-text-light);
       padding: 3px 10px;

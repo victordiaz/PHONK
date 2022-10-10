@@ -1,13 +1,17 @@
 <template>
   <li
-    v-bind:class="{ selected: actionOnProject === project }"
     class="project_item"
   >
-
-    <router-link class = "project_item" @click.native="$parent.load_project(f)" :to="{name: 'editor.load', params: {type: uri.type, folder: uri.folder, project: project.name} }">
+    <router-link
+      :is="showingAction === 'general' ? 'router-link' : 'span'"
+      class = "project_item"
+      @click.native="$parent.close_load()"
+      :to="{name: 'editor.load', params: {type: uri.type, folder: uri.folder, project: project.name} }"
+    >
       <span class="icon">{{ project.name.substr(0, 2) }}</span>
+
       <span v-if="showingAction !== 'rename'">{{ project.name }}</span>
-      <input v-else v-model = "newName" placeholder="New name..." class = "project-input"/>
+      <input v-else v-model="newName" @click.stop placeholder="New name..." class="project-input"/>
     </router-link>
 
     <div class="actionable" :class="{confirmation: showingAction === 'delete'}">
@@ -15,19 +19,19 @@
         <!-- general -->
         <div v-if="showingAction === 'general'" key="general" class = "">
           <button
-            v-on:click="setAction('clone')"
+            v-on:click.stop="setAction('clone')"
             class="material-icons"
             title="Clone">
             content_copy
           </button>          
           <button
-            v-on:click="setAction('rename')"
+            v-on:click.stop="setAction('rename')"
             class="material-icons"
             title="Rename">
             drive_file_rename_outline
           </button>
           <button
-            v-on:click="setAction('delete')"
+            v-on:click.stop="setAction('delete')"
             class="material-icons"
             title="Delete">
             delete
@@ -70,23 +74,16 @@ export default {
   },
   watch: {
     isEditing(newVal, oldVal) {
-      console.log('qq ----->', this.project.name, newVal, oldVal)
       if (oldVal) this.backActions()
     }
   },
   data () {
     return {
       showingAction: 'general',
-      actionOnProject: null,
       newName: ''
     }
   },
   methods: {
-    openActions: function (f) {
-      // console.log('openActions', f)
-      this.showingAction = 'general'
-      this.actionOnProject = f
-    },
     cloneAction: function () {
     },
     setAction: function (action) {
@@ -95,21 +92,21 @@ export default {
     },
     deleteActionSubmit: function () {
       console.log('deleteSubmit')
-      Store.project_delete(this.actionOnProject.path)
+      Store.project_delete(this.project)
     },
     renameActionSubmit: function () {
       console.log('renameSubmit')
 
       if (this.newName !== '') {
-        Store.project_rename(this.actionOnProject.path, this.newName)
+        Store.project_rename(this.project, this.newName)
         this.backActions()
       }
     },
     cloneActionSubmit: function () {
-      console.log('cloneSubmit')
+      console.log('cloneSubmit', this.project)
 
       if (this.newName !== '') {
-        Store.project_clone(this.actionOnProject.path, this.newName)
+        Store.project_clone(this.project, this.newName)
         this.backActions()
       }
     },
@@ -119,7 +116,6 @@ export default {
     },
     cancelActions: function () {
       this.showingAction = null
-      this.actionOnProject = null
       this.newName = ''
     }
   }
@@ -130,7 +126,7 @@ export default {
 @import (reference) "../../assets/css/variables.less";
 
 .project_item {
-  justify-content: space-between;
+  justify-content: flex-start;
 
   a {
     cursor: pointer;
@@ -146,7 +142,6 @@ export default {
   &:hover .actionable {
     display: flex;
   }
-
 }
 
 .project_item .actionable {

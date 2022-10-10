@@ -441,7 +441,7 @@ button {
 
   &.clean {
     padding: 0;
-    color: var(--color-text-light);
+    color: var(--color-accent);
     background: var(--color-transparent);
 
     &:hover {
@@ -473,7 +473,7 @@ button {
   .left,
   .right {
     overflow-y: auto;
-    padding: 5px;
+    padding: 5px 0;
     box-sizing: border-box;
   }
 
@@ -569,7 +569,7 @@ button {
           color: var(--color-accent);
 
           &:hover {
-            color: darken(@color-accent, 10%);
+            color: var(--color-accent);
           }
 
           .filename {
@@ -773,7 +773,7 @@ button {
 
 .panel_above {
   background: var(--color-main);
-  border: 0px solid @color-accent;
+  border: 0px solid var(--color-accent);
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -792,7 +792,8 @@ button {
   h3 {
     color: var(--color-accent);
     text-transform: uppercase;
-    font-size: 0.9em;
+    font-size: 0.8em;
+    font-weight: bolder;
     padding: 0px 5px;
   }
 }

@@ -231,6 +231,10 @@ export default {
     padding: 10px;
   }
 
+  .folder {
+    color: var(--color-text-light-faded);
+  }
+
   .name {
     color: var(--color-accent);
     display: inline-block;

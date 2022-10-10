@@ -106,7 +106,7 @@ public class PhonkHttpServer extends NanoHTTPD {
             res = serveFileFromStorage(session);
         else res = serveWebIDE(session);
 
-        //adding CORS mode for WebIDE debugging from the computer
+        // adding CORS mode for WebIDE debugging from the computer
         if (PhonkSettings.DEBUG) {
             res.addHeader("Access-Control-Allow-Methods", "DELETE, GET, POST, PUT");
             res.addHeader("Access-Control-Allow-Origin", "*");
@@ -142,24 +142,30 @@ public class PhonkHttpServer extends NanoHTTPD {
     */
     private Response serveAPI(IHTTPSession session) {
         Response res = null;
+        MLog.d(TAG, "--> ");
 
         String uri = session.getUri();
         String[] uriSplitted = uri.split("/");
+        MLog.d(TAG, session.getUri().toString() + "--> qq 1");
 
-        HashMap<String, String> cmd;
-
-        // debug the params
-
-
-        /**
-         * Project global actions
-         *
-         * /api/project/command
-         */
-
+        // General
         if (uriSplitted.length >= 4 && uriSplitted.length <= 5) {
             switch (uriSplitted[COMMAND]) {
-                case "list":
+                case "list": {
+                    MLog.d(TAG, "--> qq 2");
+                    String json;
+                    final HashMap<String, String> map = new HashMap<>();
+                    try {
+                        session.parseBody(map);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
+
+                    MLog.d(TAG, "listing projects");
                     HashMap<String, ArrayList> files = new HashMap<>();
 
                     ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
@@ -170,11 +176,12 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                     String jsonFiles = gson.toJson(files);
 
-                    // MLog.d("list", jsonFiles);
                     EventBus.getDefault().post(new Events.HTTPServerEvent("project_list_all"));
 
                     res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), jsonFiles);
+                    MLog.d(TAG, "listing projects 2");
                     break;
+                }
                 case "execute_code": {
                     // MLog.d(TAG, "run code");
 
@@ -199,7 +206,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                     }
                     break;
                 }
-                case "stop_all":
+                case "stop_all": {
                     // MLog.d(TAG, "stop all");
                     EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
                     res = newFixedLengthResponse("OK");
@@ -208,6 +215,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                      * This is for the UI editor
                      */
                     break;
+                }
                 case "views_list_types": {
                     ArrayList<String> arrayList = new ArrayList();
                     arrayList.add("button");
@@ -217,30 +225,26 @@ public class PhonkHttpServer extends NanoHTTPD {
                     res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), json);
                     break;
                 }
-                case "views_get_all":
+                case "views_get_all": {
                     if (views == null) {
                         res = newFixedLengthResponse("NOP");
                     } else {
                         res = NanoHTTPD.newFixedLengthResponse(Response.Status.OK, MIME_TYPES.get("json"), views);
                     }
                     break;
-                case "views_set_all":
+                }
+                case "views_set_all": {
 
                     break;
+                }
             }
 
-
-            /**
-             * Project dependent actions
-             *
-             * /api/project/[ff]/[sf]/[p]/action
-             */
-
+        // Project
         } else if (uriSplitted.length == 7) {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
 
             switch (uriSplitted[PROJECT_ACTION]) {
-                case "create":
+                case "create": {
                     // MLog.d(TAG, "create project " + p.getFullPath() + " " + p.exists());
 
                     if (!p.exists()) {
@@ -251,11 +255,11 @@ public class PhonkHttpServer extends NanoHTTPD {
                         EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
                     }
                     break;
+                }
                 case "save": {
                     // MLog.d(TAG, "project save");
                     String json;
                     final HashMap<String, String> map = new HashMap<>();  // POST DATA
-
 
                     try {
                         session.parseBody(map);
@@ -303,17 +307,28 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                     break;
                 }
-                case "delete":
+                case "delete": {
                     MLog.d(TAG, "delete");
-                    PhonkScriptHelper.deleteFileOrFolder(p.getFullPath());
-                    res = newFixedLengthResponse("OK");
-                    break;
-                case "rename": {
-                    MLog.d(TAG, "rename");
 
+                    final HashMap<String, String> map = new HashMap<>();
+                    try {
+                        session.parseBody(map);
+                        PhonkScriptHelper.deleteFileOrFolder(p.getFullPath());
+                        res = newFixedLengthResponse("OK");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
+
+                    break;
+                }
+                case "rename": {
                     String json;
                     final HashMap<String, String> map = new HashMap<>();  // POST DATA
-
+                    MLog.d(TAG, "qq 22 rename " + session.getHeaders().toString());
 
                     try {
                         session.parseBody(map);
@@ -330,6 +345,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                     }
 
                     NEOProject neo = gson.fromJson(json, NEOProject.class);
+
                     if (PhonkScriptHelper.renameProject(p, neo.newName)) {
                         res = newFixedLengthResponse("OK");
                     } else {
@@ -342,7 +358,6 @@ public class PhonkHttpServer extends NanoHTTPD {
 
                     String json;
                     final HashMap<String, String> map = new HashMap<>();  // POST DATA
-
 
                     try {
                         session.parseBody(map);
@@ -366,22 +381,57 @@ public class PhonkHttpServer extends NanoHTTPD {
                     }
                     break;
                 }
-                case "run":
-                    MLog.d(TAG, "run --> " + p.getFolder());
-                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
-                    res = newFixedLengthResponse("OK");
+                case "run": {
+                    final HashMap<String, String> map = new HashMap<>();
+                    try {
+                        session.parseBody(map);
+                        MLog.d(TAG, "run --> " + p.getFolder());
+                        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUN, p));
+                        res = newFixedLengthResponse("OK");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
                     break;
-                case "stop_all_and_run":
-                    MLog.d(TAG, "stop_all_and_run --> ");
-                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
-                    res = newFixedLengthResponse("STOP_AND_RUN");
+                }
+                case "stop_all_and_run": {
+                    final HashMap<String, String> map = new HashMap<>();
+                    try {
+                        session.parseBody(map);
+                        MLog.d(TAG, "stop_all_and_run --> ");
+                        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL_AND_RUN, p));
+                        res = newFixedLengthResponse("STOP_AND_RUN");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
                     break;
-                case "stop":
-                    MLog.d(TAG, "stop --> ");
-                    EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
-                    res = newFixedLengthResponse("OK");
+                }
+                case "stop": {
+                    final HashMap<String, String> map = new HashMap<>();
+                    try {
+                        session.parseBody(map);
+                        MLog.d(TAG, "stop --> ");
+                        EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_STOP_ALL, null));
+                        res = newFixedLengthResponse("OK");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    } catch (ResponseException e) {
+                        e.printStackTrace();
+                        return newFixedLengthResponse("NOP");
+                    }
                     break;
+                }
             }
+
+        // Project data
         } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
             // MLog.d(TAG, "-> files ");
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
@@ -545,7 +595,6 @@ public class PhonkHttpServer extends NanoHTTPD {
                 }
                 case "move": {
                     final HashMap<String, String> map = new HashMap<>();  // POST DATA
-
 
                     String json = null;
                     try {

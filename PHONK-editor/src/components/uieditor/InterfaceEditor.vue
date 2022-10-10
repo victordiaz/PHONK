@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import helpers from '../../Helpers'
 import Store from '../Store'
 
 export default {
@@ -72,7 +73,7 @@ export default {
     },
     views_get_all: function (data) {
       console.log(data)
-      Store.clearArray(this.elements)
+      helpers.clearArray(this.elements)
       for (var i in data) {
         data[i].x = data[i].x / 1080 * 300 + 'px'
         data[i].y = data[i].y / 1794 * 500 + 'px'

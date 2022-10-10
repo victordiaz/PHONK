@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import helpers from '../../Helpers'
 import Store from '../../Store'
 
 export default {
@@ -52,7 +53,7 @@ export default {
       this.$route.router.go({name: 'editor.load', params: { type: this.uri.type, folder: this.uri.folder, project: project.name }})
     },
     project_listed: function () {
-      Store.clearArray(this.projects_to_check)
+      helpers.clearArray(this.projects_to_check)
       for (var i in Store.state.projects) {
         if (Store.state.projects[i].name === 'examples') {
           for (var j in Store.state.projects[i].files) {

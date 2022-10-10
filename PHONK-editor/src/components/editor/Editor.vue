@@ -6,7 +6,12 @@
       <div v-if="sharedState.show_ui_editor" id="uieditor-container">
         <UIEditor />
       </div>
-      <EditorCode v-show="!sharedState.show_ui_editor" :tabs="tabs" :currentTab="currentTab" />
+      <EditorCode
+        v-show="!sharedState.show_ui_editor"
+        :tabs="tabs"
+        :currentTab="currentTab"
+        :project="project"
+        :files="files" />
     </div>
     <message-error
       v-if="isError"
@@ -19,6 +24,7 @@
 
 <script>
 import store from '../../Store'
+import helpers from '../../Helpers'
 import EditorBar from './EditorBar.vue'
 import EditorCode from './EditorCode.vue'
 import UIEditor from '../uieditor/UIEditor.vue'
@@ -39,7 +45,8 @@ export default {
       tabs: [{ name: 'main.js', text: '', modified: '' }],
       isError: false,
       sessions: [],
-      project: '',
+      project: null,
+      files: null,
       d: null,
       editor: '',
       isProjectLoaded: true
@@ -95,14 +102,15 @@ export default {
     },
     project_loaded: function (loaded) {
       // clear previous state
-      store.clearArray(this.tabs)
+      helpers.clearArray(this.tabs)
 
       if (loaded) {
+        console.log('Editor > project_loaded')
         // update object
-        let files = store.state.current_project.files
-        this.project = store.state.current_project.project
+        this.project = store.state.current_project
 
-        let mainFile = files.filter(f => f.name === 'main.js')[0]
+        let mainFile = this.project.files.filter(f => f.name === 'main.js')[0]
+        console.log(mainFile)
 
         if (mainFile) {
           this.load_file(mainFile)
@@ -181,7 +189,7 @@ export default {
   }
 
   .shortcut {
-    background: var(--color-accent);
+    // background: var(--color-accent);
   }
 }
 

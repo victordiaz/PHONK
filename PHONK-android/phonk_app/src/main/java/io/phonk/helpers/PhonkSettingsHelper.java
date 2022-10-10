@@ -67,7 +67,7 @@ public class PhonkSettingsHelper {
 
             File demosFolder = new File(PhonkSettings.getBaseDir() + PhonkSettings.DEMOS_FOLDER);
             FileIO.deleteDir(demosFolder);
-            FileIO.copyAssetFolder(c.getAssets(), "contributed_projects", demosFolder.getAbsolutePath());
+            // FileIO.copyAssetFolder(c.getAssets(), "contributed_projects", demosFolder.getAbsolutePath());
 
             l.onReady();
         }).start();

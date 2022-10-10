@@ -339,7 +339,7 @@ export default {
       this.current_folder = store.state.current_project.current_folder
       var files = store.state.current_project.files
       this.project_name = store.state.current_project.project.name
-      store.clearArray(this.files)
+      helpers.clearArray(this.files)
 
       files.sort(function (a, b) {
         return (b.isDir - a.isDir) || (a.name.toString().localeCompare(b.name))

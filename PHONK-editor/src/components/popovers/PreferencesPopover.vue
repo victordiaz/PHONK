@@ -25,9 +25,10 @@
           </li>
         </ul>
       </div>
-      <ul>
-      <li><button class = "clean" v-on:click = "clearSettings">reset settings</button></li>
-      </ul>
+      <button class = "clean"
+        v-on:click = "clearSettings">
+          reset settings
+      </button>
     </div>
   </pop-over>
 </template>
@@ -103,7 +104,7 @@ ul {
 li {
   display: inline-flex;
   align-items: center;
-  padding: 0.5em 0;
+  padding-bottom: 6px;
   text-transform: capitalize;
 
   p {

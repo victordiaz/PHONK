@@ -219,7 +219,6 @@ public class PhonkScriptHelper {
 
         // remove the project folder
         for (ProtoFile file : files) {
-            String[] splittedPath = file.path.split(p.getSandboxPath());
             file.path = file.path.replace(p.getSandboxPath(), "");
         }
 
@@ -247,6 +246,8 @@ public class PhonkScriptHelper {
 
             return pathname.getName().endsWith(extensionFilter);
         });
+
+        if (all_projects == null) return;
 
         for (File f : all_projects) {
 
@@ -357,16 +358,13 @@ public class PhonkScriptHelper {
     }
 
     public static boolean renameProject(Project p, String newName) {
-        MLog.d(TAG, "renameProject 1 -->" + p.getFullPath());
-        MLog.d(TAG, "renameProject 2 -->" + p.getParentPath());
+        // if new path doesn't exist then => rename
+        File fd = new File(p.getParentPath() + File.separator + newName + File.separator);
 
-        // if new path doent exist then => rename
-        File fd = new File(p.getParentPath() + "/" + newName);
-        if (!fd.exists()) {
+        if (!fd.exists())
             return new File(p.getFullPath()).renameTo(fd);
-        } else {
-            return false;
-        }
+
+        return false;
     }
 
     public static boolean cloneProject(Project p, String newName) {
