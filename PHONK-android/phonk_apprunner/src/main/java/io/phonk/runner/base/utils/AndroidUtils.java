@@ -336,19 +336,13 @@ public class AndroidUtils {
     static PowerManager.WakeLock wl;
 
     public static void setWakeLock(Context c, boolean b) {
-
-        PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
-        if (wl == null) {
-            wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
-            if (b) {
-                wl.acquire();
-            }
-        } else {
-            if (!b) {
-                wl.release();
-            }
+        if (b && wl == null) {
+            wl = ((PowerManager) c.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+            wl.acquire();
+        } else if (!b && wl != null) {
+            wl.release();
+            wl = null;
         }
-
     }
 
     public static void setGlobalBrightness(Context c, int brightness) {

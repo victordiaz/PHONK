@@ -361,15 +361,20 @@ public class PNetwork extends ProtoBase {
 
     @PhonkMethod(description = "Simple http server, serving the content of the project folder", example = "")
     @PhonkMethodParam(params = {"port", "function(responseString)"})
-    public PHttpServer createHttpServer(int port) {
+    public PHttpServer createHttpServer(String ip, int port) {
         PHttpServer httpServer = null;
         try {
-            httpServer = new PHttpServer(getAppRunner(), port);
+            httpServer = new PHttpServer(getAppRunner(), ip, port);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return httpServer;
+    }
+
+    @PhonkMethod
+    public PHttpServer createHttpServer(int port) {
+        return this.createHttpServer(null, port);
     }
 
     @PhonkMethod
