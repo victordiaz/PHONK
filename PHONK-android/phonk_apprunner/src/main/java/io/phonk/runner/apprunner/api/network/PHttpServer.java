@@ -82,12 +82,15 @@ public class PHttpServer extends NanoHTTPD {
     private ReturnInterfaceWithReturn mCallback = null;
     private Project mProject = null;
 
-    public PHttpServer(AppRunner appRunner, int port) throws IOException {
-        super(port);
+    public PHttpServer(AppRunner appRunner, String ip, int port) throws IOException {
+        super(ip, port);
 
         mAppRunner = appRunner;
         mProject = mAppRunner.getProject();
-        String ip = (String) NetworkUtils.getLocalIpAddress(mAppRunner.getAppContext()).get("ip");
+
+        if (ip == null) {
+            ip = (String) NetworkUtils.getLocalIpAddress(mAppRunner.getAppContext()).get("ip");
+        }
         MLog.d(TAG, "Launched server at http://" + ip + ":" + port);
 
         appRunner.whatIsRunning.add(this);
@@ -156,12 +159,21 @@ public class PHttpServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         if (mCallback == null) return null;
 
+        Map<String, String> files = new HashMap<>();
+        try {
+            session.parseBody(files);
+        } catch (IOException e) {  // TODO what then?
+            return null;
+        } catch (ResponseException e) {  // TODO what then?
+            return null;
+        }
+
         ReturnObject ret = new ReturnObject();
         ret.put("uri", session.getUri());
         ret.put("method", session.getMethod().toString());
         ret.put("header", session.getHeaders());
         ret.put("params", session.getParameters());
-        // ret.put("files", session.get());
+        ret.put("files", files);
         Response res = (Response) mCallback.event(ret);
 
         if (res == null) MLog.d(TAG, "2 is null");
@@ -187,4 +199,6 @@ public class PHttpServer extends NanoHTTPD {
     public void stop() {
         super.stop();
     }
+
+    public void __stop() { this.stop(); }
 }

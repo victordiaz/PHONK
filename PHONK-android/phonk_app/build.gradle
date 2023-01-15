@@ -7,7 +7,7 @@ apply plugin: 'com.android.application'
 // load keyStore properties to sign the apk
 def keystorePropertiesFile = rootProject.file("signing.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+if (keystorePropertiesFile.exists()) keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     flavorDimensions "version"
@@ -38,7 +38,7 @@ android {
         releaseConfig {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
+            storeFile keystoreProperties['storeFile'] == null ? null : file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
     }
