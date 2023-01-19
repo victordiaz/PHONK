@@ -346,6 +346,18 @@ public class PApp extends ProtoBase {
     }
 
     /**
+     * Runs a function on the main loop. This is normally not needed but might be required when combined with Threads
+     *
+     * @param callback
+     * @advanced
+     * @status TODO_EXAMPLE
+     */
+    @PhonkMethod
+    public void runOnMainLoop(final ReturnInterface callback) {
+        this.mHandler.post(() -> callback.event(null));
+    }
+
+    /**
      * Executes a shell command
      *
      * @param cmd

@@ -11,7 +11,7 @@
     "serveAndUSB": "vue-cli-service serve && adb forward tcp:8585 tcp:8585 && adb forward tcp:8587 tcp:8587",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "cp -r ./dist/* ../PHONK-android/phonk_app/src/main/assets/webide/",
+    "deploy": "mkdir -p ../PHONK-android/phonk_app/src/main/assets/webide && cp -r ./dist/* ../PHONK-android/phonk_app/src/main/assets/webide/",
     "cleanBuildAndDeploy": "npm run build && npm run cleanInAndroid && npm run deploy ",
     "clean": "rm -rf ./dist",
     "cleanInAndroid": "rm -rf ../PHONK-android/phonk_app/src/main/assets/webide/*"
