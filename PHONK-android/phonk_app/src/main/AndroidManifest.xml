@@ -23,8 +23,7 @@
 
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="io.phonk">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name="io.phonk.App"
@@ -101,42 +100,50 @@
             android:theme="@style/PhonkAppTheme"
             android:label="@string/welcome_activity_name" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.settings.SettingsActivity"
             android:theme="@style/PhonkAppThemePreferences"
             android:label="@string/settings_activity_name" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.editor.EditorActivity"
             android:theme="@style/PhonkAppTheme"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/editor_activity_name" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.info.LicenseActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="Licenses" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.SchedulerActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="Scheduler" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.info.HelpActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="Help" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.info.AboutActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="About" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.info.UpdateActivity"
             android:theme="@style/PhonkAppTheme"
             android:label="PHONK Update" >
         </activity>
+
         <activity
             android:name="io.phonk.gui.info.InfoScriptActivity"
             android:theme="@style/PhonkAppTheme"
@@ -220,7 +227,6 @@
             </intent-filter>
         </activity>
 
-
         <!-- New signature permission to ensure only systemui can bind to these services -->
         <service
             android:name="io.phonk.MyCustomControlService"
@@ -231,7 +237,6 @@
                 <action android:name="android.service.controls.ControlsProviderService" />
             </intent-filter>
         </service>
-
 
         <!--
         <provider

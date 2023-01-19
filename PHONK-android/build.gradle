@@ -5,22 +5,17 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:7.4.0'
     }
 }
 
 project.ext {
-    versionCode = 149
-    versionName = "1.4.9"
+    versionCode = 150
+    versionName = "1.5.0"
     compileSdkVersion = 33
     targetSdkVersion = 29
     minSdkVersion = 16
-}
-
-task hello {
-    doLast {
-        println 'Hello world!'
-    }
+    webIDEDir = '../../PHONK-editor'
 }
 
 allprojects {

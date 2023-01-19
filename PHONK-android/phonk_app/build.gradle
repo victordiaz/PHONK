@@ -1,7 +1,12 @@
 buildscript {
-
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "com.github.node-gradle:gradle-node-plugin:3.4.0"
+    }
 }
-
+apply plugin: 'com.github.node-gradle.node'
 apply plugin: 'com.android.application'
 
 // load keyStore properties to sign the apk
@@ -10,8 +15,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
+    namespace 'io.phonk'
     flavorDimensions "version"
-
     compileSdkVersion project.compileSdkVersion
 
     defaultConfig {
@@ -70,6 +75,7 @@ android {
             versionName project.versionName + "_extended"
         }
     }
+
     packagingOptions {
         resources {
             excludes += ['META-INF/DEPENDENCIES.txt', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt', 'META-INF/NOTICE', 'META-INF/LICENSE', 'META-INF/DEPENDENCIES', 'META-INF/notice.txt', 'META-INF/license.txt', 'META-INF/dependencies.txt', 'META-INF/LGPL2.1']
@@ -79,7 +85,23 @@ android {
     lint {
         disable 'InvalidPackage'
     }
+}
 
+node {
+    download = true
+    nodeProjectDir = file("${project.webIDEDir}")
+    version = "18.10.0"
+}
+
+task buildWebIDE(type: NpmTask) {
+    dependsOn npmInstall
+    args = ['run', 'cleanBuildAndDeploy']
+    // script = file('script.js')
+}
+
+task copyExamples(type: NpmTask) {
+    dependsOn npmInstall
+    args = ['run', '']
 }
 
 repositories {
@@ -101,3 +123,5 @@ dependencies {
     implementation 'org.reactivestreams:reactive-streams:1.0.3'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
 }
+
+preBuild.dependsOn buildWebIDE

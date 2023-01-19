@@ -23,6 +23,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'org.tensorflow.lite.examples.transfer.api'
     compileSdkVersion 33
 
     defaultConfig {
@@ -46,7 +47,6 @@ android {
     androidResources {
         noCompress 'tflite'
     }
-
 }
 
 
