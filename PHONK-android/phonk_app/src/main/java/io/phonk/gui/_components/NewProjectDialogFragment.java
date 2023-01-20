@@ -39,21 +39,18 @@ import io.phonk.R;
 
 public class NewProjectDialogFragment extends DialogFragment implements OnEditorActionListener {
 
-    public interface NewProjectDialogListener {
-        void onFinishEditDialog(String inputText);
-    }
-
     private EditText mEditText;
     private NewProjectDialogListener mListener;
-
     public NewProjectDialogFragment() {
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title")
-                .setPositiveButton("Create", (dialog, whichButton) -> doOK()).setNegativeButton("Cancel", (dialog, whichButton) -> dialog.dismiss());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("title").setPositiveButton(
+                "Create",
+                (dialog, whichButton) -> doOK()
+        ).setNegativeButton("Cancel", (dialog, whichButton) -> dialog.dismiss());
 
         View view = getActivity().getLayoutInflater().inflate(R.layout.newproject_dialog, null);
         mEditText = view.findViewById(R.id.dialog_new_project_name_input);
@@ -70,6 +67,10 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
         return dialog;
     }
 
+    public void doOK() {
+        mListener.onFinishEditDialog(mEditText.getText().toString());
+    }
+
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (EditorInfo.IME_ACTION_DONE != actionId) return false;
@@ -84,7 +85,7 @@ public class NewProjectDialogFragment extends DialogFragment implements OnEditor
         this.mListener = listener;
     }
 
-    public void doOK() {
-        mListener.onFinishEditDialog(mEditText.getText().toString());
+    public interface NewProjectDialogListener {
+        void onFinishEditDialog(String inputText);
     }
 }

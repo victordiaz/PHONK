@@ -40,12 +40,6 @@ public class _PDashboardBackground extends ProtoBase {
         super(appRunner);
     }
 
-    // --------- JDashboard add ---------//
-    public interface jDashboardAddCB {
-        void event();
-    }
-
-
     public void updateColor(String hex) throws JSONException, UnknownHostException {
         int c = Color.parseColor(hex);
         float alpha = (float) (Color.alpha(c) / 255.0); //html uses normalized values
@@ -53,17 +47,12 @@ public class _PDashboardBackground extends ProtoBase {
         int g = Color.green(c);
         int b = Color.blue(c);
 
-        JSONObject values = new JSONObject()
-                .put("type", "background")
-                .put("a", alpha)
-                .put("r", r)
-                .put("g", g)
-                .put("b", b);
+        JSONObject values = new JSONObject().put("type", "background").put("a", alpha).put("r", r).put("g", g).put(
+                "b",
+                b
+        );
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
@@ -72,5 +61,10 @@ public class _PDashboardBackground extends ProtoBase {
     @Override
     public void __stop() {
 
+    }
+
+    // --------- JDashboard add ---------//
+    public interface jDashboardAddCB {
+        void event();
     }
 }

@@ -46,13 +46,6 @@ public class EventManager {
         EventBus.getDefault().register(this);
     }
 
-    public void addEvent(String type, String detail, int icon) {
-        mEventList.add(new EventLogItem(type, detail, icon));
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> EventBus.getDefault().post(new Events.AppUiEvent(Events.NEW_EVENT, "")));
-    }
-
     @Subscribe
     public void onEventMainThread(Events.AppUiEvent e) {
         String action = e.getAction();
@@ -73,6 +66,13 @@ public class EventManager {
                 break;
 
         }
+    }
+
+    public void addEvent(String type, String detail, int icon) {
+        mEventList.add(new EventLogItem(type, detail, icon));
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> EventBus.getDefault().post(new Events.AppUiEvent(Events.NEW_EVENT, "")));
     }
 
     @Subscribe

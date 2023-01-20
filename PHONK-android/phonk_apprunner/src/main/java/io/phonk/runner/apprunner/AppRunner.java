@@ -53,24 +53,15 @@ import io.phonk.runner.base.utils.MLog;
 public class AppRunner {
 
     private static final String TAG = AppRunner.class.getSimpleName();
-
+    public final WhatIsRunning whatIsRunning;
+    public final boolean mIsProjectLoaded = false;
     private final Context mContext;
     public boolean hasUserInterface = false;
-    public final WhatIsRunning whatIsRunning;
-
-    //Project properties
-    private Project mProject;
-
-    private String mScript;
     public String mIntentPrefixScript = "";
     public String mIntentCode = "";
     public String mIntentPostfixScript = "";
-
-    public final boolean mIsProjectLoaded = false;
-
     //Interpreter
     public AppRunnerInterpreter interp;
-
     //API Objects for the interpreter
     public PApp pApp;
     public PBoards pBoards;
@@ -84,6 +75,10 @@ public class AppRunner {
     public PSensors pSensors;
     public PUI pUi;
     public PUtil pUtil;
+    boolean finished = false;
+    //Project properties
+    private Project mProject;
+    private String mScript;
 
     public AppRunner(Context context) {
         this.mContext = context;
@@ -186,10 +181,6 @@ public class AppRunner {
         if (interp != null) interp.eval(script, projectName);
     }
 
-    public Context getAppContext() {
-        return mContext.getApplicationContext();
-    }
-
     public Scriptable newArray() {
         return interp.newNativeArray();
     }
@@ -197,8 +188,6 @@ public class AppRunner {
     public Scriptable newArray(File[] files) {
         return interp.newNativeArrayFrom(files);
     }
-
-    boolean finished = false;
 
     public void byebye() {
         MLog.d("byebye", "");
@@ -218,5 +207,9 @@ public class AppRunner {
         MLog.d(TAG, ip);
 
         return "http://" + ip + ":" + AppRunnerSettings.SERVER_PORT + File.separator;
+    }
+
+    public Context getAppContext() {
+        return mContext.getApplicationContext();
     }
 }

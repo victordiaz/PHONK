@@ -49,7 +49,8 @@ public class PLightIntensity extends PCustomSensorManager implements WhatIsRunni
     }
 
 
-    @PhonkMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary", example = "")
+    @PhonkMethod(description = "Start the light sensor. Returns the intensity. The value per device might vary",
+            example = "")
     @PhonkMethodParam(params = {"function(intensity)"})
     public void start() {
         super.start();

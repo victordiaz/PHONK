@@ -43,12 +43,20 @@ import io.phonk.runner.base.BaseActivity;
 public class LicenseActivity extends BaseActivity {
 
     private static final java.lang.String TAG = LicenseActivity.class.getSimpleName();
-    private String[] mLicenseFiles;
     private final ArrayList<License> mLicenseFileContent = new ArrayList<>();
-
+    private String[] mLicenseFiles;
     private ListView mLicenseList;
 
-    @Override
+    static class License {
+        public final String title;
+        public final String body;
+        public boolean showing = false;
+
+        public License(String name, String content) {
+            title = name.replace("_", " ").replace(".txt", "");
+            body = content;
+        }
+    }    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.license_activity);
@@ -67,7 +75,10 @@ public class LicenseActivity extends BaseActivity {
             try {
                 mLicenseFiles = getAssets().list("licenses");
                 for (String mLicenseFile : mLicenseFiles) {
-                    mLicenseFileContent.add(new License(mLicenseFile, PhonkAppHelper.readFile(this, "licenses/" + mLicenseFile)));
+                    mLicenseFileContent.add(new License(
+                            mLicenseFile,
+                            PhonkAppHelper.readFile(this, "licenses/" + mLicenseFile)
+                    ));
                     // MLog.d(TAG, filecontent);
                 }
             } catch (IOException e) {
@@ -88,24 +99,6 @@ public class LicenseActivity extends BaseActivity {
         });
         t.start();
 
-    }
-
-    @Override
-    protected void setupActivity() {
-        super.setupActivity();
-
-        enableBackOnToolbar();
-    }
-
-    static class License {
-        public final String title;
-        public final String body;
-        public boolean showing = false;
-
-        public License(String name, String content) {
-            title = name.replace("_", " ").replace(".txt", "");
-            body = content;
-        }
     }
 
     private static class MyAdapter extends ArrayAdapter<License> {
@@ -141,6 +134,15 @@ public class LicenseActivity extends BaseActivity {
 
             return convertView;
         }
+    }    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+
+        enableBackOnToolbar();
     }
+
+
+
+
 
 }

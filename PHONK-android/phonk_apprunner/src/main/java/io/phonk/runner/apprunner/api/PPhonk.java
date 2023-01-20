@@ -74,7 +74,7 @@ public class PPhonk extends ProtoBase {
         return new PWebEditor(getAppRunner());
     }
 
-//TODO reenable this
+    //TODO reenable this
 
     //TODO this is a place holder
     //
@@ -99,11 +99,6 @@ public class PPhonk extends ProtoBase {
 
     }
 
-    // --------- addDebugger ---------//
-    public interface AddDebuggerCB {
-        void data(String debuggableScript);
-    }
-
     @PhonkMethod(description = "Get the current Protocoder version name", example = "")
     public String versionName() {
         PackageInfo pInfo = null;
@@ -115,7 +110,6 @@ public class PPhonk extends ProtoBase {
         return pInfo.versionName;
     }
 
-
     @PhonkMethod(description = "Get the current Protocoder version code", example = "")
     public int versionCode() {
         PackageInfo pInfo = null;
@@ -126,7 +120,6 @@ public class PPhonk extends ProtoBase {
         }
         return pInfo.versionCode;
     }
-
 
     @PhonkMethod(description = "Install a Proto app programatically", example = "")
     public void installPhonkApp(String src, boolean b) {
@@ -153,5 +146,10 @@ public class PPhonk extends ProtoBase {
     @Override
     public void __stop() {
 
+    }
+
+    // --------- addDebugger ---------//
+    public interface AddDebuggerCB {
+        void data(String debuggableScript);
     }
 }

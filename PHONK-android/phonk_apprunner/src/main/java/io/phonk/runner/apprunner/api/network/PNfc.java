@@ -52,57 +52,17 @@ public class PNfc extends ProtoBase {
         super(appRunner);
     }
 
-    /**
-     * Starts NFC
-     */
-    @PhonkMethod
-    public PNfc start() {
-        getActivity().initializeNFC();
-        return this;
-    }
-
-    @PhonkMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
-    @PhonkMethodParam(params = {"function(id, data)"})
-    public void onNewData(final ReturnInterface callback) {
-        getActivity().addNFCReadListener(o -> {
-            callback.event(o);
-        });
-    }
-
-    public interface onNFCWrittenListener {
-        void onDataWritten(ReturnObject o);
-    }
-
-    public interface onNFCListener {
-        void onNewTag(ReturnObject o);
-    }
-
-    @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {"function(msg)"})
-    public void onDataWritten(ReturnInterface callback) {
-        getActivity().addNFCWrittenListener(o -> {
-            MLog.d(TAG, "data written");
-            callback.event(o);
-        });
-    }
-
-    /**
-     * Write text to a tag
-     *
-     * @param textToWrite the text to write
-     */
-    public PNfc write(String textToWrite) {
-        nfcMsg = textToWrite;
-        return this;
-    }
-
     public static boolean writeTag(Context context, Tag tag, String data) {
         // Record to launch Play Store if app is not installed
         NdefRecord appRecord = NdefRecord.createApplicationRecord(context.getPackageName());
 
         // Record with actual data we care about
-        NdefRecord relayRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, ("application/"
-                + context.getPackageName()).getBytes(StandardCharsets.US_ASCII), null, data.getBytes());
+        NdefRecord relayRecord = new NdefRecord(
+                NdefRecord.TNF_MIME_MEDIA,
+                ("application/" + context.getPackageName()).getBytes(StandardCharsets.US_ASCII),
+                null,
+                data.getBytes()
+        );
 
         // Complete NDEF message with both records
         NdefMessage message = new NdefMessage(new NdefRecord[]{relayRecord, appRecord});
@@ -160,8 +120,52 @@ public class PNfc extends ProtoBase {
         return false;
     }
 
+    /**
+     * Starts NFC
+     */
+    @PhonkMethod
+    public PNfc start() {
+        getActivity().initializeNFC();
+        return this;
+    }
+
+    @PhonkMethod(description = "Gives back data when mContext NFC tag is approached", example = "")
+    @PhonkMethodParam(params = {"function(id, data)"})
+    public void onNewData(final ReturnInterface callback) {
+        getActivity().addNFCReadListener(o -> {
+            callback.event(o);
+        });
+    }
+
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {"function(msg)"})
+    public void onDataWritten(ReturnInterface callback) {
+        getActivity().addNFCWrittenListener(o -> {
+            MLog.d(TAG, "data written");
+            callback.event(o);
+        });
+    }
+
+    /**
+     * Write text to a tag
+     *
+     * @param textToWrite the text to write
+     */
+    public PNfc write(String textToWrite) {
+        nfcMsg = textToWrite;
+        return this;
+    }
+
     @Override
     public void __stop() {
 
+    }
+
+    public interface onNFCWrittenListener {
+        void onDataWritten(ReturnObject o);
+    }
+
+    public interface onNFCListener {
+        void onNewTag(ReturnObject o);
     }
 }

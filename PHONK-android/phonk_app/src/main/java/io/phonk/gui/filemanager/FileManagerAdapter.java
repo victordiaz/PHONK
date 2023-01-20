@@ -40,21 +40,12 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     private final FileManagerFragment mFragment;
     private ArrayList<ProtoFile> mDataSet;
 
-    public void setData(ArrayList<ProtoFile> currentFileList) {
+    public FileManagerAdapter(FileManagerFragment fragment, ArrayList<ProtoFile> currentFileList) {
+        mFragment = fragment;
         mDataSet = currentFileList;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final FileManagerListItem mView;
-
-        public ViewHolder(FileManagerListItem v) {
-            super(v);
-            mView = v;
-        }
-    }
-
-    public FileManagerAdapter(FileManagerFragment fragment, ArrayList<ProtoFile> currentFileList) {
-        mFragment = fragment;
+    public void setData(ArrayList<ProtoFile> currentFileList) {
         mDataSet = currentFileList;
     }
 
@@ -92,6 +83,15 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     @Override
     public int getItemCount() {
         return mDataSet.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final FileManagerListItem mView;
+
+        public ViewHolder(FileManagerListItem v) {
+            super(v);
+            mView = v;
+        }
     }
 
 }

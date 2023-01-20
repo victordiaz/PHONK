@@ -33,16 +33,14 @@ import io.phonk.runner.base.utils.MLog;
 
 public class MyLifecycleHandler implements Application.ActivityLifecycleCallbacks {
 
+    static final ArrayList<Activity> mRunningScripts = new ArrayList<>();
     private final String TAG = MyLifecycleHandler.class.getSimpleName();
-
     // I use four separate variables here. You can, of course, just use two and
     // increment/decrement them instead of using four and incrementing them all.
     private int resumed;
     private int paused;
     private int started;
     private int stopped;
-
-    static final ArrayList<Activity> mRunningScripts = new ArrayList<>();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -56,11 +54,8 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
     }
 
     @Override
-    public void onActivityDestroyed(Activity activity) {
-        String activityName = activity.getClass().getSimpleName();
-        MLog.d(TAG, activityName);
-
-
+    public void onActivityStarted(Activity activity) {
+        ++started;
     }
 
     @Override
@@ -75,18 +70,21 @@ public class MyLifecycleHandler implements Application.ActivityLifecycleCallback
     }
 
     @Override
+    public void onActivityStopped(Activity activity) {
+        ++stopped;
+        MLog.d("test", "application is visible: " + (started > stopped));
+    }
+
+    @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
     }
 
     @Override
-    public void onActivityStarted(Activity activity) {
-        ++started;
-    }
+    public void onActivityDestroyed(Activity activity) {
+        String activityName = activity.getClass().getSimpleName();
+        MLog.d(TAG, activityName);
 
-    @Override
-    public void onActivityStopped(Activity activity) {
-        ++stopped;
-        MLog.d("test", "application is visible: " + (started > stopped));
+
     }
 
     // And these two public static functions

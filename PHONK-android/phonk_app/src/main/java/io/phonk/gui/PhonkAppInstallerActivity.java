@@ -50,6 +50,11 @@ public class PhonkAppInstallerActivity extends BaseActivity {
     private LinearLayout mLl;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -127,11 +132,6 @@ public class PhonkAppInstallerActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
 }

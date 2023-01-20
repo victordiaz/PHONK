@@ -42,10 +42,42 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
 
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final TouchPadStyler styler;
+    final PLooper looper = new PLooper(mAppRunner, 5, () -> {
+        invalidate();
+        // MLog.d("touches", "size " + touches.size());
+    });
     private PhonkNativeArray touches;
     private ReturnInterface onTouchCallback;
     private int mWidth;
     private int mHeight;
+    final OnDrawCallback mydraw = new OnDrawCallback() {
+        @Override
+        public void event(PCanvas c) {
+            mWidth = c.width;
+            mHeight = c.height;
+
+            c.clear();
+            c.cornerMode(false);
+
+            if (touches != null) {
+                for (int i = 0; i < touches.size(); i++) {
+                    ReturnObject r = (ReturnObject) touches.get(i);
+                    float unmappedXVal = (float) r.get("x");
+                    float unmappedYVal = (float) r.get("y");
+
+                    if (unmappedXVal < 0) unmappedXVal = 0;
+                    if (unmappedXVal > c.width) unmappedXVal = c.width;
+                    if (unmappedYVal < 0) unmappedYVal = 0;
+                    if (unmappedYVal > c.height) unmappedYVal = c.height;
+
+                    c.fill(styler.padColor);
+                    c.stroke(styler.padBorderColor);
+                    c.strokeWidth(styler.padBorderSize);
+                    c.ellipse(unmappedXVal, unmappedYVal, styler.padSize, styler.padSize);
+                }
+            }
+        }
+    };
     private float rangeXFrom = 0;
     private float rangeXTo = 1.0f;
     private float rangeYFrom = 0;
@@ -122,46 +154,6 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    final PLooper looper = new PLooper(mAppRunner, 5, () -> {
-        invalidate();
-        // MLog.d("touches", "size " + touches.size());
-    });
-
-    private void executeCallback() {
-        if (onTouchCallback != null) {
-
-        }
-    }
-
-    final OnDrawCallback mydraw = new OnDrawCallback() {
-        @Override
-        public void event(PCanvas c) {
-            mWidth = c.width;
-            mHeight = c.height;
-
-            c.clear();
-            c.cornerMode(false);
-
-            if (touches != null) {
-                for (int i = 0; i < touches.size(); i++) {
-                    ReturnObject r = (ReturnObject) touches.get(i);
-                    float unmappedXVal = (float) r.get("x");
-                    float unmappedYVal = (float) r.get("y");
-
-                    if (unmappedXVal < 0) unmappedXVal = 0;
-                    if (unmappedXVal > c.width) unmappedXVal = c.width;
-                    if (unmappedYVal < 0) unmappedYVal = 0;
-                    if (unmappedYVal > c.height) unmappedYVal = c.height;
-
-                    c.fill(styler.padColor);
-                    c.stroke(styler.padBorderColor);
-                    c.strokeWidth(styler.padBorderSize);
-                    c.ellipse(unmappedXVal, unmappedYVal, styler.padSize, styler.padSize);
-                }
-            }
-        }
-    };
-
     public PTouchPad range(float fromX, float toX, float fromY, float toY) {
         rangeXFrom = fromX;
         rangeXTo = toX;
@@ -180,21 +172,16 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         this.invalidate();
     }
 
+    private void executeCallback() {
+        if (onTouchCallback != null) {
+
+        }
+    }
+
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
     }
-
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
 
     static class TouchPadStyler extends Styler {
         float padSize;
@@ -215,6 +202,17 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
             padBorderColor = Color.parseColor(mProps.get("padBorderColor").toString());
             padBorderSize = toFloat(mProps.get("padBorderSize"));
         }
+    }    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+
+
+
 
 }

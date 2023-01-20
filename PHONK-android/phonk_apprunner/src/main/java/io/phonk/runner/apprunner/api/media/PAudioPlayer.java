@@ -47,10 +47,6 @@ public class PAudioPlayer extends ProtoBase {
     private ReturnInterface callbackfn;
     private Visualizer mVisualiser;
 
-    public interface OnFinishCB {
-        void event();
-    }
-
     public PAudioPlayer(AppRunner appRunner) {
         super(appRunner);
         getAppRunner().whatIsRunning.add(this);
@@ -211,22 +207,6 @@ public class PAudioPlayer extends ProtoBase {
 
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
-    public PAudioPlayer finish() {
-        if (mVisualiser != null) {
-            mVisualiser.setEnabled(false);
-            mVisualiser.release();
-            mVisualiser.setDataCaptureListener(null, 0, false, false);
-        }
-
-        mMediaPlayer.stop();
-        mMediaPlayer.release();
-        mMediaPlayer = null;
-
-        return this;
-    }
-
-    @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {""})
     public PAudioPlayer onFinish(PAudioPlayer.OnFinishCB callbackfn) {
         return this;
     }
@@ -254,5 +234,25 @@ public class PAudioPlayer extends ProtoBase {
     @Override
     public void __stop() {
         finish();
+    }
+
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
+    public PAudioPlayer finish() {
+        if (mVisualiser != null) {
+            mVisualiser.setEnabled(false);
+            mVisualiser.release();
+            mVisualiser.setDataCaptureListener(null, 0, false, false);
+        }
+
+        mMediaPlayer.stop();
+        mMediaPlayer.release();
+        mMediaPlayer = null;
+
+        return this;
+    }
+
+    public interface OnFinishCB {
+        void event();
     }
 }

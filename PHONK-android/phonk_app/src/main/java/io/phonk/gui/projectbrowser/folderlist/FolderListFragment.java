@@ -48,13 +48,11 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint("NewApi")
 public class FolderListFragment extends BaseFragment {
 
-    private final String TAG = FolderListFragment.class.getSimpleName();
-
     final ArrayList<FolderAdapterData> foldersForAdapter = new ArrayList<>();
+    private final String TAG = FolderListFragment.class.getSimpleName();
+    private final boolean isShown = true;
     private ResizableRecyclerView mFolderRecyclerView;
     private FolderListAdapter folderListAdapter;
-
-    private final boolean isShown = true;
     private boolean mIsTablet = false;
 
     private ActionListener mListener;
@@ -68,10 +66,6 @@ public class FolderListFragment extends BaseFragment {
         myFragment.setArguments(args);
 
         return myFragment;
-    }
-
-    public interface ActionListener {
-        void onFolderSelected(String folder, String name);
     }
 
     public void setListener(ActionListener listener) {
@@ -106,23 +100,36 @@ public class FolderListFragment extends BaseFragment {
         ArrayList<Folder> folders = PhonkScriptHelper.listFolders(PhonkSettings.USER_PROJECTS_FOLDER, true);
 
         if (!folders.isEmpty()) {
-            this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.USER_PROJECTS_FOLDER, "Playground"));
+            this.foldersForAdapter.add(new FolderAdapterData(
+                    FolderAdapterData.TYPE_TITLE,
+                    PhonkSettings.USER_PROJECTS_FOLDER,
+                    "Playground"
+            ));
             for (Folder folder : folders) {
-                this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.USER_PROJECTS_FOLDER, folder.getName(), folder.getNumSubfolders()));
+                this.foldersForAdapter.add(new FolderAdapterData(
+                        FolderAdapterData.TYPE_FOLDER_NAME,
+                        PhonkSettings.USER_PROJECTS_FOLDER,
+                        folder.getName(),
+                        folder.getNumSubfolders()
+                ));
             }
         }
 
         // get the examples folder
         ArrayList<Folder> examples = PhonkScriptHelper.listFolders(PhonkSettings.EXAMPLES_FOLDER, true);
-        this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_TITLE, PhonkSettings.EXAMPLES_FOLDER, "Examples"));
+        this.foldersForAdapter.add(new FolderAdapterData(
+                FolderAdapterData.TYPE_TITLE,
+                PhonkSettings.EXAMPLES_FOLDER,
+                "Examples"
+        ));
         for (Folder folder : examples) {
-            this.foldersForAdapter.add(new FolderAdapterData(FolderAdapterData.TYPE_FOLDER_NAME, PhonkSettings.EXAMPLES_FOLDER, folder.getName(), folder.getNumSubfolders()));
+            this.foldersForAdapter.add(new FolderAdapterData(
+                    FolderAdapterData.TYPE_FOLDER_NAME,
+                    PhonkSettings.EXAMPLES_FOLDER,
+                    folder.getName(),
+                    folder.getNumSubfolders()
+            ));
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -135,6 +142,11 @@ public class FolderListFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Subscribe
@@ -151,6 +163,10 @@ public class FolderListFragment extends BaseFragment {
             listFolders(foldersForAdapter);
             folderListAdapter.notifyDataSetChanged();
         }
+    }
+
+    public interface ActionListener {
+        void onFolderSelected(String folder, String name);
     }
 
 }

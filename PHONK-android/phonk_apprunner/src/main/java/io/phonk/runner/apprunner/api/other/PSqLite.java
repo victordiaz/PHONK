@@ -34,7 +34,6 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.ProtoBase;
-import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PSqLite extends ProtoBase {
@@ -52,7 +51,11 @@ public class PSqLite extends ProtoBase {
     @PhonkMethod(description = "Open a SQLite ", example = "")
     @PhonkMethodParam(params = {"dirName"})
     public void open(String dbName) {
-        db = getContext().openOrCreateDatabase(getAppRunner().getProject().getFullPathForFile(dbName), Context.MODE_PRIVATE, null);
+        db = getContext().openOrCreateDatabase(
+                getAppRunner().getProject().getFullPathForFile(dbName),
+                Context.MODE_PRIVATE,
+                null
+        );
     }
 
     @PhonkMethod(description = "Executes a SQL sentence", example = "")
@@ -113,6 +116,11 @@ public class PSqLite extends ProtoBase {
         }
     }
 
+    @Override
+    public void __stop() {
+
+    }
+
     public static class DBDataType {
         final String name;
         final Object obj;
@@ -121,10 +129,5 @@ public class PSqLite extends ProtoBase {
             this.name = name;
             this.obj = obj;
         }
-    }
-
-    @Override
-    public void __stop() {
-
     }
 }

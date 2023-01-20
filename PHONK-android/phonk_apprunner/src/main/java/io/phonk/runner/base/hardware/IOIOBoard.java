@@ -33,20 +33,12 @@ import io.phonk.runner.base.utils.MLog;
 public class IOIOBoard {
 
     private static final String TAG = IOIOBoard.class.getSimpleName();
-
+    protected final HardwareCallback mHardwareCallback;
     private final Context mContext;
     private IOIOBoardService mIOIOService;
     private Intent mServiceIntent;
     private Boolean mServiceBound = false;
-    protected final HardwareCallback mHardwareCallback;
-
     private final ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            MLog.d(TAG, "onServiceDisconnected");
-            mServiceBound = false;
-        }
-
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MLog.d(TAG, "2 --> onServiceConnected");
@@ -55,6 +47,12 @@ public class IOIOBoard {
             mIOIOService.setCallback(mHardwareCallback);
             mIOIOService.start(mServiceIntent);
             mServiceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            MLog.d(TAG, "onServiceDisconnected");
+            mServiceBound = false;
         }
     };
 
@@ -69,6 +67,14 @@ public class IOIOBoard {
         mContext.bindService(mServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
+    public void __stop() {
+        MLog.d(TAG, "IOIOBoard stop called");
+        powerOff();
+        if (mServiceIntent != null) {
+            mContext.stopService(mServiceIntent);
+        }
+    }
+
     public void powerOff() {
         if (mServiceBound) {
             MLog.d(TAG, "Aborting thread...");
@@ -76,14 +82,6 @@ public class IOIOBoard {
             mContext.unbindService(mConnection);
             mServiceBound = false;
             mIOIOService = null;
-        }
-    }
-
-    public void __stop() {
-        MLog.d(TAG, "IOIOBoard stop called");
-        powerOff();
-        if (mServiceIntent != null) {
-            mContext.stopService(mServiceIntent);
         }
     }
 

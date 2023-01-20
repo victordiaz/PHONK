@@ -79,18 +79,21 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject
 public class PMedia extends ProtoBase {
+    final String TAG = PMedia.class.getSimpleName();
+    private HeadSetReceiver headsetPluggedReceiver;
+    private ReturnInterface headsetCallbackfn;
+    public PMedia(AppRunner appRunner) {
+        super(appRunner);
+    }
+
     @Override
     public void initForParentFragment(AppRunnerFragment fragment) {
         super.initForParentFragment(fragment);
     }
 
-    final String TAG = PMedia.class.getSimpleName();
-
-    private HeadSetReceiver headsetPluggedReceiver;
-    private ReturnInterface headsetCallbackfn;
-
-    public PMedia(AppRunner appRunner) {
-        super(appRunner);
+    @Override
+    public void __stop() {
+        if (headsetCallbackfn != null) getContext().unregisterReceiver(headsetPluggedReceiver);
     }
 
     @PhonkMethod(description = "Set the main volume", example = "")
@@ -126,7 +129,8 @@ public class PMedia extends ProtoBase {
         return new PVideo(getAppRunner());
     }
 
-    @PhonkMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd", example = "")
+    @PhonkMethod(description = "Loads and initializes a PureData patch http://www.puredata.info using libpd",
+            example = "")
     @PhonkMethodParam(params = {"fileName"})
     public PPureData initLibPd() {
 
@@ -139,7 +143,8 @@ public class PMedia extends ProtoBase {
         return new PAudioRecorder(getAppRunner());
     }
 
-    @PhonkMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello world');")
+    @PhonkMethod(description = "Says a text with voice using a defined locale", example = "media.textToSpeech('hello " +
+            "world');")
     @PhonkMethodParam(params = {"text", "Locale"})
     public PTextToSpeech createTextToSpeech() {
         PTextToSpeech tts = null;
@@ -152,8 +157,8 @@ public class PMedia extends ProtoBase {
         return tts;
     }
 
-
-    @PhonkMethod(description = "Fires the voice recognition and returns the best match", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @PhonkMethod(description = "Fires the voice recognition and returns the best match", example = "media" +
+            ".startVoiceRecognition(function(text) { console.log(text) } );")
     @PhonkMethodParam(params = {"function(recognizedText)"})
     public void startVoiceRecognition(ReturnInterface callbackfn) {
         startVoiceRecognition(callbackfn, true);
@@ -265,11 +270,8 @@ public class PMedia extends ProtoBase {
         // sr.stopListening();
     }
 
-    public interface onVoiceRecognitionListener {
-        void onNewResult(ArrayList<String> text);
-    }
-
-    @PhonkMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text) { console.log(text) } );")
+    @PhonkMethod(description = "Start a connected midi device", example = "media.startVoiceRecognition(function(text)" +
+            " { console.log(text) } );")
     @PhonkMethodParam(params = {"function(recognizedText)"})
     public PMidi startMidi() {
 
@@ -282,8 +284,7 @@ public class PMedia extends ProtoBase {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return new PMidiController(getAppRunner());
         } else {
-            Toast.makeText(getContext(), "MIDI not supported on your Android version!", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(getContext(), "MIDI not supported on your Android version!", Toast.LENGTH_LONG).show();
             return null;
         }
     }
@@ -300,30 +301,6 @@ public class PMedia extends ProtoBase {
         headsetPluggedReceiver = new HeadSetReceiver();
         getContext().registerReceiver(headsetPluggedReceiver, filter);
     }
-
-    private class HeadSetReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
-                int state = intent.getIntExtra("state", -1);
-
-                ReturnObject ret = new ReturnObject();
-                switch (state) {
-                    case 0:
-                        Log.d(TAG, "Headset unplugged");
-                        ret.put("plugged", false);
-                        headsetCallbackfn.event(ret);
-                        break;
-                    case 1:
-                        Log.d(TAG, "Headset plugged");
-                        ret.put("plugged", false);
-                        headsetCallbackfn.event(ret);
-                        break;
-                }
-            }
-        }
-    }
-
 
     public Bitmap generateQRCode(String text) {
         Bitmap bmp = null;
@@ -355,7 +332,16 @@ public class PMedia extends ProtoBase {
         Camera.Size size = camera.getParameters().getPreviewSize();
 
         // Create BinaryBitmap
-        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(data, size.width, size.height, 0, 0, size.width, size.height, false);
+        PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(
+                data,
+                size.width,
+                size.height,
+                0,
+                0,
+                size.width,
+                size.height,
+                false
+        );
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 
         // Read QR Code
@@ -383,7 +369,8 @@ public class PMedia extends ProtoBase {
         boolean existsCameraFront = (boolean) getAppRunner().pDevice.info().get("cameraFront");
         boolean existsCameraBack = (boolean) getAppRunner().pDevice.info().get("cameraBack");
 
-        boolean cameraIsAvailable = camera.equals("front") & existsCameraFront | camera.equals("back") & existsCameraBack;
+        boolean cameraIsAvailable =
+                camera.equals("front") & existsCameraFront | camera.equals("back") & existsCameraBack;
 
         if (!cameraIsAvailable) {
             return null;
@@ -392,9 +379,31 @@ public class PMedia extends ProtoBase {
         return new PCamera(getAppRunner(), camera);
     }
 
-    @Override
-    public void __stop() {
-        if (headsetCallbackfn != null) getContext().unregisterReceiver(headsetPluggedReceiver);
+    public interface onVoiceRecognitionListener {
+        void onNewResult(ArrayList<String> text);
+    }
+
+    private class HeadSetReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+
+                ReturnObject ret = new ReturnObject();
+                switch (state) {
+                    case 0:
+                        Log.d(TAG, "Headset unplugged");
+                        ret.put("plugged", false);
+                        headsetCallbackfn.event(ret);
+                        break;
+                    case 1:
+                        Log.d(TAG, "Headset plugged");
+                        ret.put("plugged", false);
+                        headsetCallbackfn.event(ret);
+                        break;
+                }
+            }
+        }
     }
 }
 

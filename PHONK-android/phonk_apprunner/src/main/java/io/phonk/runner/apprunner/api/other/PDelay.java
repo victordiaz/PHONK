@@ -33,13 +33,9 @@ public class PDelay implements WhatIsRunningInterface {
     private final AppRunner mAppRunner;
     private final int delay;
     private final DelayCB mCallbackfn;
-    Runnable task;
     private final Handler handler;
+    Runnable task;
     boolean mCancelJob = false;
-
-    public interface DelayCB {
-        void event();
-    }
 
     public PDelay(AppRunner appRunner, final int delay, final DelayCB callbackkfn) {
         mAppRunner = appRunner;
@@ -62,6 +58,10 @@ public class PDelay implements WhatIsRunningInterface {
         mAppRunner.whatIsRunning.add(this);
     }
 
+    public void __stop() {
+        stop();
+    }
+
     @PhonkMethod(description = "Stop the timer", example = "")
     public PDelay stop() {
         handler.removeCallbacks(task);
@@ -70,8 +70,8 @@ public class PDelay implements WhatIsRunningInterface {
         return this;
     }
 
-    public void __stop() {
-        stop();
+    public interface DelayCB {
+        void event();
     }
 
 }

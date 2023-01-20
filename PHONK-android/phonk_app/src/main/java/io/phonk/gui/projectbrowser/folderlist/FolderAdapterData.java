@@ -31,14 +31,14 @@ public class FolderAdapterData {
     final String name;
     final int numSubfolders;
 
+    public FolderAdapterData(int itemType, String parentFolder, String name) {
+        this(itemType, parentFolder, name, -1);
+    }
+
     public FolderAdapterData(int itemType, String parentFolder, String name, int numSubfolders) {
         this.itemType = itemType;
         this.parentFolder = parentFolder;
         this.name = name;
         this.numSubfolders = numSubfolders;
-    }
-
-    public FolderAdapterData(int itemType, String parentFolder, String name) {
-        this(itemType, parentFolder, name, -1);
     }
 }

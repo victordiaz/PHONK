@@ -38,88 +38,21 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PPlot extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PPlot.class.getSimpleName();
-
+    public final ArrayList<PlotPoint> arrayViz = new ArrayList<>();
+    final StylePropertiesProxy props = new StylePropertiesProxy();
     private final Handler handler;
     private final Runnable r;
     private final int mStrokeWeight;
-
-    final StylePropertiesProxy props = new StylePropertiesProxy();
     private final PlotStyler styler;
-
     private final ArrayList<PlotPoint> arrayData = new ArrayList<>();
-    public final ArrayList<PlotPoint> arrayViz = new ArrayList<>();
-
+    String name = "";
     private float yMax = Float.MIN_VALUE;
     private float yMin = Float.MAX_VALUE;
     private float xMax = Float.MIN_VALUE;
     private float xMin = Float.MAX_VALUE;
-
-    String name = "";
     private boolean isRange = false;
     private int mWidth;
     private int mHeight;
-
-    public PPlot(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
-
-        draw = mydraw;
-
-        styler = new PlotStyler(appRunner, this, props);
-        props.eventOnChange = false;
-        props.put("plotColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
-        props.put("textColor", props, "#ffffff");
-        // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
-        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
-        Styler.fromTo(initProps, props);
-        props.eventOnChange = true;
-        styler.apply();
-
-        mAppRunner.whatIsRunning.add(this);
-
-        mStrokeWeight = AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 1);
-
-        MLog.d(TAG, "starting runnable");
-
-        handler = new Handler();
-        r = new Runnable() {
-            @Override
-            public void run() {
-                // exit if no data
-                if (arrayData.size() > 0) {
-                    MLog.d(TAG, "runnable " + arrayData.size());
-                    arrayViz.clear();
-
-                    // if auto scale
-                    float xfrom = arrayData.get(0).x;
-                    float xto = xMax;
-                    float yfrom = yMax;
-                    float yto = yMin;
-
-                    for (int i = 0; i < arrayData.size(); i++) {
-                        PlotPoint p = arrayData.get(i);
-
-                        float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 10, mWidth - 10);
-                        float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 20, mHeight - 20);
-                        arrayViz.add(new PlotPoint(x, y));
-
-                    }
-                }
-
-                handler.postDelayed(r, 10);
-                postInvalidate();
-            }
-        };
-
-        handler.post(r);
-    }
-
-    // plot color
-    // plot thickness
-    // plot background
-    // rangeX [x1, x2]
-    // rangeY [y1, y2]
-
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
@@ -182,16 +115,69 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         }
     };
 
-    public PPlot update(float y) {
-        this.update(now(), y);
+    // plot color
+    // plot thickness
+    // plot background
+    // rangeX [x1, x2]
+    // rangeY [y1, y2]
 
-        return this;
+    public PPlot(AppRunner appRunner, Map initProps) {
+        super(appRunner, initProps);
+
+        draw = mydraw;
+
+        styler = new PlotStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("plotColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
+        props.put("textColor", props, "#ffffff");
+        // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
+        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        Styler.fromTo(initProps, props);
+        props.eventOnChange = true;
+        styler.apply();
+
+        mAppRunner.whatIsRunning.add(this);
+
+        mStrokeWeight = AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 1);
+
+        MLog.d(TAG, "starting runnable");
+
+        handler = new Handler();
+        r = new Runnable() {
+            @Override
+            public void run() {
+                // exit if no data
+                if (arrayData.size() > 0) {
+                    MLog.d(TAG, "runnable " + arrayData.size());
+                    arrayViz.clear();
+
+                    // if auto scale
+                    float xfrom = arrayData.get(0).x;
+                    float xto = xMax;
+                    float yfrom = yMax;
+                    float yto = yMin;
+
+                    for (int i = 0; i < arrayData.size(); i++) {
+                        PlotPoint p = arrayData.get(i);
+
+                        float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 10, mWidth - 10);
+                        float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 20, mHeight - 20);
+                        arrayViz.add(new PlotPoint(x, y));
+
+                    }
+                }
+
+                handler.postDelayed(r, 10);
+                postInvalidate();
+            }
+        };
+
+        handler.post(r);
     }
 
-    public PPlot range(float min, float max) {
-        yMin = min;
-        yMax = max;
-        isRange = true;
+    public PPlot update(float y) {
+        this.update(now(), y);
 
         return this;
     }
@@ -216,6 +202,18 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
+    private long now() {
+        return SystemClock.uptimeMillis();
+    }
+
+    public PPlot range(float min, float max) {
+        yMin = min;
+        yMax = max;
+        isRange = true;
+
+        return this;
+    }
+
     public void array2d(float[][] val) {
         arrayViz.clear();
 
@@ -234,24 +232,16 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
-    }
-
-    @Override
+    }    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
 
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
     public void __stop() {
         handler.removeCallbacks(r);
-    }
-
-    private long now() {
-        return SystemClock.uptimeMillis();
+    }    @Override
+    public Map getProps() {
+        return props;
     }
 
     static class PlotPoint {
@@ -263,7 +253,6 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
             this.y = y;
         }
     }
-
 
     static class PlotStyler extends Styler {
         int plotBackground = Color.parseColor("#22000000");
@@ -283,4 +272,9 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
             plotWidth = toFloat(mProps.get("plotWidth"));
         }
     }
+
+
+
+
+
 }

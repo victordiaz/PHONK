@@ -38,20 +38,15 @@ public class MidiInput {
     private String computeMidiInputName(final MidiDeviceInfo midiDeviceInfo, final int portNumber) {
         final MidiDeviceInfo.PortInfo portInfo = midiDeviceInfo.getPorts()[portNumber];
         final String portName = portInfo != null ? portInfo.getName() : null;
-        return "#" + deviceId
-                + ", " + getDescription(midiDeviceInfo)
-                + "[" + portNumber + "]"
-                + ", " + portName;
+        return "#" + deviceId + ", " + getDescription(midiDeviceInfo) + "[" + portNumber + "]" + ", " + portName;
     }
 
     private String getDescription(final MidiDeviceInfo midiDeviceInfo) {
-        final String description = midiDeviceInfo.getProperties()
-                .getString(MidiDeviceInfo.PROPERTY_NAME);
+        final String description = midiDeviceInfo.getProperties().getString(MidiDeviceInfo.PROPERTY_NAME);
         if (description == null) {
             return midiDeviceInfo.getProperties()
-                    .getString(MidiDeviceInfo.PROPERTY_MANUFACTURER) + ", "
-                    + midiDeviceInfo.getProperties()
-                    .getString(MidiDeviceInfo.PROPERTY_PRODUCT);
+                    .getString(MidiDeviceInfo.PROPERTY_MANUFACTURER) + ", " + midiDeviceInfo.getProperties().getString(
+                    MidiDeviceInfo.PROPERTY_PRODUCT);
         }
         return description;
     }

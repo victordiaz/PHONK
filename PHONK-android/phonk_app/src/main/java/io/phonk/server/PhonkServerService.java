@@ -68,43 +68,8 @@ import io.phonk.runner.base.utils.MLog;
 
 public class PhonkServerService extends Service {
 
-    private final String TAG = PhonkServerService.class.getSimpleName();
-
-    private final int NOTIFICATION_ID = 58592;
     private static final String SERVICE_CLOSE = "service_close";
-
-    private NotificationManager mNotificationManager;
-    private NotificationChannel mChannel;
-    private PendingIntent mRestartPendingIntent;
-    private EventsProxy mEventsProxy;
-
-    /*
-     * Servers
-     */
-    private PhonkHttpServer phonkHttpServer;
-    private PhonkWebsocketServer phonkWebsockets;
-    private final ArrayList<String> mConnectedClients = new ArrayList<>();
-
-    private final Gson gson = new Gson();
-    private final int counter = 0;
-    private Project mProjectRunning;
-    private NotificationCompat.Builder mNotificationBuilder;
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        MLog.d(TAG, "onStartCommand");
-
-        if (intent != null) {
-            AndroidUtils.debugIntent(TAG, intent);
-            if (intent.getAction() == SERVICE_CLOSE) {
-                EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
-                stopSelf();
-            }
-        }
-
-        return Service.START_STICKY;
-    }
-
+    private final String TAG = PhonkServerService.class.getSimpleName();
     final BroadcastReceiver mNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -115,7 +80,38 @@ public class PhonkServerService extends Service {
             }
         }
     };
+    /*
+     * FileObserver to notify when projects are added or removed
+     */
+    final FileObserver fileObserver = new FileObserver(
+            PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects/"),
+            FileObserver.CREATE | FileObserver.DELETE | FileObserver.DELETE_SELF | FileObserver.MODIFY | FileObserver.MOVED_TO | FileObserver.MOVED_FROM
+    ) {
+        @Override
+        public void onEvent(int event, String file) {
 
+            if ((FileObserver.CREATE & event) != 0) {
+                MLog.d(TAG, "File created [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
+            } else if ((FileObserver.DELETE & event) != 0) {
+                MLog.d(TAG, "File deleted [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
+            } else if ((FileObserver.MOVED_FROM & event) != 0) {
+                MLog.d(TAG, "File moved from [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
+            } else if ((FileObserver.MOVED_TO & event) != 0) {
+                MLog.d(TAG, "File moved to [" + PhonkSettings.getBaseDir() + file + "]");
+                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
+            }
+        }
+    };
+    private final int NOTIFICATION_ID = 58592;
+    private final ArrayList<String> mConnectedClients = new ArrayList<>();
+    private final Gson gson = new Gson();
+    private final int counter = 0;
+    private NotificationManager mNotificationManager;
+    private NotificationChannel mChannel;
+    private PendingIntent mRestartPendingIntent;
     Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
         @Override
         public void uncaughtException(Thread thread, Throwable ex) {
@@ -139,18 +135,71 @@ public class PhonkServerService extends Service {
             throw new RuntimeException(ex);
         }
     };
+    private EventsProxy mEventsProxy;
+    /*
+     * Servers
+     */
+    private PhonkHttpServer phonkHttpServer;
+    final BroadcastReceiver viewsUpdateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String views = intent.getStringExtra("views");
+            MLog.d(TAG, "views" + views);
+            phonkHttpServer.setViews(views);
+        }
+    };
+    private PhonkWebsocketServer phonkWebsockets;
+    /**
+     * send logs to WEBIDE
+     */
+    final BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, intent.getAction());
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+            HashMap hashMap = new HashMap();
+            hashMap.put("module", "console");
+            hashMap.put("action", intent.getStringExtra("action"));
+            hashMap.put("time", intent.getStringExtra("time"));
+            hashMap.put("data", intent.getStringExtra("data"));
+            String jsonObject = gson.toJson(hashMap);
+
+            phonkWebsockets.send(jsonObject);
+        }
+    };
+    final BroadcastReceiver webEditorBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "onReceive" + intent.getAction());
+
+            HashMap hashMap = new HashMap();
+            hashMap.put("module", "webeditor");
+            hashMap.put("action", intent.getStringExtra("action"));
+            hashMap.put("type", intent.getStringExtra("type"));
+            hashMap.put("folder", intent.getStringExtra("folder"));
+            hashMap.put("name", intent.getStringExtra("name"));
+            String jsonObject = gson.toJson(hashMap);
+
+            phonkWebsockets.send(jsonObject);
+        }
+    };
+    private Project mProjectRunning;
+    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "stop_all 2");
+            mProjectRunning = null;
+        }
+    };
+    private NotificationCompat.Builder mNotificationBuilder;
 
     @Override
     public void onCreate() {
         super.onCreate();
         MLog.d(TAG, "network service created");
 
-        final AppRunnerCustom appRunner = new AppRunnerCustom(this).initDefaultObjects(AppRunnerHelper.createSettings());
+        final AppRunnerCustom appRunner =
+                new AppRunnerCustom(this).initDefaultObjects(AppRunnerHelper.createSettings());
 
         /*
          * Init the connect proxy
@@ -163,26 +212,44 @@ public class PhonkServerService extends Service {
 
         PendingIntent pendingIntentStopService;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            pendingIntentStopService = PendingIntent.getService(
+                    this,
+                    (int) System.currentTimeMillis(),
+                    notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
         } else {
-            pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            pendingIntentStopService = PendingIntent.getService(
+                    this,
+                    (int) System.currentTimeMillis(),
+                    notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
         }
 
         String ip = NetworkUtils.getLocalIpAddress(PhonkServerService.this).get("ip") + ":" + PhonkSettings.HTTP_PORT;
         String msg = this.getString(R.string.notification_description) + " http://" + ip;
 
-        mNotificationBuilder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.icon_phonk_service)
-            .setContentTitle(this.getString(R.string.app_name))
-            .setContentText(msg)
-            .setOngoing(false)
-            .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
-            .addAction(R.drawable.ic_action_stop, this.getString(R.string.notification_stop), pendingIntentStopService);
+        mNotificationBuilder = new NotificationCompat.Builder(this, PhonkSettings.NOTIFICATION_CHANNEL_ID).setSmallIcon(
+                        R.drawable.icon_phonk_service)
+                .setContentTitle(this.getString(R.string.app_name))
+                .setContentText(msg)
+                .setOngoing(false)
+                .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
+                .addAction(
+                        R.drawable.ic_action_stop,
+                        this.getString(R.string.notification_stop),
+                        pendingIntentStopService
+                );
 
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         // damm annoying android pofkjpodsjf0ewiah
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mChannel = new NotificationChannel(PhonkSettings.NOTIFICATION_CHANNEL_ID, this.getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
+            mChannel = new NotificationChannel(
+                    PhonkSettings.NOTIFICATION_CHANNEL_ID,
+                    this.getString(R.string.app_name),
+                    NotificationManager.IMPORTANCE_LOW
+            );
             mChannel.enableLights(false);
             mNotificationManager.createNotificationChannel(mChannel);
         }
@@ -332,17 +399,19 @@ public class PhonkServerService extends Service {
         viewsUpdate();
     }
 
-    private void updateUserSizeNotification(int size) {
-        mNotificationBuilder.setContentTitle("Phonk (" + size + " connections)");
-        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
-    }
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        MLog.d(TAG, "onStartCommand");
 
-    private void vibrate() {
-        int vWait = 20;
-        int vTime = 80;
-        long[] pattern = new long[]{vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime};
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(pattern, -1);
+        if (intent != null) {
+            AndroidUtils.debugIntent(TAG, intent);
+            if (intent.getAction() == SERVICE_CLOSE) {
+                EventBus.getDefault().postSticky(new Events.AppUiEvent("stopServers", ""));
+                stopSelf();
+            }
+        }
+
+        return Service.START_STICKY;
     }
 
     @Override
@@ -366,41 +435,6 @@ public class PhonkServerService extends Service {
         EventBus.getDefault().unregister(this);
     }
 
-
-    /*
-     * FileObserver to notify when projects are added or removed
-     */
-    final FileObserver fileObserver = new FileObserver(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER + "/User Projects/"), FileObserver.CREATE | FileObserver.DELETE | FileObserver.DELETE_SELF | FileObserver.MODIFY | FileObserver.MOVED_TO | FileObserver.MOVED_FROM) {
-        @Override
-        public void onEvent(int event, String file) {
-
-            if ((FileObserver.CREATE & event) != 0) {
-                MLog.d(TAG, "File created [" + PhonkSettings.getBaseDir() + file + "]");
-                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
-            } else if ((FileObserver.DELETE & event) != 0) {
-                MLog.d(TAG, "File deleted [" + PhonkSettings.getBaseDir() + file + "]");
-                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
-            } else if ((FileObserver.MOVED_FROM & event) != 0) {
-                MLog.d(TAG, "File moved from [" + PhonkSettings.getBaseDir() + file + "]");
-                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
-            } else if ((FileObserver.MOVED_TO & event) != 0) {
-                MLog.d(TAG, "File moved to [" + PhonkSettings.getBaseDir() + file + "]");
-                EventBus.getDefault().postSticky(new Events.ProjectEvent(Events.PROJECT_REFRESH_LIST, null));
-            }
-        }
-    };
-
-    private void sendUpdatedProjectListToWebIDE() {
-        HashMap data = new HashMap();
-        data.put("module", "project");
-        HashMap info = new HashMap();
-        data.put("project", info);
-        info.put("updatedProjectList", true);
-        String jsonObject = gson.toJson(data);
-        phonkWebsockets.send(jsonObject);
-
-    }
-
     /*
      * Notification that show if the server is ON
      */
@@ -413,42 +447,54 @@ public class PhonkServerService extends Service {
      *
      */
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void updateUserSizeNotification(int size) {
+        mNotificationBuilder.setContentTitle("Phonk (" + size + " connections)");
+        mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+    }
+
+    private void vibrate() {
+        int vWait = 20;
+        int vTime = 80;
+        long[] pattern = new long[]{vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime, vWait, vTime};
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(pattern, -1);
+    }
+
+    private void sendUpdatedProjectListToWebIDE() {
+        HashMap data = new HashMap();
+        data.put("module", "project");
+        HashMap info = new HashMap();
+        data.put("project", info);
+        info.put("updatedProjectList", true);
+        String jsonObject = gson.toJson(data);
+        phonkWebsockets.send(jsonObject);
+
+    }
+
     /**
-     * send logs to WEBIDE
+     * Receiving order to close the apprunneractivity
      */
-    final BroadcastReceiver logBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, intent.getAction());
+    public void startStopActivityBroadcastReceiver() {
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("io.phonk.intent.CLOSED");
+        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
+    }
 
-            HashMap hashMap = new HashMap();
-            hashMap.put("module", "console");
-            hashMap.put("action", intent.getStringExtra("action"));
-            hashMap.put("time", intent.getStringExtra("time"));
-            hashMap.put("data", intent.getStringExtra("data"));
-            String jsonObject = gson.toJson(hashMap);
+    /**
+     * Receiving order to execute line of code
+     */
+    public void viewsUpdate() {
+        MLog.d("registerreceiver", "sending connect");
 
-            phonkWebsockets.send(jsonObject);
-        }
-    };
-
-
-    final BroadcastReceiver webEditorBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, "onReceive" + intent.getAction());
-
-            HashMap hashMap = new HashMap();
-            hashMap.put("module", "webeditor");
-            hashMap.put("action", intent.getStringExtra("action"));
-            hashMap.put("type", intent.getStringExtra("type"));
-            hashMap.put("folder", intent.getStringExtra("folder"));
-            hashMap.put("name", intent.getStringExtra("name"));
-            String jsonObject = gson.toJson(hashMap);
-
-            phonkWebsockets.send(jsonObject);
-        }
-    };
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("io.phonk.intent.VIEWS_UPDATE");
+        registerReceiver(viewsUpdateBroadcastReceiver, filterSend);
+    }
 
     @Subscribe
     public void onEventMainThread(Events.ProjectEvent e) {
@@ -503,43 +549,5 @@ public class PhonkServerService extends Service {
     public void onEventMainThread(Events.SelectedProjectEvent e) {
         // stopSelf();
     }
-
-    /**
-     * Receiving order to close the apprunneractivity
-     */
-    public void startStopActivityBroadcastReceiver() {
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.intent.CLOSED");
-        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
-    }
-
-    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, "stop_all 2");
-            mProjectRunning = null;
-        }
-    };
-
-
-    /**
-     * Receiving order to execute line of code
-     */
-    public void viewsUpdate() {
-        MLog.d("registerreceiver", "sending connect");
-
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.intent.VIEWS_UPDATE");
-        registerReceiver(viewsUpdateBroadcastReceiver, filterSend);
-    }
-
-    final BroadcastReceiver viewsUpdateBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String views = intent.getStringExtra("views");
-            MLog.d(TAG, "views" + views);
-            phonkHttpServer.setViews(views);
-        }
-    };
 
 }

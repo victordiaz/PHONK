@@ -51,7 +51,47 @@ public class UpdateActivity extends BaseActivity {
 
     private static final String TAG = UpdateActivity.class.getSimpleName();
 
-    @Override
+    static class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+        private final List<ChangeLogItem> changeLogList = new ArrayList<>();
+
+        MyAdapter(String changelog) {
+            String[] releases = changelog.split("\\n\\n");
+            for (String release : releases) {
+                ChangeLogItem changeLogItem = new ChangeLogItem(release);
+                changeLogList.add(changeLogItem);
+            }
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.update_activity_changelog_item, parent, false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            holder.txtVersion.setText(changeLogList.get(position).version);
+            holder.txtChanges.setText(changeLogList.get(position).changes);
+        }
+
+        @Override
+        public int getItemCount() {
+            return changeLogList.size();
+        }
+
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
+            public final TextView txtVersion;
+            public final TextView txtChanges;
+
+            public MyViewHolder(LinearLayout v) {
+                super(v);
+                txtVersion = v.findViewById(R.id.version);
+                txtChanges = v.findViewById(R.id.changes);
+            }
+        }
+    }    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_activity);
@@ -59,7 +99,9 @@ public class UpdateActivity extends BaseActivity {
         setupActivity();
 
         TextView txtVersionLine = findViewById(R.id.txtVersionLine);
-        txtVersionLine.setText(Html.fromHtml(txtVersionLine.getText().toString().replace("###", "<font color = #FFC700>" + BuildConfig.VERSION_NAME.split("_")[0] + "</font>")));
+        txtVersionLine.setText(Html.fromHtml(txtVersionLine.getText()
+                .toString()
+                .replace("###", "<font color = #FFC700>" + BuildConfig.VERSION_NAME.split("_")[0] + "</font>")));
 
         String changelog = PhonkAppHelper.readFile(this, "changelog.txt");
         RecyclerView recyclerChangelog = findViewById(R.id.recyclerChangelog);
@@ -99,7 +141,19 @@ public class UpdateActivity extends BaseActivity {
         });
     }
 
-    public void ready() {
+    static class ChangeLogItem {
+        final String version;
+        String changes;
+
+        ChangeLogItem(String release) {
+            String[] s = release.split("\n");
+            this.version = s[0];
+            this.changes = "";
+            for (int i = 1; i < s.length; i++) {
+                changes += s[i] + "\n";
+            }
+        }
+    }    public void ready() {
         // Start the activity
         Intent i = new Intent(UpdateActivity.this, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -113,58 +167,7 @@ public class UpdateActivity extends BaseActivity {
         mToolbar.setTitle("patata" + BuildConfig.VERSION_NAME);
     }
 
-    static class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-        private final List<ChangeLogItem> changeLogList = new ArrayList<>();
 
-        public static class MyViewHolder extends RecyclerView.ViewHolder {
-            public final TextView txtVersion;
-            public final TextView txtChanges;
 
-            public MyViewHolder(LinearLayout v) {
-                super(v);
-                txtVersion = v.findViewById(R.id.version);
-                txtChanges = v.findViewById(R.id.changes);
-            }
-        }
 
-        MyAdapter(String changelog) {
-            String[] releases = changelog.split("\\n\\n");
-            for (String release : releases) {
-                ChangeLogItem changeLogItem = new ChangeLogItem(release);
-                changeLogList.add(changeLogItem);
-            }
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.update_activity_changelog_item, parent, false);
-            return new MyViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            holder.txtVersion.setText(changeLogList.get(position).version);
-            holder.txtChanges.setText(changeLogList.get(position).changes);
-        }
-
-        @Override
-        public int getItemCount() {
-            return changeLogList.size();
-        }
-    }
-
-    static class ChangeLogItem {
-        final String version;
-        String changes;
-
-        ChangeLogItem(String release) {
-            String[] s = release.split("\n");
-            this.version = s[0];
-            this.changes = "";
-            for (int i = 1; i < s.length; i++) {
-                changes += s[i] + "\n";
-            }
-        }
-    }
 }

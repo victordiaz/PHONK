@@ -34,8 +34,8 @@ import io.phonk.runner.base.utils.MLog;
 
 public class LauncherActivity extends Activity {
 
-    Intent intent = null;
     private final String TAG = LauncherActivity.class.getSimpleName();
+    Intent intent = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

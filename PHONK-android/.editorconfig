@@ -16,4 +16,4 @@ indent_size = 2
 indent_size = 2
 
 [*.{java,kt}]
-indent_size = 1
+indent_size = 4

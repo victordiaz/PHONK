@@ -75,10 +75,32 @@ import io.phonk.runner.base.utils.StrUtils;
 
 public class AppRunnerActivity extends BaseActivity {
 
+    // ui fragment dependent
+    public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
     private static final String TAG = AppRunnerActivity.class.getSimpleName();
-
+    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+    private final boolean orientationChanged = false;
+    public boolean ignoreVolumeEnabled = false;
+    public boolean ignoreBackEnabled = false;
+    public boolean isCodeExecutedShown;
     private AppRunnerFragment mAppRunnerFragment;
+    final BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String code = intent.getStringExtra("code");
 
+            mAppRunnerFragment.getAppRunner().interp.eval(code);
+
+            if (mAppRunnerFragment.liveCoding != null) {
+                mAppRunnerFragment.liveCoding.write(code);
+            }
+        }
+    };
     /*
      * Events
      */
@@ -86,31 +108,126 @@ public class AppRunnerActivity extends BaseActivity {
     private PNfc.onNFCWrittenListener onNFCWrittenListener;
     private PBluetooth.onBluetoothListener onBluetoothListener;
     private PMedia.onVoiceRecognitionListener onVoiceRecognitionListener;
-
-    // ui fragment dependent
-    public static final int VOICE_RECOGNITION_REQUEST_CODE = 55;
-
     /*
      * Keyboard handling
      */
     private PDevice.onKeyListener onKeyListener;
-    public boolean ignoreVolumeEnabled = false;
-    public boolean ignoreBackEnabled = false;
-
     /*
      * UI stuff
      */
     private DebugFragment mDebugFragment;
-
     // project settings
     private boolean mSettingScreenAlwaysOn;
     private boolean mSettingWakeUpScreen = false;
     private boolean eventBusRegistered = false;
     private boolean debugFramentIsVisible;
-    private final boolean orientationChanged = false;
     private Bundle mBundle;
     private boolean isPortrait;
     private Map<String, Object> scriptSettings;
+    /**
+     * NFC stuf
+     */
+    private NfcAdapter mAdapter;
+    private PendingIntent mPendingIntent;
+    private IntentFilter[] mFilters;
+    private String[][] mTechLists;
+    private boolean nfcSupported;
+    private boolean isNFCInitialized = false;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        unregisterEventBus();
+
+        Intent i = new Intent("io.phonk.runner.intent.CLOSED");
+        sendBroadcast(i);
+    }
+
+    public void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
+        eventBusRegistered = false;
+    }
+
+    /**
+     * key listeners
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (AppRunnerSettings.DEBUG && keyCode == 25) {
+            if (debugFramentIsVisible) {
+                removeDebugFragment();
+            } else {
+                addDebugFragment();
+            }
+        }
+
+        if (onKeyListener != null) {
+            onKeyListener.onKeyDown(event);
+            onKeyListener.onKeyEvent(event);
+        }
+
+        // check if back key or volume keys are disabled
+        MLog.d(TAG, "checkbackkey " + checkBackKey(keyCode));
+
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return true;
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+
+        // wake up the device if intent says so
+        if (mSettingWakeUpScreen) {
+            final Window win = getWindow();
+            win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
+        setScreenAlwaysOn(mSettingScreenAlwaysOn);
+    }
+
+    /**
+     * Menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            overridePendingTransition(
+                    R.anim.splash_slide_in_anim_reverse_set,
+                    R.anim.splash_slide_out_anim_reverse_set
+            );
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Handle the results from the recognition activity.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // Fill the list view with the strings the recognizer thought it
+            // could have heard
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            for (String _string : matches) {
+                MLog.d(TAG, "" + _string);
+            }
+            onVoiceRecognitionListener.onNewResult(matches);
+
+            //TODO disabled
+        }
+
+        if (onBluetoothListener != null) {
+            onBluetoothListener.onActivityResult(requestCode, resultCode, data);
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,33 +291,15 @@ public class AppRunnerActivity extends BaseActivity {
         registerEventBus();
     }
 
-    public void initAppRunner() {
-        // Set the Activity UI
-        setContentView(R.layout.apprunner_activity);
-        setupActivity();
-
-        // Add debug fragment
-        if (AppRunnerSettings.DEBUG) addDebugFragment();
-
-        // add AppRunnerFragment
-        mAppRunnerFragment = AppRunnerFragment.newInstance(mBundle, scriptSettings);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FrameLayout fl = findViewById(R.id.apprunner_fragment);
-        ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
-        ft.commit();
-    }
-
     @Override
-    protected void setupActivity() {
-        super.setupActivity();
+    protected void onPause() {
+        super.onPause();
 
-        // wake up the device if intent says so
-        if (mSettingWakeUpScreen) {
-            final Window win = getWindow();
-            win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-            win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        }
-        setScreenAlwaysOn(mSettingScreenAlwaysOn);
+        MLog.d(TAG, "onPause");
+
+        if (isNFCInitialized) mAdapter.disableForegroundDispatch(this);
+        unregisterReceiver(stopActivitiyBroadcastReceiver);
+        unregisterReceiver(executeCodeActivitiyBroadcastReceiver);
     }
 
     @Override
@@ -215,49 +314,22 @@ public class AppRunnerActivity extends BaseActivity {
         executeCodeActivityBroadcastReceiver();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        MLog.d(TAG, "onPause");
-
-        if (isNFCInitialized) mAdapter.disableForegroundDispatch(this);
-        unregisterReceiver(stopActivitiyBroadcastReceiver);
-        unregisterReceiver(executeCodeActivitiyBroadcastReceiver);
+    /**
+     * Receiving order to close the activity
+     */
+    public void startStopActivityBroadcastReceiver() {
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("io.phonk.runner.intent.CLOSE");
+        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
     }
 
-    @Override
-    public void onStop() {
-        MLog.d(TAG, "onStop");
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        unregisterEventBus();
-
-        Intent i = new Intent("io.phonk.runner.intent.CLOSED");
-        sendBroadcast(i);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen for landscape and portrait
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            initAppRunner();
-            // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            initAppRunner();
-        }
+    /**
+     * Receiving order to execute line of code
+     */
+    public void executeCodeActivityBroadcastReceiver() {
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("io.phonk.runner.intent.EXECUTE_CODE");
+        registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 
     public void registerEventBus() {
@@ -267,9 +339,20 @@ public class AppRunnerActivity extends BaseActivity {
         }
     }
 
-    public void unregisterEventBus() {
-        EventBus.getDefault().unregister(this);
-        eventBusRegistered = false;
+    public void initAppRunner() {
+        // Set the Activity UI
+        setContentView(R.layout.apprunner_activity);
+        setupActivity();
+
+        // Add debug fragment
+        if (AppRunnerSettings.DEBUG) addDebugFragment();
+
+        // add AppRunnerFragment
+        mAppRunnerFragment = AppRunnerFragment.newInstance(mBundle, scriptSettings);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FrameLayout fl = findViewById(R.id.apprunner_fragment);
+        ft.add(fl.getId(), mAppRunnerFragment, String.valueOf(fl.getId()));
+        ft.commit();
     }
 
     private void addDebugFragment() {
@@ -290,16 +373,67 @@ public class AppRunnerActivity extends BaseActivity {
         debugFramentIsVisible = false;
     }
 
-    /**
-     * NFC stuf
-     */
-    private NfcAdapter mAdapter;
-    private PendingIntent mPendingIntent;
-    private IntentFilter[] mFilters;
-    private String[][] mTechLists;
-    private boolean nfcSupported;
-    private boolean isNFCInitialized = false;
-    public boolean isCodeExecutedShown;
+    public boolean checkBackKey(int keyCode) {
+        return ignoreBackEnabled && keyCode == KeyEvent.KEYCODE_BACK;
+    }
+
+    public boolean checkVolumeKeys(int keyCode) {
+        return ignoreVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (onKeyListener != null) {
+            onKeyListener.onKeyUp(event);
+            onKeyListener.onKeyEvent(event);
+        }
+
+        // check if back key or volume keys are disabled
+        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return true;
+
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyShortcut(int keyCode, KeyEvent event) {
+        if (event.isCtrlPressed()) {
+            if (keyCode == KeyEvent.KEYCODE_R) {
+                finish();
+            }
+        }
+        return super.onKeyShortcut(keyCode, event);
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        // AndroidUtils.dumpMotionEvent(event);
+
+        return super.onGenericMotionEvent(event);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen for landscape and portrait
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            initAppRunner();
+            // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            initAppRunner();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        MLog.d(TAG, "onStop");
+        super.onStop();
+    }
 
     public void initializeNFC() {
 
@@ -317,7 +451,12 @@ public class AppRunnerActivity extends BaseActivity {
             mAdapter = NfcAdapter.getDefaultAdapter(this);
 
             // PedingIntent will be delivered to this activity
-            mPendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            mPendingIntent = PendingIntent.getActivity(
+                    this,
+                    0,
+                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                    0
+            );
 
             // Setup an intent filter for all MIME based dispatches
             IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
@@ -333,7 +472,6 @@ public class AppRunnerActivity extends BaseActivity {
             isNFCInitialized = true;
         }
     }
-
 
     /**
      * Listen to NFC incomming data
@@ -394,100 +532,6 @@ public class AppRunnerActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        // AndroidUtils.dumpMotionEvent(event);
-
-        return super.onGenericMotionEvent(event);
-    }
-
-    /**
-     * key listeners
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (AppRunnerSettings.DEBUG && keyCode == 25) {
-            if (debugFramentIsVisible) {
-                removeDebugFragment();
-            } else {
-                addDebugFragment();
-            }
-        }
-
-        if (onKeyListener != null) {
-            onKeyListener.onKeyDown(event);
-            onKeyListener.onKeyEvent(event);
-        }
-
-        // check if back key or volume keys are disabled
-        MLog.d(TAG, "checkbackkey " + checkBackKey(keyCode));
-
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return true;
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (onKeyListener != null) {
-            onKeyListener.onKeyUp(event);
-            onKeyListener.onKeyEvent(event);
-        }
-
-        // check if back key or volume keys are disabled
-        if (checkBackKey(keyCode) || checkVolumeKeys(keyCode)) return true;
-
-        return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyShortcut(int keyCode, KeyEvent event) {
-        if (event.isCtrlPressed()) {
-            if (keyCode == KeyEvent.KEYCODE_R) {
-                finish();
-            }
-        }
-        return super.onKeyShortcut(keyCode, event);
-    }
-
-    /**
-     * Menu
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            overridePendingTransition(R.anim.splash_slide_in_anim_reverse_set, R.anim.splash_slide_out_anim_reverse_set);
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Handle the results from the recognition activity.
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // Fill the list view with the strings the recognizer thought it
-            // could have heard
-            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-            for (String _string : matches) {
-                MLog.d(TAG, "" + _string);
-            }
-            onVoiceRecognitionListener.onNewResult(matches);
-
-            //TODO disabled
-        }
-
-        if (onBluetoothListener != null) {
-            onBluetoothListener.onActivityResult(requestCode, resultCode, data);
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void addOnKeyListener(PDevice.onKeyListener onKeyListener2) {
         onKeyListener = onKeyListener2;
     }
@@ -506,14 +550,6 @@ public class AppRunnerActivity extends BaseActivity {
 
     public void addVoiceRecognitionListener(PMedia.onVoiceRecognitionListener onVoiceRecognitionListener2) {
         onVoiceRecognitionListener = onVoiceRecognitionListener2;
-    }
-
-    public boolean checkBackKey(int keyCode) {
-        return ignoreBackEnabled && keyCode == KeyEvent.KEYCODE_BACK;
-    }
-
-    public boolean checkVolumeKeys(int keyCode) {
-        return ignoreVolumeEnabled && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -540,49 +576,10 @@ public class AppRunnerActivity extends BaseActivity {
         i.putExtra("data", data);
         sendBroadcast(i);
 
-        if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible)
-            addDebugFragment();
+        if ((action == "log_error" || action == "log_permission_error") && !debugFramentIsVisible) addDebugFragment();
         else if (action == "show") addDebugFragment();
         else if (action == "hide") removeDebugFragment();
     }
-
-    /**
-     * Receiving order to close the activity
-     */
-    public void startStopActivityBroadcastReceiver() {
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.runner.intent.CLOSE");
-        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
-    }
-
-    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            finish();
-        }
-    };
-
-    /**
-     * Receiving order to execute line of code
-     */
-    public void executeCodeActivityBroadcastReceiver() {
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.runner.intent.EXECUTE_CODE");
-        registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
-    }
-
-    final BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String code = intent.getStringExtra("code");
-
-            mAppRunnerFragment.getAppRunner().interp.eval(code);
-
-            if (mAppRunnerFragment.liveCoding != null) {
-                mAppRunnerFragment.liveCoding.write(code);
-            }
-        }
-    };
 
 
 }

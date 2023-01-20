@@ -43,28 +43,6 @@ public class SchedulerActivity extends BaseActivity {
 
     private static final String TAG = SchedulerActivity.class.getSimpleName();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.scheduler_activity);
-
-        SchedulerManager schedulerManager = new SchedulerManager(this, null);
-        ArrayList<SchedulerManager.Task> tasks = schedulerManager.loadTasks().getTasks();
-
-        ListView listScheduleTasks = findViewById(R.id.task_list);
-        final MyAdapter myAdapter = new MyAdapter(this, tasks);
-        listScheduleTasks.setAdapter(myAdapter);
-
-        setupActivity();
-    }
-
-    @Override
-    protected void setupActivity() {
-        super.setupActivity();
-
-        enableBackOnToolbar();
-    }
-
     private static class MyAdapter extends ArrayAdapter<SchedulerManager.Task> {
 
         public MyAdapter(Context context, ArrayList<SchedulerManager.Task> task) {
@@ -101,6 +79,28 @@ public class SchedulerActivity extends BaseActivity {
 
             return convertView;
         }
+    }    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.scheduler_activity);
+
+        SchedulerManager schedulerManager = new SchedulerManager(this, null);
+        ArrayList<SchedulerManager.Task> tasks = schedulerManager.loadTasks().getTasks();
+
+        ListView listScheduleTasks = findViewById(R.id.task_list);
+        final MyAdapter myAdapter = new MyAdapter(this, tasks);
+        listScheduleTasks.setAdapter(myAdapter);
+
+        setupActivity();
     }
+
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+
+        enableBackOnToolbar();
+    }
+
+
 
 }

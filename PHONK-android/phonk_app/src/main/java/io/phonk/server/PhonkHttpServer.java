@@ -56,7 +56,42 @@ import io.phonk.server.networkexchangeobjects.NEOProject;
 
 public class PhonkHttpServer extends NanoHTTPD {
     public static final String TAG = PhonkHttpServer.class.getSimpleName();
-
+    private static final String WEBAPP_DIR = "webide/";
+    /*
+     * MIME types
+     */
+    private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
+        {
+            put("css", "text/css");
+            put("htm", "text/html");
+            put("html", "text/html");
+            put("xml", "text/xml");
+            put("txt", "text/plain");
+            put("json", "application/json");
+            put("asc", "text/plain");
+            put("gif", "image/gif");
+            put("jpg", "image/jpeg");
+            put("jpeg", "image/jpeg");
+            put("png", "image/png");
+            put("mp3", "audio/mpeg");
+            put("m3u", "audio/mpeg-url");
+            put("mp4", "video/mp4");
+            put("ogv", "video/ogg");
+            put("flv", "video/x-flv");
+            put("mov", "video/quicktime");
+            put("swf", "application/x-shockwave-flash");
+            put("js", "application/javascript");
+            put("pdf", "application/pdf");
+            put("doc", "application/msword");
+            put("ogg", "application/x-ogg");
+            put("binary", "application/octet-stream");
+            put("zip", "application/octet-stream");
+            put("exe", "application/octet-stream");
+            put("class", "application/octet-stream");
+        }
+    };
+    private static WeakReference<Context> mContext;
+    final Gson gson;
     private final int COMMAND = 3;
     private final int TYPE = 3;
     private final int FOLDER = 4;
@@ -65,12 +100,6 @@ public class PhonkHttpServer extends NanoHTTPD {
     private final int FILE_DELIMITER = 6;
     private final int FILE_ACTION = 7;
     private final int FILE_NAME = 8;
-
-
-    private static WeakReference<Context> mContext;
-
-    private static final String WEBAPP_DIR = "webide/";
-    final Gson gson;
     private String views;
     private ConnectionCallback mConnectionCallback;
 
@@ -89,8 +118,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        if (mConnectionCallback != null)
-            mConnectionCallback.event(session.getHeaders().get("remote-addr"));
+        if (mConnectionCallback != null) mConnectionCallback.event(session.getHeaders().get("remote-addr"));
 
         Response res = null;
 
@@ -102,15 +130,17 @@ public class PhonkHttpServer extends NanoHTTPD {
         String uri = session.getUri();
 
         if (uri.startsWith("/api")) res = serveAPI(session);
-        else if (uri.startsWith("/playground") || uri.startsWith("/examples"))
-            res = serveFileFromStorage(session);
+        else if (uri.startsWith("/playground") || uri.startsWith("/examples")) res = serveFileFromStorage(session);
         else res = serveWebIDE(session);
 
         // adding CORS mode for WebIDE debugging from the computer
         if (PhonkSettings.DEBUG) {
             res.addHeader("Access-Control-Allow-Methods", "DELETE, GET, POST, PUT");
             res.addHeader("Access-Control-Allow-Origin", "*");
-            res.addHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Access-Control-Allow-Headers, Authorization");
+            res.addHeader(
+                    "Access-Control-Allow-Headers",
+                    "X-Requested-With, Content-Type, Access-Control-Allow-Headers, Authorization"
+            );
         }
 
         return res;
@@ -146,7 +176,7 @@ public class PhonkHttpServer extends NanoHTTPD {
 
         String uri = session.getUri();
         String[] uriSplitted = uri.split("/");
-        MLog.d(TAG, session.getUri().toString() + "--> qq 1");
+        MLog.d(TAG, session.getUri() + "--> qq 1");
 
         // General
         if (uriSplitted.length >= 4 && uriSplitted.length <= 5) {
@@ -168,8 +198,14 @@ public class PhonkHttpServer extends NanoHTTPD {
                     MLog.d(TAG, "listing projects");
                     HashMap<String, ArrayList> files = new HashMap<>();
 
-                    ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 1);
-                    ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.EXAMPLES_FOLDER, 1);
+                    ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(
+                            PhonkSettings.USER_PROJECTS_FOLDER,
+                            1
+                    );
+                    ArrayList<ProtoFile> examplesFolder = PhonkScriptHelper.listProjectsInFolder(
+                            PhonkSettings.EXAMPLES_FOLDER,
+                            1
+                    );
 
                     files.put(PhonkSettings.USER_PROJECTS_FOLDER, userFolder);
                     files.put(PhonkSettings.EXAMPLES_FOLDER, examplesFolder);
@@ -239,7 +275,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 }
             }
 
-        // Project
+            // Project
         } else if (uriSplitted.length == 7) {
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
 
@@ -431,7 +467,7 @@ public class PhonkHttpServer extends NanoHTTPD {
                 }
             }
 
-        // Project data
+            // Project data
         } else if (uriSplitted.length >= 8 && uriSplitted[FILE_DELIMITER].equals("files")) {
             // MLog.d(TAG, "-> files ");
             Project p = new Project(uriSplitted[TYPE] + "/" + uriSplitted[FOLDER], uriSplitted[PROJECT_NAME]);
@@ -610,7 +646,8 @@ public class PhonkHttpServer extends NanoHTTPD {
                     NEOProject neo = gson.fromJson(json, NEOProject.class);
                     for (ProtoFile file : neo.files) {
                         PhonkScriptHelper.moveFileFromTo(p, file.formerPath, file.path);
-                        // EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_RENAME, file.formerName + " to " + file.path));
+                        // EventBus.getDefault().post(new Events.HTTPServerEvent(Events.PROJECT_RENAME, file
+                        // .formerName + " to " + file.path));
                     }
                     res = NanoHTTPD.newFixedLengthResponse("OK");
                     break;
@@ -622,35 +659,6 @@ public class PhonkHttpServer extends NanoHTTPD {
         }
 
         return res;
-    }
-
-    private Response serveWebIDE(IHTTPSession session) {
-        Response res = null;
-
-        String uri = cleanUpUri(session.getUri());
-        String mime = getMimeType(uri); // Get MIME type
-
-        // Read file and return it, otherwise NOT_FOUND is returned
-        AssetManager am = mContext.get().getAssets();
-        try {
-            InputStream fi = am.open(WEBAPP_DIR + uri);
-            res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
-        } catch (IOException e) {
-            e.printStackTrace();
-            NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_TYPES.get("txt"), "ERROR: " + e.getMessage());
-        }
-
-        return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, fontSize);
-    }
-
-    private String cleanUpUri(String uri_) {
-        String uri = uri_.trim().replace(File.separatorChar, '/');
-        if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
-        if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
-        if (uri.charAt(0) == '/')
-            uri = uri.substring(1); // using assets, so we can't have leading '/'
-
-        return uri;
     }
 
     private Response serveFileFromStorage(IHTTPSession session) {
@@ -670,39 +678,28 @@ public class PhonkHttpServer extends NanoHTTPD {
         return res;
     }
 
-    /*
-     * MIME types
-     */
-    private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
-        {
-            put("css", "text/css");
-            put("htm", "text/html");
-            put("html", "text/html");
-            put("xml", "text/xml");
-            put("txt", "text/plain");
-            put("json", "application/json");
-            put("asc", "text/plain");
-            put("gif", "image/gif");
-            put("jpg", "image/jpeg");
-            put("jpeg", "image/jpeg");
-            put("png", "image/png");
-            put("mp3", "audio/mpeg");
-            put("m3u", "audio/mpeg-url");
-            put("mp4", "video/mp4");
-            put("ogv", "video/ogg");
-            put("flv", "video/x-flv");
-            put("mov", "video/quicktime");
-            put("swf", "application/x-shockwave-flash");
-            put("js", "application/javascript");
-            put("pdf", "application/pdf");
-            put("doc", "application/msword");
-            put("ogg", "application/x-ogg");
-            put("binary", "application/octet-stream");
-            put("zip", "application/octet-stream");
-            put("exe", "application/octet-stream");
-            put("class", "application/octet-stream");
+    private Response serveWebIDE(IHTTPSession session) {
+        Response res = null;
+
+        String uri = cleanUpUri(session.getUri());
+        String mime = getMimeType(uri); // Get MIME type
+
+        // Read file and return it, otherwise NOT_FOUND is returned
+        AssetManager am = mContext.get().getAssets();
+        try {
+            InputStream fi = am.open(WEBAPP_DIR + uri);
+            res = newFixedLengthResponse(Response.Status.OK, mime, fi, fi.available());
+        } catch (IOException e) {
+            e.printStackTrace();
+            NanoHTTPD.newFixedLengthResponse(
+                    Response.Status.NOT_FOUND,
+                    MIME_TYPES.get("txt"),
+                    "ERROR: " + e.getMessage()
+            );
         }
-    };
+
+        return res; //NanoHTTPD.newFixedLengthResponse(getStatus(), getMimeType(), inp, fontSize);
+    }
 
     String getMimeType(String uri) {
         String mime = null;
@@ -711,6 +708,15 @@ public class PhonkHttpServer extends NanoHTTPD {
         if (mime == null) mime = MIME_TYPES.get("binary");
 
         return mime;
+    }
+
+    private String cleanUpUri(String uri_) {
+        String uri = uri_.trim().replace(File.separatorChar, '/');
+        if (uri.indexOf('?') >= 0) uri = uri.substring(0, uri.indexOf('?'));
+        if (uri.length() == 1) uri = "index.html"; // We never want to request just the '/'
+        if (uri.charAt(0) == '/') uri = uri.substring(1); // using assets, so we can't have leading '/'
+
+        return uri;
     }
 
     public void close() {

@@ -47,6 +47,14 @@ public class PScrollView extends ScrollView {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        // Touches do anything with intercepted touch events if
+        // we are not scrollable
+        if (!mScrollable) return false;
+        else return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {// if we can scroll pass the event to the superclass
             if (mScrollable) return super.onTouchEvent(ev);
@@ -54,14 +62,6 @@ public class PScrollView extends ScrollView {
             return mScrollable; // mScrollable is always false at this point
         }
         return super.onTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        // Touches do anything with intercepted touch events if
-        // we are not scrollable
-        if (!mScrollable) return false;
-        else return super.onInterceptTouchEvent(ev);
     }
 
 

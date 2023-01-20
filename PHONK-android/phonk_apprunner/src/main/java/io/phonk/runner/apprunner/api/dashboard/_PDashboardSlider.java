@@ -41,30 +41,23 @@ public class _PDashboardSlider extends ProtoBase {
         super(appRunner);
     }
 
-    // --------- JDashboardSlider add ---------//
-    public interface jDashboardSliderAddCB {
-        void event(double val);
-    }
-
-    public void add(String name, int x, int y, int w, int h, int min, int max)
-            throws UnknownHostException, JSONException {
+    public void add(
+            String name,
+            int x,
+            int y,
+            int w,
+            int h,
+            int min,
+            int max
+    ) throws UnknownHostException, JSONException {
         this.id = StrUtils.generateUUID();
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("name", name)
-                .put("type", "slider")
-                .put("x", x)
-                .put("y", y)
-                .put("w", w)
-                .put("h", h)
-                .put("min", min)
-                .put("max", max);
+        JSONObject values = new JSONObject().put("id", id).put("name", name).put("type", "slider").put("x", x).put(
+                "y",
+                y
+        ).put("w", w).put("h", h).put("min", min).put("max", max);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
 
@@ -96,5 +89,10 @@ public class _PDashboardSlider extends ProtoBase {
     @Override
     public void __stop() {
 
+    }
+
+    // --------- JDashboardSlider add ---------//
+    public interface jDashboardSliderAddCB {
+        void event(double val);
     }
 }

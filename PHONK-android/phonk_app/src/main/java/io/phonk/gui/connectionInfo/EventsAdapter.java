@@ -53,15 +53,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         mEventsRecyclerView.scrollToPosition(mEventList.size() - 1);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final EventItemView mView;
-
-        public ViewHolder(EventItemView v) {
-            super(v);
-            mView = v;
-        }
-    }
-
     public void add(EventManager.EventLogItem event) {
         mEventList.add(event);
         notifyItemInserted(mEventList.size());
@@ -84,5 +75,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mEventList.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final EventItemView mView;
+
+        public ViewHolder(EventItemView v) {
+            super(v);
+            mView = v;
+        }
     }
 }

@@ -41,13 +41,12 @@ import io.phonk.runner.base.services.AlarmReceiver;
 public class SchedulerManager {
 
     private static final java.lang.String TAG = SchedulerManager.class.getSimpleName();
+    private static final String ALARM_INTENT = "protocoder_alarm_message";
     private final AlarmManager mAlarmManager;
     private final Context c;
     private final Project mProject;
-
     private SharedPreferences mPreferences;
     private ArrayList<Task> tasks = null; // new ArrayList<SchedulerManager.Task>();
-    private static final String ALARM_INTENT = "protocoder_alarm_message";
 
     public SchedulerManager(Context c, Project p) {
         this.c = c;
@@ -70,24 +69,11 @@ public class SchedulerManager {
         PendingIntent sender = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set Alarm
-        if (repeating)
-            mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval, sender);
+        if (repeating) mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval, sender);
         else mAlarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 
         // add to a global alarm thingie
         addTask(new Task(id, mProject, Task.TYPE_ALARM, cal, interval, repeating, wakeUpScreen));
-    }
-
-    public void removeAlarm(int id) {
-        Intent intent = new Intent(c, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mAlarmManager.cancel(pendingIntent);
-        removeTask(id);
-    }
-
-
-    public ArrayList<Task> getTasks() {
-        return tasks;
     }
 
     public void addTask(Task task) {
@@ -96,19 +82,10 @@ public class SchedulerManager {
         saveTasks();
     }
 
-    public void removeTask(int id) {
-        loadTasks();
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).id == id) tasks.remove(i);
-        }
-        saveTasks();
-    }
-
     public SchedulerManager loadTasks() {
         mPreferences = c.getSharedPreferences("io.phonk.scheduler", Context.MODE_PRIVATE);
         String tasksString = mPreferences.getString("tasks", "");
-        tasks = GSONUtil.getInstance().getGson().fromJson(tasksString, new TypeToken<ArrayList<Task>>() {
-        }.getType());
+        tasks = GSONUtil.getInstance().getGson().fromJson(tasksString, new TypeToken<ArrayList<Task>>() {}.getType());
 
         if (tasks == null) tasks = new ArrayList<>();
         MLog.d(TAG, "ww " + tasksString + " " + tasks);
@@ -124,6 +101,24 @@ public class SchedulerManager {
         return this;
     }
 
+    public void removeAlarm(int id) {
+        Intent intent = new Intent(c, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mAlarmManager.cancel(pendingIntent);
+        removeTask(id);
+    }
+
+    public void removeTask(int id) {
+        loadTasks();
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).id == id) tasks.remove(i);
+        }
+        saveTasks();
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
 
     public static class Task {
         static final int TYPE_ALARM = 0;

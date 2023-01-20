@@ -48,6 +48,13 @@ public class ExecuteCmd {
         this.callbackfn = callbackfn;
     }
 
+    public ExecuteCmd start() {
+        initThread();
+        mThread.start();
+
+        return this;
+    }
+
     private void initThread() {
         mThread = new Thread(() -> {
             Looper.prepare();
@@ -55,8 +62,7 @@ public class ExecuteCmd {
             try {
                 //execute the command
                 final Process process = Runtime.getRuntime().exec(cmd);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        process.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                 //handler that can stop the thread
                 mHandler = new Handler() {
@@ -98,13 +104,6 @@ public class ExecuteCmd {
             }
             Looper.loop();
         });
-    }
-
-    public ExecuteCmd start() {
-        initThread();
-        mThread.start();
-
-        return this;
     }
 
     @PhonkMethod(description = "stop the running command", example = "")

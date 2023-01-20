@@ -25,8 +25,8 @@ package io.phonk.runner.apidoc;
 import java.util.Vector;
 
 public class APIManagerClass {
+    public final Vector<APIManagerMethod> apiMethods = new Vector<>();
     public String name;
     public String description;
     public boolean isMainObject;
-    public final Vector<APIManagerMethod> apiMethods = new Vector<>();
 }

@@ -28,8 +28,8 @@ import com.google.gson.LongSerializationPolicy;
 
 public class GSONUtil {
 
-    public final Gson gson;
     private static GSONUtil inst;
+    public final Gson gson;
 
     GSONUtil() {
         GsonBuilder gsonBuilder = new GsonBuilder();

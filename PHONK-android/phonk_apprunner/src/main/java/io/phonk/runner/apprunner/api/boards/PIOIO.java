@@ -47,23 +47,6 @@ public class PIOIO extends ProtoBase {
     private ReturnInterface mCallbackConnected;
     private ReturnInterface mCallbackDisconnected;
     private ReturnInterface mCallbackStatus;
-
-    public PIOIO(AppRunner appRunner) {
-        super(appRunner);
-    }
-
-    @PhonkMethod(description = "initializes ioio board", example = "ioio.connect();")
-    public void connect() {
-        this.board = new IOIOBoard(getContext(), ioioCallback);
-        board.powerOn();
-        getAppRunner().whatIsRunning.add(board);
-    }
-
-    @PhonkMethod
-    public void onConnect(ReturnInterface callback) {
-        mCallbackConnected = callback;
-    }
-
     final IOIOBoard.HardwareCallback ioioCallback = new IOIOBoard.HardwareCallback() {
         @Override
         public void onConnect(Object ioio) {
@@ -93,17 +76,24 @@ public class PIOIO extends ProtoBase {
         }
     };
 
-    public IOIO get() {
-        return mIoio;
+    public PIOIO(AppRunner appRunner) {
+        super(appRunner);
     }
 
-    @PhonkMethod(description = "stops the ioio board", example = "ioio.stop();")
-    public void stop() {
-        if (mIoio != null) {
-            board.powerOff();
-            board = null;
-            mIoio = null;
-        }
+    @PhonkMethod(description = "initializes ioio board", example = "ioio.connect();")
+    public void connect() {
+        this.board = new IOIOBoard(getContext(), ioioCallback);
+        board.powerOn();
+        getAppRunner().whatIsRunning.add(board);
+    }
+
+    @PhonkMethod
+    public void onConnect(ReturnInterface callback) {
+        mCallbackConnected = callback;
+    }
+
+    public IOIO get() {
+        return mIoio;
     }
 
     @PhonkMethod(description = "", example = "")
@@ -129,5 +119,14 @@ public class PIOIO extends ProtoBase {
     @Override
     public void __stop() {
         stop();
+    }
+
+    @PhonkMethod(description = "stops the ioio board", example = "ioio.stop();")
+    public void stop() {
+        if (mIoio != null) {
+            board.powerOff();
+            board = null;
+            mIoio = null;
+        }
     }
 }

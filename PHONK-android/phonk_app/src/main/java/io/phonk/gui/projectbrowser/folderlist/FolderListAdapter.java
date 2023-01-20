@@ -41,48 +41,29 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
     private final ArrayList<FolderAdapterData> mDataSet;
     private FolderListFragment.ActionListener mListener;
 
-    public void setListener(FolderListFragment.ActionListener listener) {
-        mListener = listener;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public final ViewGroup mainView;
-        public TextView textNumProjects;
-
-        public ViewHolder(int viewType, ViewGroup v) {
-            super(v);
-            mainView = v;
-
-            switch (viewType) {
-                case FolderAdapterData.TYPE_TITLE:
-                    textView = v.findViewById(R.id.textType);
-                    break;
-
-                case (FolderAdapterData.TYPE_FOLDER_NAME):
-                    textView = v.findViewById(R.id.textFolder);
-                    textNumProjects = v.findViewById(R.id.textNumProjects);
-                    break;
-            }
-        }
-    }
-
     public FolderListAdapter(ArrayList<FolderAdapterData> folders) {
         mDataSet = folders;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return mDataSet.get(position).itemType;
+    public void setListener(FolderListFragment.ActionListener listener) {
+        mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewGroup t = null;
         if (viewType == FolderAdapterData.TYPE_TITLE) {
-            t = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_title_view, parent, false);
+            t = (RelativeLayout) LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.folderchooser_title_view,
+                    parent,
+                    false
+            );
         } else if (viewType == FolderAdapterData.TYPE_FOLDER_NAME) {
-            t = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.folderchooser_folder_view, parent, false);
+            t = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.folderchooser_folder_view,
+                    parent,
+                    false
+            );
         }
         return new ViewHolder(viewType, t);
     }
@@ -111,8 +92,35 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return mDataSet.get(position).itemType;
+    }
+
+    @Override
     public int getItemCount() {
         return mDataSet.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public final ViewGroup mainView;
+        public TextView textView;
+        public TextView textNumProjects;
+
+        public ViewHolder(int viewType, ViewGroup v) {
+            super(v);
+            mainView = v;
+
+            switch (viewType) {
+                case FolderAdapterData.TYPE_TITLE:
+                    textView = v.findViewById(R.id.textType);
+                    break;
+
+                case (FolderAdapterData.TYPE_FOLDER_NAME):
+                    textView = v.findViewById(R.id.textFolder);
+                    textNumProjects = v.findViewById(R.id.textNumProjects);
+                    break;
+            }
+        }
     }
 
 }

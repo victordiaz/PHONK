@@ -35,6 +35,10 @@ public class ObservingDebugger implements Debugger {
 
     private DebugFrame debugFrame = null;
 
+    public ObservingDebugger() {
+
+    }
+
     public boolean isDisconnected() {
         return isDisconnected;
     }
@@ -46,8 +50,8 @@ public class ObservingDebugger implements Debugger {
         }
     }
 
-    public ObservingDebugger() {
-
+    @Override
+    public void handleCompilationDone(Context arg0, DebuggableScript arg1, String arg2) {
     }
 
     public DebugFrame getFrame(Context cx, DebuggableScript fnOrScript) {
@@ -56,15 +60,15 @@ public class ObservingDebugger implements Debugger {
         }
         return debugFrame;
     }
-
-    @Override
-    public void handleCompilationDone(Context arg0, DebuggableScript arg1, String arg2) {
-    }
 }
 
 // internal ObservingDebugFrame class
 class ObservingDebugFrame implements DebugFrame {
     boolean isDisconnected = false;
+
+    ObservingDebugFrame(boolean isDisconnected) {
+        this.isDisconnected = isDisconnected;
+    }
 
     public boolean isDisconnected() {
         return isDisconnected;
@@ -74,12 +78,9 @@ class ObservingDebugFrame implements DebugFrame {
         this.isDisconnected = isDisconnected;
     }
 
-    ObservingDebugFrame(boolean isDisconnected) {
-        this.isDisconnected = isDisconnected;
-    }
-
-    public void onEnter(Context cx, Scriptable activation,
-                        Scriptable thisObj, Object[] args) {
+    public void onEnter(
+            Context cx, Scriptable activation, Scriptable thisObj, Object[] args
+    ) {
     }
 
     public void onLineChange(Context cx, int lineNumber) {
@@ -91,8 +92,9 @@ class ObservingDebugFrame implements DebugFrame {
     public void onExceptionThrown(Context cx, Throwable ex) {
     }
 
-    public void onExit(Context cx, boolean byThrow,
-                       Object resultOrException) {
+    public void onExit(
+            Context cx, boolean byThrow, Object resultOrException
+    ) {
     }
 
     @Override

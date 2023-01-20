@@ -36,6 +36,15 @@ import java.util.List;
 
 public class Intents {
 
+    // URIs for Google Play intents
+    private static final String market_root = "market://details?id=";
+    // Twitter
+    private static final String uri_market_twitter = market_root + "com.twitter.android";
+    public static final Uri GOOGLE_PLAY_TWITTER_URI = Uri.parse(uri_market_twitter);
+    // Facebook
+    private static final String uri_market_facebook = market_root + "com.facebook.katana";
+    public static final Uri GOOGLE_PLAY_FACEBOOK_URI = Uri.parse(uri_market_facebook);
+
     /**
      * Indicates whether the specified action can be used as an intent. This
      * method queries the package manager for installed packages that can
@@ -54,16 +63,6 @@ public class Intents {
         List<ResolveInfo> list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
     }
-
-    // URIs for Google Play intents
-    private static final String market_root = "market://details?id=";
-    // Twitter
-    private static final String uri_market_twitter = market_root + "com.twitter.android";
-    public static final Uri GOOGLE_PLAY_TWITTER_URI = Uri.parse(uri_market_twitter);
-
-    // Facebook
-    private static final String uri_market_facebook = market_root + "com.facebook.katana";
-    public static final Uri GOOGLE_PLAY_FACEBOOK_URI = Uri.parse(uri_market_facebook);
 
     // com.google.android.googlequicksearchbox.MUSIC_SEARCH
     //
@@ -87,8 +86,9 @@ public class Intents {
         ad.show();
     }
 
-    static public void shareWithMail(Context context, String emailTo, String emailCC, String subject, String emailText,
-                                     List<String> filePaths) {
+    static public void shareWithMail(
+            Context context, String emailTo, String emailCC, String subject, String emailText, List<String> filePaths
+    ) {
         // need to "send multiple" to get more than one attachment
         final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND_MULTIPLE);
         emailIntent.setType("text/plain");

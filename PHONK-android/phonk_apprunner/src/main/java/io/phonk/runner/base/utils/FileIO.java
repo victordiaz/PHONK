@@ -138,7 +138,9 @@ public class FileIO {
     }
 
     public static void copyFile(File src, File dst) throws IOException {
-        try (FileChannel inChannel = new FileInputStream(src).getChannel(); FileChannel outChannel = new FileOutputStream(dst).getChannel()) {
+        try (FileChannel inChannel = new FileInputStream(src).getChannel(); FileChannel outChannel =
+                new FileOutputStream(
+                dst).getChannel()) {
             inChannel.transferTo(0, inChannel.size(), outChannel);
         }
     }
@@ -204,7 +206,10 @@ public class FileIO {
             if (!f.isDirectory()) {
                 f.mkdirs();
             }
-            try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), BUFFER_SIZE))) {
+            try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream(
+                    new FileInputStream(zipFile),
+                    BUFFER_SIZE
+            ))) {
                 ZipEntry ze = null;
                 while ((ze = zin.getNextEntry()) != null) {
                     String path = location + ze.getName();

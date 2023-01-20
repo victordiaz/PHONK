@@ -67,20 +67,12 @@ public class AppRunnerHelper {
         String json = getCode(p, "app.conf");
         if (json != null) {
             Gson gson = new Gson();
-            Type stringStringMap = new TypeToken<Map<String, Object>>() {
-            }.getType();
+            Type stringStringMap = new TypeToken<Map<String, Object>>() {}.getType();
             map = gson.fromJson(json, stringStringMap);
         } else {
             map = new HashMap<>();
         }
 
-        resetValues(map);
-
-        return map;
-    }
-
-    public static HashMap<String, Object> createSettings() {
-        HashMap<String, Object> map = new HashMap<>();
         resetValues(map);
 
         return map;
@@ -103,6 +95,13 @@ public class AppRunnerHelper {
         if (!map.containsKey("contact")) map.put("contact", "");
         if (!map.containsKey("url")) map.put("url", "");
         if (!map.containsKey("execute_on_save")) map.put("execute_on_save", "");
+    }
+
+    public static HashMap<String, Object> createSettings() {
+        HashMap<String, Object> map = new HashMap<>();
+        resetValues(map);
+
+        return map;
     }
 
 

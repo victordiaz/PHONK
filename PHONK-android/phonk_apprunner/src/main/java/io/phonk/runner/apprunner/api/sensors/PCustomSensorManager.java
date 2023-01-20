@@ -38,11 +38,9 @@ import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
 @PhonkClass
 public abstract class PCustomSensorManager implements WhatIsRunningInterface {
     private final static String TAG = PCustomSensorManager.class.getSimpleName();
-
-    final AppRunner mAppRunner;
-
-    protected Sensor sensor;
     protected final SensorManager mSensormanager;
+    final AppRunner mAppRunner;
+    protected Sensor sensor;
     protected SensorEventListener mListener;
     protected ReturnInterface mCallback;
     protected int speed = SensorManager.SENSOR_DELAY_FASTEST;
@@ -58,23 +56,20 @@ public abstract class PCustomSensorManager implements WhatIsRunningInterface {
     public void start() {
         if (isEnabled) return;
         if (!isAvailable()) {
-            mAppRunner.pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, this.getClass().getSimpleName().substring(1));
+            mAppRunner.pConsole.p_error(
+                    AppRunnerInterpreter.RESULT_NOT_CAPABLE,
+                    this.getClass().getSimpleName().substring(1)
+            );
             return;
         }
         mAppRunner.whatIsRunning.add(this);
         sensor = mSensormanager.getDefaultSensor(type);
     }
 
-    @PhonkMethod(description = "Stop the sensor", example = "")
-    @PhonkMethodParam(params = {""})
-    public void stop() {
-        isEnabled = false;
-        if (mListener != null) {
-            mSensormanager.unregisterListener(mListener);
-            mListener = null;
-        }
+    @PhonkMethod(description = "Check if the device has the sensor", example = "")
+    public boolean isAvailable() {
+        return mSensormanager.getDefaultSensor(type) != null;
     }
-
 
     @PhonkMethod(description = "Set the speed of the sensor 'slow', 'normal', 'fast'", example = "")
     @PhonkMethodParam(params = {"speed=['slow', 'normal', 'fast']"})
@@ -103,11 +98,6 @@ public abstract class PCustomSensorManager implements WhatIsRunningInterface {
         return sensor.getResolution();
     }
 
-    @PhonkMethod(description = "Check if the device has the sensor", example = "")
-    public boolean isAvailable() {
-        return mSensormanager.getDefaultSensor(type) != null;
-    }
-
     @PhonkMethod
     public Sensor info() {
         return mSensormanager.getDefaultSensor(type);
@@ -118,5 +108,15 @@ public abstract class PCustomSensorManager implements WhatIsRunningInterface {
 
     public void __stop() {
         stop();
+    }
+
+    @PhonkMethod(description = "Stop the sensor", example = "")
+    @PhonkMethodParam(params = {""})
+    public void stop() {
+        isEnabled = false;
+        if (mListener != null) {
+            mSensormanager.unregisterListener(mListener);
+            mListener = null;
+        }
     }
 }

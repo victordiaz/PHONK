@@ -45,6 +45,20 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
         mAppRunner.whatIsRunning.add(this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public static void startFlash(Context c, boolean b) {
+        try {
+            CameraManager mCamManager = (CameraManager) c.getSystemService(Context.CAMERA_SERVICE);
+            String cameraId = null;
+            if (mCamManager != null) {
+                cameraId = mCamManager.getCameraIdList()[0];
+                mCamManager.setTorchMode(cameraId, b);
+            }
+        } catch (CameraAccessException e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
     @Override
     public void takePicture() {
 
@@ -83,20 +97,6 @@ public class PCamera2 extends CameraTexture2 implements PCameraInterface {
     @Override
     public void flash(boolean b) {
 
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static void startFlash(Context c, boolean b) {
-        try {
-            CameraManager mCamManager = (CameraManager) c.getSystemService(Context.CAMERA_SERVICE);
-            String cameraId = null;
-            if (mCamManager != null) {
-                cameraId = mCamManager.getCameraIdList()[0];
-                mCamManager.setTorchMode(cameraId, b);
-            }
-        } catch (CameraAccessException e) {
-            Log.e(TAG, e.toString());
-        }
     }
 
     @Override

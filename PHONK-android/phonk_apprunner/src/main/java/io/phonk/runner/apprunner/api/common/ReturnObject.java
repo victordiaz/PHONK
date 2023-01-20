@@ -42,17 +42,34 @@ public class ReturnObject implements Scriptable, Map {
 
     public final Map map;
 
-    public ReturnObject() {
-        this.map = new HashMap();
-    }
-
     public ReturnObject(Object obj) {
         this();
         map.put("obj", obj);
     }
 
-    public void clear() {
-        map.clear();
+    public ReturnObject() {
+        this.map = new HashMap();
+    }
+
+    public int hashCode() {
+        return map.hashCode();
+    }
+
+    public boolean equals(Object o) {
+        return map.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        return GSONUtil.getInstance().getGson().toJson(this);
+    }
+
+    public int size() {
+        return map.size();
+    }
+
+    public boolean isEmpty() {
+        return map.isEmpty();
     }
 
     public boolean containsKey(Object key) {
@@ -63,58 +80,41 @@ public class ReturnObject implements Scriptable, Map {
         return map.containsValue(value);
     }
 
-    public Set entrySet() {
-        return map.entrySet();
-    }
-
-    public boolean equals(Object o) {
-        return map.equals(o);
-    }
-
     public Object get(Object key) {
         return map.get(key);
-    }
-
-    public int hashCode() {
-        return map.hashCode();
-    }
-
-    public boolean isEmpty() {
-        return map.isEmpty();
-    }
-
-    public Set keySet() {
-        return map.keySet();
     }
 
     public Object put(Object key, Object value) {
         return map.put(key, value);
     }
 
-    public void putAll(Map m) {
-        map.putAll(m);
-    }
-
     public Object remove(Object key) {
         return map.remove(key);
     }
 
-    public int size() {
-        return map.size();
+    public void putAll(Map m) {
+        map.putAll(m);
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
+    public Set keySet() {
+        return map.keySet();
     }
 
     public Collection values() {
         return map.values();
     }
 
-    @Override
-    public void delete(String name) {
-        map.remove(name);
+    public Set entrySet() {
+        return map.entrySet();
     }
 
     @Override
-    public void delete(int index) {
-        map.remove(index);
+    public String getClassName() {
+        return map.getClass().getName();
     }
 
     @Override
@@ -128,13 +128,51 @@ public class ReturnObject implements Scriptable, Map {
     }
 
     @Override
-    public String getClassName() {
-        return map.getClass().getName();
+    public boolean has(String name, Scriptable start) {
+        return map.containsKey(name);
     }
 
     @Override
-    public Object getDefaultValue(Class<?> hint) {
-        return toString();
+    public boolean has(int index, Scriptable start) {
+        return map.containsKey(index);
+    }
+
+    @Override
+    public void put(String name, Scriptable start, Object value) {
+        map.put(name, value);
+    }
+
+    @Override
+    public void put(int index, Scriptable start, Object value) {
+        map.put(index, value);
+    }
+
+    @Override
+    public void delete(String name) {
+        map.remove(name);
+    }
+
+    @Override
+    public void delete(int index) {
+        map.remove(index);
+    }
+
+    @Override
+    public Scriptable getPrototype() {
+        return null;
+    }
+
+    @Override
+    public void setPrototype(Scriptable prototype) {
+    }
+
+    @Override
+    public Scriptable getParentScope() {
+        return null;
+    }
+
+    @Override
+    public void setParentScope(Scriptable parent) {
     }
 
     @Override
@@ -149,50 +187,12 @@ public class ReturnObject implements Scriptable, Map {
     }
 
     @Override
-    public Scriptable getParentScope() {
-        return null;
-    }
-
-    @Override
-    public Scriptable getPrototype() {
-        return null;
-    }
-
-    @Override
-    public boolean has(String name, Scriptable start) {
-        return map.containsKey(name);
-    }
-
-    @Override
-    public boolean has(int index, Scriptable start) {
-        return map.containsKey(index);
+    public Object getDefaultValue(Class<?> hint) {
+        return toString();
     }
 
     @Override
     public boolean hasInstance(Scriptable instance) {
         return false;
-    }
-
-    @Override
-    public void put(String name, Scriptable start, Object value) {
-        map.put(name, value);
-    }
-
-    @Override
-    public void put(int index, Scriptable start, Object value) {
-        map.put(index, value);
-    }
-
-    @Override
-    public void setParentScope(Scriptable parent) {
-    }
-
-    @Override
-    public void setPrototype(Scriptable prototype) {
-    }
-
-    @Override
-    public String toString() {
-        return GSONUtil.getInstance().getGson().toJson(this);
     }
 }

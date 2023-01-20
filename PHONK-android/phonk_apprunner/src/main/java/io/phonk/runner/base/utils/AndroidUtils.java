@@ -64,7 +64,10 @@ import io.phonk.runner.apprunner.permissions.PermissionNotGrantedException;
 
 public class AndroidUtils {
 
+    public static final int CLIP_RECT = 0;
+    public static final int CLIP_ROUND = 1;
     private static final String TAG = AndroidUtils.class.getSimpleName();
+    static PowerManager.WakeLock wl;
 
     public static boolean checkFeature(AppRunnerActivity c, String what, String feature, String permission) {
         boolean ret = false;
@@ -73,8 +76,7 @@ public class AndroidUtils {
 
         // check if available
         if (!pm.hasSystemFeature(feature)) throw new FeatureNotAvailableException(what);
-        if (!c.checkPermission(permission))
-            throw new PermissionNotGrantedException(what);
+        if (!c.checkPermission(permission)) throw new PermissionNotGrantedException(what);
         ret = true;
 
         return ret;
@@ -139,7 +141,6 @@ public class AndroidUtils {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, c.getResources().getDisplayMetrics());
     }
 
-
     /**
      * Show an event in the LogCat view, for debugging
      */
@@ -173,11 +174,20 @@ public class AndroidUtils {
         }
     }
 
-    public static final int CLIP_RECT = 0;
-    public static final int CLIP_ROUND = 1;
+    public static boolean isVersionLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void setViewGenericShadow(View v, int type, final int x, final int y, final int w, final int h, final int r) {
+    public static void setViewGenericShadow(
+            View v,
+            int type,
+            final int x,
+            final int y,
+            final int w,
+            final int h,
+            final int r
+    ) {
         if (isVersionLollipop()) {
 
             ViewOutlineProvider viewOutlineProvider = null;
@@ -231,10 +241,6 @@ public class AndroidUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-    public static boolean isVersionLollipop() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
     public static boolean isVersionKitKat() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
@@ -255,9 +261,7 @@ public class AndroidUtils {
         int endG = (endValue >> 8) & 0xff;
         int endB = endValue & 0xff;
 
-        return (startA + (int) (fraction * (endA - startA))) << 24
-                | (startR + (int) (fraction * (endR - startR))) << 16
-                | (startG + (int) (fraction * (endG - startG))) << 8 | ((startB + (int) (fraction * (endB - startB))));
+        return (startA + (int) (fraction * (endA - startA))) << 24 | (startR + (int) (fraction * (endR - startR))) << 16 | (startG + (int) (fraction * (endG - startG))) << 8 | ((startB + (int) (fraction * (endB - startB))));
     }
 
     public static void debugIntent(String tag, Intent intent) {
@@ -272,7 +276,6 @@ public class AndroidUtils {
             MLog.v(tag, "no extras");
         }
     }
-
 
     public static String colorHexToHtmlRgba(String colorHex) {
         int c = Color.parseColor(colorHex);
@@ -289,10 +292,11 @@ public class AndroidUtils {
         int maxValue = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         float val = (float) (value / 100.0 * maxValue);
 
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, Math.round(val),
-                AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                Math.round(val),
+                AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE
+        );
     }
-
 
     public static boolean isScreenOn(Context c) {
         PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
@@ -301,14 +305,6 @@ public class AndroidUtils {
 
     public static boolean isAirplaneMode(Context c) {
         return Settings.System.getInt(c.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
-    }
-
-    public boolean isUSBMassStorageEnabled(Context c) {
-        return Settings.System.getInt(c.getContentResolver(), Settings.Global.USB_MASS_STORAGE_ENABLED, 0) != 0;
-    }
-
-    public boolean isADBEnabled(Context c) {
-        return Settings.System.getInt(c.getContentResolver(), Settings.Global.ADB_ENABLED, 0) != 0;
     }
 
     public static void setEnableSoundEffects(Context c, boolean b) {
@@ -321,8 +317,10 @@ public class AndroidUtils {
     }
 
     public static boolean isTablet(Context c) {
-        boolean xlarge = ((c.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-        boolean large = ((c.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        boolean xlarge = ((c.getResources()
+                .getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((c.getResources()
+                .getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
         return (xlarge || large);
     }
 
@@ -333,11 +331,12 @@ public class AndroidUtils {
         return b;
     }
 
-    static PowerManager.WakeLock wl;
-
     public static void setWakeLock(Context c, boolean b) {
         if (b && wl == null) {
-            wl = ((PowerManager) c.getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+            wl = ((PowerManager) c.getSystemService(Context.POWER_SERVICE)).newWakeLock(
+                    PowerManager.PARTIAL_WAKE_LOCK,
+                    TAG
+            );
             wl.acquire();
         } else if (!b && wl != null) {
             wl.release();
@@ -363,7 +362,6 @@ public class AndroidUtils {
         Settings.System.putInt(c.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, time);
     }
 
-
     public static void setSpeakerOn(boolean b) {
 
         Class<?> audioSystemClass;
@@ -388,25 +386,26 @@ public class AndroidUtils {
 
     }
 
-    private static String convertToHex(byte[] data) {
-        StringBuilder buf = new StringBuilder();
-        for (byte b : data) {
-            int halfbyte = (b >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do {
-                buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
-                halfbyte = b & 0x0F;
-            } while (two_halfs++ < 1);
-        }
-        return buf.toString();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String sha1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         md.update(text.getBytes(StandardCharsets.ISO_8859_1), 0, text.length());
         byte[] sha1hash = md.digest();
         return convertToHex(sha1hash);
+    }
+
+    private static String convertToHex(byte[] data) {
+        StringBuilder buf = new StringBuilder();
+        for (byte b : data) {
+            int halfbyte = (b >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) :
+                        (char) ('a' + (halfbyte - 10)));
+                halfbyte = b & 0x0F;
+            } while (two_halfs++ < 1);
+        }
+        return buf.toString();
     }
 
     public static String actionToString(int action) {
@@ -436,8 +435,6 @@ public class AndroidUtils {
         }
     }
 
-    // http://stackoverflow.com/questions/4928772/using-color-and-color-darker-in-android
-
     public static int darkenColor(int color, float factor) {
 
         int a = Color.alpha(color);
@@ -448,7 +445,8 @@ public class AndroidUtils {
         return Color.argb(a,
                 Math.max((int) (r * factor), 0),
                 Math.max((int) (g * factor), 0),
-                Math.max((int) (b * factor), 0));
+                Math.max((int) (b * factor), 0)
+        );
     }
 
     public static int lighter(int color, float factor) {
@@ -456,5 +454,15 @@ public class AndroidUtils {
         int green = (int) ((Color.green(color) * (1 - factor) / 255 + factor) * 255);
         int blue = (int) ((Color.blue(color) * (1 - factor) / 255 + factor) * 255);
         return Color.argb(Color.alpha(color), red, green, blue);
+    }
+
+    // http://stackoverflow.com/questions/4928772/using-color-and-color-darker-in-android
+
+    public boolean isUSBMassStorageEnabled(Context c) {
+        return Settings.System.getInt(c.getContentResolver(), Settings.Global.USB_MASS_STORAGE_ENABLED, 0) != 0;
+    }
+
+    public boolean isADBEnabled(Context c) {
+        return Settings.System.getInt(c.getContentResolver(), Settings.Global.ADB_ENABLED, 0) != 0;
     }
 }

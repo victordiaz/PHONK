@@ -39,7 +39,6 @@ import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.helpers.PhonkAppHelper;
 import io.phonk.runner.base.BaseActivity;
 import io.phonk.runner.base.models.Project;
-import io.phonk.runner.base.utils.MLog;
 
 public class SharingDispatcherActivity extends BaseActivity {
 
@@ -71,7 +70,8 @@ public class SharingDispatcherActivity extends BaseActivity {
         Button btn = findViewById(R.id.btnOpenProjectBrowser);
 
         FragmentManager fm = getSupportFragmentManager();
-        ProjectBrowserDialogFragment projectBrowserDialogFragment = ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK);
+        ProjectBrowserDialogFragment projectBrowserDialogFragment =
+                ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK);
 
         projectBrowserDialogFragment.setListener(new ProjectListFragment.ProjectSelectedListener() {
             @Override

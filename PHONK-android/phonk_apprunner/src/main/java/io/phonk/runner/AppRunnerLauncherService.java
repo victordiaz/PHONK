@@ -41,6 +41,16 @@ public class AppRunnerLauncherService extends Service {
     private static final boolean multiWindowEnabled = true;
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String projectFolder = intent.getStringExtra("projectFolder");
         String projectName = intent.getStringExtra("projectName");
@@ -60,8 +70,7 @@ public class AppRunnerLauncherService extends Service {
         } else {
             newIntent = new Intent(getApplicationContext(), AppRunnerActivity.class);
             newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            if (AndroidUtils.isVersionN() && multiWindowEnabled)
-                intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
+            if (AndroidUtils.isVersionN() && multiWindowEnabled) intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT);
         }
 
         newIntent.putExtras(intent);
@@ -76,16 +85,6 @@ public class AppRunnerLauncherService extends Service {
         }
 
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
     }
 
     @Nullable

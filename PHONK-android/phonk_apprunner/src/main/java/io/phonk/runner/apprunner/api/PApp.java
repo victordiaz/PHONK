@@ -72,24 +72,12 @@ public class PApp extends ProtoBase {
 
     @PhonkField
     public final Notification notification;
-
+    final PEvents pevents;
     @PhonkField
     public Map<String, Object> settings;
-
-    final PEvents pevents;
     public String folder;
     public String name;
     public ReturnObject intentData;
-
-    public interface onAppStatus {
-        void onStart();
-
-        void onPause();
-
-        void onResume();
-
-        void onStop();
-    }
 
     public PApp(AppRunner appRunner) {
         super(appRunner);
@@ -151,6 +139,18 @@ public class PApp extends ProtoBase {
     }
 
     /**
+     * Runs a function in the UI thread. This is normally not needed but might be required when combined with Threads
+     *
+     * @param callback
+     * @advanced
+     * @status TODO_EXAMPLE
+     */
+    @PhonkMethod
+    public void runOnUiThread(final ReturnInterface callback) {
+        getActivity().runOnUiThread(() -> callback.event(null));
+    }
+
+    /**
      * Loads and external file containing code
      *
      * @param filename
@@ -173,109 +173,6 @@ public class PApp extends ProtoBase {
     }
     */
 
-
-    public class MyBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, "notification cancelled");
-        }
-    }
-
-    public class Notification {
-        private final NotificationManager mNotificationManager;
-        int id;
-        NotificationCompat.Builder mBuilder;
-
-        Notification() {
-            mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-
-        public Notification create(Map map) {
-
-            Bitmap iconBmp = null;
-            String iconName = (String) map.get("icon");
-            if (iconName != null)
-                iconBmp = BitmapFactory.decodeFile(getAppRunner().getProject().getFullPathForFile(iconName));
-
-            String launchOnClick = null;
-            launchOnClick = (String) map.get("launchOnClick");
-            Project p = new Project(launchOnClick);
-
-            String notificationData = null;
-            notificationData = (String) map.get("notificationData");
-            this.id = ((Number) map.get("id")).intValue();
-
-            Intent intent = new Intent(getContext(), MyBroadcastReceiver.class);
-            intent.putExtra("notificationData", notificationData);
-            intent.putExtra(Project.FOLDER, p.getFolder());
-            intent.putExtra(Project.NAME, p.getName());
-            intent.putExtra("isNotification", true);
-            intent.putExtra("notificationId", this.id);
-
-            PendingIntent deletePendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
-
-            // Creates an explicit intent for an Activity in your app
-            Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
-            resultIntent.putExtra("notificationData", notificationData);
-            resultIntent.putExtra(Project.FOLDER, p.getFolder());
-            resultIntent.putExtra(Project.NAME, p.getName());
-            resultIntent.putExtra("isNotification", true);
-            resultIntent.putExtra("notificationId", this.id);
-
-            // The stack builder object will contain an artificial back stack for navigating backward from the Activity leads out your application to the Home screen.
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
-            stackBuilder.addParentStack(AppRunnerActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            this.mBuilder = new NotificationCompat.Builder(getContext(), getAppRunner().getProject().name)
-                    .setSmallIcon(R.drawable.bubble)
-                    .setContentTitle((CharSequence) map.get("title"))
-                    .setContentText((CharSequence) map.get("description"))
-                    .setLights(Color.parseColor((String) map.get("color")), 1000, 1000)
-                    .setLargeIcon(iconBmp)
-                    .setAutoCancel((Boolean) map.get("autocancel"))
-                    .setTicker((String) map.get("ticker"))
-                    .setSubText((CharSequence) map.get("subtext"))
-                    .setDeleteIntent(deletePendingIntent)
-                    .setContentIntent(resultPendingIntent);
-
-            // damm annoying android pofkjpodsjf0ewiah
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                int importance = NotificationManager.IMPORTANCE_LOW;
-                NotificationChannel mChannel = new NotificationChannel(getAppRunner().getProject().name, getAppRunner().getProject().name, importance);
-                // mChannel.setDescription("lalalla");
-                mChannel.enableLights(false);
-                mNotificationManager.createNotificationChannel(mChannel);
-            } else {
-            }
-
-            return this;
-        }
-
-        public Notification show() {
-            mNotificationManager.notify(id, mBuilder.build());
-            return this;
-        }
-
-        public Notification cancel(int id) {
-            mNotificationManager.cancel(id);
-
-            return this;
-        }
-
-        public Notification cancelAll() {
-            mNotificationManager.cancelAll();
-
-            return this;
-        }
-
-        public Notification onClick(ReturnInterface callback) {
-
-            return this;
-        }
-    }
-
     /**
      * Share Image with an app installed in the system
      *
@@ -295,7 +192,6 @@ public class PApp extends ProtoBase {
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         getContext().startActivity(shareIntent);
     }
-
 
     /**
      * Share text with an app installed in the system
@@ -331,18 +227,6 @@ public class PApp extends ProtoBase {
     @PhonkMethod
     public String fullPath() {
         return getAppRunner().getProject().getFullPath();
-    }
-
-    /**
-     * Runs a function in the UI thread. This is normally not needed but might be required when combined with Threads
-     *
-     * @param callback
-     * @advanced
-     * @status TODO_EXAMPLE
-     */
-    @PhonkMethod
-    public void runOnUiThread(final ReturnInterface callback) {
-        getActivity().runOnUiThread(() -> callback.event(null));
     }
 
     /**
@@ -502,6 +386,11 @@ public class PApp extends ProtoBase {
         // getActivity().startActivityForResult();
     }
 
+    @PhonkMethod
+    public void launchScript(String path) {
+        this.launchScript(path, null);
+    }
+
     /**
      * Launch a PHONK script as follows
      * <p>
@@ -519,15 +408,11 @@ public class PApp extends ProtoBase {
 
         if (data != null) intent.putExtra(Project.LAUNCH_DATA, data);
         // intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
-        // intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
+        // intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get
+        // ("device_wakeup_on_play"));
         // EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUNNING, p));
         getContext().startService(intent);
         // getContext().startActivity(intent);
-    }
-
-    @PhonkMethod
-    public void launchScript(String path) {
-        this.launchScript(path, null);
     }
 
     /**
@@ -563,7 +448,8 @@ public class PApp extends ProtoBase {
     }
 
     /**
-     * Callback called when script is resumed. This can be called either when the app loads for the first time or switches back from a different app.
+     * Callback called when script is resumed. This can be called either when the app loads for the first time or
+     * switches back from a different app.
      *
      * @param callback
      * @exampleLink /examples/Advanced/App Lifecycle
@@ -602,9 +488,125 @@ public class PApp extends ProtoBase {
         intentData = ret;
     }
 
-
     @Override
     public void __stop() {
 
+    }
+
+    public interface onAppStatus {
+        void onStart();
+
+        void onPause();
+
+        void onResume();
+
+        void onStop();
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "notification cancelled");
+        }
+    }
+
+    public class Notification {
+        private final NotificationManager mNotificationManager;
+        int id;
+        NotificationCompat.Builder mBuilder;
+
+        Notification() {
+            mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+
+        public Notification create(Map map) {
+
+            Bitmap iconBmp = null;
+            String iconName = (String) map.get("icon");
+            if (iconName != null) iconBmp = BitmapFactory.decodeFile(getAppRunner().getProject()
+                    .getFullPathForFile(iconName));
+
+            String launchOnClick = null;
+            launchOnClick = (String) map.get("launchOnClick");
+            Project p = new Project(launchOnClick);
+
+            String notificationData = null;
+            notificationData = (String) map.get("notificationData");
+            this.id = ((Number) map.get("id")).intValue();
+
+            Intent intent = new Intent(getContext(), MyBroadcastReceiver.class);
+            intent.putExtra("notificationData", notificationData);
+            intent.putExtra(Project.FOLDER, p.getFolder());
+            intent.putExtra(Project.NAME, p.getName());
+            intent.putExtra("isNotification", true);
+            intent.putExtra("notificationId", this.id);
+
+            PendingIntent deletePendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(getContext(), AppRunnerActivity.class);
+            resultIntent.putExtra("notificationData", notificationData);
+            resultIntent.putExtra(Project.FOLDER, p.getFolder());
+            resultIntent.putExtra(Project.NAME, p.getName());
+            resultIntent.putExtra("isNotification", true);
+            resultIntent.putExtra("notificationId", this.id);
+
+            // The stack builder object will contain an artificial back stack for navigating backward from the
+            // Activity leads out your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+            stackBuilder.addParentStack(AppRunnerActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            this.mBuilder = new NotificationCompat.Builder(getContext(), getAppRunner().getProject().name).setSmallIcon(
+                            R.drawable.bubble)
+                    .setContentTitle((CharSequence) map.get("title"))
+                    .setContentText((CharSequence) map.get("description"))
+                    .setLights(Color.parseColor((String) map.get("color")), 1000, 1000)
+                    .setLargeIcon(iconBmp)
+                    .setAutoCancel((Boolean) map.get("autocancel"))
+                    .setTicker((String) map.get("ticker"))
+                    .setSubText((CharSequence) map.get("subtext"))
+                    .setDeleteIntent(deletePendingIntent)
+                    .setContentIntent(resultPendingIntent);
+
+            // damm annoying android pofkjpodsjf0ewiah
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_LOW;
+                NotificationChannel mChannel = new NotificationChannel(
+                        getAppRunner().getProject().name,
+                        getAppRunner().getProject().name,
+                        importance
+                );
+                // mChannel.setDescription("lalalla");
+                mChannel.enableLights(false);
+                mNotificationManager.createNotificationChannel(mChannel);
+            } else {
+            }
+
+            return this;
+        }
+
+        public Notification show() {
+            mNotificationManager.notify(id, mBuilder.build());
+            return this;
+        }
+
+        public Notification cancel(int id) {
+            mNotificationManager.cancel(id);
+
+            return this;
+        }
+
+        public Notification cancelAll() {
+            mNotificationManager.cancelAll();
+
+            return this;
+        }
+
+        public Notification onClick(ReturnInterface callback) {
+
+            return this;
+        }
     }
 }

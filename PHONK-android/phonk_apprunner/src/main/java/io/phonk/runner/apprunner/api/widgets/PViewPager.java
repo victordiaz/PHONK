@@ -37,13 +37,11 @@ import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
 public class PViewPager extends ViewPager implements PViewMethodsInterface {
-    final MyAdapter mAdapter;
-
     // this is a props proxy for the user
     public final StylePropertiesProxy props = new StylePropertiesProxy();
-
     // the props are transformed / accessed using the styler object
     public final Styler styler;
+    final MyAdapter mAdapter;
 
     public PViewPager(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -71,6 +69,11 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
         return this;
     }
 
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
     static class MyAdapter extends PagerAdapter {
         final ArrayList<View> list = new ArrayList<>();
 
@@ -86,11 +89,6 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
             return list.size();
         }
 
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
-        }
-
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -103,11 +101,11 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
-    }
 
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view == object;
+        }
     }
 
     @Override

@@ -50,14 +50,20 @@ public class FilePreviewerFragment extends BaseFragment {
     private RelativeLayout mVideoContainer;
     private RelativeLayout mTextContainer;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public static FilePreviewerFragment newInstance() {
+        return newInstance(null);
+    }
+
+    public static FilePreviewerFragment newInstance(Bundle bundle) {
+        FilePreviewerFragment myFragment = new FilePreviewerFragment();
+        myFragment.setArguments(bundle);
+
+        return myFragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
@@ -73,15 +79,6 @@ public class FilePreviewerFragment extends BaseFragment {
         }
 
         return v;
-    }
-
-    private void loadFile(Project project) {
-
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -110,36 +107,18 @@ public class FilePreviewerFragment extends BaseFragment {
         mTextContainer = v.findViewById(R.id.preview_text);
     }
 
-
-    public static FilePreviewerFragment newInstance() {
-        return newInstance(null);
-    }
-
-    public static FilePreviewerFragment newInstance(Bundle bundle) {
-        FilePreviewerFragment myFragment = new FilePreviewerFragment();
-        myFragment.setArguments(bundle);
-
-        return myFragment;
-    }
-
-    private void unloadAll() {
-        mVideoContainer.setVisibility(View.GONE);
-        mImageContainer.setVisibility(View.GONE);
-        mTextContainer.setVisibility(View.GONE);
-    }
-
-    private void loadSound(String name) {
+    private void loadFile(Project project) {
 
     }
 
-    private void loadVideo(String name) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
-    private void loadImage(String file) {
-        mImageContainer.setVisibility(View.VISIBLE);
-        ImageView imageView = v.findViewById(R.id.imageView);
-
-        imageView.setImageBitmap(Image.loadBitmap(file));
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     // load file in editor
@@ -163,6 +142,26 @@ public class FilePreviewerFragment extends BaseFragment {
                     break;
             }
         }
+    }
+
+    private void unloadAll() {
+        mVideoContainer.setVisibility(View.GONE);
+        mImageContainer.setVisibility(View.GONE);
+        mTextContainer.setVisibility(View.GONE);
+    }
+
+    private void loadImage(String file) {
+        mImageContainer.setVisibility(View.VISIBLE);
+        ImageView imageView = v.findViewById(R.id.imageView);
+
+        imageView.setImageBitmap(Image.loadBitmap(file));
+    }
+
+    private void loadVideo(String name) {
+    }
+
+    private void loadSound(String name) {
+
     }
 
 }

@@ -39,6 +39,17 @@ public class FitRecyclerView extends RecyclerView {
         init(context, null);
     }
 
+    private void init(Context context, AttributeSet attrs) {
+        if (attrs != null) {
+            int[] attrsArray = {android.R.attr.columnWidth};
+            TypedArray array = context.obtainStyledAttributes(attrs, attrsArray);
+            columnWidth = array.getDimensionPixelSize(0, -1);
+        }
+
+        manager = new GridLayoutManager(getContext(), 1);
+        setLayoutManager(manager);
+    }
+
     public FitRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
@@ -47,19 +58,6 @@ public class FitRecyclerView extends RecyclerView {
     public FitRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
-    }
-
-    private void init(Context context, AttributeSet attrs) {
-        if (attrs != null) {
-            int[] attrsArray = {
-                    android.R.attr.columnWidth
-            };
-            TypedArray array = context.obtainStyledAttributes(attrs, attrsArray);
-            columnWidth = array.getDimensionPixelSize(0, -1);
-        }
-
-        manager = new GridLayoutManager(getContext(), 1);
-        setLayoutManager(manager);
     }
 
     @Override

@@ -52,43 +52,112 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    public static boolean isNetworkAvailable(Context con) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
+    }
+
+    // Get broadcast Address
+    public static InetAddress getBroadcastAddress(Context c) throws UnknownHostException {
+        WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        DhcpInfo dhcp = wifi.getDhcpInfo();
+
+        if (dhcp == null) {
+            return InetAddress.getByAddress(null);
+        }
+
+        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+
+        byte[] quads = new byte[4];
+        for (int k = 0; k < 4; k++) {
+            quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+        }
+
+        return InetAddress.getByAddress(quads);
+    }
+
+    // Get the local IP address
+    public static ReturnObject getLocalIpAddress(Context c) {
+        ReturnObject networkInfo = new ReturnObject();
+        networkInfo.put("ip", "127.0.0.1");
+        networkInfo.put("type", "local");
+
+        if (NetworkUtils.isTetheringEnabled(c)) {
+            networkInfo.put("type", "tethering");
+            networkInfo.put("ip", "192.168.43.1");
+        }
+
+        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        if (ipAddress != 0) {
+
+            // Convert little-endian to big-endianif needed
+            if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                ipAddress = Integer.reverseBytes(ipAddress);
+            }
+
+            byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
+
+
+            try {
+                networkInfo.put("type", "wifi");
+                networkInfo.put("ip", InetAddress.getByAddress(ipByteArray).getHostAddress());
+            } catch (UnknownHostException ex) {
+                Log.e("WIFIIP", "Unable to get host address.");
+            }
+        }
+
+        return networkInfo;
+
+    }
+
+    public static boolean isTetheringEnabled(Context c) {
+        boolean isWifiAPenabled = false;
+
+        WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+        for (Method method : wmMethods) {
+            if (method.getName().equals("isWifiApEnabled")) {
+
+                try {
+                    isWifiAPenabled = (boolean) method.invoke(wifi);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        return isWifiAPenabled;
+    }
+
+    public static WifiInfo getWifiInfo(Context c) {
+        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        return wifiManager.getConnectionInfo();
+    }
+
     // usually, subclasses of AsyncTask are declared inside the activity class.
     // that way, you can easily modify the UI thread from here
     public static class DownloadTask extends AsyncTask<String, Integer, String> implements WhatIsRunningInterface {
 
         private final Context context;
-        private DownloadListener downloadListener;
-        private PowerManager.WakeLock wl;
-
         private final String url;
         private final String path;
-
-        public interface DownloadListener {
-            void onUpdate(int progress);
-        }
+        private DownloadListener downloadListener;
+        private PowerManager.WakeLock wl;
 
         public DownloadTask(Context c, String url, String fileName) {
             this.context = c;
             this.url = url;
             this.path = fileName;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            super.onProgressUpdate(progress);
-            // if we get here, length is known, now set indeterminate to false
-            // mProgressDialog.setProgress(progress[0]);
-            downloadListener.onUpdate(progress[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            downloadListener = null;
         }
 
         @Override
@@ -112,8 +181,7 @@ public class NetworkUtils {
                     // report
                     // instead of the file
                     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                        return "Server returned HTTP " + connection.getResponseCode() + " "
-                                + connection.getResponseMessage();
+                        return "Server returned HTTP " + connection.getResponseCode() + " " + connection.getResponseMessage();
                     }
 
                     // this will be useful to display download percentage
@@ -162,6 +230,24 @@ public class NetworkUtils {
             return null;
         }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            downloadListener = null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+            // if we get here, length is known, now set indeterminate to false
+            // mProgressDialog.setProgress(progress[0]);
+            downloadListener.onUpdate(progress[0]);
+        }
+
         public void addListener(DownloadListener listener) {
             downloadListener = listener;
 
@@ -171,99 +257,10 @@ public class NetworkUtils {
         public void __stop() {
             wl.release();
         }
-    }
 
-    public static boolean isNetworkAvailable(Context con) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        return (activeNetworkInfo != null && activeNetworkInfo.isConnected());
-    }
-
-    // Get broadcast Address
-    public static InetAddress getBroadcastAddress(Context c) throws UnknownHostException {
-        WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        DhcpInfo dhcp = wifi.getDhcpInfo();
-
-        if (dhcp == null) {
-            return InetAddress.getByAddress(null);
+        public interface DownloadListener {
+            void onUpdate(int progress);
         }
-
-        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
-
-        byte[] quads = new byte[4];
-        for (int k = 0; k < 4; k++) {
-            quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-        }
-
-        return InetAddress.getByAddress(quads);
-    }
-
-    public static boolean isTetheringEnabled(Context c) {
-        boolean isWifiAPenabled = false;
-
-        WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
-        for (Method method : wmMethods) {
-            if (method.getName().equals("isWifiApEnabled")) {
-
-                try {
-                    isWifiAPenabled = (boolean) method.invoke(wifi);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-        return isWifiAPenabled;
-    }
-
-
-    // Get the local IP address
-    public static ReturnObject getLocalIpAddress(Context c) {
-        ReturnObject networkInfo = new ReturnObject();
-        networkInfo.put("ip", "127.0.0.1");
-        networkInfo.put("type", "local");
-
-        if (NetworkUtils.isTetheringEnabled(c)) {
-            networkInfo.put("type", "tethering");
-            networkInfo.put("ip", "192.168.43.1");
-        }
-
-        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        if (ipAddress != 0) {
-
-            // Convert little-endian to big-endianif needed
-            if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
-                ipAddress = Integer.reverseBytes(ipAddress);
-            }
-
-            byte[] ipByteArray = BigInteger.valueOf(ipAddress).toByteArray();
-
-
-            try {
-                networkInfo.put("type", "wifi");
-                networkInfo.put("ip", InetAddress.getByAddress(ipByteArray).getHostAddress());
-            } catch (UnknownHostException ex) {
-                Log.e("WIFIIP", "Unable to get host address.");
-            }
-        }
-
-        return networkInfo;
-
-    }
-
-    public static WifiInfo getWifiInfo(Context c) {
-        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-        return wifiManager.getConnectionInfo();
     }
 
 }

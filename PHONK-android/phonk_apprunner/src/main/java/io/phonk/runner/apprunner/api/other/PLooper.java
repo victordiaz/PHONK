@@ -33,19 +33,13 @@ import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
 public class PLooper implements WhatIsRunningInterface {
-    private final AppRunner mAppRunner;
-    private LooperCB mCallbackfn;
     final Runnable task;
-    private final Handler handler;
     final ArrayList<Runnable> rl = new ArrayList<>();
-
+    private final AppRunner mAppRunner;
+    private final Handler handler;
     public int speed;
     boolean isLooping = false;
-
-    // --------- Looper ---------//
-    public interface LooperCB {
-        void event();
-    }
+    private LooperCB mCallbackfn;
 
     public PLooper(AppRunner appRunner, final int speed, final LooperCB callbackkfn) {
         mAppRunner = appRunner;
@@ -91,6 +85,14 @@ public class PLooper implements WhatIsRunningInterface {
         return this;
     }
 
+    @PhonkMethod(description = "Stop the looper", example = "")
+    public PLooper stop() {
+        this.isLooping = false;
+        handler.removeCallbacks(task);
+
+        return this;
+    }
+
     /*
     @ProtoMethod(description = "Pause the looper", example = "")
     @ProtoMethodParam(params = {"boolean"})
@@ -104,14 +106,6 @@ public class PLooper implements WhatIsRunningInterface {
         return this;
     }
      */
-
-    @PhonkMethod(description = "Stop the looper", example = "")
-    public PLooper stop() {
-        this.isLooping = false;
-        handler.removeCallbacks(task);
-
-        return this;
-    }
 
     @PhonkMethod(description = "Start the looper", example = "")
     public PLooper start() {
@@ -129,6 +123,11 @@ public class PLooper implements WhatIsRunningInterface {
 
     public void __stop() {
         stop();
+    }
+
+    // --------- Looper ---------//
+    public interface LooperCB {
+        void event();
     }
 
 }

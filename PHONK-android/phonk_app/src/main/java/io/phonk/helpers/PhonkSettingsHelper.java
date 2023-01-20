@@ -42,21 +42,19 @@ public class PhonkSettingsHelper {
 
     public static void showRestartMessage(final Context mContext, View view) {
 
-        Snackbar.make(view, "Close the app to see the changes", Snackbar.LENGTH_LONG)
-                .setAction("RESTART", view1 -> {
+        Snackbar.make(view, "Close the app to see the changes", Snackbar.LENGTH_LONG).setAction("RESTART", view1 -> {
 
-                    Intent mStartActivity = new Intent(mContext, MainActivity.class);
-                    int mPendingIntentId = 123456;
-                    PendingIntent mPendingIntent = PendingIntent.getActivity(mContext, mPendingIntentId, mStartActivity,
-                            PendingIntent.FLAG_CANCEL_CURRENT);
-                    AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-                    mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 250, mPendingIntent);
-                    System.exit(0);
-                }).show();
-    }
-
-    public interface InstallListener {
-        void onReady();
+            Intent mStartActivity = new Intent(mContext, MainActivity.class);
+            int mPendingIntentId = 123456;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(mContext,
+                    mPendingIntentId,
+                    mStartActivity,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+            );
+            AlarmManager mgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 250, mPendingIntent);
+            System.exit(0);
+        }).show();
     }
 
     public static void installExamples(final Context c, final InstallListener l) {
@@ -71,6 +69,10 @@ public class PhonkSettingsHelper {
 
             l.onReady();
         }).start();
+    }
+
+    public interface InstallListener {
+        void onReady();
     }
 
 }

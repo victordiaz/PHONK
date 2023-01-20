@@ -58,18 +58,14 @@ import io.phonk.runner.base.views.FitRecyclerView;
 @SuppressLint("NewApi")
 public class ProjectListFragment extends BaseFragment {
 
+    final boolean mListMode = true;
     private final String TAG = ProjectListFragment.class.getSimpleName();
-
-    private FitRecyclerView mGrid;
-    private ConstraintLayout mEmptyGrid;
-
     public ArrayList<Project> mListProjects = null;
     public ProjectItemAdapter mProjectAdapter;
-
     public String mProjectFolder;
-    final boolean mListMode = true;
     public boolean mOrderByName = true;
-
+    private FitRecyclerView mGrid;
+    private ConstraintLayout mEmptyGrid;
     private TextView mTxtParentFolder;
     private TextView mTxtProjectFolder;
 
@@ -77,17 +73,6 @@ public class ProjectListFragment extends BaseFragment {
 
     private ProjectSelectedListener mListener;
     private BackClickedListener mClickBackListener;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mProjectFolder = getArguments().getString("folderName", "");
-        mOrderByName = getArguments().getBoolean("orderByName");
-
-        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode, getArguments().getInt("mode"));
-        mProjectAdapter.setListener(mListener);
-    }
 
     public static ProjectListFragment newInstance(String folderName, int mode, boolean orderByName) {
         ProjectListFragment myFragment = new ProjectListFragment();
@@ -101,16 +86,20 @@ public class ProjectListFragment extends BaseFragment {
         return myFragment;
     }
 
-    public interface BackClickedListener {
-        void onBackSelected();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mProjectFolder = getArguments().getString("folderName", "");
+        mOrderByName = getArguments().getBoolean("orderByName");
+
+        mProjectAdapter = new ProjectItemAdapter(getActivity(), mListMode, getArguments().getInt("mode"));
+        mProjectAdapter.setListener(mListener);
     }
 
-    public interface ProjectSelectedListener {
-        void onProjectSelected(Project p);
-
-        void onMultipleProjectsSelected(HashMap<Project, Boolean> projects);
-
-        void onActionClicked(String action);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     public void setBackClickListener(BackClickedListener listener) {
@@ -153,11 +142,6 @@ public class ProjectListFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
@@ -169,38 +153,8 @@ public class ProjectListFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private void checkEmptyState() {
-        //check if a has been loaded
-        if (mListProjects == null) {
-            showProjectList(false);
-            return;
-        }
-
-        //if empty we show, hey! there is no projects!
-        showProjectList(!mListProjects.isEmpty());
-    }
-
-    private void showProjectList(boolean b) {
-        if (b) {
-            mGrid.setVisibility(View.VISIBLE);
-            mEmptyGrid.setVisibility(View.GONE);
-        } else {
-            mGrid.setVisibility(View.GONE);
-            mEmptyGrid.setVisibility(View.VISIBLE);
-        }
-    }
-
     public void goTo(int pos) {
         if (pos != -1) mGrid.smoothScrollToPosition(pos);
-    }
-
-    public void clear() {
-        if (mListProjects != null) mListProjects.clear();
-        mProjectAdapter.notifyDataSetChanged();
-    }
-
-    public void notifyAddedProject() {
-        checkEmptyState();
     }
 
     public void loadFolder(String folder, String project) {
@@ -227,18 +181,35 @@ public class ProjectListFragment extends BaseFragment {
         MLog.d(TAG, "loading " + mProjectFolder);
     }
 
-    public View getItemView(String projectName) {
-        return mGrid.findViewWithTag(projectName);
+    public void clear() {
+        if (mListProjects != null) mListProjects.clear();
+        mProjectAdapter.notifyDataSetChanged();
     }
 
-    /*
-     * UI fancyness
-     */
-    public void projectRefresh(String projectName) {
-        getItemView(projectName).animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
+    public void notifyAddedProject() {
+        checkEmptyState();
     }
 
-    //TODO reenable this
+    private void checkEmptyState() {
+        //check if a has been loaded
+        if (mListProjects == null) {
+            showProjectList(false);
+            return;
+        }
+
+        //if empty we show, hey! there is no projects!
+        showProjectList(!mListProjects.isEmpty());
+    }
+
+    private void showProjectList(boolean b) {
+        if (b) {
+            mGrid.setVisibility(View.VISIBLE);
+            mEmptyGrid.setVisibility(View.GONE);
+        } else {
+            mGrid.setVisibility(View.GONE);
+            mEmptyGrid.setVisibility(View.VISIBLE);
+        }
+    }
 
     public View highlight(String projectName, boolean b) {
         View v = mGrid.findViewWithTag(projectName);
@@ -249,10 +220,6 @@ public class ProjectListFragment extends BaseFragment {
 
         return v;
     }
-
-    /*
-     * Events
-     */
 
     //run project
     @Subscribe
@@ -277,5 +244,34 @@ public class ProjectListFragment extends BaseFragment {
                 break;
         }
 
+    }
+
+    /*
+     * UI fancyness
+     */
+    public void projectRefresh(String projectName) {
+        getItemView(projectName).animate().alpha(0).setDuration(500).setInterpolator(new CycleInterpolator(1));
+    }
+
+    public View getItemView(String projectName) {
+        return mGrid.findViewWithTag(projectName);
+    }
+
+    //TODO reenable this
+
+    public interface BackClickedListener {
+        void onBackSelected();
+    }
+
+    /*
+     * Events
+     */
+
+    public interface ProjectSelectedListener {
+        void onProjectSelected(Project p);
+
+        void onMultipleProjectsSelected(HashMap<Project, Boolean> projects);
+
+        void onActionClicked(String action);
     }
 }

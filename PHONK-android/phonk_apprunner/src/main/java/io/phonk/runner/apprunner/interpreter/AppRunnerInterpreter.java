@@ -38,14 +38,12 @@ import io.phonk.runner.base.utils.MLog;
 
 public class AppRunnerInterpreter {
 
-    private static final String TAG = AppRunnerInterpreter.class.getSimpleName();
-
     //result after line execution
     public static final int RESULT_OK = 1;
     public static final int RESULT_ERROR = 2;
     public static final int RESULT_PERMISSION_ERROR = 3;
     public static final int RESULT_NOT_CAPABLE = 4;
-
+    private static final String TAG = AppRunnerInterpreter.class.getSimpleName();
     //rhino stuff
     private static ScriptContextFactory mScriptContextFactory;
     final AppRunner mAppRunner;
@@ -84,6 +82,11 @@ public class AppRunnerInterpreter {
         rhino.getWrapFactory().setJavaPrimitiveWrap(false);
     }
 
+    // we will use this method for live coding
+    public void eval(String jscode) {
+        eval(jscode, "liveCoding");
+    }
+
     // we will use this method for normal script execution
     public void eval(String jscode, String origin) {
         try {
@@ -97,37 +100,6 @@ public class AppRunnerInterpreter {
         } catch (Exception e) {
             processResult(RESULT_ERROR, e.getMessage());
         }
-    }
-
-    // we will use this method for live coding
-    public void eval(String jscode) {
-        eval(jscode, "liveCoding");
-    }
-
-    public void addJavaObjectToJs(String name, Object obj) {
-        ScriptableObject.putProperty(scope, name, Context.javaToJS(obj, scope));
-    }
-
-    public Object getJsFunction(String name) {
-        return scope.get(name, scope);
-    }
-
-    public void callJsFunction(String name, Object... params) {
-        Object obj = getJsFunction(name);
-        if (obj instanceof Function) {
-            Function function = (Function) obj;
-            // NativeObject result = (NativeObject)
-            function.call(rhino, scope, scope, params);
-            processResult(RESULT_OK, "");
-        }
-    }
-
-    public Object getObject(String name) {
-        Object obj = scope.get(name, scope);
-        if (obj == Scriptable.NOT_FOUND) {
-            return null;
-        }
-        return obj;
     }
 
     public void processResult(int resultType, String message) {
@@ -144,6 +116,32 @@ public class AppRunnerInterpreter {
         }
     }
 
+    public void addJavaObjectToJs(String name, Object obj) {
+        ScriptableObject.putProperty(scope, name, Context.javaToJS(obj, scope));
+    }
+
+    public void callJsFunction(String name, Object... params) {
+        Object obj = getJsFunction(name);
+        if (obj instanceof Function) {
+            Function function = (Function) obj;
+            // NativeObject result = (NativeObject)
+            function.call(rhino, scope, scope, params);
+            processResult(RESULT_OK, "");
+        }
+    }
+
+    public Object getJsFunction(String name) {
+        return scope.get(name, scope);
+    }
+
+    public Object getObject(String name) {
+        Object obj = scope.get(name, scope);
+        if (obj == Scriptable.NOT_FOUND) {
+            return null;
+        }
+        return obj;
+    }
+
     /*
      * Native arrays
      */
@@ -153,13 +151,6 @@ public class AppRunnerInterpreter {
 
     public Scriptable newNativeArrayFrom(Object[] obj) {
         return rhino.newArray(scope, obj);
-    }
-
-    /*
-     *   Errors and misc
-     */
-    public interface InterpreterInfo {
-        void onError(int resultType, Object message);
     }
 
     public void addListener(InterpreterInfo listener) {
@@ -173,6 +164,13 @@ public class AppRunnerInterpreter {
 
     public void stop() {
         Context.exit();
+    }
+
+    /*
+     *   Errors and misc
+     */
+    public interface InterpreterInfo {
+        void onError(int resultType, Object message);
     }
 
     public static class ScriptContextFactory extends ContextFactory {
@@ -193,10 +191,6 @@ public class AppRunnerInterpreter {
             }
 
             return super.hasFeature(cx, featureIndex);
-        }
-
-        public void setInterpreter(AppRunnerInterpreter appRunnerInterpreter) {
-            mAppRunnerInterpretter = appRunnerInterpreter;
         }
 
         @Override
@@ -230,6 +224,10 @@ public class AppRunnerInterpreter {
             } finally {
                 MLog.e("finally", "bye bye");
             }
+        }
+
+        public void setInterpreter(AppRunnerInterpreter appRunnerInterpreter) {
+            mAppRunnerInterpretter = appRunnerInterpreter;
         }
     }
 

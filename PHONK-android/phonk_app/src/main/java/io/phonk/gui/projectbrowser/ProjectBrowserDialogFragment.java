@@ -90,7 +90,10 @@ public class ProjectBrowserDialogFragment extends DialogFragment {
 
         if (savedInstanceState == null) {
             FolderListFragment folderListFragment = FolderListFragment.newInstance(PhonkSettings.EXAMPLES_FOLDER, true);
-            getChildFragmentManager().beginTransaction().add(R.id.project_browser_dialog_fragment_content, projectBrowserFragment).commit();
+            getChildFragmentManager().beginTransaction().add(
+                    R.id.project_browser_dialog_fragment_content,
+                    projectBrowserFragment
+            ).commit();
         }
         return rootView;
     }

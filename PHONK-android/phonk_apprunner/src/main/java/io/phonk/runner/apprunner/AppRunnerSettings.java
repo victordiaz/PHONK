@@ -48,18 +48,18 @@ public class AppRunnerSettings {
 
     public String id;
 
+    public static String getFolderPath(String folder) {
+        return getBaseDir() + folder + File.separator;
+    }
+
     public static String getBaseDir() {
         try {
-            return Environment.getExternalStorageDirectory().getCanonicalPath()
-                    + File.separator + PHONK_FOLDER + File.separator;
+            return Environment.getExternalStorageDirectory()
+                    .getCanonicalPath() + File.separator + PHONK_FOLDER + File.separator;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static String getFolderPath(String folder) {
-        return getBaseDir() + folder + File.separator;
     }
 
     public static String getBaseLibrariesDir() {

@@ -72,29 +72,15 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkObject
 public class PDevice extends ProtoBase {
 
+    public String deviceId;
     private BroadcastReceiver batteryReceiver;
     private BroadcastReceiver notificationReceiver;
     private BroadcastReceiver smsReceiver;
-
     private ReturnInterface mOnKeyDownfn;
     private ReturnInterface mOnKeyUpfn;
     private ReturnInterface mOnKeyEventfn;
-
     private boolean isKeyPressInit = false;
 
-    public String deviceId;
-
-
-    /**
-     * Interface for key up / down
-     */
-    public interface onKeyListener {
-        void onKeyDown(KeyEvent event);
-
-        void onKeyUp(KeyEvent event);
-
-        void onKeyEvent(KeyEvent event);
-    }
 
     public PDevice(AppRunner appRunner) {
         super(appRunner);
@@ -105,10 +91,21 @@ public class PDevice extends ProtoBase {
         super.initForParentFragment(fragment);
     }
 
+    @Override
+    public void __stop() {
+        if (batteryReceiver != null) getContext().unregisterReceiver(batteryReceiver);
+        if (notificationReceiver != null) getContext().unregisterReceiver(notificationReceiver);
+        if (smsReceiver != null) getContext().unregisterReceiver(smsReceiver);
+
+        batteryReceiver = null;
+        notificationReceiver = null;
+        smsReceiver = null;
+    }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void getInputDevices() {
-        InputManager inputManager = (InputManager) getAppRunner().getAppContext().getSystemService(Context.INPUT_SERVICE);
+        InputManager inputManager = (InputManager) getAppRunner().getAppContext()
+                .getSystemService(Context.INPUT_SERVICE);
         int[] devicesId = inputManager.getInputDeviceIds();
 
         MLog.d(TAG, "" + devicesId.length);
@@ -156,6 +153,39 @@ public class PDevice extends ProtoBase {
 
     }
 
+    /**
+     * Tells which software / hardware / gamepad button is pressed
+     *
+     * @param fn
+     * @status TOREVIEW
+     */
+    @PhonkMethod
+    public void onKeyDown(ReturnInterface fn) {
+        keyInit();
+        mOnKeyDownfn = fn;
+    }
+
+    private void keyInit() {
+        if (isKeyPressInit) return;
+        isKeyPressInit = true;
+
+        (getActivity()).addOnKeyListener(new onKeyListener() {
+            @Override
+            public void onKeyDown(KeyEvent event) {
+                if (mOnKeyDownfn != null) mOnKeyDownfn.event(keyEventToJs(event));
+            }
+
+            @Override
+            public void onKeyUp(KeyEvent event) {
+                if (mOnKeyUpfn != null) mOnKeyUpfn.event(keyEventToJs(event));
+            }
+
+            @Override
+            public void onKeyEvent(KeyEvent event) {
+                if (mOnKeyEventfn != null) mOnKeyEventfn.event(keyEventToJs(event));
+            }
+        });
+    }
 
     private ReturnObject keyEventToJs(KeyEvent event) {
         ReturnObject o = new ReturnObject();
@@ -187,40 +217,6 @@ public class PDevice extends ProtoBase {
         o.put("number", event.getNumber());
 
         return o;
-    }
-
-    private void keyInit() {
-        if (isKeyPressInit) return;
-        isKeyPressInit = true;
-
-        (getActivity()).addOnKeyListener(new onKeyListener() {
-            @Override
-            public void onKeyUp(KeyEvent event) {
-                if (mOnKeyUpfn != null) mOnKeyUpfn.event(keyEventToJs(event));
-            }
-
-            @Override
-            public void onKeyDown(KeyEvent event) {
-                if (mOnKeyDownfn != null) mOnKeyDownfn.event(keyEventToJs(event));
-            }
-
-            @Override
-            public void onKeyEvent(KeyEvent event) {
-                if (mOnKeyEventfn != null) mOnKeyEventfn.event(keyEventToJs(event));
-            }
-        });
-    }
-
-    /**
-     * Tells which software / hardware / gamepad button is pressed
-     *
-     * @param fn
-     * @status TOREVIEW
-     */
-    @PhonkMethod
-    public void onKeyDown(ReturnInterface fn) {
-        keyInit();
-        mOnKeyDownfn = fn;
     }
 
     /**
@@ -586,13 +582,13 @@ public class PDevice extends ProtoBase {
     @PhonkMethod
     public void battery(final ReturnInterface callback) {
         batteryReceiver = new BroadcastReceiver() {
+            private final boolean alreadyKilled = false;
             float scale = -1;
             float level = -1;
             float voltage = -1;
             float temp = -1;
             boolean isConnected = false;
             private int status;
-            private final boolean alreadyKilled = false;
 
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -692,7 +688,8 @@ public class PDevice extends ProtoBase {
         ret.put("androidId", Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID));
 
         // imei
-        // deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        // deviceInfo.imei = ((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE))
+        // .getDeviceId();
         ret.put("manufacturer", Build.MANUFACTURER);
         ret.put("model", Build.MODEL);
         ret.put("display", Build.DISPLAY);
@@ -715,7 +712,10 @@ public class PDevice extends ProtoBase {
         ret.put("fingerPrint", Build.FINGERPRINT);
         ret.put("host", Build.HOST);
         ret.put("id", Build.ID);
-        ret.put("keyboardPresent", getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
+        ret.put(
+                "keyboardPresent",
+                getContext().getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS
+        );
 
         ret.put("totalMem", Runtime.getRuntime().totalMemory());
         ret.put("usedMem", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
@@ -746,21 +746,6 @@ public class PDevice extends ProtoBase {
 
     public boolean areNotificationsEnabled() {
         return NotificationManagerCompat.from(getContext()).areNotificationsEnabled();
-    }
-
-    private void showNotificationsManager() {
-        if (AndroidUtils.isVersionMarshmallow()) {
-            getActivity().startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-        } else {
-            getActivity().startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-        }
-    }
-
-    private boolean isNotificationServiceRunning() {
-        ContentResolver contentResolver = getContext().getContentResolver();
-        String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
-        String packageName = getContext().getPackageName();
-        return enabledNotificationListeners != null && enabledNotificationListeners.contains(packageName);
     }
 
     /**
@@ -794,6 +779,23 @@ public class PDevice extends ProtoBase {
         getContext().registerReceiver(notificationReceiver, intentFilter);
     }
 
+    private boolean isNotificationServiceRunning() {
+        ContentResolver contentResolver = getContext().getContentResolver();
+        String enabledNotificationListeners = Settings.Secure.getString(
+                contentResolver,
+                "enabled_notification_listeners"
+        );
+        String packageName = getContext().getPackageName();
+        return enabledNotificationListeners != null && enabledNotificationListeners.contains(packageName);
+    }
+
+    private void showNotificationsManager() {
+        if (AndroidUtils.isVersionMarshmallow()) {
+            getActivity().startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+        } else {
+            getActivity().startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        }
+    }
 
     /**
      * Loads the list of installed applications in mApplications.
@@ -822,8 +824,10 @@ public class PDevice extends ProtoBase {
                 application.title = info.loadLabel(pm);
                 application.packageName = info.activityInfo.packageName;
                 application.setActivity(new ComponentName(info.activityInfo.applicationInfo.packageName,
-                                info.activityInfo.name),
-                        Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                                info.activityInfo.name
+                        ),
+                        Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                );
                 application.iconDrawable = info.activityInfo.loadIcon(pm);
                 application.permission = info.activityInfo.permission;
 
@@ -882,15 +886,15 @@ public class PDevice extends ProtoBase {
     }
 */
 
-    @Override
-    public void __stop() {
-        if (batteryReceiver != null) getContext().unregisterReceiver(batteryReceiver);
-        if (notificationReceiver != null) getContext().unregisterReceiver(notificationReceiver);
-        if (smsReceiver != null) getContext().unregisterReceiver(smsReceiver);
+    /**
+     * Interface for key up / down
+     */
+    public interface onKeyListener {
+        void onKeyDown(KeyEvent event);
 
-        batteryReceiver = null;
-        notificationReceiver = null;
-        smsReceiver = null;
+        void onKeyUp(KeyEvent event);
+
+        void onKeyEvent(KeyEvent event);
     }
 
 }

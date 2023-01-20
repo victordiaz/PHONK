@@ -52,18 +52,20 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
+    public static final int REQUEST_ENABLE_BT = 2;
     protected static final UUID UUID_SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     protected BluetoothAdapter mAdapter;
     private boolean mBtStarted = false;
-    public static final int REQUEST_ENABLE_BT = 2;
-
-    // interface to get info from the activity when requesting to enable the bluetooth adapter
-    public interface onBluetoothListener {
-        void onActivityResult(int requestCode, int resultCode, Intent data);
-    }
 
     public PBluetooth(AppRunner appRunner) {
         super(appRunner);
+    }
+
+    @PhonkMethod(description = "")
+    @PhonkMethodParam(params = {""})
+    public PBluetoothClient createClient() {
+        start();
+        return new PBluetoothClient(this, getAppRunner());
     }
 
     @PhonkMethod(description = "Start the bluetooth adapter", example = "")
@@ -105,7 +107,11 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
                             MLog.d(TAG, "enabling BT");
                             mBtStarted = true;
                         } else {
-                            Toast.makeText(getActivity().getApplicationContext(), "BT not enabled :(", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                    getActivity().getApplicationContext(),
+                                    "BT not enabled :(",
+                                    Toast.LENGTH_SHORT
+                            ).show();
                         }
                     }
                 }
@@ -117,13 +123,6 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
         getAppRunner().whatIsRunning.add(this);
 
         return this;
-    }
-
-    @PhonkMethod(description = "")
-    @PhonkMethodParam(params = {""})
-    public PBluetoothClient createClient() {
-        start();
-        return new PBluetoothClient(this, getAppRunner());
     }
 
     @PhonkMethod(description = "")
@@ -212,6 +211,11 @@ public class PBluetooth extends ProtoBase implements WhatIsRunningInterface {
 
     protected BluetoothAdapter getAdapter() {
         return mAdapter;
+    }
+
+    // interface to get info from the activity when requesting to enable the bluetooth adapter
+    public interface onBluetoothListener {
+        void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
 

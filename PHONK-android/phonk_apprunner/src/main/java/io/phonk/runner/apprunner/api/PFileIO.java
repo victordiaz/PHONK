@@ -75,12 +75,6 @@ public class PFileIO extends ProtoBase {
         return file.mkdirs();
     }
 
-    @PhonkMethod(description = "Delete a filename", example = "")
-    @PhonkMethodParam(params = {"fileName"})
-    public void delete(String name) {
-        FileIO.deleteFileDir(getAppRunner().getProject().getFullPathForFile(name));
-    }
-
     public void deleteAsync(final String name, final ReturnInterface callback) {
         Thread t = new Thread(() -> {
             delete(name);
@@ -89,6 +83,16 @@ public class PFileIO extends ProtoBase {
             returnValues(ret, callback);
         });
         t.start();
+    }
+
+    @PhonkMethod(description = "Delete a filename", example = "")
+    @PhonkMethodParam(params = {"fileName"})
+    public void delete(String name) {
+        FileIO.deleteFileDir(getAppRunner().getProject().getFullPathForFile(name));
+    }
+
+    private void returnValues(final ReturnObject ret, final ReturnInterface callback) {
+        mHandler.post(() -> callback.event(ret));
     }
 
     @PhonkMethod(description = "Get 1 is is a file, 2 if is a directory and -1 if the file doesnt exists", example = "")
@@ -105,6 +109,16 @@ public class PFileIO extends ProtoBase {
         return ret;
     }
 
+    public void moveAsync(final String name, final String to, final ReturnInterface callback) {
+        Thread t = new Thread(() -> {
+            move(name, to);
+            ReturnObject ret = new ReturnObject();
+            ret.put("file", name);
+            returnValues(ret, callback);
+        });
+        t.start();
+    }
+
     @PhonkMethod(description = "Move a file to a directory", example = "")
     @PhonkMethodParam(params = {"name", "destination"})
     public void move(String name, String to) {
@@ -117,16 +131,6 @@ public class PFileIO extends ProtoBase {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void moveAsync(final String name, final String to, final ReturnInterface callback) {
-        Thread t = new Thread(() -> {
-            move(name, to);
-            ReturnObject ret = new ReturnObject();
-            ret.put("file", name);
-            returnValues(ret, callback);
-        });
-        t.start();
     }
 
     @PhonkMethod(description = "Copy a file or directory", example = "")
@@ -157,12 +161,6 @@ public class PFileIO extends ProtoBase {
         origin.renameTo(new File(path + File.separator + newName));
     }
 
-    @PhonkMethod(description = "Save an array with text into a file", example = "")
-    @PhonkMethodParam(params = {"fileName", "lines[]"})
-    public void saveTextToFile(String lines, String fileName) {
-        FileIO.saveStringToFile(lines, getAppRunner().getProject().getFullPathForFile(fileName));
-    }
-
     public void saveTextToFileAsync(final String lines, final String fileName, final ReturnInterface callback) {
         Thread t = new Thread(() -> {
             saveTextToFile(lines, fileName);
@@ -173,10 +171,10 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
-    @PhonkMethod(description = "Append an array of text into a file", example = "")
+    @PhonkMethod(description = "Save an array with text into a file", example = "")
     @PhonkMethodParam(params = {"fileName", "lines[]"})
-    public void appendTextToFile(String line, String fileName) {
-        FileIO.appendString(getAppRunner().getProject().getFullPathForFile(fileName), line);
+    public void saveTextToFile(String lines, String fileName) {
+        FileIO.saveStringToFile(lines, getAppRunner().getProject().getFullPathForFile(fileName));
     }
 
     @PhonkMethod(description = "Append an array of text into a file", example = "")
@@ -188,10 +186,10 @@ public class PFileIO extends ProtoBase {
         });
     }
 
-    @PhonkMethod(description = "Load the Strings of a text file into an array", example = "")
-    @PhonkMethodParam(params = {"fileName"})
-    public String loadTextFromFile(String fileName) {
-        return FileIO.loadStringFromFile(getAppRunner().getProject().getFullPathForFile(fileName));
+    @PhonkMethod(description = "Append an array of text into a file", example = "")
+    @PhonkMethodParam(params = {"fileName", "lines[]"})
+    public void appendTextToFile(String line, String fileName) {
+        FileIO.appendString(getAppRunner().getProject().getFullPathForFile(fileName), line);
     }
 
     public void loadTextFromFileAsync(final String fileName, final ReturnInterface callback) {
@@ -205,15 +203,16 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
+    @PhonkMethod(description = "Load the Strings of a text file into an array", example = "")
+    @PhonkMethodParam(params = {"fileName"})
+    public String loadTextFromFile(String fileName) {
+        return FileIO.loadStringFromFile(getAppRunner().getProject().getFullPathForFile(fileName));
+    }
+
     @PhonkMethod(description = "Loads a font", example = "")
     @PhonkMethodParam(params = {"fontFile"})
     public Typeface loadFont(String fontName) {
         return Typeface.createFromFile(getAppRunner().getProject().getFullPathForFile(fontName));
-    }
-
-    @PhonkMethod(description = "Loads a bitmap", example = "")
-    public Bitmap loadImage(String path) {
-        return Image.loadBitmap(getAppRunner().getProject().getFullPathForFile(path));
     }
 
     public void loadImageAsync(final String path, final ReturnInterface callback) {
@@ -222,6 +221,11 @@ public class PFileIO extends ProtoBase {
             returnValues(null, callback);
         });
         t.start();
+    }
+
+    @PhonkMethod(description = "Loads a bitmap", example = "")
+    public Bitmap loadImage(String path) {
+        return Image.loadBitmap(getAppRunner().getProject().getFullPathForFile(path));
     }
 
     @PhonkMethod(description = "List all the files in the directory", example = "")
@@ -254,13 +258,15 @@ public class PFileIO extends ProtoBase {
         return new PSqLite(getAppRunner(), db);
     }
 
-
     @PhonkMethod(description = "Zip a file/folder into a zip", example = "")
     @PhonkMethodParam(params = {"folder", "filename"})
     public void zip(final String fOrigin, final String fDestiny, final ReturnInterface callback) {
         Thread t = new Thread(() -> {
             try {
-                FileIO.zipFolder(getAppRunner().getProject().getFullPathForFile(fOrigin), getAppRunner().getProject().getFullPathForFile(fDestiny));
+                FileIO.zipFolder(
+                        getAppRunner().getProject().getFullPathForFile(fOrigin),
+                        getAppRunner().getProject().getFullPathForFile(fDestiny)
+                );
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -275,7 +281,10 @@ public class PFileIO extends ProtoBase {
     public void unzip(final String src, final String dst, final ReturnInterface callback) {
         Thread t = new Thread(() -> {
             try {
-                FileIO.unZipFile(getAppRunner().getProject().getFullPathForFile(src), getAppRunner().getProject().getFullPathForFile(dst));
+                FileIO.unZipFile(
+                        getAppRunner().getProject().getFullPathForFile(src),
+                        getAppRunner().getProject().getFullPathForFile(dst)
+                );
                 returnValues(null, callback);
             } catch (ZipException e) {
                 e.printStackTrace();
@@ -284,12 +293,46 @@ public class PFileIO extends ProtoBase {
         t.start();
     }
 
+    public void saveImage(Bitmap finalBitmap, String fileName, String type, int quality) {
+        String filePath = getAppRunner().getProject().getFullPathForFile(fileName);
+
+        Bitmap.CompressFormat formatType;
+        if (type.equals("jpg")) formatType = Bitmap.CompressFormat.JPEG;
+        else formatType = Bitmap.CompressFormat.PNG;
+
+        File file = new File(filePath);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(formatType, quality, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PhonkMethod(description = "Observer file changes in a folder", example = "")
+    @PhonkMethodParam(params = {"path", "function(action, file"})
+    public PFileObserver createFileObserver(String path) {
+
+        return new PFileObserver(getAppRunner(), path);
+    }
+
+    @Override
+    public void __stop() {
+
+    }
+
     class PFileObserver implements WhatIsRunningInterface {
         private ReturnInterface callback;
         private FileObserver fileObserver;
 
         PFileObserver(AppRunner appRunner, String path) {
-            fileObserver = new FileObserver(appRunner.getProject().getFullPathForFile(path), FileObserver.CREATE | FileObserver.MODIFY | FileObserver.DELETE) {
+            fileObserver = new FileObserver(
+                    appRunner.getProject().getFullPathForFile(path),
+                    FileObserver.CREATE | FileObserver.MODIFY | FileObserver.DELETE
+            ) {
 
                 @Override
                 public void onEvent(int event, String file) {
@@ -331,41 +374,6 @@ public class PFileIO extends ProtoBase {
                 fileObserver = null;
             }
         }
-    }
-
-    public void saveImage(Bitmap finalBitmap, String fileName, String type, int quality) {
-        String filePath = getAppRunner().getProject().getFullPathForFile(fileName);
-
-        Bitmap.CompressFormat formatType;
-        if (type.equals("jpg")) formatType = Bitmap.CompressFormat.JPEG;
-        else formatType = Bitmap.CompressFormat.PNG;
-
-        File file = new File(filePath);
-        if (file.exists()) file.delete();
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(formatType, quality, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @PhonkMethod(description = "Observer file changes in a folder", example = "")
-    @PhonkMethodParam(params = {"path", "function(action, file"})
-    public PFileObserver createFileObserver(String path) {
-
-        return new PFileObserver(getAppRunner(), path);
-    }
-
-    private void returnValues(final ReturnObject ret, final ReturnInterface callback) {
-        mHandler.post(() -> callback.event(ret));
-    }
-
-    @Override
-    public void __stop() {
-
     }
 
 }

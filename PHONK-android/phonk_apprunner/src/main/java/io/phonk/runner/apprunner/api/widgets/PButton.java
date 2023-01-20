@@ -40,7 +40,8 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface, PTextInterface {
+public class PButton extends androidx.appcompat.widget.AppCompatButton implements PViewMethodsInterface,
+        PTextInterface {
     private static final String TAG = PButton.class.getSimpleName();
 
     // this is a props proxy for the user
@@ -160,18 +161,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     @Override
-    public View textStyle(int style) {
-        this.setTypeface(mFont, style);
-        return this;
-    }
-
-    @Override
-    public View textAlign(int alignment) {
-        this.setGravity(alignment);
-        return this;
-    }
-
-    @Override
     public View textSize(int size) {
         this.textSize(size);
         return this;
@@ -190,6 +179,27 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     @PhonkMethodParam(params = {"colorHex"})
     public PButton textColor(int c) {
         this.setTextColor(c);
+        return this;
+    }
+
+    @Override
+    @PhonkMethod(description = "Changes the text size", example = "")
+    @PhonkMethodParam(params = {"size"})
+    public View textSize(float size) {
+        this.setTextSize(size);
+
+        return this;
+    }
+
+    @Override
+    public View textStyle(int style) {
+        this.setTypeface(mFont, style);
+        return this;
+    }
+
+    @Override
+    public View textAlign(int alignment) {
+        this.setGravity(alignment);
         return this;
     }
 
@@ -217,15 +227,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
-    @Override
-    @PhonkMethod(description = "Changes the text size", example = "")
-    @PhonkMethodParam(params = {"size"})
-    public View textSize(float size) {
-        this.setTextSize(size);
-
-        return this;
-    }
-
     @PhonkMethod(description = "Button position", example = "")
     @PhonkMethodParam(params = {"x", "y"})
     public PButton pos(int x, int y) {
@@ -240,18 +241,11 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         styler.setLayoutProps(x, y, w, h);
     }
 
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
     public PAnimation anim() {
         return new PAnimation(this);
+    }    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
 
     class ButtonStyler extends Styler {
@@ -265,5 +259,12 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
             text(mProps.get("text").toString());
         }
+    }    @Override
+    public Map getProps() {
+        return props;
     }
+
+
+
+
 }

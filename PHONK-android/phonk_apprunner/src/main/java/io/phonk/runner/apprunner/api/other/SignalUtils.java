@@ -56,6 +56,11 @@ public class SignalUtils extends ProtoBase {
         return re;
     }
 
+    @Override
+    public void __stop() {
+
+    }
+
     static class LowPass {
         final int n;
         final float[] vals;
@@ -80,11 +85,6 @@ public class SignalUtils extends ProtoBase {
             }
             return sum / n;
         }
-
-    }
-
-    @Override
-    public void __stop() {
 
     }
 }

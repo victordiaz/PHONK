@@ -40,10 +40,8 @@ import io.phonk.runner.apprunner.AppRunner;
 @PhonkClass
 public class PImage extends androidx.appcompat.widget.AppCompatImageView implements PViewMethodsInterface {
     private static final String TAG = PImage.class.getSimpleName();
-
-    protected final AppRunner mAppRunner;
-
     public final StylePropertiesProxy props = new StylePropertiesProxy();
+    protected final AppRunner mAppRunner;
     protected final ImageStyler styler;
 
     public PImage(AppRunner appRunner, Map initProps) {
@@ -72,7 +70,8 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
             Picasso.with(mAppRunner.getAppContext()).load(imagePath).resize(width, height).centerCrop().into(this);
         } else {
             imagePath = mAppRunner.getProject().getFullPathForFile(imagePath);
-            Picasso.with(mAppRunner.getAppContext()).load(new File(imagePath)).resize(width, height).centerCrop().into(this);
+            Picasso.with(mAppRunner.getAppContext()).load(new File(imagePath)).resize(width, height).centerCrop().into(
+                    this);
         }
 
         return this;
@@ -128,16 +127,6 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         styler.setLayoutProps(x, y, w, h);
     }
 
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
     class ImageStyler extends Styler {
         private String srcMode;
 
@@ -152,5 +141,15 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
             srcMode = mProps.get("srcMode").toString();
             mode(srcMode);
         }
+    }    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+
+
 }

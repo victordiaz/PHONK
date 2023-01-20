@@ -53,32 +53,6 @@ public class PBluetoothLE extends ProtoBase {
 
     private BluetoothAdapter mBleAdapter;
     private ReturnInterface mCallbackScan;
-
-    public PBluetoothLE(AppRunner appRunner) {
-        super(appRunner);
-        mAppRunner = appRunner;
-
-        mContext = appRunner.getAppContext();
-    }
-
-    public PBluetoothLE start() {
-        if (!getAppRunner().getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, "Bluetooth Low Energy");
-            return null;
-        }
-
-        mBleAdapter = ((BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-        mAppRunner.whatIsRunning.add(this);
-        mHandler = new Handler(Looper.getMainLooper());
-
-        return this;
-    }
-
-
-    /*
-     * Search devices
-     */
-
     // Callback that control the Functionality of scan devices.
     private final BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -100,17 +74,37 @@ public class PBluetoothLE extends ProtoBase {
         }
     };
 
+    public PBluetoothLE(AppRunner appRunner) {
+        super(appRunner);
+        mAppRunner = appRunner;
+
+        mContext = appRunner.getAppContext();
+    }
+
+
+    /*
+     * Search devices
+     */
+
+    public PBluetoothLE start() {
+        if (!getAppRunner().getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            getAppRunner().pConsole.p_error(AppRunnerInterpreter.RESULT_NOT_CAPABLE, "Bluetooth Low Energy");
+            return null;
+        }
+
+        mBleAdapter = ((BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        mAppRunner.whatIsRunning.add(this);
+        mHandler = new Handler(Looper.getMainLooper());
+
+        return this;
+    }
+
     // Scan Bluetooth Devices for the especific miliseconds
     public PBluetoothLE scan(final ReturnInterface callbackfn) {
         MLog.d(TAG, "Scanning Devices");
         mBleAdapter.startLeScan(this.mScanCallback);
         this.mCallbackScan = callbackfn;
 
-        return this;
-    }
-
-    public PBluetoothLE stopScan() {
-        if (mBleAdapter != null) mBleAdapter.stopLeScan(mScanCallback);
         return this;
     }
 
@@ -121,6 +115,11 @@ public class PBluetoothLE extends ProtoBase {
     @Override
     public void __stop() {
         this.stopScan();
+    }
+
+    public PBluetoothLE stopScan() {
+        if (mBleAdapter != null) mBleAdapter.stopLeScan(mScanCallback);
+        return this;
     }
 
 }

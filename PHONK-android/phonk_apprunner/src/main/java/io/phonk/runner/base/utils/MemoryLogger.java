@@ -35,8 +35,10 @@ public class MemoryLogger {
     }
 
     public static void showMemoryStats(String message) {
-        Log.i("memory", message
-                + "----------------------------------------------------------------------------------------");
+        Log.i(
+                "memory",
+                message + "----------------------------------------------------------------------------------------"
+        );
         double nativeUsage = Debug.getNativeHeapAllocatedSize();
         Log.i("memory", "nativeUsage: " + (nativeUsage / 1048576d));
         // current heap size
@@ -59,7 +61,9 @@ public class MemoryLogger {
 
         lastavail = memoryAvailable;
 
-        Log.i("memory",
-                "-----------------------------------------------------------------------------------------------");
+        Log.i(
+                "memory",
+                "-----------------------------------------------------------------------------------------------"
+        );
     }
 }

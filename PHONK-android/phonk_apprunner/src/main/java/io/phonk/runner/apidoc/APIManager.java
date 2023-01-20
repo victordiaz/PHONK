@@ -44,22 +44,20 @@ import io.phonk.runner.base.utils.MLog;
 
 public class APIManager {
 
+    private static final String TAG = "APIManager";
+    private static APIManager instance;
+    private static int methodCount = 0;
+    HashMap<String, API> apis = new HashMap<>();
+    APIManagerDoc doc = new APIManagerDoc();
+    public APIManager() {
+
+    }
+
     public static APIManager getInstance() {
         if (instance == null) {
             instance = new APIManager();
         }
         return instance;
-    }
-
-    private static final String TAG = "APIManager";
-    private static APIManager instance;
-    private static int methodCount = 0;
-
-    HashMap<String, API> apis = new HashMap<>();
-    APIManagerDoc doc = new APIManagerDoc();
-
-    public APIManager() {
-
     }
 
     /**
@@ -113,7 +111,9 @@ public class APIManager {
                         }
 
                         // get parameters names
-                        if (annotation2.annotationType().getSimpleName().equals(PhonkMethodParam.class.getSimpleName())) {
+                        if (annotation2.annotationType()
+                                .getSimpleName()
+                                .equals(PhonkMethodParam.class.getSimpleName())) {
                             apiMethod.parametersName = ((PhonkMethodParam) annotation2).params();
                             MLog.d(TAG, "getting names " + apiMethod.parametersName);
                         }
@@ -156,8 +156,10 @@ public class APIManager {
 
                 for (Annotation annotation2 : annotations) {
 
-                    MLog.d(TAG, annotation2.toString() + " " + annotation2.annotationType().getSimpleName() + " "
-                            + PhonkMethod.class.getSimpleName());
+                    MLog.d(TAG,
+                            annotation2.toString() + " " + annotation2.annotationType()
+                                    .getSimpleName() + " " + PhonkMethod.class.getSimpleName()
+                    );
 
                     if (annotation2.annotationType().getSimpleName().equals(PhonkMethod.class.getSimpleName())) {
                         String desc = ((PhonkMethod) annotation2).description();

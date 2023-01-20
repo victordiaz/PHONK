@@ -42,8 +42,7 @@ public class PDashboardWebview extends PDashboardWidget {
     @PhonkMethodParam(params = {"text"})
     public void setUrl(String text) throws UnknownHostException, JSONException {
 
-        JSONObject values = new JSONObject()
-                .put("url", text);
+        JSONObject values = new JSONObject().put("url", text);
 
         sendToDashboard("setUrl", values);
     }
@@ -52,8 +51,7 @@ public class PDashboardWebview extends PDashboardWidget {
     @PhonkMethodParam(params = {"text"})
     public void setHTML(String text) throws UnknownHostException, JSONException {
 
-        JSONObject values = new JSONObject()
-                .put("html", text);
+        JSONObject values = new JSONObject().put("html", text);
 
         sendToDashboard("setHTML", values);
     }

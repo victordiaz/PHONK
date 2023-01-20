@@ -66,9 +66,9 @@ import io.phonk.runner.apprunner.api.network.PBluetooth;
 import io.phonk.runner.apprunner.api.network.PBluetoothLE;
 import io.phonk.runner.apprunner.api.network.PFtpClient;
 import io.phonk.runner.apprunner.api.network.PFtpServer;
+import io.phonk.runner.apprunner.api.network.PHttpServer;
 import io.phonk.runner.apprunner.api.network.PMqtt;
 import io.phonk.runner.apprunner.api.network.PNfc;
-import io.phonk.runner.apprunner.api.network.PHttpServer;
 import io.phonk.runner.apprunner.api.network.PWebSocketClient;
 import io.phonk.runner.apprunner.api.network.PWebSocketServer;
 import io.phonk.runner.apprunner.interpreter.AppRunnerInterpreter;
@@ -96,7 +96,8 @@ public class PNetwork extends ProtoBase {
     public PBluetoothLE bluetoothLE;
     public ServiceDiscovery mDNS = null;
     public PNfc nfc = null;
-
+    WifiManager.MulticastLock wifiLock;
+    BroadcastReceiver wifiReceiver;
     private PWebSocketServer PWebsockerServer;
 
     public PNetwork(AppRunner appRunner) {
@@ -118,10 +119,19 @@ public class PNetwork extends ProtoBase {
         }
     }
 
+    @Override
+    public void __stop() {
+        if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
+    }
+
     @PhonkMethod(description = "Downloads a file from a given Uri. Returns the progress", example = "")
     @PhonkMethodParam(params = {"url", "fileName", "function(progress)"})
     public void download(String url, String fileName, final ReturnInterface callbackfn) {
-        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(getAppRunner().getAppContext(), url, getAppRunner().getProject().getFullPathForFile(fileName));
+        NetworkUtils.DownloadTask downloadTask = new NetworkUtils.DownloadTask(
+                getAppRunner().getAppContext(),
+                url,
+                getAppRunner().getProject().getFullPathForFile(fileName)
+        );
         downloadTask.addListener(progress -> {
             ReturnObject ret = new ReturnObject();
             ret.put("progress", progress);
@@ -182,7 +192,8 @@ public class PNetwork extends ProtoBase {
     @PhonkMethod(description = "Check if internet connection is available", example = "")
     @PhonkMethodParam(params = {""})
     public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -221,8 +232,6 @@ public class PNetwork extends ProtoBase {
         return client;
     }
 
-    WifiManager.MulticastLock wifiLock;
-
     @PhonkMethod(description = "Enable multicast networking", example = "")
     @PhonkMethodParam(params = {"boolean"})
     public void multicast(boolean b) {
@@ -259,13 +268,322 @@ public class PNetwork extends ProtoBase {
         return httpRequest;
     }
 
+    @PhonkMethod
+    public PHttpServer createHttpServer(int port) {
+        return this.createHttpServer(null, port);
+    }
+
+    @PhonkMethod(description = "Simple http server, serving the content of the project folder", example = "")
+    @PhonkMethodParam(params = {"port", "function(responseString)"})
+    public PHttpServer createHttpServer(String ip, int port) {
+        PHttpServer httpServer = null;
+        try {
+            httpServer = new PHttpServer(getAppRunner(), ip, port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return httpServer;
+    }
+
+    @PhonkMethod
+    public void ssh(final String serverAddress, final int port, final String username, final String password) {
+        MLog.d(TAG, "trying to connect");
+
+        new Thread(() -> {
+            com.jcraft.jsch.Session session = null;
+            try {
+                JSch jsch = new JSch();
+                String result = "";
+
+                session = jsch.getSession(username, serverAddress, port);
+                session.setPassword(password);
+
+                // Avoid asking for key confirmation
+                Properties prop = new Properties();
+                prop.put("StrictHostKeyChecking", "no");
+                session.setConfig(prop);
+                session.connect();
+
+                // SSH Channel
+                ChannelExec channel = (ChannelExec) session.openChannel("exec");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                channel.setOutputStream(stream);
+
+                // Execute command
+                channel.setCommand("ls -ltr");
+                channel.connect(1000);
+                Thread.sleep(500);   // this kludge seemed to be required.
+                channel.disconnect();
+
+                result = stream.toString();
+                MLog.d(TAG, "result: " + result);
+
+            } catch (JSchException ex) {
+                String s = ex.toString();
+                System.out.println(s);
+            } catch (InterruptedException ex) {
+                String s = ex.toString();
+                System.out.println(s);
+            } finally {
+                MLog.d(TAG, "disconnected");
+                if (session != null) session.disconnect();
+            }
+
+        }).start();
+    }
+
+    @PhonkMethod(description = "Enable/Disable the Wifi adapter", example = "")
+    @PhonkMethodParam(params = {"boolean"})
+    public void enableWifi(boolean enabled) {
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext()
+                .getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(enabled);
+    }
+
+    @PhonkMethod(description = "Check if the Wifi adapter is enabled", example = "")
+    @PhonkMethodParam(params = {})
+    public boolean isWifiEnabled() {
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext()
+                .getSystemService(Context.WIFI_SERVICE);
+        return wifiManager.isWifiEnabled();
+    }
+
+    // http://stackoverflow.com/questions/3213205/how-to-detect-system-information-like-os-or-device-type
+    @PhonkMethod(description = "Get the network type", example = "")
+    @PhonkMethodParam(params = {})
+    public String getNetworkType() {
+        String type = "none";
+        TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        switch (tm.getNetworkType()) {
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                type = "4G";
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                type = "3G";
+                break;
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                type = "GPRS";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                type = "2G";
+                break;
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                break;
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                break;
+            case TelephonyManager.NETWORK_TYPE_GSM:
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                break;
+            case TelephonyManager.NETWORK_TYPE_IWLAN:
+                break;
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                break;
+            case TelephonyManager.NETWORK_TYPE_NR:
+                break;
+            case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
+                break;
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                break;
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                break;
+        }
+
+        return type;
+    }
+
+    // http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
+    @PhonkMethod(description = "Connect to a given Wifi network with a given 'wpa', 'wep', 'open' type and mContext " +
+            "password", example = "")
+    @PhonkMethodParam(params = {"ssidName", "type", "password"})
+    public void connectWifi(String networkSSID, String type, String networkPass) {
+        WifiConfiguration conf = new WifiConfiguration();
+        conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
+        // should contain ssid in quotes
+
+        switch (type) {
+            case "wep":
+                // wep
+                conf.wepKeys[0] = "\"" + networkPass + "\"";
+                conf.wepTxKeyIndex = 0;
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                break;
+            case "wpa":
+                // wpa
+                conf.preSharedKey = "\"" + networkPass + "\"";
+                break;
+            case "open":
+                // open
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                break;
+        }
+
+        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext()
+                .getSystemService(Context.WIFI_SERVICE);
+        wifiManager.addNetwork(conf);
+
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for (WifiConfiguration i : list) {
+            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+                wifiManager.disconnect();
+                wifiManager.enableNetwork(i.networkId, true);
+                wifiManager.reconnect();
+
+                break;
+            }
+        }
+    }
+
+    @PhonkMethod(description = "Enable/Disable a Wifi access point", example = "")
+    @PhonkMethodParam(params = {"AP name, enabled"})
+    public void wifiAP(String wifiName, boolean enabled) {
+        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
+        Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
+        for (Method method : wmMethods) {
+            Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
+            if (method.getName().equals("setWifiApEnabled")) {
+                WifiConfiguration netConfig = new WifiConfiguration();
+                netConfig.SSID = wifiName;
+                netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+
+                //
+                try {
+                    //MLog.d(TAG, "enableMobileAP try: ");
+                    method.invoke(wifi, netConfig, enabled);
+                    if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
+                        Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
+                    }
+                } catch (Exception e) {
+                    //MLog.e(TAG, "enableMobileAP failed: ", e);
+                }
+            }
+        }
+    }
+
+    public void wifiScan(ReturnInterface callback) {
+        if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
+
+        WifiManager wifi = (WifiManager) getAppRunner().getAppContext()
+                .getApplicationContext()
+                .getSystemService(Context.WIFI_SERVICE);
+        wifiReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent intent) {
+                List<ScanResult> results = wifi.getScanResults();
+
+                final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
+                for (int i = 0; i < results.size(); i++) {
+
+                    ReturnObject result = new ReturnObject();
+
+                    result.put("SSID", results.get(i).SSID);
+                    result.put("BSSID", results.get(i).BSSID);
+                    result.put("frequency", results.get(i).frequency);
+                    result.put("level", results.get(i).level);
+                    result.put("capabilities", results.get(i).capabilities);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        result.put("centerFreq0", results.get(i).centerFreq0);
+                        result.put("centerFreq1", results.get(i).centerFreq1);
+                        result.put("channelWidth", results.get(i).channelWidth);
+                        result.put("timestamp", results.get(i).timestamp);
+                        result.put("venueName", results.get(i).venueName);
+                    }
+
+                    valuesArray.put(valuesArray.size(), valuesArray, result);
+                }
+                ReturnObject ret = new ReturnObject();
+                ret.put("networks", valuesArray);
+                callback.event(ret);
+
+                if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
+            }
+        };
+
+        wifi.startScan();
+        getAppRunner().getAppContext().registerReceiver(
+                wifiReceiver,
+                new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+        );
+    }
+
+    @PhonkMethod(description = "Ping mContext Ip address", example = "")
+    @PhonkMethodParam(params = {"ip", "function(time)"})
+    public void ping(final String where, final int num, final ReturnInterface callbackfn) {
+        mHandler.post(() -> {
+            final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
+            final Matcher[] m = {null};
+
+            new ExecuteCmd("/system/bin/ping -c " + num + " " + where, r -> {
+                //MLog.d(TAG, pattern.toString() + "" + buffer);
+
+                ReturnObject ret = new ReturnObject();
+                m[0] = pattern.matcher((CharSequence) r.get("value"));
+                if (m[0].find()) {
+                    ret.put("time", Float.parseFloat(m[0].group(1)));
+                } else {
+                    ret.put("time", -1);
+                }
+                callbackfn.event(ret);
+
+
+            }).start();
+        });
+    }
+
+    @PhonkMethod(description = "Start a ftp server in the given port", example = "")
+    @PhonkMethodParam(params = {"port", "function(activity)"})
+    public PFtpServer createFtpServer(final int port, PFtpServer.FtpServerCb callback) {
+        PFtpServer ftpServer = new PFtpServer(port, callback);
+        getAppRunner().whatIsRunning.add(ftpServer);
+
+        return ftpServer;
+    }
+
+    @PhonkMethod(description = "Connect to ftp", example = "")
+    @PhonkMethodParam(params = {})
+    public PFtpClient createFtpConnection() {
+
+        return new PFtpClient(getAppRunner());
+    }
+
+    @PhonkMethod(description = "Connect to a MQTT service", example = "")
+    @PhonkMethodParam(params = {})
+    public PMqtt createMQTTClient() {
+
+        return new PMqtt(getAppRunner());
+    }
+
+    // --------- RegisterServiceCB ---------//
+    public interface RegisterServiceCB {
+        void event();
+    }
+
     public class HTTPRequest {
         private final String method;
         private final String url;
-        private NativeObject headers;
         private final NativeArray data;
         private final NativeObject body;
-
+        private NativeObject headers;
         private ReturnInterface callbackfn;
 
         public HTTPRequest(NativeObject requestParams) {
@@ -290,8 +608,10 @@ public class PNetwork extends ProtoBase {
                     headers = new NativeObject();
                 }
 
-                if (body != null)
-                    requestBody = RequestBody.create(MediaType.parse((String) body.get("type")), (String) body.get("data"));
+                if (body != null) requestBody = RequestBody.create(
+                        MediaType.parse((String) body.get("type")),
+                        (String) body.get("data")
+                );
 
                 if (dataExists) {
                     MultipartBody.Builder formBody = new MultipartBody.Builder();
@@ -357,318 +677,6 @@ public class PNetwork extends ProtoBase {
         public void onResponse(ReturnInterface callbackfn) {
             this.callbackfn = callbackfn;
         }
-    }
-
-    @PhonkMethod(description = "Simple http server, serving the content of the project folder", example = "")
-    @PhonkMethodParam(params = {"port", "function(responseString)"})
-    public PHttpServer createHttpServer(String ip, int port) {
-        PHttpServer httpServer = null;
-        try {
-            httpServer = new PHttpServer(getAppRunner(), ip, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return httpServer;
-    }
-
-    @PhonkMethod
-    public PHttpServer createHttpServer(int port) {
-        return this.createHttpServer(null, port);
-    }
-
-    @PhonkMethod
-    public void ssh(final String serverAddress, final int port, final String username, final String password) {
-        MLog.d(TAG, "trying to connect");
-
-        new Thread(() -> {
-            com.jcraft.jsch.Session session = null;
-            try {
-                JSch jsch = new JSch();
-                String result = "";
-
-                session = jsch.getSession(username, serverAddress, port);
-                session.setPassword(password);
-
-                // Avoid asking for key confirmation
-                Properties prop = new Properties();
-                prop.put("StrictHostKeyChecking", "no");
-                session.setConfig(prop);
-                session.connect();
-
-                // SSH Channel
-                ChannelExec channel = (ChannelExec) session.openChannel("exec");
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                channel.setOutputStream(stream);
-
-                // Execute command
-                channel.setCommand("ls -ltr");
-                channel.connect(1000);
-                Thread.sleep(500);   // this kludge seemed to be required.
-                channel.disconnect();
-
-                result = stream.toString();
-                MLog.d(TAG, "result: " + result);
-
-            } catch (JSchException ex) {
-                String s = ex.toString();
-                System.out.println(s);
-            } catch (InterruptedException ex) {
-                String s = ex.toString();
-                System.out.println(s);
-            } finally {
-                MLog.d(TAG, "disconnected");
-                if (session != null) session.disconnect();
-            }
-
-        }).start();
-    }
-
-    @PhonkMethod(description = "Enable/Disable the Wifi adapter", example = "")
-    @PhonkMethodParam(params = {"boolean"})
-    public void enableWifi(boolean enabled) {
-        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifiManager.setWifiEnabled(enabled);
-    }
-
-
-    @PhonkMethod(description = "Check if the Wifi adapter is enabled", example = "")
-    @PhonkMethodParam(params = {})
-    public boolean isWifiEnabled() {
-        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        return wifiManager.isWifiEnabled();
-    }
-
-    // http://stackoverflow.com/questions/3213205/how-to-detect-system-information-like-os-or-device-type
-    @PhonkMethod(description = "Get the network type", example = "")
-    @PhonkMethodParam(params = {})
-    public String getNetworkType() {
-        String type = "none";
-        TelephonyManager tm = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-
-        switch (tm.getNetworkType()) {
-            case TelephonyManager.NETWORK_TYPE_HSPAP:
-                type = "4G";
-                break;
-            case TelephonyManager.NETWORK_TYPE_HSDPA:
-                type = "3G";
-                break;
-            case TelephonyManager.NETWORK_TYPE_GPRS:
-                type = "GPRS";
-                break;
-            case TelephonyManager.NETWORK_TYPE_EDGE:
-                type = "2G";
-                break;
-            case TelephonyManager.NETWORK_TYPE_1xRTT:
-                break;
-            case TelephonyManager.NETWORK_TYPE_CDMA:
-                break;
-            case TelephonyManager.NETWORK_TYPE_EHRPD:
-                break;
-            case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                break;
-            case TelephonyManager.NETWORK_TYPE_EVDO_A:
-                break;
-            case TelephonyManager.NETWORK_TYPE_EVDO_B:
-                break;
-            case TelephonyManager.NETWORK_TYPE_GSM:
-                break;
-            case TelephonyManager.NETWORK_TYPE_HSPA:
-                break;
-            case TelephonyManager.NETWORK_TYPE_HSUPA:
-                break;
-            case TelephonyManager.NETWORK_TYPE_IDEN:
-                break;
-            case TelephonyManager.NETWORK_TYPE_IWLAN:
-                break;
-            case TelephonyManager.NETWORK_TYPE_LTE:
-                break;
-            case TelephonyManager.NETWORK_TYPE_NR:
-                break;
-            case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
-                break;
-            case TelephonyManager.NETWORK_TYPE_UMTS:
-                break;
-            case TelephonyManager.NETWORK_TYPE_UNKNOWN:
-                break;
-        }
-
-        return type;
-    }
-
-    // http://stackoverflow.com/questions/8818290/how-to-connect-to-a-specific-wifi-network-in-android-programmatically
-    @PhonkMethod(description = "Connect to a given Wifi network with a given 'wpa', 'wep', 'open' type and mContext password", example = "")
-    @PhonkMethodParam(params = {"ssidName", "type", "password"})
-    public void connectWifi(String networkSSID, String type, String networkPass) {
-        WifiConfiguration conf = new WifiConfiguration();
-        conf.SSID = "\"" + networkSSID + "\""; // Please note the quotes. String
-        // should contain ssid in quotes
-
-        switch (type) {
-            case "wep":
-                // wep
-                conf.wepKeys[0] = "\"" + networkPass + "\"";
-                conf.wepTxKeyIndex = 0;
-                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-                conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-                break;
-            case "wpa":
-                // wpa
-                conf.preSharedKey = "\"" + networkPass + "\"";
-                break;
-            case "open":
-                // open
-                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-                break;
-        }
-
-        WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifiManager.addNetwork(conf);
-
-        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-        for (WifiConfiguration i : list) {
-            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-                wifiManager.disconnect();
-                wifiManager.enableNetwork(i.networkId, true);
-                wifiManager.reconnect();
-
-                break;
-            }
-        }
-    }
-
-    @PhonkMethod(description = "Enable/Disable a Wifi access point", example = "")
-    @PhonkMethodParam(params = {"AP name, enabled"})
-    public void wifiAP(String wifiName, boolean enabled) {
-        WifiManager wifi = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
-        Log.d(TAG, "enableMobileAP methods " + wmMethods.length);
-        for (Method method : wmMethods) {
-            Log.d(TAG, "enableMobileAP method.getName() " + method.getName());
-            if (method.getName().equals("setWifiApEnabled")) {
-                WifiConfiguration netConfig = new WifiConfiguration();
-                netConfig.SSID = wifiName;
-                netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-                netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-                netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
-                //
-                try {
-                    //MLog.d(TAG, "enableMobileAP try: ");
-                    method.invoke(wifi, netConfig, enabled);
-                    if (netConfig.wepKeys != null && netConfig.wepKeys.length >= 1) {
-                        Log.d(TAG, "enableMobileAP key : " + netConfig.wepKeys[0]);
-                    }
-                } catch (Exception e) {
-                    //MLog.e(TAG, "enableMobileAP failed: ", e);
-                }
-            }
-        }
-    }
-
-    BroadcastReceiver wifiReceiver;
-
-    public void wifiScan(ReturnInterface callback) {
-        if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
-
-        WifiManager wifi = (WifiManager) getAppRunner().getAppContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifiReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context c, Intent intent) {
-                List<ScanResult> results = wifi.getScanResults();
-
-                final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
-                for (int i = 0; i < results.size(); i++) {
-
-                    ReturnObject result = new ReturnObject();
-
-                    result.put("SSID", results.get(i).SSID);
-                    result.put("BSSID", results.get(i).BSSID);
-                    result.put("frequency", results.get(i).frequency);
-                    result.put("level", results.get(i).level);
-                    result.put("capabilities", results.get(i).capabilities);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        result.put("centerFreq0", results.get(i).centerFreq0);
-                        result.put("centerFreq1", results.get(i).centerFreq1);
-                        result.put("channelWidth", results.get(i).channelWidth);
-                        result.put("timestamp", results.get(i).timestamp);
-                        result.put("venueName", results.get(i).venueName);
-                    }
-
-                    valuesArray.put(valuesArray.size(), valuesArray, result);
-                }
-                ReturnObject ret = new ReturnObject();
-                ret.put("networks", valuesArray);
-                callback.event(ret);
-
-                if (wifiReceiver != null)
-                    getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
-            }
-        };
-
-        wifi.startScan();
-        getAppRunner().getAppContext().registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-    }
-
-    // --------- RegisterServiceCB ---------//
-    public interface RegisterServiceCB {
-        void event();
-    }
-
-    @PhonkMethod(description = "Ping mContext Ip address", example = "")
-    @PhonkMethodParam(params = {"ip", "function(time)"})
-    public void ping(final String where, final int num, final ReturnInterface callbackfn) {
-        mHandler.post(() -> {
-            final Pattern pattern = Pattern.compile("time=(\\d.+)\\s*ms");
-            final Matcher[] m = {null};
-
-            new ExecuteCmd("/system/bin/ping -c " + num + " " + where, r -> {
-                //MLog.d(TAG, pattern.toString() + "" + buffer);
-
-                ReturnObject ret = new ReturnObject();
-                m[0] = pattern.matcher((CharSequence) r.get("value"));
-                if (m[0].find()) {
-                    ret.put("time", Float.parseFloat(m[0].group(1)));
-                } else {
-                    ret.put("time", -1);
-                }
-                callbackfn.event(ret);
-
-
-            }).start();
-        });
-    }
-
-
-    @PhonkMethod(description = "Start a ftp server in the given port", example = "")
-    @PhonkMethodParam(params = {"port", "function(activity)"})
-    public PFtpServer createFtpServer(final int port, PFtpServer.FtpServerCb callback) {
-        PFtpServer ftpServer = new PFtpServer(port, callback);
-        getAppRunner().whatIsRunning.add(ftpServer);
-
-        return ftpServer;
-    }
-
-
-    @PhonkMethod(description = "Connect to ftp", example = "")
-    @PhonkMethodParam(params = {})
-    public PFtpClient createFtpConnection() {
-
-        return new PFtpClient(getAppRunner());
-    }
-
-    @PhonkMethod(description = "Connect to a MQTT service", example = "")
-    @PhonkMethodParam(params = {})
-    public PMqtt createMQTTClient() {
-
-        return new PMqtt(getAppRunner());
-    }
-
-    @Override
-    public void __stop() {
-        if (wifiReceiver != null) getAppRunner().getAppContext().unregisterReceiver(wifiReceiver);
     }
 
 }

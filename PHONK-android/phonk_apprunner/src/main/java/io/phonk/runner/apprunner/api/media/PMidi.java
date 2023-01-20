@@ -39,34 +39,9 @@ import jp.kshoji.driver.midi.util.UsbMidiDriver;
 @PhonkClass
 public class PMidi extends ProtoBase {
     private static final String TAG = PMidi.class.getSimpleName();
-
+    private final UsbMidiDriver usbMidiDriver;
     private ReturnInterface mConnectionCallback;
     private ReturnInterface mMidiEvent;
-
-    private void callbackData(final String deviceAddress, final int cable, final int channel, final int function, final int value) {
-        MLog.d(TAG, "new val + " + cable + " " + channel + " " + function + " " + value);
-        mHandler.post(() -> {
-            ReturnObject o = new ReturnObject();
-            o.put("midiAddress", deviceAddress);
-            o.put("cable", cable);
-            o.put("channel", channel);
-            o.put("function", function);
-            o.put("value", value);
-            if (mMidiEvent != null) mMidiEvent.event(o);
-        });
-    }
-
-    private void callbackConnection(final String type, final String attached, final Object midiDevice) {
-        mHandler.post(() -> {
-            ReturnObject o = new ReturnObject();
-            o.put("type", type);
-            o.put("status", attached);
-            o.put("device", midiDevice);
-            if (mConnectionCallback != null) mConnectionCallback.event(o);
-        });
-    }
-
-    private final UsbMidiDriver usbMidiDriver;
 
     public PMidi(AppRunner appRunner) {
         super(appRunner);
@@ -74,7 +49,13 @@ public class PMidi extends ProtoBase {
         usbMidiDriver = new UsbMidiDriver(appRunner.getAppContext()) {
 
             @Override
-            public void onMidiMiscellaneousFunctionCodes(@NonNull MidiInputDevice midiInputDevice, int i, int i1, int i2, int i3) {
+            public void onMidiMiscellaneousFunctionCodes(
+                    @NonNull MidiInputDevice midiInputDevice,
+                    int i,
+                    int i1,
+                    int i2,
+                    int i3
+            ) {
 
             }
 
@@ -104,22 +85,44 @@ public class PMidi extends ProtoBase {
             }
 
             @Override
-            public void onMidiPolyphonicAftertouch(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int note, int pressure) {
+            public void onMidiPolyphonicAftertouch(
+                    @NonNull MidiInputDevice midiInputDevice,
+                    int cable,
+                    int channel,
+                    int note,
+                    int pressure
+            ) {
                 callbackData(midiInputDevice.getDeviceAddress(), cable, channel, note, pressure);
             }
 
             @Override
-            public void onMidiControlChange(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int function, int value) {
+            public void onMidiControlChange(
+                    @NonNull MidiInputDevice midiInputDevice,
+                    int cable,
+                    int channel,
+                    int function,
+                    int value
+            ) {
                 callbackData(midiInputDevice.getDeviceAddress(), cable, channel, function, value);
             }
 
             @Override
-            public void onMidiProgramChange(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int program) {
+            public void onMidiProgramChange(
+                    @NonNull MidiInputDevice midiInputDevice,
+                    int cable,
+                    int channel,
+                    int program
+            ) {
                 callbackData(midiInputDevice.getDeviceAddress(), cable, channel, channel, program);
             }
 
             @Override
-            public void onMidiChannelAftertouch(@NonNull MidiInputDevice midiInputDevice, int cable, int channel, int pressure) {
+            public void onMidiChannelAftertouch(
+                    @NonNull MidiInputDevice midiInputDevice,
+                    int cable,
+                    int channel,
+                    int pressure
+            ) {
                 callbackData(midiInputDevice.getDeviceAddress(), cable, channel, channel, pressure);
             }
 
@@ -205,7 +208,8 @@ public class PMidi extends ProtoBase {
 
             @Override
             public void onMidiOutputDeviceDetached(@NonNull MidiOutputDevice midiOutputDevice) {
-                // Toast.makeText(getContext(), "USB MIDI Output Device deatached" + midiOutputDevice.getUsbDevice().getDeviceName(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(getContext(), "USB MIDI Output Device deatached" + midiOutputDevice.getUsbDevice()
+                // .getDeviceName(), Toast.LENGTH_LONG).show();
                 callbackConnection("output", "detached", midiOutputDevice);
             }
 
@@ -221,13 +225,43 @@ public class PMidi extends ProtoBase {
 
             @Override
             public void onMidiOutputDeviceAttached(MidiOutputDevice midiOutputDevice) {
-                // Toast.makeText(getContext(), "USB MIDI Output Device " + midiOutputDevice.getUsbDevice().getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getContext(), "USB MIDI Output Device " + midiOutputDevice.getUsbDevice()
+                // .getDeviceName() + " has been attached.", Toast.LENGTH_LONG).show();
 
                 callbackConnection("output", "attached", midiOutputDevice);
             }
         };
 
         usbMidiDriver.open();
+    }
+
+    private void callbackData(
+            final String deviceAddress,
+            final int cable,
+            final int channel,
+            final int function,
+            final int value
+    ) {
+        MLog.d(TAG, "new val + " + cable + " " + channel + " " + function + " " + value);
+        mHandler.post(() -> {
+            ReturnObject o = new ReturnObject();
+            o.put("midiAddress", deviceAddress);
+            o.put("cable", cable);
+            o.put("channel", channel);
+            o.put("function", function);
+            o.put("value", value);
+            if (mMidiEvent != null) mMidiEvent.event(o);
+        });
+    }
+
+    private void callbackConnection(final String type, final String attached, final Object midiDevice) {
+        mHandler.post(() -> {
+            ReturnObject o = new ReturnObject();
+            o.put("type", type);
+            o.put("status", attached);
+            o.put("device", midiDevice);
+            if (mConnectionCallback != null) mConnectionCallback.event(o);
+        });
     }
 
     public PMidi onDeviceEvent(ReturnInterface callback) {

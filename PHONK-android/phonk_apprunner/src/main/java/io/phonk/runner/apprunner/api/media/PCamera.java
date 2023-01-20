@@ -37,17 +37,14 @@ import io.phonk.runner.base.gui.CameraTexture;
 
 @PhonkClass
 public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*/ PCameraInterface {
-    private final PCamera cam;
     protected final AppRunner mAppRunner;
-
-    private LearnImages learnImages = null;
-    private DetectImage detectImage = null;
-
+    private final PCamera cam;
     // this is a props proxy for the user
     public StylePropertiesProxy props = new StylePropertiesProxy();
-
     // the props are transformed / accessed using the styler object
     public Styler styler;
+    private LearnImages learnImages = null;
+    private DetectImage detectImage = null;
 
     public PCamera(AppRunner appRunner, String camera) {
         super(appRunner, camera, "color");
@@ -58,6 +55,15 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
             setFocusMode("auto");
             // setAspectRatio(1, 1);
         });
+    }
+
+    public void setFocusMode(String mode) {
+        if (mode.equals("auto")) {
+            mParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        } else {
+            mParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
+        }
+        applyParameters();
     }
 
     @PhonkMethod
@@ -74,11 +80,47 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
         return this;
     }
 
-
     @PhonkMethod(description = "Takes a picture and saves it to fileName", example = "camera.takePicture();")
     // @APIRequires()
     public void takePicture() {
         takePic();
+    }
+
+    @PhonkMethodParam(params = {"width", "height"})
+    @PhonkMethod(description = "Set the camera preview resolution", example = "")
+    public void previewSize(int w, int h) {
+        super.setPreviewSize(w, h);
+    }
+
+    @PhonkMethodParam(params = {"width", "height"})
+    @PhonkMethod(description = "Set the camera picture resolution", example = "")
+    public void pictureResolution(int w, int h) {
+        super.setPictureSize(w, h);
+    }
+
+    @PhonkMethodParam(params = {"{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', " +
+            "'blackboard'}"})
+    @PhonkMethod(description = "Set the camera picture effect if supported", example = "")
+    public void colorEffect(String effect) {
+        super.setColorEffect(effect);
+    }
+
+    @PhonkMethodParam(params = {"function(data)"})
+    @PhonkMethod(description = "Gets data frames in yuv format (bytes)", example = "")
+    public void onNewFrame(CallbackData callbackfn) {
+        cam.addCallbackData(callbackfn);
+    }
+
+    @PhonkMethodParam(params = {"function(bitmap)"})
+    @PhonkMethod(description = "Gets bitmap frames ready to use", example = "")
+    public void onNewFrameBitmap(final CameraTexture.CallbackBmp callbackfn) {
+        cam.addCallbackBmp(callbackfn);
+    }
+
+    @PhonkMethodParam(params = {"function(base64Image)"})
+    @PhonkMethod(description = "Get the frames ready to stream", example = "")
+    public void onNewFrameBase64(CameraTexture.CallbackStream callbackfn) {
+        cam.addCallbackStream(callbackfn);
     }
 
     public List<Camera.Size> getSizes() {
@@ -99,15 +141,6 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
 
     public List<String> getFocusModes() {
         return mParameters.getSupportedFocusModes();
-    }
-
-    public void setFocusMode(String mode) {
-        if (mode.equals("auto")) {
-            mParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        } else {
-            mParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
-        }
-        applyParameters();
     }
 
     @PhonkMethodParam(params = {"function(data)"})
@@ -143,42 +176,6 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
         return detectImage;
     }
 
-    @PhonkMethodParam(params = {"function(data)"})
-    @PhonkMethod(description = "Gets data frames in yuv format (bytes)", example = "")
-    public void onNewFrame(CallbackData callbackfn) {
-        cam.addCallbackData(callbackfn);
-    }
-
-    @PhonkMethodParam(params = {"function(bitmap)"})
-    @PhonkMethod(description = "Gets bitmap frames ready to use", example = "")
-    public void onNewFrameBitmap(final CameraTexture.CallbackBmp callbackfn) {
-        cam.addCallbackBmp(callbackfn);
-    }
-
-    @PhonkMethodParam(params = {"function(base64Image)"})
-    @PhonkMethod(description = "Get the frames ready to stream", example = "")
-    public void onNewFrameBase64(CameraTexture.CallbackStream callbackfn) {
-        cam.addCallbackStream(callbackfn);
-    }
-
-    @PhonkMethodParam(params = {"width", "height"})
-    @PhonkMethod(description = "Set the camera preview resolution", example = "")
-    public void previewSize(int w, int h) {
-        super.setPreviewSize(w, h);
-    }
-
-    @PhonkMethodParam(params = {"width", "height"})
-    @PhonkMethod(description = "Set the camera picture resolution", example = "")
-    public void pictureResolution(int w, int h) {
-        super.setPictureSize(w, h);
-    }
-
-    @PhonkMethodParam(params = {"{'none', 'mono', 'sepia', 'negative', 'solarize', 'posterize', 'whiteboard', 'blackboard'}"})
-    @PhonkMethod(description = "Set the camera picture effect if supported", example = "")
-    public void colorEffect(String effect) {
-        super.setColorEffect(effect);
-    }
-
     @PhonkMethod(description = "Records a video in fileName", example = "")
     @PhonkMethodParam(params = {"fileName"})
     public void recordVideo(String file) {
@@ -197,6 +194,12 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
         return super.isFlashAvailable();
     }
 
+    @PhonkMethod(description = "Focus with callback on finish", example = "")
+    @PhonkMethodParam(params = {""})
+    public void focus(ReturnInterface callback) {
+        super.focus(callback);
+    }
+
     @PhonkMethod(description = "Turns on/off the flash", example = "")
     @PhonkMethodParam(params = {""})
     public void flashLight(boolean b) {
@@ -207,12 +210,6 @@ public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*
     @PhonkMethodParam(params = {""})
     public void focus() {
         super.focus(null);
-    }
-
-    @PhonkMethod(description = "Focus with callback on finish", example = "")
-    @PhonkMethodParam(params = {""})
-    public void focus(ReturnInterface callback) {
-        super.focus(callback);
     }
 
 }

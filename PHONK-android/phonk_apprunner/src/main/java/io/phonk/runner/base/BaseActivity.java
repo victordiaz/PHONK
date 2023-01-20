@@ -54,39 +54,32 @@ import io.phonk.runner.base.utils.MLog;
 public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
-
-    protected Toolbar mToolbar;
     public boolean isToolbarAllowed = true;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    protected Toolbar mToolbar;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
+    // override volume buttons
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+        MLog.d(TAG, "" + keyCode);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        //TODO reenable this
+        //        if (AppRunnerSettings.OVERRIDE_VOLUME_BUTTONS
+        //                && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
+        //            return true;
+        //        }
+        //
+        //        if (keyCode == KeyEvent.KEYCODE_BACK && AppRunnerSettings.CLOSE_WITH_BACK) {
+        //            finish();
+        //            return true;
+        //        }
 
-        if (id == android.R.id.home) {
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
+        return super.onKeyDown(keyCode, event);
     }
 
     // Create the action bar programmatically
@@ -109,14 +102,8 @@ public class BaseActivity extends AppCompatActivity {
     public void setImmersive() {
         isToolbarAllowed = false;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        );
+        getWindow().getDecorView()
+                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     public int getStatusBarSize() {
@@ -141,7 +128,10 @@ public class BaseActivity extends AppCompatActivity {
         getSupportActionBar().show();
         isToolbarAllowed = true;
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN
+        );
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -163,7 +153,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-
     public void changeFragment(int id, Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -171,7 +160,6 @@ public class BaseActivity extends AppCompatActivity {
         fragmentTransaction.replace(id, fragment);
         fragmentTransaction.commit();
     }
-
 
     public void addFragment(Fragment f, int id, String tag) {
         FrameLayout fl = findViewById(id);
@@ -190,7 +178,6 @@ public class BaseActivity extends AppCompatActivity {
         }
         ft.commit();
     }
-
 
     public void addFragment(Fragment fragment, int fragmentPosition, boolean addToBackStack) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -232,6 +219,17 @@ public class BaseActivity extends AppCompatActivity {
         super.onAttachedToWindow();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Handle the results from the recognition activity.
      */
@@ -251,24 +249,19 @@ public class BaseActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // override volume buttons
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-        MLog.d(TAG, "" + keyCode);
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-        //TODO reenable this
-//        if (AppRunnerSettings.OVERRIDE_VOLUME_BUTTONS
-//                && (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-//            return true;
-//        }
-//
-//        if (keyCode == KeyEvent.KEYCODE_BACK && AppRunnerSettings.CLOSE_WITH_BACK) {
-//            finish();
-//            return true;
-//        }
-
-        return super.onKeyDown(keyCode, event);
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public void superMegaForceKill() {

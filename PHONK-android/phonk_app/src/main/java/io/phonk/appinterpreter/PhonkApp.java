@@ -25,10 +25,9 @@ import io.phonk.runner.apprunner.AppRunner;
 
 public class PhonkApp {
 
-    private final AppRunner mAppRunner;
-
     //public objects
     public final Network network;
+    private final AppRunner mAppRunner;
     // public UserSettings userSettings;
 
     public PhonkApp(AppRunnerCustom appRunner) {

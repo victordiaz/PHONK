@@ -27,7 +27,7 @@ import io.phonk.runner.base.utils.PhonkFonts;
  * Created by victornomad on 11/04/16.
  */
 public class EditorSettings {
-    public float fontSize;
     public final String font = PhonkFonts.CODE;
     public final boolean extraKeysBarEnabled = true;
+    public float fontSize;
 }

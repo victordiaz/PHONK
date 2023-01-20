@@ -84,18 +84,6 @@ public class PWebSocketClient extends ProtoBase {
                 }
 
                 @Override
-                public void onError(Exception arg0) {
-                    mHandler.post(() -> {
-                        ReturnObject o = new ReturnObject();
-                        o.put("status", "error");
-                        if (mCallbackError != null) mCallbackError.event(o);
-                        if (mCallbackStatus != null) mCallbackStatus.event(o);
-                    });
-
-                    //Log.d(TAG, "onError");
-                }
-
-                @Override
                 public void onClose(int arg0, String arg1, boolean arg2) {
 
                     mHandler.post(() -> {
@@ -107,6 +95,18 @@ public class PWebSocketClient extends ProtoBase {
 
                     //Log.d(TAG, "onClose");
 
+                }
+
+                @Override
+                public void onError(Exception arg0) {
+                    mHandler.post(() -> {
+                        ReturnObject o = new ReturnObject();
+                        o.put("status", "error");
+                        if (mCallbackError != null) mCallbackError.event(o);
+                        if (mCallbackStatus != null) mCallbackStatus.event(o);
+                    });
+
+                    //Log.d(TAG, "onError");
                 }
             };
             mWebSocketClient.connect();

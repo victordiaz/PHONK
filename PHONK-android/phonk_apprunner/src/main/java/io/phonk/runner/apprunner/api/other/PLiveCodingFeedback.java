@@ -52,25 +52,19 @@ public class PLiveCodingFeedback {
     private static final String TAG = PLiveCodingFeedback.class.getSimpleName();
 
     protected final Context mContext;
-
-    private LinearLayout liveRLayout;
+    final boolean hidingLiveText = true;
+    private final Handler h;
+    private final Runnable r;
+    private final Typeface fontCode;
+    public boolean enable = false;
     float liveTextY = 0;
-
+    private LinearLayout liveRLayout;
     private TextView liveText;
-
     private boolean show = true; //
     private int bgColor; // OK
     private String textColor = "#FFFFFFFF";
     private int textSize;
     private boolean autoHide = false; // OK
-    final boolean hidingLiveText = true;
-
-    private final Handler h;
-    private final Runnable r;
-
-    private final Typeface fontCode;
-
-    public boolean enable = false;
     private int paddingLeft = 5;
     private int paddingRight = 5;
     private int paddingTop = 5;
@@ -94,16 +88,16 @@ public class PLiveCodingFeedback {
             }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-
-            @Override
             public void onAnimationEnd(Animator animation) {
                 // liveRLayout.setVisibility(View.GONE);
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
             }
         });
 
@@ -236,7 +230,9 @@ public class PLiveCodingFeedback {
             // add text view
             liveText = new TextView(mContext);
             RelativeLayout.LayoutParams liveTextLayoutParams = new RelativeLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+            );
             liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             liveTextLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             liveText.setLayoutParams(liveTextLayoutParams);
@@ -260,7 +256,9 @@ public class PLiveCodingFeedback {
         // live execution layout
         liveRLayout = new LinearLayout(mContext);
         RelativeLayout.LayoutParams liveLayoutParams = new RelativeLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT);
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT
+        );
         liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         liveLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         liveRLayout.setLayoutParams(liveLayoutParams);

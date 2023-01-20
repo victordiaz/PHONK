@@ -33,14 +33,13 @@ import io.phonk.runner.apprunner.AppRunner;
 
 public abstract class ProtoBase {
 
-    protected final String TAG = getClass().getSimpleName();
-
-    private final AppRunner mAppRunner;
     public final Handler mHandler = new Handler(Looper.getMainLooper());
+    protected final String TAG = getClass().getSimpleName();
+    private final AppRunner mAppRunner;
     private final Context mContext;
+    protected AppRunnerActivity mActivity;
     private AppRunnerFragment mFragment;
     private AppRunnerService mService;
-    protected AppRunnerActivity mActivity;
 
     public ProtoBase(AppRunner appRunner) {
         super();

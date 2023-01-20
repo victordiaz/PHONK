@@ -45,96 +45,20 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final KnobStyler styler;
-
+    private final Typeface textStyle = Typeface.DEFAULT;
+    private final boolean autoTextSize = false;
+    private final DecimalFormat df;
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
-
-    private final Typeface textStyle = Typeface.DEFAULT;
     private Typeface textFont;
-
     private ArrayList touches;
     private float firstY;
     private float prevVal = 0;
     private float val = 0;
-    private final boolean autoTextSize = false;
     private int mWidth;
     private int mHeight;
     private float mappedVal;
     private float unmappedVal;
-    private float rangeFrom = 0;
-    private float rangeTo = 360;
-
-    private final DecimalFormat df;
-
-    public PKnob(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
-
-        draw = mydraw;
-
-        styler = new KnobStyler(appRunner, this, props);
-        props.eventOnChange = false;
-        props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
-        props.put("knobProgressWidth", props, appRunner.pUtil.dpToPixels(2));
-        props.put("knobProgressSeparation", props, appRunner.pUtil.dpToPixels(15));
-        props.put("knobBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
-
-        props.put("knobProgressColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("background", props, "#00FFFFFF");
-        props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
-        props.put("textFont", props, "monospace");
-        props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
-        Styler.fromTo(initProps, props);
-        props.eventOnChange = true;
-        styler.apply();
-
-        df = new DecimalFormat("#.##");
-        decimals(2);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                firstY = y;
-                prevVal = val;
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                float delta = y - firstY;
-                val = prevVal - delta;
-                if (val < 0) val = 0;
-                if (val > mHeight) val = mHeight;
-                unmappedVal = CanvasUtils.map(val, 0, mHeight, 0, 360);
-                mappedVal = CanvasUtils.map(val, 0, mHeight, rangeFrom, rangeTo);
-
-                break;
-            case MotionEvent.ACTION_UP:
-                executeCallbackRelease();
-                break;
-            default:
-                return false;
-        }
-
-        executeCallbackDrag();
-        invalidate();
-
-        return true;
-    }
-
-    private void executeCallbackDrag() {
-        ReturnObject ret = new ReturnObject();
-        ret.put("value", mappedVal);
-        if (callbackDrag != null) callbackDrag.event(ret);
-    }
-
-    private void executeCallbackRelease() {
-        ReturnObject ret = new ReturnObject();
-        ret.put("value", mappedVal);
-        if (callbackRelease != null) callbackRelease.event(ret);
-    }
-
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
@@ -175,6 +99,33 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             c.drawTextCentered("" + df.format(mappedVal));
         }
     };
+    private float rangeFrom = 0;
+    private float rangeTo = 360;
+
+    public PKnob(AppRunner appRunner, Map initProps) {
+        super(appRunner, initProps);
+
+        draw = mydraw;
+
+        styler = new KnobStyler(appRunner, this, props);
+        props.eventOnChange = false;
+        props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
+        props.put("knobProgressWidth", props, appRunner.pUtil.dpToPixels(2));
+        props.put("knobProgressSeparation", props, appRunner.pUtil.dpToPixels(15));
+        props.put("knobBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
+
+        props.put("knobProgressColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("background", props, "#00FFFFFF");
+        props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
+        props.put("textFont", props, "monospace");
+        props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
+        Styler.fromTo(initProps, props);
+        props.eventOnChange = true;
+        styler.apply();
+
+        df = new DecimalFormat("#.##");
+        decimals(2);
+    }
 
     public PKnob decimals(int num) {
         String formatString = "#.##";
@@ -183,6 +134,50 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         df.setMinimumFractionDigits(num);
         df.setMinimumFractionDigits(num);
         return this;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                firstY = y;
+                prevVal = val;
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                float delta = y - firstY;
+                val = prevVal - delta;
+                if (val < 0) val = 0;
+                if (val > mHeight) val = mHeight;
+                unmappedVal = CanvasUtils.map(val, 0, mHeight, 0, 360);
+                mappedVal = CanvasUtils.map(val, 0, mHeight, rangeFrom, rangeTo);
+
+                break;
+            case MotionEvent.ACTION_UP:
+                executeCallbackRelease();
+                break;
+            default:
+                return false;
+        }
+
+        executeCallbackDrag();
+        invalidate();
+
+        return true;
+    }
+
+    private void executeCallbackRelease() {
+        ReturnObject ret = new ReturnObject();
+        ret.put("value", mappedVal);
+        if (callbackRelease != null) callbackRelease.event(ret);
+    }
+
+    private void executeCallbackDrag() {
+        ReturnObject ret = new ReturnObject();
+        ret.put("value", mappedVal);
+        if (callbackDrag != null) callbackDrag.event(ret);
     }
 
     public PKnob onChange(final ReturnInterface callbackfn) {
@@ -202,18 +197,18 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         return this;
     }
 
+    public PKnob valueAndTriggerEvent(float val) {
+        this.value(val);
+        executeCallbackDrag();
+
+        return this;
+    }
+
     public PKnob value(float val) {
         this.mappedVal = val;
         this.unmappedVal = CanvasUtils.map(val, rangeFrom, rangeTo, 0, 360);
 
         this.invalidate();
-
-        return this;
-    }
-
-    public PKnob valueAndTriggerEvent(float val) {
-        this.value(val);
-        executeCallbackDrag();
 
         return this;
     }
@@ -224,25 +219,21 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     }
 
     @Override
+    public View textFont(Typeface font) {
+        this.textFont = font;
+
+        return this;
+    }    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
 
     @Override
-    public Map getProps() {
-        return props;
-    }
-
-    @Override
-    public View textFont(Typeface font) {
-        this.textFont = font;
-
-        return this;
-    }
-
-    @Override
     public View textSize(int size) {
         return null;
+    }    @Override
+    public Map getProps() {
+        return props;
     }
 
     @Override
@@ -292,4 +283,8 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             knobProgressColor = Color.parseColor(mProps.get("knobProgressColor").toString());
         }
     }
+
+
+
+
 }

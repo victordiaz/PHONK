@@ -39,13 +39,12 @@ import io.phonk.runner.base.views.FitRecyclerView;
 
 public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
-    private final Context mContext;
-    protected final AppRunner mAppRunner;
-    private GridLayoutManager mGridLayoutManager;
-    private PViewItemAdapter mViewAdapter;
-
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final ListStyler styler;
+    protected final AppRunner mAppRunner;
+    private final Context mContext;
+    private GridLayoutManager mGridLayoutManager;
+    private PViewItemAdapter mViewAdapter;
     private int nNumCols = 1;
 
     public PList(AppRunner appRunner, Map initProps) {
@@ -66,7 +65,11 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     protected void addFromChild(StylePropertiesProxy props) {
     }
 
-    public void init(NativeArray data, ReturnInterfaceWithReturn createCallback, ReturnInterfaceWithReturn bindingCallback) {
+    public void init(
+            NativeArray data,
+            ReturnInterfaceWithReturn createCallback,
+            ReturnInterfaceWithReturn bindingCallback
+    ) {
         mGridLayoutManager = new GridLayoutManager(mContext, nNumCols);
         setLayoutManager(mGridLayoutManager);
         mViewAdapter = new PViewItemAdapter(mContext, data, createCallback, bindingCallback);
@@ -78,6 +81,12 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         notifyDataChanged();
 
         setItemAnimator(null);
+    }
+
+    @PhonkMethod(description = "", example = "")
+    @PhonkMethodParam(params = {""})
+    public void notifyDataChanged() {
+        mViewAdapter.notifyDataSetChanged();
     }
 
     public void stackFromEnd(boolean b) {
@@ -106,12 +115,10 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     public void clear() {
     }
 
-    @PhonkMethod(description = "", example = "")
-    @PhonkMethodParam(params = {""})
-    public void notifyDataChanged() {
-        mViewAdapter.notifyDataSetChanged();
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
     }
-
 
     static class ListStyler extends Styler {
         ListStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
@@ -122,11 +129,6 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         public void apply() {
             super.apply();
         }
-    }
-
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
     }
 
     @Override

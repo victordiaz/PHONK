@@ -38,27 +38,67 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PMatrix extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PMatrix.class.getSimpleName();
-
+    private static final int STATUS_DISABLED = 0;
+    private static final int STATUS_ENABLED = 1;
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final MatrixStyler styler;
-
+    private final int colorUnselected;
+    int COLS = 20;
+    int ROWS = 20;
+    boolean wasSelected = false;
     private ArrayList touches;
     private float x;
     private float y;
     private int[][] matrix;
     private int colorSelected;
-    private final int colorUnselected;
-
-    int COLS = 20;
-    int ROWS = 20;
-
     private float W;
     private float H;
-    private static final int STATUS_DISABLED = 0;
-    private static final int STATUS_ENABLED = 1;
-
     private ReturnInterface callback;
     private float selectedColumn = -1;
+    final OnDrawCallback mydraw = new OnDrawCallback() {
+        @Override
+        public void event(PCanvas c) {
+            c.clear();
+            c.cornerMode(true);
+
+            W = (float) c.width / (float) COLS;
+            H = (float) c.height / (float) ROWS;
+
+            c.stroke(styler.matrixCellBorderColor);
+            c.strokeWidth(styler.matrixCellBorderSize);
+
+            // grid
+            for (int i = 0; i < COLS; i++) {
+                for (int j = 0; j < ROWS; j++) {
+                    c.fill(matrix[i][j]);
+                    // c.rect(i * W, j * H, W, H, 2, 2);
+                    c.point(i * W, j * H);
+                }
+            }
+
+            // cells
+            c.noStroke();
+            for (int i = 0; i < COLS; i++) {
+                for (int j = 0; j < ROWS; j++) {
+                    c.fill(matrix[i][j]);
+                    c.rect(i * W, j * H, W, H, 2, 2);
+                    // c.point(i * W, j * H);
+                }
+            }
+
+            // matrix border
+            c.stroke(styler.borderColor);
+            c.noFill();
+            c.rect(0, 0, c.width, c.height, (float) styler.borderRadius, (float) styler.borderRadius);
+
+            c.stroke("#00000022");
+            c.fill("#2200FF00");
+
+            if (selectedColumn != -1) {
+                c.rect(W * selectedColumn, 0, W, c.height, 0, 0);
+            }
+        }
+    };
 
     public PMatrix(AppRunner appRunner, Map initProps) {
         super(appRunner, initProps);
@@ -132,8 +172,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    boolean wasSelected = false;
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -157,8 +195,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
 
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (!wasSelected /* matrix[tx][ty] != colorSelected */)
-                    matrix[tx][ty] = colorSelected;
+                if (!wasSelected /* matrix[tx][ty] != colorSelected */) matrix[tx][ty] = colorSelected;
                 else matrix[tx][ty] = colorUnselected;
                 // break;
 
@@ -214,6 +251,10 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
+    private boolean isInBoundaries(int x, int y) {
+        return x < 0 || x >= COLS || y < 0 || y >= ROWS;
+    }
+
     public PMatrix xy(int x, int y, String color) {
         if (isInBoundaries(x, y)) return this;
         matrix[x][y] = Color.parseColor(color);
@@ -227,56 +268,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         return matrix[x][y] == colorSelected;
     }
 
-    private boolean isInBoundaries(int x, int y) {
-        return x < 0 || x >= COLS || y < 0 || y >= ROWS;
-    }
-
-    final OnDrawCallback mydraw = new OnDrawCallback() {
-        @Override
-        public void event(PCanvas c) {
-            c.clear();
-            c.cornerMode(true);
-
-            W = (float) c.width / (float) COLS;
-            H = (float) c.height / (float) ROWS;
-
-            c.stroke(styler.matrixCellBorderColor);
-            c.strokeWidth(styler.matrixCellBorderSize);
-
-            // grid
-            for (int i = 0; i < COLS; i++) {
-                for (int j = 0; j < ROWS; j++) {
-                    c.fill(matrix[i][j]);
-                    // c.rect(i * W, j * H, W, H, 2, 2);
-                    c.point(i * W, j * H);
-                }
-            }
-
-            // cells
-            c.noStroke();
-            for (int i = 0; i < COLS; i++) {
-                for (int j = 0; j < ROWS; j++) {
-                    c.fill(matrix[i][j]);
-                    c.rect(i * W, j * H, W, H, 2, 2);
-                    // c.point(i * W, j * H);
-                }
-            }
-
-            // matrix border
-            c.stroke(styler.borderColor);
-            c.noFill();
-            c.rect(0, 0, c.width, c.height, (float) styler.borderRadius, (float) styler.borderRadius);
-
-            c.stroke("#00000022");
-            c.fill("#2200FF00");
-
-            if (selectedColumn != -1) {
-                c.rect(W * selectedColumn, 0, W, c.height, 0, 0);
-            }
-        }
-    };
-
-
     public PMatrix onChange(final ReturnInterface callbackfn) {
         this.callback = callbackfn;
 
@@ -287,17 +278,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
     }
-
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
 
     static class MatrixStyler extends Styler {
         int matrixCellColor;
@@ -320,5 +300,16 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
             matrixCellBorderColor = Color.parseColor(mProps.get("matrixCellBorderColor").toString());
             matrixCellBorderRadius = toFloat(mProps.get("matrixCellBorderRadius"));
         }
+    }    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+
+
+
 }

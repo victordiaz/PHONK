@@ -36,11 +36,10 @@ import io.phonk.runner.apprunner.AppRunner;
 
 public class PLinearLayout extends LinearLayout {
 
-    private final AppRunner mAppRunner;
-    private final LayoutParams mLp;
-
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final Styler styler;
+    private final AppRunner mAppRunner;
+    private final LayoutParams mLp;
     private final HashMap<String, View> mViews = new HashMap<>();
 
     public PLinearLayout(AppRunner appRunner, Map initProps) {

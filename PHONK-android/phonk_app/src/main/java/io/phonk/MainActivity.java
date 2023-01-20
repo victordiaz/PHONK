@@ -30,7 +30,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -48,10 +47,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.events.Events;
-import io.phonk.gui.connectionInfo.ConnectionInfoFragment;
-import io.phonk.gui.projectbrowser.ProjectBrowserFragment;
 import io.phonk.gui._components.APIWebviewFragment;
 import io.phonk.gui._components.NewProjectDialogFragment;
+import io.phonk.gui.connectionInfo.ConnectionInfoFragment;
+import io.phonk.gui.projectbrowser.ProjectBrowserFragment;
 import io.phonk.gui.projectbrowser.projectlist.ProjectItem;
 import io.phonk.gui.projectbrowser.projectlist.ProjectListFragment;
 import io.phonk.gui.settings.PhonkSettings;
@@ -70,19 +69,60 @@ import io.phonk.server.model.ProtoFile;
 public class MainActivity extends BaseActivity {
 
     private static final java.lang.String TAG = MainActivity.class.getSimpleName();
+    /*
+     * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
+     */
+    final BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String cmd = intent.getStringExtra("cmd");
+            MLog.d(TAG, "executing >> " + cmd);
+            // mAppRunner.interp.eval(cmd);
+        }
+    };
+    /*
+     * Network Connectivity listener
+     */
+    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, "connectivity changed");
+            AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
 
+            // check if there is a WIFI connection or we can connect via USB
+            if (NetworkUtils.getLocalIpAddress(MainActivity.this).get("ip").equals("127.0.0.1")) {
+                MLog.d(TAG, "No WIFI, still you can hack via USB using the adb command");
+                EventBus.getDefault().post(new Events.Connection("none", ""));
+            } else {
+                MLog.d(
+                        TAG,
+                        "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(MainActivity.this) + ":" + PhonkSettings.HTTP_PORT
+                );
+                String ip = NetworkUtils.getLocalIpAddress(MainActivity.this).get("ip") + ":" + PhonkSettings.HTTP_PORT;
+                String type = (String) NetworkUtils.getLocalIpAddress(MainActivity.this).get("type");
+                EventBus.getDefault().post(new Events.Connection(type, ip));
+            }
+        }
+    };
     private Intent mServerIntent;
-
     private ProjectBrowserFragment mProjectBrowserFragment;
-
     private ImageButton mBtnHelp;
-
     private ConnectionInfoFragment mConnectionInfoFragment;
     private APIWebviewFragment mWebViewFragment;
-
     private boolean mIsWebIdeMode = false;
     private boolean mAlreadyStartedServices = false;
     private boolean mIsConfigChanging = false;
+
+    private void listProjectsWithControlsThread() {
+        Thread t = new Thread(() -> {
+            try {
+                listProjectsWithControls();
+            } catch (Exception e) {
+                MLog.d(TAG, "Error:" + e);
+            }
+        });
+        t.start();
+    }
 
     private void listProjectsWithControls() {
         ArrayList<ProtoFile> userFolder = PhonkScriptHelper.listProjectsInFolder(PhonkSettings.USER_PROJECTS_FOLDER, 2);
@@ -103,15 +143,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void listProjectsWithControlsThread() {
-        Thread t = new Thread(() -> {
-            try {
-                listProjectsWithControls();
-            } catch (Exception e) {
-                MLog.d(TAG, "Error:" + e);
-            }
-        });
-        t.start();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        if (!mIsConfigChanging) stopServers();
     }
 
     @Override
@@ -153,6 +189,13 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(adbBroadcastReceiver);
+        unregisterReceiver(connectivityChangeReceiver);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -164,30 +207,24 @@ public class MainActivity extends BaseActivity {
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(adbBroadcastReceiver);
-        unregisterReceiver(connectivityChangeReceiver);
+    private void startBroadCastReceiver() {
+        if (PhonkSettings.DEBUG) {
+            //execute commands from intents
+            //ie: adb shell am broadcast -a io.phonk.intent.EXECUTE --es cmd "device.vibrate(100)"
+
+            IntentFilter filterSend = new IntentFilter();
+            filterSend.addAction("io.phonk.intent.EXECUTE");
+            registerReceiver(adbBroadcastReceiver, filterSend);
+        }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        if (!mIsConfigChanging) stopServers();
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("alreadyStartedServices", true);
-        mIsConfigChanging = true;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    /*
+     * Server
+     */
+    private void startServers() {
+        MLog.d(TAG, "starting servers");
+        mServerIntent = new Intent(this, PhonkServerService.class);
+        startService(mServerIntent);
     }
 
     private void loadUI() {
@@ -254,8 +291,7 @@ public class MainActivity extends BaseActivity {
         String friendlyVersionName = "(unknown version)";
         if (versionNameTemp.length > 1) {
             friendlyVersionName = versionNameTemp[0];
-            if (!versionNameTemp[1].equals("normal"))
-                friendlyVersionName += " (" + versionNameTemp[1] + ").";
+            if (!versionNameTemp[1].equals("normal")) friendlyVersionName += " (" + versionNameTemp[1] + ").";
         }
         sendDelayedEvent("welcome", "Welcome to PHONK " + friendlyVersionName + " Enjoy!", 0);
     }
@@ -265,23 +301,30 @@ public class MainActivity extends BaseActivity {
         handler.postDelayed(() -> EventBus.getDefault().post(new Events.AppUiEvent(type, message)), delay);
     }
 
-    public void loadWebIde() {
-        MLog.d(TAG, "loadWebIde");
+    private void stopServers() {
+        if (mServerIntent != null) stopService(mServerIntent);
+    }
 
-        if (mWebViewFragment != null) return;
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("alreadyStartedServices", true);
+        mIsConfigChanging = true;
+    }
 
-        FrameLayout fl = findViewById(R.id.webEditorFragment);
-        fl.setVisibility(View.VISIBLE);
-        mWebViewFragment = new APIWebviewFragment();
+    @Override
+    public void onBackPressed() {
+        // if we are not in the first page we go dont exit the app
+        if (mProjectBrowserFragment.mViewPager.getCurrentItem() != 0) {
+            mProjectBrowserFragment.mViewPager.setCurrentItem(0, true);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
-        Bundle bundle = new Bundle();
-        String url = "http://127.0.0.1:8585";
-        // String url = "http://10.0.2.2:8080";
-        bundle.putString("url", url);
-        bundle.putBoolean("isTablet", true);
-        mWebViewFragment.setArguments(bundle);
-
-        addFragment(mWebViewFragment, R.id.webEditorFragment, "WebIDE");
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     public void createProjectDialog() {
@@ -297,45 +340,14 @@ public class MainActivity extends BaseActivity {
         newProjectDialog.setListener(inputText -> {
             String template = "default";
             Toast.makeText(MainActivity.this, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-            Project p = PhonkScriptHelper.createNewProject(MainActivity.this, template, "user_projects/User Projects/", inputText);
+            Project p = PhonkScriptHelper.createNewProject(
+                    MainActivity.this,
+                    template,
+                    "user_projects/User Projects/",
+                    inputText
+            );
             EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
         });
-    }
-
-    /*
-     * This broadcast will receive JS commands if is in debug mode, useful to debug the app through adb
-     */
-    final BroadcastReceiver adbBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String cmd = intent.getStringExtra("cmd");
-            MLog.d(TAG, "executing >> " + cmd);
-            // mAppRunner.interp.eval(cmd);
-        }
-    };
-
-    private void startBroadCastReceiver() {
-        if (PhonkSettings.DEBUG) {
-            //execute commands from intents
-            //ie: adb shell am broadcast -a io.phonk.intent.EXECUTE --es cmd "device.vibrate(100)"
-
-            IntentFilter filterSend = new IntentFilter();
-            filterSend.addAction("io.phonk.intent.EXECUTE");
-            registerReceiver(adbBroadcastReceiver, filterSend);
-        }
-    }
-
-    /*
-     * Server
-     */
-    private void startServers() {
-        MLog.d(TAG, "starting servers");
-        mServerIntent = new Intent(this, PhonkServerService.class);
-        startService(mServerIntent);
-    }
-
-    private void stopServers() {
-        if (mServerIntent != null) stopService(mServerIntent);
     }
 
     // execute lines
@@ -377,8 +389,7 @@ public class MainActivity extends BaseActivity {
                 stopServers();
                 break;
             case "startServers":
-                if (!mAlreadyStartedServices)
-                    startServers();
+                if (!mAlreadyStartedServices) startServers();
                 break;
             case "serversStarted":
                 // show webview
@@ -389,35 +400,22 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    /*
-     * Network Connectivity listener
-     */
-    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, "connectivity changed");
-            AndroidUtils.debugIntent("connectivityChangerReceiver", intent);
+    public void loadWebIde() {
+        MLog.d(TAG, "loadWebIde");
 
-            // check if there is a WIFI connection or we can connect via USB
-            if (NetworkUtils.getLocalIpAddress(MainActivity.this).get("ip").equals("127.0.0.1")) {
-                MLog.d(TAG, "No WIFI, still you can hack via USB using the adb command");
-                EventBus.getDefault().post(new Events.Connection("none", ""));
-            } else {
-                MLog.d(TAG, "Hack via your browser @ http://" + NetworkUtils.getLocalIpAddress(MainActivity.this) + ":" + PhonkSettings.HTTP_PORT);
-                String ip = NetworkUtils.getLocalIpAddress(MainActivity.this).get("ip") + ":" + PhonkSettings.HTTP_PORT;
-                String type = (String) NetworkUtils.getLocalIpAddress(MainActivity.this).get("type");
-                EventBus.getDefault().post(new Events.Connection(type, ip));
-            }
-        }
-    };
+        if (mWebViewFragment != null) return;
 
-    @Override
-    public void onBackPressed() {
-        // if we are not in the first page we go dont exit the app
-        if (mProjectBrowserFragment.mViewPager.getCurrentItem() != 0) {
-            mProjectBrowserFragment.mViewPager.setCurrentItem(0, true);
-        } else {
-            super.onBackPressed();
-        }
+        FrameLayout fl = findViewById(R.id.webEditorFragment);
+        fl.setVisibility(View.VISIBLE);
+        mWebViewFragment = new APIWebviewFragment();
+
+        Bundle bundle = new Bundle();
+        String url = "http://127.0.0.1:8585";
+        // String url = "http://10.0.2.2:8080";
+        bundle.putString("url", url);
+        bundle.putBoolean("isTablet", true);
+        mWebViewFragment.setArguments(bundle);
+
+        addFragment(mWebViewFragment, R.id.webEditorFragment, "WebIDE");
     }
 }

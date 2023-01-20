@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.network;
 
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
 import android.util.Log;
 
 import java.io.DataInputStream;
@@ -44,11 +43,10 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PBluetoothServer extends ProtoBase {
 
+    final ArrayList<ConnectedDevice> mServerConnections = new ArrayList<>();
     private final PBluetooth mPBluetooth;
     private final String name;
-
     BluetoothServerSocket mBluetoothServer;
-    final ArrayList<ConnectedDevice> mServerConnections = new ArrayList<>();
     boolean mServerStarted = true;
 
     // server
@@ -109,6 +107,27 @@ public class PBluetoothServer extends ProtoBase {
         }
     }
 
+    // http://stackoverflow.com/questions/13450406/how-to-receive-serial-data-using-android-bluetooth
+    private void connectToClient(final BluetoothSocket btSocketClient) throws IOException {
+        MLog.d(TAG, "bbt connection to device: " + btSocketClient.getRemoteDevice().getName());
+
+        final ConnectedDevice connectedDevice = new ConnectedDevice(btSocketClient);
+        mServerConnections.add(connectedDevice);
+
+        // callback
+        if (mCallbackOnNewConnection != null) {
+            mHandler.post(() -> {
+                ReturnObject ret = new ReturnObject();
+                ret.put("device", connectedDevice);
+                ret.put("name", btSocketClient.getRemoteDevice().getName());
+                ret.put("mac", btSocketClient.getRemoteDevice().getAddress());
+                mCallbackOnNewConnection.event(ret);
+            });
+
+        }
+
+        connectedDevice.startThread();
+    }
 
     /***************************************************************
      * IMPL
@@ -140,37 +159,13 @@ public class PBluetoothServer extends ProtoBase {
         }
     }
 
-
-    // http://stackoverflow.com/questions/13450406/how-to-receive-serial-data-using-android-bluetooth
-    private void connectToClient(final BluetoothSocket btSocketClient) throws IOException {
-        MLog.d(TAG, "bbt connection to device: " + btSocketClient.getRemoteDevice().getName());
-
-        final ConnectedDevice connectedDevice = new ConnectedDevice(btSocketClient);
-        mServerConnections.add(connectedDevice);
-
-        // callback
-        if (mCallbackOnNewConnection != null) {
-            mHandler.post(() -> {
-                ReturnObject ret = new ReturnObject();
-                ret.put("device", connectedDevice);
-                ret.put("name", btSocketClient.getRemoteDevice().getName());
-                ret.put("mac", btSocketClient.getRemoteDevice().getAddress());
-                mCallbackOnNewConnection.event(ret);
-            });
-
-        }
-
-        connectedDevice.startThread();
-    }
-
-
     private class ConnectedDevice {
-        private ConnectionThread connectionThread;
         final BluetoothSocket bluetoothSocket;
-        private InputStream inputStream;
-        private OutputStream outputStream;
         final String name;
         final String mac;
+        private ConnectionThread connectionThread;
+        private InputStream inputStream;
+        private OutputStream outputStream;
 
         ConnectedDevice(BluetoothSocket bluetoothSocketClient) {
             MLog.d(TAG, "bbt connected device");

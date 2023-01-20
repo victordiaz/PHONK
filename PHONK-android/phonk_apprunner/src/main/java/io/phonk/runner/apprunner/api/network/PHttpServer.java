@@ -47,10 +47,6 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PHttpServer extends NanoHTTPD {
     public static final String TAG = PHttpServer.class.getSimpleName();
-
-    public Handler mHandler = new Handler(Looper.getMainLooper());
-    private final AppRunner mAppRunner;
-
     private static final Map<String, String> MIME_TYPES = new HashMap<String, String>() {
         {
             put("css", "text/css");
@@ -79,6 +75,8 @@ public class PHttpServer extends NanoHTTPD {
             put("class", "application/octet-stream");
         }
     };
+    private final AppRunner mAppRunner;
+    public Handler mHandler = new Handler(Looper.getMainLooper());
     private ReturnInterfaceWithReturn mCallback = null;
     private Project mProject = null;
 
@@ -94,14 +92,6 @@ public class PHttpServer extends NanoHTTPD {
         MLog.d(TAG, "Launched server at http://" + ip + ":" + port);
 
         appRunner.whatIsRunning.add(this);
-    }
-
-    public void start() {
-        try {
-            super.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void onNewRequest(ReturnInterfaceWithReturn callbackfn) {
@@ -142,7 +132,6 @@ public class PHttpServer extends NanoHTTPD {
 
         return res;
     }
-
 
     String getMimeType(String uri) {
         String mime = null;
@@ -194,11 +183,19 @@ public class PHttpServer extends NanoHTTPD {
         return res;
     }
 
+    public void start() {
+        try {
+            super.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @PhonkMethod(description = "Stops the http server", example = "")
     @PhonkMethodParam(params = {""})
     public void stop() {
         super.stop();
     }
 
-    public void __stop() { this.stop(); }
+    public void __stop() {this.stop();}
 }

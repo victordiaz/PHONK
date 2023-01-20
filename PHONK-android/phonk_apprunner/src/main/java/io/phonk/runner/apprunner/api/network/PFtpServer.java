@@ -49,18 +49,12 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PFtpServer {
     final String TAG = PFtpServer.class.getSimpleName();
-
-    private final int mPort;
-    private final FtpServerCb mCallback;
-
     final PropertiesUserManagerFactory userManagerFactory;
     final UserManager um;
+    private final int mPort;
+    private final FtpServerCb mCallback;
     org.apache.ftpserver.FtpServer server;
 
-
-    public interface FtpServerCb {
-        void event(String status);
-    }
 
     public PFtpServer(int port, FtpServerCb callback) {
         mCallback = callback;
@@ -72,7 +66,6 @@ public class PFtpServer {
 
         um = userManagerFactory.createUserManager();
     }
-
 
     //we have to pass the protocoder project folder
     public void addUser(String name, String pass, String directory, boolean canWrite) {
@@ -98,7 +91,6 @@ public class PFtpServer {
         }
 
     }
-
 
     public void start() {
         FtpServerFactory serverFactory = new FtpServerFactory();
@@ -134,6 +126,10 @@ public class PFtpServer {
         }
     }
 
+    public interface FtpServerCb {
+        void event(String status);
+    }
+
     private static class CallbackFTP extends DefaultFtplet {
         final FtpServerCb callback;
 
@@ -152,6 +148,19 @@ public class PFtpServer {
         }
 
         @Override
+        public FtpletResult onConnect(FtpSession ftpSession) throws IOException {
+            if (callback != null) callback.event("Connected from " + ftpSession.getClientAddress());
+            return FtpletResult.DEFAULT;
+        }
+
+        @Override
+        public FtpletResult onDisconnect(FtpSession ftpSession) throws IOException {
+            if (callback != null) callback.event("Disconnected: " + ftpSession.getUser().getName());
+
+            return FtpletResult.DEFAULT;
+        }
+
+        @Override
         public FtpletResult beforeCommand(FtpSession ftpSession, FtpRequest ftpRequest) throws IOException {
             if (callback != null)
                 callback.event("Requested command: " + ftpRequest.getCommand() + " " + ftpRequest.getArgument() + " " + ftpRequest.getRequestLine());
@@ -159,29 +168,17 @@ public class PFtpServer {
         }
 
         @Override
-        public FtpletResult afterCommand(FtpSession ftpSession, FtpRequest ftpRequest, FtpReply ftpReply) throws IOException {
+        public FtpletResult afterCommand(
+                FtpSession ftpSession,
+                FtpRequest ftpRequest,
+                FtpReply ftpReply
+        ) throws IOException {
             return null;
         }
 
         @Override
-        public FtpletResult onConnect(FtpSession ftpSession) throws IOException {
-            if (callback != null)
-                callback.event("Connected from " + ftpSession.getClientAddress());
-            return FtpletResult.DEFAULT;
-        }
-
-        @Override
         public FtpletResult onLogin(FtpSession session, FtpRequest request) throws IOException {
-            if (callback != null)
-                callback.event("Logged in: " + session.getUser().getName());
-            return FtpletResult.DEFAULT;
-        }
-
-        @Override
-        public FtpletResult onDisconnect(FtpSession ftpSession) throws IOException {
-            if (callback != null)
-                callback.event("Disconnected: " + ftpSession.getUser().getName());
-
+            if (callback != null) callback.event("Logged in: " + session.getUser().getName());
             return FtpletResult.DEFAULT;
         }
     }

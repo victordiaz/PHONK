@@ -61,8 +61,8 @@ public class FixedLayout extends ViewGroup {
     }
 
     @Override
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0);
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof FixedLayout.LayoutParams;
     }
 
     @Override
@@ -78,13 +78,13 @@ public class FixedLayout extends ViewGroup {
     }
 
     @Override
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof FixedLayout.LayoutParams;
+    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+        return new LayoutParams(p);
     }
 
     @Override
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
-        return new LayoutParams(p);
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0);
     }
 
     public static class LayoutParams extends ViewGroup.LayoutParams {

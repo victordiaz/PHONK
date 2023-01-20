@@ -48,7 +48,8 @@ public class NewMainActivity extends BaseActivity {
         Button btn = findViewById(R.id.btnOpenProjectBrowser);
 
         FragmentManager fm = getSupportFragmentManager();
-        ProjectBrowserDialogFragment projectBrowserDialogFragment = ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK);
+        ProjectBrowserDialogFragment projectBrowserDialogFragment =
+                ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK);
 
         projectBrowserDialogFragment.setListener(new ProjectListFragment.ProjectSelectedListener() {
             @Override

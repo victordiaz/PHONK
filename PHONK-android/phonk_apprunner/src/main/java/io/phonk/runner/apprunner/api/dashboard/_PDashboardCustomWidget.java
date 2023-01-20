@@ -40,17 +40,17 @@ public class _PDashboardCustomWidget extends ProtoBase {
         super(appRunner);
     }
 
-    // --------- JDashboard add ---------//
-    public interface jDashboardAddCB {
-        void event(JSONObject obj);
-    }
-
-    public void add(String url, int x, int y, int w, int h, final jDashboardAddCB callbackfn) throws JSONException,
-            UnknownHostException {
+    public void add(
+            String url,
+            int x,
+            int y,
+            int w,
+            int h,
+            final jDashboardAddCB callbackfn
+    ) throws JSONException, UnknownHostException {
         this.id = StrUtils.generateUUID();
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
+        JSONObject values = new JSONObject().put("id", id)
                 .put("url", url)
                 .put("type", "custom")
                 .put("x", x)
@@ -58,10 +58,7 @@ public class _PDashboardCustomWidget extends ProtoBase {
                 .put("w", w)
                 .put("h", h);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
 
@@ -69,15 +66,9 @@ public class _PDashboardCustomWidget extends ProtoBase {
 
     public void send(JSONObject obj) throws JSONException, UnknownHostException {
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("type", "custom")
-                .put("val", obj);
+        JSONObject values = new JSONObject().put("id", id).put("type", "custom").put("val", obj);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "send")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "send").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
@@ -86,5 +77,10 @@ public class _PDashboardCustomWidget extends ProtoBase {
     @Override
     public void __stop() {
 
+    }
+
+    // --------- JDashboard add ---------//
+    public interface jDashboardAddCB {
+        void event(JSONObject obj);
     }
 }

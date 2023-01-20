@@ -36,8 +36,8 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     private static final java.lang.String TAG = StylePropertiesProxy.class.getSimpleName();
     public final ReturnObject values = new ReturnObject();
-    private OnChangeListener changeListener;
     public boolean eventOnChange = true;
+    private OnChangeListener changeListener;
 
     public StylePropertiesProxy() {
 
@@ -56,14 +56,6 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     }
 
     @Override
-    public void put(String name, Scriptable start, Object value) {
-        // MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
-        values.put(name, value);
-
-        if (changeListener != null && eventOnChange) changeListener.event(name, value);
-    }
-
-    @Override
     public Object get(int index, Scriptable start) {
         // TODO Auto-generated method stub
         return null;
@@ -79,6 +71,14 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     public boolean has(int index, Scriptable start) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public void put(String name, Scriptable start, Object value) {
+        // MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
+        values.put(name, value);
+
+        if (changeListener != null && eventOnChange) changeListener.event(name, value);
     }
 
     @Override
@@ -210,15 +210,15 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
         changeListener = listener;
     }
 
-    public interface OnChangeListener {
-        void event(String name, Object value);
-    }
-
     public void apply(HashMap<String, Object> styleProps) {
         this.putAll(styleProps);
     }
 
     public String toString() {
         return GSONUtil.getInstance().getGson().toJson(this);
+    }
+
+    public interface OnChangeListener {
+        void event(String name, Object value);
     }
 }

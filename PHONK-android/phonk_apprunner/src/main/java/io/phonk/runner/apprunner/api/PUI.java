@@ -61,20 +61,13 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject(mergeFrom = "ViewsArea")
 public class PUI extends PViewsArea {
-    public StylePropertiesProxy theme;
     public final StylePropertiesProxy rootStyle = new StylePropertiesProxy();
-
-    private boolean isMainLayoutSetup = false;
-    public View mainLayout;
     public final ArrayList viewTree = new ArrayList<ViewElement>();
+    public StylePropertiesProxy theme;
+    public View mainLayout;
     public int screenWidth;
     public int screenHeight;
-
-    static class ViewElement {
-        String id;
-        String type;
-        View ref;
-    }
+    private boolean isMainLayoutSetup = false;
 
     public PUI(AppRunner appRunner) {
         super(appRunner);
@@ -89,15 +82,6 @@ public class PUI extends PViewsArea {
         }
 
         initializeLayout();
-    }
-
-    @Override
-    public void statusBarColor(int color) {
-        if (mActivity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = this.mActivity.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(color);
-        }
     }
 
     /**
@@ -126,26 +110,6 @@ public class PUI extends PViewsArea {
         background((String) theme.get("background"));
 
         viewTree.add(this);
-    }
-
-    @PhonkMethod
-    public PViewsArea addArea(Object x, Object y, Object w, Object h) {
-        PViewsArea pViewsArea = new PViewsArea(mAppRunner);
-        View v = pViewsArea.initMainLayout("match", "match");
-        addView(v, x, y, w, h);
-        return pViewsArea;
-    }
-
-    @PhonkMethod
-    public PViewsArea newArea() {
-        return newArea("match", "match");
-    }
-
-    @PhonkMethod
-    public PViewsArea newArea(String widthType, String heightType) {
-        PViewsArea pViewsArea = new PViewsArea(mAppRunner);
-        View v = pViewsArea.initMainLayout(widthType, heightType);
-        return pViewsArea;
     }
 
     @SuppressLint("ResourceType")
@@ -216,6 +180,39 @@ public class PUI extends PViewsArea {
         // style.put("animOut", style, "this.animate().x(0)");
     }
 
+    @Override
+    public void statusBarColor(int color) {
+        if (mActivity != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.mActivity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
+    }
+
+    @Override
+    public void __stop() {
+    }
+
+    @PhonkMethod
+    public PViewsArea addArea(Object x, Object y, Object w, Object h) {
+        PViewsArea pViewsArea = new PViewsArea(mAppRunner);
+        View v = pViewsArea.initMainLayout("match", "match");
+        addView(v, x, y, w, h);
+        return pViewsArea;
+    }
+
+    @PhonkMethod
+    public PViewsArea newArea() {
+        return newArea("match", "match");
+    }
+
+    @PhonkMethod
+    public PViewsArea newArea(String widthType, String heightType) {
+        PViewsArea pViewsArea = new PViewsArea(mAppRunner);
+        View v = pViewsArea.initMainLayout(widthType, heightType);
+        return pViewsArea;
+    }
+
     public StylePropertiesProxy getStyle() {
         return rootStyle;
     }
@@ -255,6 +252,16 @@ public class PUI extends PViewsArea {
     }
 
     /**
+     * Get the current global theme
+     *
+     * @return theme
+     */
+    @PhonkMethod
+    public Map getTheme() {
+        return theme;
+    }
+
+    /**
      * Set a global theme
      *
      * @param properties
@@ -268,16 +275,6 @@ public class PUI extends PViewsArea {
         setStyle();
         background((String) theme.get("background"));
         theme.eventOnChange = true;
-    }
-
-    /**
-     * Get the current global theme
-     *
-     * @return theme
-     */
-    @PhonkMethod
-    public Map getTheme() {
-        return theme;
     }
 
     /**
@@ -449,16 +446,6 @@ public class PUI extends PViewsArea {
         WidgetHelper.removeMovable(viewHandler);
     }
 
-    static class Touch {
-        int id;
-        Object x, y;
-        String action;
-
-        Touch() {
-
-        }
-    }
-
     /**
      * @param view
      * @param callback
@@ -598,7 +585,9 @@ public class PUI extends PViewsArea {
                 Map props = ((PViewMethodsInterface) o).getProps();
                 ReturnObject returnObject = ((StylePropertiesProxy) props).values;
                 ob.put("props", returnObject);
-            } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass().getSimpleName().equals("PUI")) {
+            } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass()
+                    .getSimpleName()
+                    .equals("PUI")) {
                 if (((PViewsArea) o).viewArray.size() > 0) {
                     ob.put("children", it(((PViewsArea) o).viewArray));
                 }
@@ -609,8 +598,20 @@ public class PUI extends PViewsArea {
         return ret;
     }
 
-    @Override
-    public void __stop() {
+    static class ViewElement {
+        String id;
+        String type;
+        View ref;
+    }
+
+    static class Touch {
+        int id;
+        Object x, y;
+        String action;
+
+        Touch() {
+
+        }
     }
 
 }

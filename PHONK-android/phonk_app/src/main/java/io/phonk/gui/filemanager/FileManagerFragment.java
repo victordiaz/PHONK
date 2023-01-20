@@ -64,19 +64,15 @@ import io.phonk.server.model.ProtoFile;
 @SuppressLint("NewApi")
 public class FileManagerFragment extends BaseFragment {
 
-    private static final String TAG = FileManagerFragment.class.getSimpleName();
-
     public static final String ROOT_FOLDER = "root_folder";
     public static final String CURRENT_FOLDER = "current_folder";
     public static final String PATH_HIDE_PATH_FROM = "hide_path_from";
-
-    private Menu mMenu;
+    private static final String TAG = FileManagerFragment.class.getSimpleName();
+    public ArrayList<ProtoFile> mCurrentFileList;
     // public HashMap<Integer, Boolean> filesModified;
-
     protected FileManagerAdapter mProjectAdapter;
     protected RecyclerView mRecyclerFileList;
-
-    public ArrayList<ProtoFile> mCurrentFileList;
+    private Menu mMenu;
     private String mCurrentFolder = "";
     private String mRootFolder = "";
     private String mPathHideFrom;
@@ -102,6 +98,11 @@ public class FileManagerFragment extends BaseFragment {
         mPathHideFrom = bundle.getString(PATH_HIDE_PATH_FROM);
 
         MLog.d(TAG, "created with root: " + mCurrentFolder + " and current " + mCurrentFolder);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -159,9 +160,17 @@ public class FileManagerFragment extends BaseFragment {
         mTxtPath = v.findViewById(R.id.path);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void getFileList() {
+        mCurrentFileList = PhonkScriptHelper.listFilesForFileManager(mCurrentFolder);
+
+        String showPath = "";
+        if (mPathHideFrom != null) {
+            // MLog.d(TAG, mPathHideFrom + " " + mCurrentFolder);
+            showPath = mCurrentFolder.replace(mPathHideFrom, "");
+        } else {
+            showPath = mCurrentFolder;
+        }
+        mTxtPath.setText(showPath);
     }
 
     @Override
@@ -177,13 +186,6 @@ public class FileManagerFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.file_list, menu);
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -194,6 +196,13 @@ public class FileManagerFragment extends BaseFragment {
     public void onDestroyOptionsMenu() {
         mMenu.removeItem(21);
         super.onDestroyOptionsMenu();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.file_list, menu);
     }
 
     /*
@@ -232,8 +241,10 @@ public class FileManagerFragment extends BaseFragment {
                         }
                     };
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener).setNegativeButton(
+                            "No",
+                            dialogClickListener
+                    ).show();
 
                     return true;
 
@@ -245,32 +256,16 @@ public class FileManagerFragment extends BaseFragment {
         myPopup.show();
     }
 
-    private void getFileList() {
-        mCurrentFileList = PhonkScriptHelper.listFilesForFileManager(mCurrentFolder);
-
-        String showPath = "";
-        if (mPathHideFrom != null) {
-            // MLog.d(TAG, mPathHideFrom + " " + mCurrentFolder);
-            showPath = mCurrentFolder.replace(mPathHideFrom, "");
-        } else {
-            showPath = mCurrentFolder;
-        }
-        mTxtPath.setText(showPath);
-    }
-
-    protected void deleteFile(int position) {
-        PhonkScriptHelper.deleteFileOrFolder(mCurrentFileList.get(position).getFullPath());
-        mCurrentFileList.remove(position);
-        mProjectAdapter.notifyDataSetChanged();
-    }
-
     private void viewFile(int index) {
         Intent newIntent = new Intent();
 
         String fileName = mCurrentFileList.get(index).name;
         String fileExt = PhonkScriptHelper.fileExt(fileName).substring(1);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExt);
-        File file = new File(Environment.getExternalStorageDirectory(), "phonk_io/examples/User%20Interface/UI/patata2.png");
+        File file = new File(
+                Environment.getExternalStorageDirectory(),
+                "phonk_io/examples/User%20Interface/UI/patata2.png"
+        );
 
         MLog.d(TAG, "File path " + file.getAbsoluteFile() + " fileExtension " + fileExt + " mimeType " + mimeType);
 
@@ -287,6 +282,12 @@ public class FileManagerFragment extends BaseFragment {
         newIntent.setDataAndType(uri, mimeType);
 
         startActivity(newIntent);
+    }
+
+    protected void deleteFile(int position) {
+        PhonkScriptHelper.deleteFileOrFolder(mCurrentFileList.get(position).getFullPath());
+        mCurrentFileList.remove(position);
+        mProjectAdapter.notifyDataSetChanged();
     }
 
     // load file in editor

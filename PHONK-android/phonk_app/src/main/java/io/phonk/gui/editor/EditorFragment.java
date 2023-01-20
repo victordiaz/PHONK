@@ -55,36 +55,64 @@ import io.phonk.server.model.ProtoFile;
 @SuppressLint("NewApi")
 public class EditorFragment extends BaseFragment {
 
-    protected static final String TAG = EditorFragment.class.getSimpleName();
     public static final String FILE_NAME = "file_name";
     public static final String FILE_PATH = "file_path";
-
-    public interface EditorFragmentListener {
-        void onLoad();
-
-        void onLineTouched();
-    }
-
-    private EditText mEdit;
-    private View v;
-    private EditorFragmentListener listener;
-
+    protected static final String TAG = EditorFragment.class.getSimpleName();
     // settings
     private final EditorSettings mEditorSettings = new EditorSettings();
     private final HashMap<String, String> openedFiles = new HashMap<>();
+    private EditText mEdit;
+    private View v;
+    private EditorFragmentListener listener;
     private ProtoFile mCurrentFile;
-
     public EditorFragment() {
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public static EditorFragment newInstance() {
+        return newInstance(null);
+    }
+
+    public static EditorFragment newInstance(Bundle bundle) {
+        EditorFragment myFragment = new EditorFragment();
+        myFragment.setArguments(bundle);
+
+        return myFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    public void increaseFont() {
+        MLog.d(TAG, "size: " + mEdit.getTextSize() + " " + mEditorSettings.fontSize);
+        mEditorSettings.fontSize += 1;
+        mEdit.setTextSize(mEditorSettings.fontSize);
+    }
+
+    public void decreaseFont() {
+        mEditorSettings.fontSize -= 1;
+        mEdit.setTextSize(mEditorSettings.fontSize);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        Toast.makeText(getActivity(), "HIDDEN? " + hidden, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
@@ -111,23 +139,6 @@ public class EditorFragment extends BaseFragment {
         }
 
         return v;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -162,17 +173,6 @@ public class EditorFragment extends BaseFragment {
 
             }
         });
-    }
-
-    public void increaseFont() {
-        MLog.d(TAG, "size: " + mEdit.getTextSize() + " " + mEditorSettings.fontSize);
-        mEditorSettings.fontSize += 1;
-        mEdit.setTextSize(mEditorSettings.fontSize);
-    }
-
-    public void decreaseFont() {
-        mEditorSettings.fontSize -= 1;
-        mEdit.setTextSize(mEditorSettings.fontSize);
     }
 
     /**
@@ -214,40 +214,6 @@ public class EditorFragment extends BaseFragment {
         }
     }
 
-    public static EditorFragment newInstance() {
-        return newInstance(null);
-    }
-
-    public static EditorFragment newInstance(Bundle bundle) {
-        EditorFragment myFragment = new EditorFragment();
-        myFragment.setArguments(bundle);
-
-        return myFragment;
-    }
-
-    @Override
-    public View getView() {
-        return super.getView();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        Toast.makeText(getActivity(), "HIDDEN? " + hidden, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Add a listner to know whe the cursor is
-     */
-    public void addListener(EditorFragmentListener listener) {
-        this.listener = listener;
-    }
-
-
     public void loadFile(String path, String name) {
         mCurrentFile = new ProtoFile(path, name);
         String filePath = mCurrentFile.getFullPath();
@@ -264,10 +230,50 @@ public class EditorFragment extends BaseFragment {
     }
 
     /**
+     * Get current cursor line
+     */
+    public int getCurrentCursorLine(Editable editable) {
+        int selectionStartPos = Selection.getSelectionStart(editable);
+
+        // no selection
+        if (selectionStartPos < 0) return -1;
+
+        String preSelectionStartText = editable.toString().substring(0, selectionStartPos);
+        return StringUtils.countMatches(preSelectionStartText, "\n");
+    }
+
+    @Override
+    public View getView() {
+        return super.getView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * Add a listner to know whe the cursor is
+     */
+    public void addListener(EditorFragmentListener listener) {
+        this.listener = listener;
+    }
+
+    /**
      * Save the current project
      */
     public void saveFile() {
-        PhonkScriptHelper.saveCodeFromAbsolutePath(mCurrentFile.getFullPath(), openedFiles.get(mCurrentFile.getFullPath()));
+        PhonkScriptHelper.saveCodeFromAbsolutePath(
+                mCurrentFile.getFullPath(),
+                openedFiles.get(mCurrentFile.getFullPath())
+        );
         // Toast.makeText(getActivity(), "Saving " + mCurrentFile.getFullPath() + "...", Toast.LENGTH_SHORT).show();
     }
 
@@ -280,20 +286,6 @@ public class EditorFragment extends BaseFragment {
         } else {
             mEdit.setFocusable(false);
         }
-    }
-
-
-    /**
-     * Get current cursor line
-     */
-    public int getCurrentCursorLine(Editable editable) {
-        int selectionStartPos = Selection.getSelectionStart(editable);
-
-        // no selection
-        if (selectionStartPos < 0) return -1;
-
-        String preSelectionStartText = editable.toString().substring(0, selectionStartPos);
-        return StringUtils.countMatches(preSelectionStartText, "\n");
     }
 
     /**
@@ -317,5 +309,11 @@ public class EditorFragment extends BaseFragment {
             ProtoFile f = e.getProtofile();
             loadFile(e.getProtofile().path, e.getProtofile().name);
         }
+    }
+
+    public interface EditorFragmentListener {
+        void onLoad();
+
+        void onLineTouched();
     }
 }

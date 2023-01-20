@@ -59,6 +59,29 @@ public class PConsole extends ProtoBase {
         return this;
     }
 
+    private void base_log(String action, Object... outputs) {
+        StringBuilder builder = new StringBuilder();
+        if (showTime) builder.append(getCurrentTime());
+        for (Object output : outputs) {
+            // format the objects to json output if the object is a ReturnObject
+            String out = "";
+
+            out = output.toString();
+            builder.append(" ").append(out);
+        }
+        String log = builder.toString();
+
+        send(action, log);
+    }
+
+    private String getCurrentTime() {
+        return s.format(new Date());
+    }
+
+    private void send(String action, String data) {
+        EventBus.getDefault().postSticky(new Events.LogEvent(action, getCurrentTime(), data));
+    }
+
     @PhonkMethod
     public PConsole logImage(String imgPath) {
         imgPath = imgPath + "?" + StrUtils.generateUUID();
@@ -67,7 +90,6 @@ public class PConsole extends ProtoBase {
         base_log("log", img);
         return this;
     }
-
 
     /**
      * Shows any text in the WebIDE console
@@ -79,51 +101,6 @@ public class PConsole extends ProtoBase {
     @PhonkMethodParam(params = {"text", "text", "..."})
     public PConsole error(Object outputs) {
         base_log("log_error", outputs);
-
-        return this;
-    }
-
-    public PConsole p_error(int type, Object outputs) {
-        switch (type) {
-            case AppRunnerInterpreter.RESULT_ERROR:
-                base_log("log_error", outputs);
-                break;
-
-            case AppRunnerInterpreter.RESULT_PERMISSION_ERROR:
-                base_log("log_permission_error", outputs);
-                break;
-
-            case AppRunnerInterpreter.RESULT_NOT_CAPABLE:
-                base_log("log_error", "This device does not support/have " + outputs);
-        }
-
-        return this;
-    }
-
-
-    /**
-     * Clears the console
-     *
-     * @status TODO_EXAMPLE
-     */
-    @PhonkMethod(description = "clear the console", example = "")
-    @PhonkMethodParam(params = {""})
-    public PConsole clear() {
-        send("clear", "");
-        return this;
-    }
-
-    /**
-     * Shows / hide the console
-     *
-     * @param b
-     * @status TODO
-     */
-    @PhonkMethod(description = "show/hide the console", example = "")
-    @PhonkMethodParam(params = {"boolean"})
-    public PConsole show(boolean b) {
-        if (b) send("show", "");
-        else send("hide", "");
 
         return this;
     }
@@ -215,27 +192,48 @@ public class PConsole extends ProtoBase {
     }
     */
 
-    private void base_log(String action, Object... outputs) {
-        StringBuilder builder = new StringBuilder();
-        if (showTime) builder.append(getCurrentTime());
-        for (Object output : outputs) {
-            // format the objects to json output if the object is a ReturnObject
-            String out = "";
+    public PConsole p_error(int type, Object outputs) {
+        switch (type) {
+            case AppRunnerInterpreter.RESULT_ERROR:
+                base_log("log_error", outputs);
+                break;
 
-            out = output.toString();
-            builder.append(" ").append(out);
+            case AppRunnerInterpreter.RESULT_PERMISSION_ERROR:
+                base_log("log_permission_error", outputs);
+                break;
+
+            case AppRunnerInterpreter.RESULT_NOT_CAPABLE:
+                base_log("log_error", "This device does not support/have " + outputs);
         }
-        String log = builder.toString();
 
-        send(action, log);
+        return this;
     }
 
-    private void send(String action, String data) {
-        EventBus.getDefault().postSticky(new Events.LogEvent(action, getCurrentTime(), data));
+    /**
+     * Clears the console
+     *
+     * @status TODO_EXAMPLE
+     */
+    @PhonkMethod(description = "clear the console", example = "")
+    @PhonkMethodParam(params = {""})
+    public PConsole clear() {
+        send("clear", "");
+        return this;
     }
 
-    private String getCurrentTime() {
-        return s.format(new Date());
+    /**
+     * Shows / hide the console
+     *
+     * @param b
+     * @status TODO
+     */
+    @PhonkMethod(description = "show/hide the console", example = "")
+    @PhonkMethodParam(params = {"boolean"})
+    public PConsole show(boolean b) {
+        if (b) send("show", "");
+        else send("hide", "");
+
+        return this;
     }
 
     public void adbLog(String tag, String msg) {

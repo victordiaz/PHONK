@@ -48,8 +48,7 @@ import io.phonk.runner.base.utils.Image;
 public class PCanvas {
     private static final String TAG = PCustomView.class.getSimpleName();
     private final AppRunner mAppRunner;
-
-    private Canvas mCanvasBuffer;
+    private final boolean absoluteMode = false;
     public Canvas mCanvas;
 
     @PhonkField(description = "Canvas width", example = "")
@@ -57,17 +56,17 @@ public class PCanvas {
 
     @PhonkField(description = "Canvas height", example = "")
     public int height;
-
+    public Paint mPaintFill;
+    Path path;
+    boolean firstPathPoint = false;
+    private Canvas mCanvasBuffer;
     private RectF mRectf;
     private Bitmap mTransparentBmp;
     private Paint mPaintBackground;
-    public Paint mPaintFill;
     private Paint mPaintStroke;
     private boolean fillOn = true;
     private boolean strokeOn = false;
     private boolean mModeCorner = true;
-
-    private final boolean absoluteMode = false;
 
     PCanvas(AppRunner appRunner) {
         this.mAppRunner = appRunner;
@@ -95,10 +94,27 @@ public class PCanvas {
         refresh();
     }
 
+    /**
+     * Layer class stuff
+     */
+    public void refresh() {
+
+    }
+
     @PhonkMethod(description = "Sets the filling color", example = "")
     @PhonkMethodParam(params = {"hex"})
     public PCanvas fill(String hex) {
         fill(Color.parseColor(hex));
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Sets the filling color", example = "")
+    @PhonkMethodParam(params = {"hex"})
+    public PCanvas fill(int c) {
+        mPaintFill.setStyle(Paint.Style.FILL);
+        mPaintFill.setColor(c);
+        fillOn = true;
 
         return this;
     }
@@ -115,16 +131,6 @@ public class PCanvas {
     @PhonkMethodParam(params = {"r", "g", "b"})
     public PCanvas fill(int r, int g, int b) {
         fill(Color.argb(255, r, g, b));
-
-        return this;
-    }
-
-    @PhonkMethod(description = "Sets the filling color", example = "")
-    @PhonkMethodParam(params = {"hex"})
-    public PCanvas fill(int c) {
-        mPaintFill.setStyle(Paint.Style.FILL);
-        mPaintFill.setColor(c);
-        fillOn = true;
 
         return this;
     }
@@ -151,6 +157,16 @@ public class PCanvas {
     }
 
     @PhonkMethod(description = "Sets the stroke color", example = "")
+    @PhonkMethodParam(params = {"hex"})
+    public PCanvas stroke(int c) {
+        mPaintStroke.setStyle(Paint.Style.STROKE);
+        mPaintStroke.setColor(c);
+        strokeOn = true;
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Sets the stroke color", example = "")
     @PhonkMethodParam(params = {"r", "g", "b"})
     public PCanvas stroke(int r, int g, int b) {
         stroke(Color.argb(255, r, g, b));
@@ -162,16 +178,6 @@ public class PCanvas {
     @PhonkMethodParam(params = {"hex"})
     public PCanvas stroke(String c) {
         stroke(Color.parseColor(c));
-
-        return this;
-    }
-
-    @PhonkMethod(description = "Sets the stroke color", example = "")
-    @PhonkMethodParam(params = {"hex"})
-    public PCanvas stroke(int c) {
-        mPaintStroke.setStyle(Paint.Style.STROKE);
-        mPaintStroke.setColor(c);
-        strokeOn = true;
 
         return this;
     }
@@ -216,17 +222,6 @@ public class PCanvas {
         return this;
     }
 
-    @PhonkMethod(description = "Change the background color with alpha value", example = "")
-    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
-    public PCanvas background(int r, int g, int b, int alpha) {
-        mPaintBackground.setStyle(Paint.Style.FILL);
-        mPaintBackground.setARGB(alpha, r, g, b);
-        mCanvasBuffer.drawRect(0, 0, width, height, mPaintBackground);
-        refresh();
-
-        return this;
-    }
-
     /**
      * Drawing cornerMode
      */
@@ -245,6 +240,17 @@ public class PCanvas {
     @PhonkMethodParam(params = {"r", "g", "b"})
     public PCanvas background(int r, int g, int b) {
         background(r, g, b, 255);
+        refresh();
+
+        return this;
+    }
+
+    @PhonkMethod(description = "Change the background color with alpha value", example = "")
+    @PhonkMethodParam(params = {"r", "g", "b", "alpha"})
+    public PCanvas background(int r, int g, int b, int alpha) {
+        mPaintBackground.setStyle(Paint.Style.FILL);
+        mPaintBackground.setARGB(alpha, r, g, b);
+        mCanvasBuffer.drawRect(0, 0, width, height, mPaintBackground);
         refresh();
 
         return this;
@@ -273,6 +279,16 @@ public class PCanvas {
         return this;
     }
 
+    private RectF place(float x, float y, float w, float h) {
+        if (mModeCorner) {
+            mRectf.set(x, y, x + w, y + h);
+        } else {
+            mRectf.set(x - w / 2, y - h / 2, x + w / 2, y + h / 2);
+        }
+
+        return mRectf;
+    }
+
     @PhonkMethod(description = "Draws a rectangle with a given roundness value", example = "")
     @PhonkMethodParam(params = {"x", "y", "width", "height", "rx", "ry"})
     public PCanvas rect(float x, float y, float width, float height, float rx, float ry) {
@@ -296,10 +312,8 @@ public class PCanvas {
     @PhonkMethod(description = "Draws an arc", example = "")
     @PhonkMethodParam(params = {"x1", "y1", "x2", "y2", "initAngle", "sweepAngle", "center"})
     public PCanvas arc(float x1, float y1, float x2, float y2, float initAngle, float sweepAngle, boolean center) {
-        if (fillOn)
-            mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
-        if (strokeOn)
-            mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
+        if (fillOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintFill);
+        if (strokeOn) mCanvasBuffer.drawArc(place(x1, y1, x2, y2), initAngle, sweepAngle, center, mPaintStroke);
         refresh();
 
         return this;
@@ -330,9 +344,6 @@ public class PCanvas {
         refresh();
     }
 
-    Path path;
-    boolean firstPathPoint = false;
-
     public void beginPath() {
         path = new Path();
         firstPathPoint = true;
@@ -352,6 +363,8 @@ public class PCanvas {
         refresh();
     }
 
+    // TODO this only works on api 21
+
     /**
      * Text stuff
      */
@@ -362,31 +375,6 @@ public class PCanvas {
         mPaintStroke.setTextSize(size);
         return this;
     }
-
-    public PCanvas textAlign(String alignTo) {
-        Paint.Align alignment = Paint.Align.LEFT;
-
-        switch (alignTo) {
-            case "left":
-                alignment = Paint.Align.LEFT;
-                break;
-
-            case "center":
-                alignment = Paint.Align.CENTER;
-                break;
-
-            case "right":
-                alignment = Paint.Align.RIGHT;
-                break;
-        }
-
-        mPaintFill.setTextAlign(alignment);
-        mPaintStroke.setTextAlign(alignment);
-
-        return this;
-    }
-
-    // TODO this only works on api 21
 
     @PhonkMethod(description = "Writes text", example = "")
     @PhonkMethodParam(params = {"text", "x", "y"})
@@ -419,6 +407,28 @@ public class PCanvas {
         mCanvasBuffer.drawText(text, cx, cy - rectTextBounds.exactCenterY(), mPaintFill);
     }
 
+    public PCanvas textAlign(String alignTo) {
+        Paint.Align alignment = Paint.Align.LEFT;
+
+        switch (alignTo) {
+            case "left":
+                alignment = Paint.Align.LEFT;
+                break;
+
+            case "center":
+                alignment = Paint.Align.CENTER;
+                break;
+
+            case "right":
+                alignment = Paint.Align.RIGHT;
+                break;
+        }
+
+        mPaintFill.setTextAlign(alignment);
+        mPaintStroke.setTextAlign(alignment);
+
+        return this;
+    }
 
     public void typeface(String type) {
         Typeface selectedType;
@@ -465,7 +475,6 @@ public class PCanvas {
         return this;
     }
 
-
     /**
      *
      */
@@ -511,15 +520,15 @@ public class PCanvas {
         return this;
     }
 
-    public Camera getCamera() {
-        return new Camera();
-    }
-
     public Matrix getMatrix() {
         Matrix matrix = new Matrix();
         getCamera().getMatrix(matrix);
 
         return matrix;
+    }
+
+    public Camera getCamera() {
+        return new Camera();
     }
 
     /**
@@ -570,27 +579,10 @@ public class PCanvas {
         return this;
     }
 
-    private RectF place(float x, float y, float w, float h) {
-        if (mModeCorner) {
-            mRectf.set(x, y, x + w, y + h);
-        } else {
-            mRectf.set(x - w / 2, y - h / 2, x + w / 2, y + h / 2);
-        }
-
-        return mRectf;
-    }
-
     public void setCanvas(Canvas canvas) {
         this.width = canvas.getWidth();
         this.height = canvas.getHeight();
         this.mCanvas = canvas;
-    }
-
-    /**
-     * Layer class stuff
-     */
-    public void refresh() {
-
     }
 
     public void prepare(int w, int h) {

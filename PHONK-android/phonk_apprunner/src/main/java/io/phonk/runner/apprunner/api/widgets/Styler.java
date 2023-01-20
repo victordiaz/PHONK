@@ -22,6 +22,8 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
+
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
@@ -36,15 +38,11 @@ import java.util.Map;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
-import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
-
 public class Styler {
     private static final java.lang.String TAG = Styler.class.getSimpleName();
-
+    public final StylePropertiesProxy mProps;
     final View mView;
     final AppRunner mAppRunner;
-    public final StylePropertiesProxy mProps;
-
     final MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
     // MyRoundCornerDrawable mActiveDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mPressedDrawable = new MyRoundCornerDrawable();
@@ -144,14 +142,6 @@ public class Styler {
         StylePropertiesProxy style = mAppRunner.pUi.getStyle();
         fromTo(style, mProps);
         mProps.put("id", id);
-    }
-
-    public static void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {
-        if (styleFrom == null) return;
-
-        for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
-            styleTo.put(entry.getKey(), styleTo, entry.getValue());
-        }
     }
 
     public void apply() {
@@ -307,29 +297,12 @@ public class Styler {
         }
     }
 
-    public void setProps(Map o) {
-        mProps.eventOnChange = false;
-        fromTo(o, mProps);
-        apply();
-        mProps.eventOnChange = true;
-    }
+    public static void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {
+        if (styleFrom == null) return;
 
-    protected float toFloat(Object o) {
-        return ((Number) o).floatValue();
-    }
-
-    public void setLayoutProps(float x, float y, float width, float height) {
-        mProps.eventOnChange = false;
-        mProps.put("x", mProps, x);
-        mProps.put("y", mProps, y);
-        mProps.put("w", mProps, width);
-        mProps.put("h", mProps, height);
-        mProps.eventOnChange = true;
-    }
-
-    void getScreenSize() {
-        mWidth = mAppRunner.pUi.screenWidth;
-        mHeight = mAppRunner.pUi.screenHeight;
+        for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
+            styleTo.put(entry.getKey(), styleTo, entry.getValue());
+        }
     }
 
     public void setX(Object value) {
@@ -372,6 +345,31 @@ public class Styler {
             lp.height = val;
             mView.setLayoutParams(lp);
         }
+    }
+
+    protected float toFloat(Object o) {
+        return ((Number) o).floatValue();
+    }
+
+    void getScreenSize() {
+        mWidth = mAppRunner.pUi.screenWidth;
+        mHeight = mAppRunner.pUi.screenHeight;
+    }
+
+    public void setProps(Map o) {
+        mProps.eventOnChange = false;
+        fromTo(o, mProps);
+        apply();
+        mProps.eventOnChange = true;
+    }
+
+    public void setLayoutProps(float x, float y, float width, float height) {
+        mProps.eventOnChange = false;
+        mProps.put("x", mProps, x);
+        mProps.put("y", mProps, y);
+        mProps.put("w", mProps, width);
+        mProps.put("h", mProps, height);
+        mProps.eventOnChange = true;
     }
 
 }

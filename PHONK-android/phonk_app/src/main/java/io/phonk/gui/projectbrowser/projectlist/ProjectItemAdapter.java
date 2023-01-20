@@ -35,26 +35,12 @@ import io.phonk.runner.base.models.Project;
 
 public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.ViewHolder> {
     private static final String TAG = ProjectItemAdapter.class.getSimpleName();
+    public final HashMap<Project, Boolean> mProjectSelection = new HashMap<>();
     private final Context mContext;
     private final int mPickMode;
-
-    public ArrayList<Project> mProjectList = new ArrayList<>();
-    public final HashMap<Project, Boolean> mProjectSelection = new HashMap<>();
     private final boolean mListMode;
+    public ArrayList<Project> mProjectList = new ArrayList<>();
     private ProjectListFragment.ProjectSelectedListener mListener;
-
-    public void setListener(ProjectListFragment.ProjectSelectedListener listener) {
-        mListener = listener;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final ProjectItem mView;
-
-        public ViewHolder(ProjectItem v) {
-            super(v);
-            mView = v;
-        }
-    }
 
     /*
      * ProjectItemAdapter
@@ -63,6 +49,10 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         mContext = c;
         mListMode = listMode;
         mPickMode = pickMode;
+    }
+
+    public void setListener(ProjectListFragment.ProjectSelectedListener listener) {
+        mListener = listener;
     }
 
     public void setArray(ArrayList<Project> projectList) {
@@ -80,20 +70,6 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         notifyItemRemoved(id);
     }
 
-    public int findAppIdByName(String appName) {
-        int id = -1;
-
-        for (int i = 0; i < mProjectList.size(); i++) {
-            String name = mProjectList.get(i).getName();
-            if (name.equals(appName)) {
-                id = i;
-                break;
-            }
-        }
-
-        return id;
-    }
-
     public int findAppPosByName(String appName) {
         int pos = -1;
 
@@ -108,6 +84,20 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
         }
 
         return pos;
+    }
+
+    public int findAppIdByName(String appName) {
+        int id = -1;
+
+        for (int i = 0; i < mProjectList.size(); i++) {
+            String name = mProjectList.get(i).getName();
+            if (name.equals(appName)) {
+                id = i;
+                break;
+            }
+        }
+
+        return id;
     }
 
     // Create new views (invoked by the layout manager)
@@ -144,6 +134,15 @@ public class ProjectItemAdapter extends RecyclerView.Adapter<ProjectItemAdapter.
     @Override
     public int getItemCount() {
         return mProjectList.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final ProjectItem mView;
+
+        public ViewHolder(ProjectItem v) {
+            super(v);
+            mView = v;
+        }
     }
 
 }

@@ -35,14 +35,12 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.Looper;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -59,26 +57,51 @@ import io.phonk.runner.base.utils.MLog;
 
 public class AppRunnerService extends Service {
 
-    private final String TAG = AppRunnerService.class.getSimpleName();
-
     private static final String SERVICE_CLOSE = "service_close";
+    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            stopSelf();
+        }
+    };
+    final BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String code = intent.getStringExtra("code");
 
+            // mAppRunner.interp.eval(code);
+        }
+    };
+    private final String TAG = AppRunnerService.class.getSimpleName();
+    private final boolean mOverlayIsEnabled = false;
+    private final String mNotificationChannelId = "phonk_script";
     private AppRunner mAppRunner;
-
     private WindowManager windowManager;
     private RelativeLayout parentScriptedLayout;
     private RelativeLayout mainLayout;
-
     private NotificationManager mNotifManager;
     private PendingIntent mRestartPendingIntent;
+    final Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+            MLog.d(TAG, "exception" + ex.toString());
 
+            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mRestartPendingIntent);
+
+            mNotifManager.cancelAll();
+
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(10);
+
+            throw new RuntimeException(ex);
+        }
+    };
     private boolean eventBusRegistered = false;
-    private final boolean mOverlayIsEnabled = false;
     private NotificationManager mNotificationManager;
     private int mNotificationId;
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationChannel mChannel;
-    private final String mNotificationChannelId = "phonk_script";
 
     @Override
     public void onCreate() {
@@ -123,12 +146,12 @@ public class AppRunnerService extends Service {
                 touchParam = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
             }
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     touchParam,
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    PixelFormat.TRANSLUCENT);
+                    PixelFormat.TRANSLUCENT
+            );
 
             params.gravity = Gravity.TOP | Gravity.LEFT;
             params.x = 0;
@@ -136,7 +159,10 @@ public class AppRunnerService extends Service {
 
             if (Build.VERSION.SDK_INT >= 23) {
                 if (!Settings.canDrawOverlays(this)) {
-                    Intent intent2 = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                    Intent intent2 = new Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName())
+                    );
                     // startActivityForResult(intent, 1234);
                 }
             }
@@ -148,7 +174,10 @@ public class AppRunnerService extends Service {
         executeCodeActivityBroadcastReceiver();
 
         // catch errors and send them to the WebIDE or the app console
-        AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(resultType, message);
+        AppRunnerInterpreter.InterpreterInfo appRunnerCb = (resultType, message) -> mAppRunner.pConsole.p_error(
+                resultType,
+                message
+        );
         mAppRunner.initProject();
 
         // notification
@@ -157,7 +186,8 @@ public class AppRunnerService extends Service {
         createNotification(mNotificationId, mAppRunner.getProject().getFolder(), mAppRunner.getProject().getName());
 
         // just in case it crash
-        Intent restartIntent = new Intent("io.phonk.LauncherActivity"); //getApplicationContext(), AppRunnerActivity.class);
+        Intent restartIntent = new Intent("io.phonk.LauncherActivity"); //getApplicationContext(), AppRunnerActivity
+        // .class);
         restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         restartIntent.putExtra("wasCrash", true);
 
@@ -175,9 +205,37 @@ public class AppRunnerService extends Service {
         }
     }
 
-    public void unregisterEventBus() {
-        EventBus.getDefault().unregister(this);
-        eventBusRegistered = false;
+    public RelativeLayout initLayout() {
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        // set the parent
+        parentScriptedLayout = new RelativeLayout(this);
+        parentScriptedLayout.setLayoutParams(layoutParams);
+        parentScriptedLayout.setGravity(Gravity.BOTTOM);
+        parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+        return parentScriptedLayout;
+    }
+
+    /**
+     * Receiving order to close the activity
+     */
+    public void startStopActivityBroadcastReceiver() {
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("io.phonk.runner.intent.CLOSE");
+        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
+    }
+
+    /**
+     * Receiving order to execute line of code
+     */
+    public void executeCodeActivityBroadcastReceiver() {
+        IntentFilter filterSend = new IntentFilter();
+        filterSend.addAction("io.phonk.runner.intent.EXECUTE_CODE");
+        registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
     }
 
     private void createNotification(final int notificationId, String scriptFolder, String scriptName) {
@@ -185,16 +243,21 @@ public class AppRunnerService extends Service {
 
         // close server intent
         Intent notificationIntent = new Intent(this, AppRunnerService.class).setAction(SERVICE_CLOSE);
-        PendingIntent pendingIntentStopService = PendingIntent.getService(this, (int) System.currentTimeMillis(), notificationIntent, 0);
+        PendingIntent pendingIntentStopService = PendingIntent.getService(
+                this,
+                (int) System.currentTimeMillis(),
+                notificationIntent,
+                0
+        );
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationBuilder = new NotificationCompat.Builder(this, mNotificationChannelId)
-                .setSmallIcon(R.drawable.dotted)
+        mNotificationBuilder = new NotificationCompat.Builder(
+                this,
+                mNotificationChannelId
+        ).setSmallIcon(R.drawable.dotted)
                 // .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                .setContentTitle(this.getString(R.string.app_name))
-                .setContentText("Running " + scriptName)
-                .setOngoing(false)
-                .setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
+                .setContentTitle(this.getString(R.string.app_name)).setContentText("Running " + scriptName).setOngoing(
+                        false).setColor(this.getResources().getColor(R.color.phonk_colorPrimary))
                 // .setContentIntent(pendingIntent)
                 // .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_action_stop, "Stop script", pendingIntentStopService);
@@ -214,46 +277,6 @@ public class AppRunnerService extends Service {
         Thread.setDefaultUncaughtExceptionHandler(handler);
     }
 
-    final Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-        @Override
-        public void uncaughtException(Thread thread, Throwable ex) {
-            MLog.d(TAG, "exception" + ex.toString());
-
-            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mRestartPendingIntent);
-
-            mNotifManager.cancelAll();
-
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(10);
-
-            throw new RuntimeException(ex);
-        }
-    };
-
-
-    public void addScriptedLayout(View scriptedUILayout) {
-        parentScriptedLayout.addView(scriptedUILayout);
-    }
-
-    public RelativeLayout initLayout() {
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-        // set the parent
-        parentScriptedLayout = new RelativeLayout(this);
-        parentScriptedLayout.setLayoutParams(layoutParams);
-        parentScriptedLayout.setGravity(Gravity.BOTTOM);
-        parentScriptedLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
-
-        return parentScriptedLayout;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-
-        return null;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -270,6 +293,21 @@ public class AppRunnerService extends Service {
         // mAppRunner.interp = null;
     }
 
+    public void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
+        eventBusRegistered = false;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+
+        return null;
+    }
+
+    public void addScriptedLayout(View scriptedUILayout) {
+        parentScriptedLayout.addView(scriptedUILayout);
+    }
+
     /**
      * Activity dependent events
      */
@@ -284,40 +322,6 @@ public class AppRunnerService extends Service {
         i.putExtra("data", data);
         sendBroadcast(i);
     }
-
-    /**
-     * Receiving order to close the activity
-     */
-    public void startStopActivityBroadcastReceiver() {
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.runner.intent.CLOSE");
-        registerReceiver(stopActivitiyBroadcastReceiver, filterSend);
-    }
-
-    final BroadcastReceiver stopActivitiyBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            stopSelf();
-        }
-    };
-
-    /**
-     * Receiving order to execute line of code
-     */
-    public void executeCodeActivityBroadcastReceiver() {
-        IntentFilter filterSend = new IntentFilter();
-        filterSend.addAction("io.phonk.runner.intent.EXECUTE_CODE");
-        registerReceiver(executeCodeActivitiyBroadcastReceiver, filterSend);
-    }
-
-    final BroadcastReceiver executeCodeActivitiyBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String code = intent.getStringExtra("code");
-
-            // mAppRunner.interp.eval(code);
-        }
-    };
 
 
 }

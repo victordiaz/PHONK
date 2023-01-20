@@ -34,21 +34,24 @@ import io.phonk.runner.base.utils.FileIO;
 
 public class UserPreferences {
 
-    Map<String, Object> pref = null;
-
     private static UserPreferences instance;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Map<String, Object> pref = null;
 
     public static UserPreferences getInstance() {
         if (instance == null) instance = new UserPreferences();
         return instance;
     }
 
+    public Object get(String key) {
+        if (pref == null) load();
+        return pref.get(key);
+    }
+
     public void load() {
         String json = FileIO.loadStringFromFile(PhonkSettings.getPrefUrl());
         if (json != null) {
-            Type stringStringMap = new TypeToken<Map<String, Object>>() {
-            }.getType();
+            Type stringStringMap = new TypeToken<Map<String, Object>>() {}.getType();
             pref = gson.fromJson(json, stringStringMap);
         } else {
             pref = new HashMap<>();
@@ -75,11 +78,6 @@ public class UserPreferences {
         resetIfEmpty("background_image", null);
 
 
-    }
-
-    public Object get(String key) {
-        if (pref == null) load();
-        return pref.get(key);
     }
 
     private void resetIfEmpty(String key, Object obj) {

@@ -76,7 +76,11 @@ public class PMqtt extends ProtoBase {
         MemoryPersistence persistence = new MemoryPersistence();
 
         try {
-            client = new MqttAsyncClient((String) connectionSettings.get("broker"), (String) connectionSettings.get("clientId"), persistence);
+            client = new MqttAsyncClient(
+                    (String) connectionSettings.get("broker"),
+                    (String) connectionSettings.get("clientId"),
+                    persistence
+            );
             MqttConnectOptions connOpts = new MqttConnectOptions();
 
             if (connectionSettings.containsKey("user") && connectionSettings.containsKey("password")) {
@@ -189,6 +193,9 @@ public class PMqtt extends ProtoBase {
         return this;
     }
 
+    public PMqtt subscribe(String topic) {
+        return subscribe(topic, 2);
+    }
 
     /**
      * Subscribes to a certain topic. The data will arrive in the onNewData callback
@@ -205,10 +212,6 @@ public class PMqtt extends ProtoBase {
         }
 
         return this;
-    }
-
-    public PMqtt subscribe(String topic) {
-        return subscribe(topic, 2);
     }
 
     /**
@@ -256,21 +259,10 @@ public class PMqtt extends ProtoBase {
      * @return
      */
     public PMqtt onConnected(ReturnInterface callback) {
-        getAppRunner().pUi.toast("Please update to the new API onConnect, this will be deprecated in a future release, thx :)", true);
-        onConnect(callback);
-        return this;
-    }
-
-    /**
-     * Callback that returns connection status
-     *
-     * @param callback
-     * @return
-     */
-    public PMqtt onDisconnected(ReturnInterface callback) {
-        mCallbackDisconnected = callback;
-        getAppRunner().pUi.toast("Please update to the new API onDisconnect, this will be deprecated in a future release, thx :)", true);
-
+        getAppRunner().pUi.toast(
+                "Please update to the new API onConnect, this will be deprecated in a future release, thx :)",
+                true
+        );
         onConnect(callback);
         return this;
     }
@@ -284,6 +276,23 @@ public class PMqtt extends ProtoBase {
     public PMqtt onConnect(ReturnInterface callback) {
         mCallbackConnected = callback;
 
+        return this;
+    }
+
+    /**
+     * Callback that returns connection status
+     *
+     * @param callback
+     * @return
+     */
+    public PMqtt onDisconnected(ReturnInterface callback) {
+        mCallbackDisconnected = callback;
+        getAppRunner().pUi.toast(
+                "Please update to the new API onDisconnect, this will be deprecated in a future release, thx :)",
+                true
+        );
+
+        onConnect(callback);
         return this;
     }
 
@@ -342,6 +351,12 @@ public class PMqtt extends ProtoBase {
         return this;
     }
 
+    @Override
+    public void __stop() {
+        disconnect();
+        client = null;
+    }
+
     /**
      * Disconnect from the broker
      *
@@ -355,13 +370,6 @@ public class PMqtt extends ProtoBase {
             e.printStackTrace();
         }
         return this;
-    }
-
-
-    @Override
-    public void __stop() {
-        disconnect();
-        client = null;
     }
 
 }

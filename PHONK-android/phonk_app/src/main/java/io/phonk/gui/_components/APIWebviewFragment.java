@@ -45,11 +45,11 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint({"NewApi", "ValidFragment"})
 public class APIWebviewFragment extends BaseFragment {
 
-    public WebView webView;
     final Handler myHandler = new Handler();
+    private final String TAG = APIWebviewFragment.class.getSimpleName();
+    public WebView webView;
     protected View v;
     private String mUrl = null;
-    private final String TAG = APIWebviewFragment.class.getSimpleName();
     private boolean mIsTablet;
 
     public APIWebviewFragment(String file) {

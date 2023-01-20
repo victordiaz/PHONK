@@ -43,156 +43,154 @@ import io.phonk.runner.base.utils.MLog;
 
 public class OSC {
 
-	protected static final String TAG = OSC.class.getSimpleName();
+    protected static final String TAG = OSC.class.getSimpleName();
 
-	public interface OSCServerListener {
-		void onMessage(OSCMessage msg);
-	}
+    public interface OSCServerListener {
+        void onMessage(OSCMessage msg);
+    }
 
-	public static class Server {
-		public final Handler mHandler = new Handler(Looper.getMainLooper());
+    public static class Server {
+        public final Handler mHandler = new Handler(Looper.getMainLooper());
+        final Vector<OSCServerListener> listeners = new Vector<>();
+        // OSC server
+        OSCReceiver rcv;
+        OSCTransmitter trns;
+        DatagramChannel dch;
+        SocketAddress inPort = null;
 
-		// OSC server
-		OSCReceiver rcv;
-		OSCTransmitter trns;
-		DatagramChannel dch;
+        public void start(String port) {
+            rcv = null;
+            dch = null;
 
-		SocketAddress inPort = null;
-		final Vector<OSCServerListener> listeners = new Vector<>();
+            try {
+                inPort = new InetSocketAddress(Integer.parseInt(port));
 
-		public void start(String port) {
-			rcv = null;
-			dch = null;
+                dch = DatagramChannel.open();
+                dch.socket().bind(inPort); // assigns an automatic local socket
+                // address
+                rcv = OSCReceiver.newUsing(dch);
 
-			try {
-				inPort = new InetSocketAddress(Integer.parseInt(port));
+                rcv.addOSCListener((msg, sender, time) -> {
+                    for (OSCServerListener l : listeners) {
+                        l.onMessage(msg);
+                    }
+                });
+                rcv.startListening();
 
-				dch = DatagramChannel.open();
-				dch.socket().bind(inPort); // assigns an automatic local socket
-				// address
-				rcv = OSCReceiver.newUsing(dch);
+            } catch (IOException e2) {
+                MLog.d(TAG, e2.getLocalizedMessage());
+            }
+        }
 
-				rcv.addOSCListener((msg, sender, time) -> {
-					for (OSCServerListener l : listeners) {
-						l.onMessage(msg);
-					}
-				});
-				rcv.startListening();
+        public void onNewData(final ReturnInterface callbackfn) {
+            this.addListener(msg -> {
+                final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
+                for (int i = 0; i < msg.getArgCount(); i++) {
+                    valuesArray.put(valuesArray.size(), valuesArray, msg.getArg(i));
+                }
 
-			} catch (IOException e2) {
-				MLog.d(TAG, e2.getLocalizedMessage());
-			}
-		}
+                mHandler.post(() -> {
+                    // MLog.d(TAG, "receiver");
+                    ReturnObject o = new ReturnObject();
+                    o.put("name", msg.getName());
+                    o.put("data", valuesArray);
+                    callbackfn.event(o);
+                });
+            });
+        }
 
-		public void onNewData(final ReturnInterface callbackfn) {
-			this.addListener(msg -> {
-				final PhonkNativeArray valuesArray = new PhonkNativeArray(0);
-				for (int i = 0; i < msg.getArgCount(); i++) {
-					valuesArray.put(valuesArray.size(), valuesArray, msg.getArg(i));
-				}
+        public void addListener(OSCServerListener listener) {
+            listeners.add(listener);
+        }
 
-				mHandler.post(() -> {
-					// MLog.d(TAG, "receiver");
-					ReturnObject o = new ReturnObject();
-					o.put("name", msg.getName());
-					o.put("data", valuesArray);
-					callbackfn.event(o);
-				});
-			});
-		}
+        public void __stop() {
+            stop();
+        }
 
-		public void stop() {
-			stopOSCServer();
-		}
+        public void stop() {
+            stopOSCServer();
+        }
 
-		public void __stop() {
-			stop();
-		}
+        public void stopOSCServer() {
+            try {
+                dch.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            rcv.dispose();
+        }
 
-		public void stopOSCServer() {
-			try {
-				dch.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			rcv.dispose();
-		}
+        public void removeListener(OSCServerListener listener) {
+            listeners.remove(listener);
+        }
+    }
 
-		public void addListener(OSCServerListener listener) {
-			listeners.add(listener);
-		}
+    public static class Client {
+        // OSC client
+        SocketAddress addr2;
+        DatagramChannel dch2;
+        OSCTransmitter trns2;
+        boolean oscConnected = false;
 
-		public void removeListener(OSCServerListener listener) {
-			listeners.remove(listener);
-		}
-	}
+        public Client(String address, int port) {
+            connectOSC(address, port);
+        }
 
-	public static class Client {
-		// OSC client
-		SocketAddress addr2;
-		DatagramChannel dch2;
-		OSCTransmitter trns2;
-		boolean oscConnected = false;
+        public void connectOSC(String address, int port) {
+            try {
+                addr2 = new InetSocketAddress(InetAddress.getByName(address), port);
+                dch2 = DatagramChannel.open();
+                dch2.socket().bind(null);
+                trns2 = OSCTransmitter.newUsing(dch2);
+                oscConnected = true;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-		public Client(String address, int port) {
-			connectOSC(address, port);
-		}
+        public boolean isOSCConnected() {
+            return oscConnected;
+        }
 
-		public void connectOSC(String address, int port) {
-			try {
-				addr2 = new InetSocketAddress(InetAddress.getByName(address), port);
-				dch2 = DatagramChannel.open();
-				dch2.socket().bind(null);
-				trns2 = OSCTransmitter.newUsing(dch2);
-				oscConnected = true;
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+        public void send(final String msg, final Object[] o) {
 
-		public boolean isOSCConnected() {
-			return oscConnected;
-		}
+            if (oscConnected) {
+                Thread t = new Thread(() -> {
+                    MLog.d(TAG, "sending");
+                    try {
+                        MLog.d(TAG, "sent");
+                        trns2.send(new OSCMessage(msg, o), addr2);
+                    } catch (IOException e) {
+                        MLog.d(TAG, "not sent");
+                        e.printStackTrace();
+                    }
 
-		public void send(final String msg, final Object[] o) {
+                });
+                t.start();
+            }
+        }
 
-			if (oscConnected) {
-				Thread t = new Thread(() -> {
-					MLog.d(TAG, "sending");
-					try {
-						MLog.d(TAG, "sent");
-						trns2.send(new OSCMessage(msg, o), addr2);
-					} catch (IOException e) {
-						MLog.d(TAG, "not sent");
-						e.printStackTrace();
-					}
+        public void __stop() {
+            stop();
+        }
 
-				});
-				t.start();
-			}
-		}
+        public void stop() {
+            disconnectOSC();
+        }
 
-		public void disconnectOSC() {
-			try {
-				dch2.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			trns2.dispose();
-		}
+        public void disconnectOSC() {
+            try {
+                dch2.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            trns2.dispose();
+        }
 
-		public void stop() {
-			disconnectOSC();
-		}
-
-		public void __stop() {
-			stop();
-		}
-
-	}
+    }
 
 }

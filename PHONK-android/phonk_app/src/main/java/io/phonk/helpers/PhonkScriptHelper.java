@@ -62,23 +62,6 @@ public class PhonkScriptHelper {
 
     private static final String TAG = PhonkScriptHelper.class.getSimpleName();
 
-    private static String getBaseDir() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + PhonkSettings.PHONK_FOLDER + File.separator;
-    }
-
-    public static String getExportFolderPath() {
-        File p = new File(getProjectFolderPath(PhonkSettings.EXPORTED_FOLDER));
-        p.mkdirs();
-
-        return p.getAbsolutePath();
-    }
-
-    //
-    public static String getProjectFolderPath(String folder) {
-        return getBaseDir() + folder;
-    }
-
     public static String[] listTemplates(Context c) {
         return FileIO.listFilesInAssets(c, PhonkSettings.TEMPLATES_FOLDER);
     }
@@ -102,6 +85,16 @@ public class PhonkScriptHelper {
 
 
         return newProject;
+    }
+
+    //
+    public static String getProjectFolderPath(String folder) {
+        return getBaseDir() + folder;
+    }
+
+    private static String getBaseDir() {
+        return Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + File.separator + PhonkSettings.PHONK_FOLDER + File.separator;
     }
 
     public static void deleteFileInProject(Project p, String path) {
@@ -130,19 +123,12 @@ public class PhonkScriptHelper {
         saveCodeFromAbsolutePath(absolutePath, code);
     }
 
+    public static String getAbsolutePathFromRelative(String relativePath) {
+        return PhonkSettings.getBaseDir() + relativePath;
+    }
+
     public static void saveCodeFromAbsolutePath(String filepath, String code) {
         FileIO.saveStringToFile(code, filepath);
-    }
-
-    // Get code from sdcard
-    public static String getCode(Project p) {
-        return getCode(p, PhonkSettings.MAIN_FILENAME);
-    }
-
-    public static String getCode(Project p, String name) {
-        String path = p.getFullPath() + name;
-
-        return FileIO.loadStringFromFile(path);
     }
 
     public static ArrayList<Folder> listFoldersOrdered(String folder) {
@@ -212,7 +198,6 @@ public class PhonkScriptHelper {
         return protoFiles;
     }
 
-
     // List folders in a tree structure
     public static ArrayList<ProtoFile> listFilesInProjectFolder(Project p, String folder, int levels) {
         ArrayList<ProtoFile> files = listFilesInFolder(p.getSandboxPath() + folder, levels, "*");
@@ -265,8 +250,7 @@ public class PhonkScriptHelper {
             protoFile.name = f.getName();
             protoFile.path = PhonkScriptHelper.getRelativePathFromAbsolute(f.getAbsolutePath());
 
-            if (f.isDirectory() && levels > 0)
-                fileWalker(protoFile.files, f, levels - 1, extensionFilter);
+            if (f.isDirectory() && levels > 0) fileWalker(protoFile.files, f, levels - 1, extensionFilter);
 
             tree.add(protoFile);
         }
@@ -276,10 +260,6 @@ public class PhonkScriptHelper {
         // get relative uri
         String[] splitted = path.split(PhonkSettings.getBaseDir());
         return splitted[1];
-    }
-
-    public static String getAbsolutePathFromRelative(String relativePath) {
-        return PhonkSettings.getBaseDir() + relativePath;
     }
 
     // List projects
@@ -306,23 +286,6 @@ public class PhonkScriptHelper {
         }
 
         return projects;
-    }
-
-    public static String exportProjectAsPhonkFile(Project p) {
-        File f = new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PHONK_FILE_EXTENSION);
-
-        MLog.d(TAG, "compress " + p.getFullPath());
-        MLog.d(TAG, "to " + f.getAbsolutePath());
-
-        // compress
-        try {
-            FileIO.zipFolder(p.getFullPath(), f.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // return the filepath of the backup
-        return f.getAbsolutePath();
     }
 
     public static boolean importPhonkFile(String folder, String zipFilePath) {
@@ -361,15 +324,15 @@ public class PhonkScriptHelper {
         // if new path doesn't exist then => rename
         File fd = new File(p.getParentPath() + File.separator + newName + File.separator);
 
-        if (!fd.exists())
-            return new File(p.getFullPath()).renameTo(fd);
+        if (!fd.exists()) return new File(p.getFullPath()).renameTo(fd);
 
         return false;
     }
 
     public static boolean cloneProject(Project p, String newName) {
         File fo = new File(p.getFullPath());
-        File fd = new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER) + "/User Projects/" + newName);
+        File fd =
+                new File(PhonkSettings.getFolderPath(PhonkSettings.USER_PROJECTS_FOLDER) + "/User Projects/" + newName);
 
         MLog.d(TAG, "rename_ " + fo + " - " + fd);
         if (!fd.exists()) {
@@ -381,16 +344,6 @@ public class PhonkScriptHelper {
             return true;
         } else {
             return false;
-        }
-    }
-
-    public void listProcesses(Context context) {
-        ActivityManager actvityManager = (ActivityManager)
-                context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
-
-        for (ActivityManager.RunningAppProcessInfo runningProInfo : procInfos) {
-            MLog.d("Running Processes", "()()" + runningProInfo.processName);
         }
     }
 
@@ -428,11 +381,9 @@ public class PhonkScriptHelper {
             IconCompat icon = IconCompat.createWithResource(c, R.drawable.app_icon);
             if (bitmapIcon != null) icon = IconCompat.createWithBitmap(bitmapIcon);
 
-            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(c, folder + "/" + name)
-                    .setIntent(shortcutIntent) // !!! intent's action must be set on oreo
-                    .setShortLabel(name)
-                    .setIcon(icon)
-                    .build();
+            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(c, folder + "/" + name).setIntent(
+                            shortcutIntent) // !!! intent's action must be set on oreo
+                    .setShortLabel(name).setIcon(icon).build();
             ShortcutManagerCompat.requestPinShortcut(c, shortcutInfo, null);
         }
     }
@@ -444,6 +395,17 @@ public class PhonkScriptHelper {
         sendIntent.putExtra(Intent.EXTRA_TEXT, getCode(p));
         sendIntent.setType("text/plain");
         c.startActivity(Intent.createChooser(sendIntent, c.getResources().getText(R.string.send_to)));
+    }
+
+    // Get code from sdcard
+    public static String getCode(Project p) {
+        return getCode(p, PhonkSettings.MAIN_FILENAME);
+    }
+
+    public static String getCode(Project p, String name) {
+        String path = p.getFullPath() + name;
+
+        return FileIO.loadStringFromFile(path);
     }
 
     public static void sharePhonkFileDialog(Context c, String folder, String name) {
@@ -467,6 +429,30 @@ public class PhonkScriptHelper {
         c.startActivity(Intent.createChooser(shareIntent, c.getResources().getText(R.string.share_phonk_file)));
     }
 
+    public static String exportProjectAsPhonkFile(Project p) {
+        File f =
+                new File(getExportFolderPath() + File.separator + p.getName() + "_" + TimeUtils.getCurrentTime() + PhonkSettings.PHONK_FILE_EXTENSION);
+
+        MLog.d(TAG, "compress " + p.getFullPath());
+        MLog.d(TAG, "to " + f.getAbsolutePath());
+
+        // compress
+        try {
+            FileIO.zipFolder(p.getFullPath(), f.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // return the filepath of the backup
+        return f.getAbsolutePath();
+    }
+
+    public static String getExportFolderPath() {
+        File p = new File(getProjectFolderPath(PhonkSettings.EXPORTED_FOLDER));
+        p.mkdirs();
+
+        return p.getAbsolutePath();
+    }
 
     public static boolean installProject(Context c, String from, String to) {
         try {
@@ -491,6 +477,15 @@ public class PhonkScriptHelper {
             FileUtils.moveFile(oldFile, newFile);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void listProcesses(Context context) {
+        ActivityManager actvityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> procInfos = actvityManager.getRunningAppProcesses();
+
+        for (ActivityManager.RunningAppProcessInfo runningProInfo : procInfos) {
+            MLog.d("Running Processes", "()()" + runningProInfo.processName);
         }
     }
 }

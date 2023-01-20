@@ -41,28 +41,15 @@ public class _PDashboardInput extends ProtoBase {
         super(appRunner);
     }
 
-    // --------- JDashboardInput add ---------//
-    public interface jDashboardInputCB {
-        void event(String responseString);
-    }
-
-    public void add(String name, int x, int y, int width, int height)
-            throws UnknownHostException, JSONException {
+    public void add(String name, int x, int y, int width, int height) throws UnknownHostException, JSONException {
         this.id = StrUtils.generateUUID();
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("name", name)
-                .put("type", "input")
-                .put("x", x)
-                .put("y", y)
-                .put("width", width)
-                .put("height", height);
+        JSONObject values = new JSONObject().put("id", id).put("name", name).put("type", "input").put("x", x).put(
+                "y",
+                y
+        ).put("width", width).put("height", height);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
 
@@ -75,5 +62,10 @@ public class _PDashboardInput extends ProtoBase {
     @Override
     public void __stop() {
 
+    }
+
+    // --------- JDashboardInput add ---------//
+    public interface jDashboardInputCB {
+        void event(String responseString);
     }
 }

@@ -41,16 +41,12 @@ public class PViewItemAdapter extends RecyclerView.Adapter<PViewItemAdapter.View
 
     public NativeArray mData;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final View mView;
-
-        public ViewHolder(View v) {
-            super(v);
-            mView = v;
-        }
-    }
-
-    public PViewItemAdapter(Context c, NativeArray data, ReturnInterfaceWithReturn creating, ReturnInterfaceWithReturn binding) {
+    public PViewItemAdapter(
+            Context c,
+            NativeArray data,
+            ReturnInterfaceWithReturn creating,
+            ReturnInterfaceWithReturn binding
+    ) {
         mData = data;
 
         mCreating = creating;
@@ -92,6 +88,15 @@ public class PViewItemAdapter extends RecyclerView.Adapter<PViewItemAdapter.View
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final View mView;
+
+        public ViewHolder(View v) {
+            super(v);
+            mView = v;
+        }
     }
 
 }

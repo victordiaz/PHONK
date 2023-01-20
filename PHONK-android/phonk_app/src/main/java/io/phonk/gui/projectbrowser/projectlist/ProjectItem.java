@@ -47,22 +47,19 @@ import io.phonk.runner.base.models.Project;
 
 public class ProjectItem extends LinearLayout {
 
-    private static final String TAG = ProjectItem.class.getSimpleName();
-
     public static final int MODE_NORMAL = 0;
     public static final int MODE_SINGLE_PICK = 1;
     public static final int MODE_SINGLE_PICK_CLEAR = 2;
     public static final int MODE_MULTIPLE_PICK = 3;
-
+    private static final String TAG = ProjectItem.class.getSimpleName();
     public final CheckBox checkbox;
     private final View mItemView;
     private final Context mContext;
-
-    private Project mProject;
-    private TextView txtProjectIcon;
     private final TextView textViewName;
     private final ImageView mMenuButton;
     private final ImageView customIcon;
+    private Project mProject;
+    private TextView txtProjectIcon;
 
     public ProjectItem(Context context, boolean listMode, int pickMode) {
         super(context);
@@ -90,14 +87,34 @@ public class ProjectItem extends LinearLayout {
         customIcon = mItemView.findViewById(R.id.iconImg);
     }
 
-    public void setImage(Bitmap bmp) {
-        customIcon.setVisibility(View.VISIBLE);
-        customIcon.setImageBitmap(bmp);
-        txtProjectIcon.setVisibility(View.INVISIBLE);
+    public void setProjectInfo(Project p) {
+        mProject = p;
+
+        if (p.getName().length() > 2) {
+            setIcon(p.getName().substring(0, 2));
+        } else {
+            setIcon(p.getName().substring(0, 1));
+        }
+        setText(p.getName());
+        setTag(p.getName());
+
+        Bitmap icon = p.getIcon();
+        if (icon != null) setImage(icon);
+        setMenu();
+    }
+
+    public void setIcon(String text) {
+        this.txtProjectIcon.setText(text);
     }
 
     public void setText(String text) {
         textViewName.setText(text);
+    }
+
+    public void setImage(Bitmap bmp) {
+        customIcon.setVisibility(View.VISIBLE);
+        customIcon.setImageBitmap(bmp);
+        txtProjectIcon.setVisibility(View.INVISIBLE);
     }
 
     public void setMenu() {
@@ -145,8 +162,10 @@ public class ProjectItem extends LinearLayout {
                         }
                     };
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener).setNegativeButton(
+                            "No",
+                            dialogClickListener
+                    ).show();
                     return true;
                 case R.id.menu_project_list_add_shortcut:
                     PhonkScriptHelper.addShortcut(mContext, mProject.getFolder(), mProject.getName());
@@ -166,25 +185,5 @@ public class ProjectItem extends LinearLayout {
         });
         myPopup.show();
 
-    }
-
-    public void setProjectInfo(Project p) {
-        mProject = p;
-
-        if (p.getName().length() > 2) {
-            setIcon(p.getName().substring(0, 2));
-        } else {
-            setIcon(p.getName().substring(0, 1));
-        }
-        setText(p.getName());
-        setTag(p.getName());
-
-        Bitmap icon = p.getIcon();
-        if (icon != null) setImage(icon);
-        setMenu();
-    }
-
-    public void setIcon(String text) {
-        this.txtProjectIcon.setText(text);
     }
 }

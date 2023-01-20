@@ -47,15 +47,6 @@ public class PAudioRecorder extends ProtoBase {
         recorder = new MediaRecorder();
     }
 
-    private void init() {
-        recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        // recorder.setAudioEncoder(MediaRecorder.getAudioSourceMax());
-        recorder.setAudioEncodingBitRate(96000);
-        recorder.setAudioSamplingRate(44100);
-    }
-
     @PhonkMethod(description = "Starts recording", example = "")
     @PhonkMethodParam(params = {"showProgressBoolean"})
     public PAudioRecorder record(String fileName) {
@@ -72,11 +63,10 @@ public class PAudioRecorder extends ProtoBase {
             mProgressDialog = new ProgressDialog(getActivity());
             mProgressDialog.setTitle("Record!");
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mProgressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Stop recording",
-                    (dialog, whichButton) -> {
-                        mProgressDialog.dismiss();
-                        stop();
-                    });
+            mProgressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Stop recording", (dialog, whichButton) -> {
+                mProgressDialog.dismiss();
+                stop();
+            });
 
             mProgressDialog.setOnCancelListener(p1 -> stop());
             mProgressDialog.show();
@@ -85,6 +75,21 @@ public class PAudioRecorder extends ProtoBase {
         recorder.start();
 
         return this;
+    }
+
+    private void init() {
+        recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        // recorder.setAudioEncoder(MediaRecorder.getAudioSourceMax());
+        recorder.setAudioEncodingBitRate(96000);
+        recorder.setAudioSamplingRate(44100);
+    }
+
+    @PhonkMethod(description = "Stops recording", example = "")
+    @PhonkMethodParam(params = {""})
+    public void stop() {
+        recorder.stop();
     }
 
     public int amplitude() {
@@ -103,12 +108,6 @@ public class PAudioRecorder extends ProtoBase {
         recorder.resume();
 
         return this;
-    }
-
-    @PhonkMethod(description = "Stops recording", example = "")
-    @PhonkMethodParam(params = {""})
-    public void stop() {
-        recorder.stop();
     }
 
     @Override

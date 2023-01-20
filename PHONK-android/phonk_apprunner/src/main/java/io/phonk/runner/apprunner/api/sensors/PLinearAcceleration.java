@@ -55,7 +55,10 @@ public class PLinearAcceleration extends PCustomSensorManager {
                     r.put("x", event.values[0]);
                     r.put("y", event.values[1]);
                     r.put("z", event.values[2]);
-                    float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
+                    float force = (float) Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(
+                            event.values[1],
+                            2
+                    ) + Math.pow(event.values[2], 2));
                     r.put("force", force);
                     mCallback.event(r);
                 }

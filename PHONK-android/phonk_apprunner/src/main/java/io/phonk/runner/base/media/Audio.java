@@ -33,18 +33,6 @@ public class Audio {
 
     public final static int VOICE_RECOGNITION_REQUEST_CODE = 1234;
 
-    /**
-     * Fire an intent to start the speech recognition activity. onActivityResult
-     * is handled in BaseActivity
-     */
-    private void startVoiceRecognitionActivity(Activity a) {
-
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
-        a.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
-    }
-
     public static void setSpeakerOn(boolean b) {
 
         Class audioSystemClass;
@@ -67,6 +55,18 @@ public class Audio {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Fire an intent to start the speech recognition activity. onActivityResult
+     * is handled in BaseActivity
+     */
+    private void startVoiceRecognitionActivity(Activity a) {
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Tell me something!");
+        a.startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 
 }

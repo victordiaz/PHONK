@@ -37,10 +37,6 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     private int mWidth;
     private int mHeight;
 
-    public interface OnEvent {
-        void surfaceTextureAvailable(SurfaceTexture surfaceTexture);
-    }
-
     public CustomVideoTextureView(Context context) {
         super(context);
     }
@@ -61,9 +57,21 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+    }
+
+    @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         if (mOnEvent != null) mOnEvent.surfaceTextureAvailable(surface);
 
+        mWidth = width;
+        mHeight = height;
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         mWidth = width;
         mHeight = height;
     }
@@ -74,22 +82,14 @@ public class CustomVideoTextureView extends TextureView implements TextureView.S
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        mWidth = width;
-        mHeight = height;
-    }
-
-    @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
     }
 
     public void setListener(OnEvent onEvent) {
         mOnEvent = onEvent;
+    }
+
+    public interface OnEvent {
+        void surfaceTextureAvailable(SurfaceTexture surfaceTexture);
     }
 }

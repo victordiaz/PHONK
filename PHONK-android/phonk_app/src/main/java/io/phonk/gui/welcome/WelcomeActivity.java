@@ -72,6 +72,31 @@ public class WelcomeActivity extends BaseActivity {
     private LinearLayout mLoading;
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus) {
+            mNextStepButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.splash_slide_in_anim_set));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void setupActivity() {
+        super.setupActivity();
+        // mToolbar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -92,38 +117,13 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if (hasFocus) {
-            mNextStepButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.splash_slide_in_anim_set));
-        }
-    }
-
-    @Override
-    protected void setupActivity() {
-        super.setupActivity();
-        // mToolbar.setVisibility(View.GONE);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -168,7 +168,10 @@ public class WelcomeActivity extends BaseActivity {
         new File(PhonkSettings.getBaseLibrariesDir()).mkdirs();
 
         // install examples
-        PhonkSettingsHelper.installExamples(getApplicationContext(), () -> runOnUiThread(() -> goToStep(STEP_INSTALL_EXAMPLES_OK)));
+        PhonkSettingsHelper.installExamples(
+                getApplicationContext(),
+                () -> runOnUiThread(() -> goToStep(STEP_INSTALL_EXAMPLES_OK))
+        );
     }
 
     public void ready() {

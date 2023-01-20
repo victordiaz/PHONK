@@ -38,9 +38,8 @@ import io.phonk.runner.apprunner.AppRunner;
 @SuppressLint("JavascriptInterface")
 @PhonkClass
 public class PWebView extends WebView implements PViewMethodsInterface {
-    private final AppRunner mAppRunner;
-
     public final StylePropertiesProxy props = new StylePropertiesProxy();
+    private final AppRunner mAppRunner;
     private final Styler styler;
 
     public PWebView(AppRunner appRunner) {
@@ -120,6 +119,11 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
     private class CustomWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             //load the url
@@ -128,11 +132,6 @@ public class PWebView extends WebView implements PViewMethodsInterface {
             // return true to tell that we handled the url
             return true;
         }
-    }
-
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
     }
 
     @Override

@@ -73,13 +73,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     }
 
+    public static SettingsFragment newInstance() {
+        return new SettingsFragment();
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
-    }
-
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
     }
 
     //twostatepreference(boolean)->action/action edittextpreference(text)->action preference->action
@@ -94,7 +94,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.preferences);
 
         FragmentManager fm = getChildFragmentManager();
-        ProjectBrowserDialogFragment projectBrowserDialogFragment = ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK_CLEAR);
+        ProjectBrowserDialogFragment projectBrowserDialogFragment =
+                ProjectBrowserDialogFragment.newInstance(ProjectItem.MODE_SINGLE_PICK_CLEAR);
         projectBrowserDialogFragment.setListener(new ProjectListFragment.ProjectSelectedListener() {
             @Override
             public void onProjectSelected(Project p) {
@@ -290,12 +291,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             progress.setCanceledOnTouchOutside(false);
 
             new AlertDialog.Builder(getActivity()).setMessage("Do you really want to reinstall the examples?")
-                    .setCancelable(false).setPositiveButton("Yes", (dialog, which) -> {
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", (dialog, which) -> {
                         progress.show();
 
                         PhonkSettingsHelper.installExamples(getActivity(), () -> progress.dismiss());
                         dialog.cancel();
-                    }).setNegativeButton("No", (dialog, which) -> dialog.cancel()).show();
+                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.cancel())
+                    .show();
 
             return true;
         });
@@ -312,7 +316,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         /*
 
         // Notify and download
-        final TwoStatePreference notifyNewVersionPreference = (TwoStatePreference) findPreference("pref_notify_new_version");
+        final TwoStatePreference notifyNewVersionPreference = (TwoStatePreference) findPreference
+        ("pref_notify_new_version");
         if (notifyNewVersionPreference != null) {
             notifyNewVersionPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override

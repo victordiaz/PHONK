@@ -219,14 +219,14 @@ public class Events {
         private final String action;
         private final String previewType;
 
+        public EditorEvent(String action, ProtoFile protofile) {
+            this(action, protofile, null);
+        }
+
         public EditorEvent(String action, ProtoFile protofile, String previewType) {
             this.action = action;
             this.protofile = protofile;
             this.previewType = previewType;
-        }
-
-        public EditorEvent(String action, ProtoFile protofile) {
-            this(action, protofile, null);
         }
 
         public String getAction() {

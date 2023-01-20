@@ -41,7 +41,8 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
-public class PText extends androidx.appcompat.widget.AppCompatTextView implements PViewMethodsInterface, PTextInterface {
+public class PText extends androidx.appcompat.widget.AppCompatTextView implements PViewMethodsInterface,
+        PTextInterface {
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final TextStyler styler;
     private Typeface currentFont;
@@ -193,12 +194,6 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     }
 
     @Override
-    public View textSize(float textSize) {
-        this.setTextSize(textSize);
-        return this;
-    }
-
-    @Override
     public View textColor(String textColor) {
         this.setTextColor(Color.parseColor(textColor));
         return this;
@@ -209,6 +204,12 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
+        return this;
+    }
+
+    @Override
+    public View textSize(float textSize) {
+        this.setTextSize(textSize);
         return this;
     }
 
@@ -229,16 +230,6 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         styler.setLayoutProps(x, y, w, h);
     }
 
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
     static class TextStyler extends Styler {
         TextStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
@@ -248,6 +239,16 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         public void apply() {
             super.apply();
         }
+    }    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+
+
 
 }

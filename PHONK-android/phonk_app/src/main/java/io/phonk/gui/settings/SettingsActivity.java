@@ -37,7 +37,9 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.settings_activity);
         setupActivity();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.pref_container, SettingsFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.pref_container, SettingsFragment.newInstance())
+                .commit();
     }
 
     @Override

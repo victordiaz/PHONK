@@ -47,13 +47,13 @@ import java.util.Map;
 
 import io.phonk.MainActivity;
 import io.phonk.events.Events;
+import io.phonk.gui.SchedulerActivity;
+import io.phonk.gui._components.NewProjectDialogFragment;
+import io.phonk.gui.editor.EditorActivity;
 import io.phonk.gui.info.AboutActivity;
 import io.phonk.gui.info.HelpActivity;
 import io.phonk.gui.info.InfoScriptActivity;
 import io.phonk.gui.info.LicenseActivity;
-import io.phonk.gui.SchedulerActivity;
-import io.phonk.gui._components.NewProjectDialogFragment;
-import io.phonk.gui.editor.EditorActivity;
 import io.phonk.gui.settings.PhonkSettings;
 import io.phonk.gui.settings.SettingsActivity;
 import io.phonk.gui.settings.UserPreferences;
@@ -65,13 +65,20 @@ import io.phonk.runner.base.utils.MLog;
 public class PhonkAppHelper {
     private static final String TAG = PhonkAppHelper.class.getSimpleName();
 
+    public static void launchScript(Context context, Project p) {
+        PhonkAppHelper.launchScript(context, p, new HashMap<>());
+    }
+
     public static void launchScript(Context context, Project p, HashMap<String, String> extras) {
         Intent intent = new Intent(context, AppRunnerLauncherService.class);
         intent.putExtra(Project.SERVER_PORT, PhonkSettings.HTTP_PORT);
         intent.putExtra(Project.FOLDER, p.getFolder());
         intent.putExtra(Project.NAME, p.getName());
         intent.putExtra(Project.DEVICE_ID, (String) UserPreferences.getInstance().get("device_id"));
-        intent.putExtra(Project.SETTINGS_SCREEN_WAKEUP, (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play"));
+        intent.putExtra(
+                Project.SETTINGS_SCREEN_WAKEUP,
+                (Boolean) UserPreferences.getInstance().get("device_wakeup_on_play")
+        );
 
         for (Map.Entry<String, String> entry : extras.entrySet()) {
             intent.putExtra(entry.getKey(), entry.getValue());
@@ -79,10 +86,6 @@ public class PhonkAppHelper {
 
         EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_RUNNING, p));
         context.startService(intent);
-    }
-
-    public static void launchScript(Context context, Project p) {
-        PhonkAppHelper.launchScript(context, p, new HashMap<>());
     }
 
     public static void launchSettings(Context context) {
@@ -181,7 +184,12 @@ public class PhonkAppHelper {
             } else {
                 String template = "default";
                 Toast.makeText(c, "Creating " + inputText, Toast.LENGTH_SHORT).show();
-                Project p = PhonkScriptHelper.createNewProject(c, template, AppRunnerSettings.USER_PROJECTS_FOLDER + "/User Projects/", inputText);
+                Project p = PhonkScriptHelper.createNewProject(
+                        c,
+                        template,
+                        AppRunnerSettings.USER_PROJECTS_FOLDER + "/User Projects/",
+                        inputText
+                );
                 EventBus.getDefault().post(new Events.ProjectEvent(Events.PROJECT_NEW, p));
             }
         });

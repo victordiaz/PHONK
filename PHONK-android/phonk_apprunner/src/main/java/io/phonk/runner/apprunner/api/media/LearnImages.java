@@ -47,19 +47,17 @@ import io.phonk.runner.base.utils.MLog;
 public class LearnImages {
 
     private static final String TAG = LearnImages.class.getSimpleName();
-
-    private final AppRunner mAppRunner;
-    private TransferLearningModelWrapper mTlModel;
-    private boolean mIsAnalyzerRunning = false;
     public final Handler mHandler = new Handler(Looper.getMainLooper());
-
+    private final AppRunner mAppRunner;
     // When the user presses the "add sample" button for some class,
     // that class will be added to this queue. It is later extracted by
     // InferenceThread and processed.
     private final ConcurrentLinkedQueue<Frame> mLearnFrames = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Frame> mCameraFrames = new ConcurrentLinkedQueue<>();
-
     private final LoggingBenchmark mInferenceBenchmark = new LoggingBenchmark("InferenceBench");
+    Callback mCallback = null;
+    private TransferLearningModelWrapper mTlModel;
+    private boolean mIsAnalyzerRunning = false;
     private String mNextFrameCategory = null;
 
     LearnImages(AppRunner appRunner) {
@@ -101,15 +99,6 @@ public class LearnImages {
             }
         });
         t1.start();
-    }
-
-    public void stop() {
-        disableTraining();
-        mTlModel.close();
-        mTlModel = null;
-
-        // stop thread
-        mIsAnalyzerRunning = false;
     }
 
     public void inferenceAnalyzer() {
@@ -166,41 +155,23 @@ public class LearnImages {
         return rgbImage;
     }
 
-    public void enableTraining() {
-        // dont enable training if not enought samples
-        if (mTlModel.getNumberSamples() < mTlModel.getTrainBatchSize()) return;
+    private Bitmap cameraDataToBmp(byte[] data, Camera camera) {
+        // transform camera data to bmp
+        Camera.Parameters parameters = camera.getParameters();
+        int width = parameters.getPreviewSize().width;
+        int height = parameters.getPreviewSize().height;
 
-        mTlModel.enableTraining((epoch, loss) -> MLog.d(TAG, "" + epoch + " " + loss));
+        // get support preview format
+        YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // maybe pass the output to the callbacks and do each compression there?
+        yuv.compressToJpeg(new Rect(0, 0, (int) Math.floor(width * 0.2), (int) Math.floor(height * 0.2)), 100, out);
+        byte[] bytes = out.toByteArray();
+        BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
+        bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
     }
-
-    public void disableTraining() {
-        mTlModel.disableTraining();
-    }
-
-    Callback mCallback = null;
-
-    public interface Callback {
-        void event(String p);
-
-    }
-
-    public void addCallback(Callback callback) {
-        this.mCallback = callback;
-    }
-
-
-    static class Frame {
-        final byte[] data;
-        final Camera camera;
-        String category;
-
-        Frame(byte[] data, Camera camera, String category) {
-            this.data = data;
-            this.camera = camera;
-            this.category = category;
-        }
-    }
-
 
     /**
      * Normalizes a camera image to [0; 1], cropping it
@@ -212,13 +183,19 @@ public class LearnImages {
         int modelImageSize = TransferLearningModelWrapper.IMAGE_SIZE;
 
         Bitmap paddedBitmap = padToSquare(bitmap);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(
-                paddedBitmap, modelImageSize, modelImageSize, true);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(paddedBitmap, modelImageSize, modelImageSize, true);
 
         Matrix rotationMatrix = new Matrix();
         rotationMatrix.postRotate(rotationDegrees);
         Bitmap rotatedBitmap = Bitmap.createBitmap(
-                scaledBitmap, 0, 0, modelImageSize, modelImageSize, rotationMatrix, false);
+                scaledBitmap,
+                0,
+                0,
+                modelImageSize,
+                modelImageSize,
+                rotationMatrix,
+                false
+        );
 
         float[] normalizedRgb = new float[modelImageSize * modelImageSize * 3];
         int nextIdx = 0;
@@ -245,30 +222,52 @@ public class LearnImages {
 
         int paddingX = width < height ? (height - width) / 2 : 0;
         int paddingY = height < width ? (width - height) / 2 : 0;
-        Bitmap paddedBitmap = Bitmap.createBitmap(
-                width + 2 * paddingX, height + 2 * paddingY, Bitmap.Config.ARGB_8888);
+        Bitmap paddedBitmap = Bitmap.createBitmap(width + 2 * paddingX, height + 2 * paddingY, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(paddedBitmap);
         canvas.drawARGB(0xFF, 0xFF, 0xFF, 0xFF);
         canvas.drawBitmap(source, paddingX, paddingY, null);
         return paddedBitmap;
     }
 
-    private Bitmap cameraDataToBmp(byte[] data, Camera camera) {
-        // transform camera data to bmp
-        Camera.Parameters parameters = camera.getParameters();
-        int width = parameters.getPreviewSize().width;
-        int height = parameters.getPreviewSize().height;
+    public void stop() {
+        disableTraining();
+        mTlModel.close();
+        mTlModel = null;
 
-        // get support preview format
-        YuvImage yuv = new YuvImage(data, parameters.getPreviewFormat(), width, height, null);
+        // stop thread
+        mIsAnalyzerRunning = false;
+    }
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        // maybe pass the output to the callbacks and do each compression there?
-        yuv.compressToJpeg(new Rect(0, 0, (int) Math.floor(width * 0.2), (int) Math.floor(height * 0.2)), 100, out);
-        byte[] bytes = out.toByteArray();
-        BitmapFactory.Options bitmap_options = new BitmapFactory.Options();
-        bitmap_options.inPreferredConfig = Bitmap.Config.RGB_565;
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bitmap_options);
+    public void disableTraining() {
+        mTlModel.disableTraining();
+    }
+
+    public void enableTraining() {
+        // dont enable training if not enought samples
+        if (mTlModel.getNumberSamples() < mTlModel.getTrainBatchSize()) return;
+
+        mTlModel.enableTraining((epoch, loss) -> MLog.d(TAG, "" + epoch + " " + loss));
+    }
+
+    public void addCallback(Callback callback) {
+        this.mCallback = callback;
+    }
+
+    public interface Callback {
+        void event(String p);
+
+    }
+
+    static class Frame {
+        final byte[] data;
+        final Camera camera;
+        String category;
+
+        Frame(byte[] data, Camera camera, String category) {
+            this.data = data;
+            this.camera = camera;
+            this.category = category;
+        }
     }
 
 }

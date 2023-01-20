@@ -40,8 +40,7 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
-        if (extras == null)
-            return;
+        if (extras == null) return;
 
         Object[] pdus = (Object[]) extras.get("pdus");
         for (Object o : pdus) {

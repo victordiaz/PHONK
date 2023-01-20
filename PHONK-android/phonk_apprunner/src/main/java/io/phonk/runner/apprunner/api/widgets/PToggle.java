@@ -37,7 +37,8 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton implements PViewMethodsInterface, PTextInterface {
+public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton implements PViewMethodsInterface,
+        PTextInterface {
     private static final String TAG = PToggle.class.getSimpleName();
 
     public final StylePropertiesProxy props = new StylePropertiesProxy();
@@ -66,40 +67,6 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         styler.apply();
 
         textFont(mFont);
-    }
-
-    public PToggle onChange(final ReturnInterface callbackfn) {
-        // Add change listener
-        this.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
-            if (isChecked) {
-                setTextColor(styler.textOnColor);
-                styler.mBackgroundDrawable.setBackground(styler.backgroundCheckedColor);
-            } else {
-                setTextColor(styler.textOffColor);
-                styler.mBackgroundDrawable.setBackground(styler.backgroundColor);
-            }
-
-            ReturnObject r = new ReturnObject(PToggle.this);
-            r.put("checked", isChecked);
-            callbackfn.event(r);
-        });
-
-        return this;
-    }
-
-    public void text(String label) {
-        this.props.put("text", this.props, label);
-        setText(label);
-        setTextOn(label);
-        setTextOff(label);
-    }
-
-    public void checked(boolean b) {
-        this.props.eventOnChange = false;
-        this.props.put("checked", this.props, b);
-        this.props.eventOnChange = true;
-        setChecked(b);
     }
 
     @Override
@@ -149,19 +116,43 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return this;
     }
 
+    public PToggle onChange(final ReturnInterface callbackfn) {
+        // Add change listener
+        this.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            if (isChecked) {
+                setTextColor(styler.textOnColor);
+                styler.mBackgroundDrawable.setBackground(styler.backgroundCheckedColor);
+            } else {
+                setTextColor(styler.textOffColor);
+                styler.mBackgroundDrawable.setBackground(styler.backgroundColor);
+            }
+
+            ReturnObject r = new ReturnObject(PToggle.this);
+            r.put("checked", isChecked);
+            callbackfn.event(r);
+        });
+
+        return this;
+    }
+
+    public void text(String label) {
+        this.props.put("text", this.props, label);
+        setText(label);
+        setTextOn(label);
+        setTextOff(label);
+    }
+
+    public void checked(boolean b) {
+        this.props.eventOnChange = false;
+        this.props.put("checked", this.props, b);
+        this.props.eventOnChange = true;
+        setChecked(b);
+    }
+
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
-    }
-
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
     }
 
     class ToggleStyler extends Styler {
@@ -195,5 +186,15 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
             backgroundColor = Color.parseColor(mProps.get("background").toString());
             backgroundCheckedColor = Color.parseColor(mProps.get("backgroundChecked").toString());
         }
+    }    @Override
+    public void setProps(Map style) {
+        styler.setProps(style);
     }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+
+
 }

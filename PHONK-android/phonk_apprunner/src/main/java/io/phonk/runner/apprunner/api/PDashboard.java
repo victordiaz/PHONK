@@ -46,9 +46,32 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkObject
 public class PDashboard extends ProtoBase {
 
-    private final DashboardServer mDashboardServer;
-    private final PDashboardMainObject mDashboard;
     final String TAG = PDashboard.class.getSimpleName();
+    private final DashboardServer mDashboardServer;
+    final BroadcastReceiver dashboardBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MLog.d(TAG, intent.getAction());
+
+            MLog.d(TAG, "received in PDashboardMainObject");
+            String msg = intent.getStringExtra("data");
+
+            MLog.d(TAG, "msg -----> " + msg);
+
+            try {
+                JSONObject msgJSON = new JSONObject(msg);
+                // String id = (String) msgJSON.get("id");
+                mDashboardServer.run(msgJSON);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            //
+        }
+    };
+    private final PDashboardMainObject mDashboard;
 
     public PDashboard(AppRunner appRunner) {
         super(appRunner);
@@ -62,6 +85,69 @@ public class PDashboard extends ProtoBase {
 
         mDashboard = new PDashboardMainObject(getAppRunner(), mDashboardServer);
     }
+
+    public PDashboardMainObject get() {
+        return mDashboard;
+    }
+
+    @PhonkMethod(description = "add a button in the dashboard", example = "")
+    @PhonkMethodParam(params = {"name", "x", "y", "w", "h", "function()"})
+    public PDashboardButton addButton(
+            String name,
+            int x,
+            int y,
+            int w,
+            int h
+    ) throws UnknownHostException, JSONException {
+        PDashboardButton pWebAppButton = new PDashboardButton(getAppRunner(), mDashboardServer);
+        pWebAppButton.add(name, x, y, w, h);
+
+        return pWebAppButton;
+    }
+
+    @PhonkMethod(description = "add a text in the dashboard", example = "")
+    @PhonkMethodParam(params = {"name", "x", "y", "size", "hexColor"})
+    public PDashboardText addText(
+            String name,
+            int x,
+            int y,
+            int width,
+            int height
+    ) throws UnknownHostException, JSONException {
+
+        PDashboardText pWebAppText = new PDashboardText(getAppRunner(), mDashboardServer);
+        pWebAppText.add(name, x, y, width, height);
+
+        return pWebAppText;
+    }
+
+    @PhonkMethod(description = "add a HTML content in the dashboard", example = "")
+    @PhonkMethodParam(params = {"htmlFile", "x", "y"})
+    public PDashboardWebview addHtml(int x, int y, int width, int height) throws UnknownHostException, JSONException {
+
+        PDashboardWebview pWebAppHTML = new PDashboardWebview(getAppRunner(), mDashboardServer);
+        pWebAppHTML.add("", x, y, width, height);
+
+        return pWebAppHTML;
+    }
+
+    @PhonkMethod(description = "show/hide the dashboard", example = "")
+    @PhonkMethodParam(params = {"boolean"})
+    public void show(boolean b) {
+        JSONObject msg = new JSONObject();
+        try {
+            JSONObject values = new JSONObject().put("val", b);
+            msg.put("type", "widget").put("action", "showDashboard").put("values", values);
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void __stop() {
+        getAppRunner().getAppContext().unregisterReceiver(dashboardBroadcastReceiver);
+    }
+
 
     public interface ServerListenerCallback {
         void onUpdated(JSONObject jsonObject);
@@ -100,85 +186,5 @@ public class PDashboard extends ProtoBase {
 
         public void stop() {
         }
-    }
-
-    public PDashboardMainObject get() {
-        return mDashboard;
-    }
-
-
-    @PhonkMethod(description = "add a button in the dashboard", example = "")
-    @PhonkMethodParam(params = {"name", "x", "y", "w", "h", "function()"})
-    public PDashboardButton addButton(String name, int x, int y, int w, int h) throws UnknownHostException, JSONException {
-        PDashboardButton pWebAppButton = new PDashboardButton(getAppRunner(), mDashboardServer);
-        pWebAppButton.add(name, x, y, w, h);
-
-        return pWebAppButton;
-    }
-
-
-    @PhonkMethod(description = "add a text in the dashboard", example = "")
-    @PhonkMethodParam(params = {"name", "x", "y", "size", "hexColor"})
-    public PDashboardText addText(String name, int x, int y, int width, int height) throws UnknownHostException, JSONException {
-
-        PDashboardText pWebAppText = new PDashboardText(getAppRunner(), mDashboardServer);
-        pWebAppText.add(name, x, y, width, height);
-
-        return pWebAppText;
-    }
-
-
-    @PhonkMethod(description = "add a HTML content in the dashboard", example = "")
-    @PhonkMethodParam(params = {"htmlFile", "x", "y"})
-    public PDashboardWebview addHtml(int x, int y, int width, int height) throws UnknownHostException, JSONException {
-
-        PDashboardWebview pWebAppHTML = new PDashboardWebview(getAppRunner(), mDashboardServer);
-        pWebAppHTML.add("", x, y, width, height);
-
-        return pWebAppHTML;
-    }
-
-
-    @PhonkMethod(description = "show/hide the dashboard", example = "")
-    @PhonkMethodParam(params = {"boolean"})
-    public void show(boolean b) {
-        JSONObject msg = new JSONObject();
-        try {
-            JSONObject values = new JSONObject().put("val", b);
-            msg.put("type", "widget").put("action", "showDashboard").put("values", values);
-        } catch (JSONException e1) {
-            e1.printStackTrace();
-        }
-    }
-
-
-    final BroadcastReceiver dashboardBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MLog.d(TAG, intent.getAction());
-
-            MLog.d(TAG, "received in PDashboardMainObject");
-            String msg = intent.getStringExtra("data");
-
-            MLog.d(TAG, "msg -----> " + msg);
-
-            try {
-                JSONObject msgJSON = new JSONObject(msg);
-                // String id = (String) msgJSON.get("id");
-                mDashboardServer.run(msgJSON);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            //
-        }
-    };
-
-
-    @Override
-    public void __stop() {
-        getAppRunner().getAppContext().unregisterReceiver(dashboardBroadcastReceiver);
     }
 }

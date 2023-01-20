@@ -43,17 +43,12 @@ import io.phonk.runner.base.utils.MLog;
 
 public class PhonkWebsocketServer extends WebSocketServer {
     private final String TAG = PhonkWebsocketServer.class.getSimpleName();
-    private Context mContext;
-
-    private int mPort;
-    private int mNumConnections = 0;
     private final List<WebSocket> connections = new ArrayList<>();
     private final HashMap<String, WebSocketListener> listeners = new HashMap<>();
+    private Context mContext;
+    private int mPort;
+    private int mNumConnections = 0;
     private ConnectionCallback mConnectionCallback;
-
-    public interface WebSocketListener {
-        void onUpdated(JSONObject jsonObject);
-    }
 
     public PhonkWebsocketServer(Context c, int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -95,29 +90,6 @@ public class PhonkWebsocketServer extends WebSocketServer {
     }
 
     @Override
-    public void onError(WebSocket conn, Exception ex) {
-        // MLog.d(TAG, "Error:");
-        ex.printStackTrace();
-
-        if (conn != null) {
-            mConnectionCallback.disconnect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
-        }
-    }
-
-    @Override
-    public void onStart() {
-        // MLog.d(TAG, "Start websocket server at on port " + mPort);
-    }
-
-    public void send(String json) {
-        for (WebSocket sock : connections) {
-            if (sock.isOpen()) {
-                sock.send(json);
-            }
-        }
-    }
-
-    @Override
     public void onMessage(WebSocket conn, String message) {
         MLog.d(TAG, "Received message --> " + message);
 
@@ -141,11 +113,34 @@ public class PhonkWebsocketServer extends WebSocketServer {
         conn.send(response.toString());
     }
 
+    @Override
+    public void onError(WebSocket conn, Exception ex) {
+        // MLog.d(TAG, "Error:");
+        ex.printStackTrace();
+
+        if (conn != null) {
+            mConnectionCallback.disconnect(conn.getRemoteSocketAddress().getAddress().toString().substring(1));
+        }
+    }
+
+    @Override
+    public void onStart() {
+        // MLog.d(TAG, "Start websocket server at on port " + mPort);
+    }
+
     private void sendDashboardReceiver(JSONObject msg) {
         Intent i = new Intent("io.phonk.intent.WEBEDITOR_RECEIVER");
 
         i.putExtra("data", msg.toString());
         mContext.sendBroadcast(i);
+    }
+
+    public void send(String json) {
+        for (WebSocket sock : connections) {
+            if (sock.isOpen()) {
+                sock.send(json);
+            }
+        }
     }
 
     public void addListener(String name, WebSocketListener l) {
@@ -156,9 +151,13 @@ public class PhonkWebsocketServer extends WebSocketServer {
         listeners.clear();
     }
 
-
     public void addConnectionCallback(ConnectionCallback connectionCallback) {
         mConnectionCallback = connectionCallback;
+    }
+
+
+    public interface WebSocketListener {
+        void onUpdated(JSONObject jsonObject);
     }
 
     public interface ConnectionCallback {

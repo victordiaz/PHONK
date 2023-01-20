@@ -29,42 +29,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MLog {
+    public static final boolean showClass = false;
+    public static final boolean showMethod = true;
+    public static final boolean network = false;
+    public static final boolean device = true;
+    public static final boolean verbose = true;
     private static final String TAG = "MLog";
-
     private static final int LOG_D = 0;
     private static final int LOG_E = 1;
     private static final int LOG_I = 2;
     private static final int LOG_W = 3;
     private static final int LOG_V = 4;
 
-    public static final boolean showClass = false;
-    public static final boolean showMethod = true;
-    public static final boolean network = false;
-    public static final boolean device = true;
-    public static final boolean verbose = true;
-
-    public static void d(final String tag, final String msg) {
-        generic(LOG_D, tag, msg);
-    }
-
     public static void d(String msg) {
         d(msg, "");
     }
 
-    public static void e(String tag, String msg) {
-        generic(LOG_E, tag, msg);
-    }
-
-    public static void i(String tag, String msg) {
-        generic(LOG_I, tag, msg);
-    }
-
-    public static void w(String tag, String msg) {
-        generic(LOG_W, tag, msg);
-    }
-
-    public static void v(String tag, String msg) {
-        generic(LOG_V, tag, msg);
+    public static void d(final String tag, final String msg) {
+        generic(LOG_D, tag, msg);
     }
 
     public static void generic(int type, final String tag, final String msg) {
@@ -109,6 +91,22 @@ public class MLog {
 
 
         }
+    }
+
+    public static void e(String tag, String msg) {
+        generic(LOG_E, tag, msg);
+    }
+
+    public static void i(String tag, String msg) {
+        generic(LOG_I, tag, msg);
+    }
+
+    public static void w(String tag, String msg) {
+        generic(LOG_W, tag, msg);
+    }
+
+    public static void v(String tag, String msg) {
+        generic(LOG_V, tag, msg);
     }
 
     public static void network(Context c, String TAG, String msg) {

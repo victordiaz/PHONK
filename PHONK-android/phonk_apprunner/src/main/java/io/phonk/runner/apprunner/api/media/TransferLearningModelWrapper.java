@@ -52,9 +52,7 @@ public class TransferLearningModelWrapper implements Closeable {
     private volatile LossConsumer lossConsumer;
 
     TransferLearningModelWrapper(Context context) {
-        model =
-                new TransferLearningModel(
-                        new AssetModelLoader(context, "model"), Arrays.asList("1", "2", "3", "4"));
+        model = new TransferLearningModel(new AssetModelLoader(context, "model"), Arrays.asList("1", "2", "3", "4"));
 
         new Thread(() -> {
             while (!Thread.interrupted()) {

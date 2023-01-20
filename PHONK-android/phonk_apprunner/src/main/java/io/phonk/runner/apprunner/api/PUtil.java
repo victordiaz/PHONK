@@ -103,16 +103,22 @@ public class PUtil extends ProtoBase {
     @PhonkMethod(description = "Convert given mm to pixels", example = "")
     @PhonkMethodParam(params = {""})
     public float mmToPixels(float mm) {
-        return TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, getContext().getResources().getDisplayMetrics());
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_MM,
+                mm,
+                getContext().getResources().getDisplayMetrics()
+        );
     }
 
 
     @PhonkMethod(description = "Convert given pixels to mm", example = "")
     @PhonkMethodParam(params = {""})
     public float pixelsToMm(int px) {
-        float onepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, getContext().getResources()
-                .getDisplayMetrics());
+        float onepx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_MM,
+                1,
+                getContext().getResources().getDisplayMetrics()
+        );
 
         return px * onepx;
     }
@@ -149,12 +155,9 @@ public class PUtil extends ProtoBase {
         }
     }
 
-    public interface AnimCB {
-        void event(float data);
-    }
-
     //TODO include the new support lib v22 interpolations
-    @PhonkMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', 'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
+    @PhonkMethod(description = "Animate a variable from min to max in a specified time using 'bounce', 'linear', " +
+            "'decelerate', 'anticipate', 'aovershoot', 'accelerate' type  ", example = "")
     @PhonkMethodParam(params = {"type", "min", "max", "time", "function(val)"})
     public ValueAnimator anim(String type, float min, float max, int time, final AnimCB callback) {
         TimeInterpolator interpolator = null;
@@ -191,7 +194,6 @@ public class PUtil extends ProtoBase {
 
         return va;
     }
-
 
     @PhonkMethod(description = "Parse a color and return and int representing it", example = "")
     @PhonkMethodParam(params = {"colorString"})
@@ -306,5 +308,9 @@ public class PUtil extends ProtoBase {
     @Override
     public void __stop() {
 
+    }
+
+    public interface AnimCB {
+        void event(float data);
     }
 }

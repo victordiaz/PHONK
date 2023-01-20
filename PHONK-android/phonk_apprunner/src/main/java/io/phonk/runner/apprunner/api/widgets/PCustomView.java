@@ -37,33 +37,20 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PCustomView extends View implements PViewMethodsInterface {
     private static final String TAG = PCustomView.class.getSimpleName();
-
-    protected final AppRunner mAppRunner;
-    private PCanvas mPCanvas;
-
     // this is a props proxy for the user
     public final StylePropertiesProxy props = new StylePropertiesProxy();
-
     // the props are transformed / accessed using the styler object
     public final Styler styler;
-
+    protected final AppRunner mAppRunner;
     @PhonkField(description = "Time interval between draws", example = "")
     private final int drawInterval = 35;
-    protected boolean mAutoDraw = false;
-    private PLooper loop;
-    protected int canvasWidth;
-    protected int canvasHeight;
-
-    public interface OnSetupCallback {
-        void event(PCustomView c);
-    }
-
-    public interface OnDrawCallback {
-        void event(PCanvas c);
-    }
-
     public OnSetupCallback setup;
     public OnDrawCallback draw;
+    protected boolean mAutoDraw = false;
+    protected int canvasWidth;
+    protected int canvasHeight;
+    private PCanvas mPCanvas;
+    private PLooper loop;
 
     public PCustomView(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -85,22 +72,11 @@ public class PCustomView extends View implements PViewMethodsInterface {
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-        invalidate();
-    }
-
-    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         MLog.d(TAG, "new size --> " + w + " " + h);
         mPCanvas.prepare(w, h);
 
-    }
-
-    public void onDraw(OnDrawCallback callback) {
-        MLog.d(TAG, "setting up callback;");
-        draw = callback;
     }
 
     @Override
@@ -113,10 +89,29 @@ public class PCustomView extends View implements PViewMethodsInterface {
         mPCanvas.drawAll();
     }
 
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        invalidate();
+    }
+
+    public void onDraw(OnDrawCallback callback) {
+        MLog.d(TAG, "setting up callback;");
+        draw = callback;
+    }
 
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
+    }
+
+    public interface OnSetupCallback {
+        void event(PCustomView c);
+    }
+
+
+    public interface OnDrawCallback {
+        void event(PCanvas c);
     }
 
     @Override

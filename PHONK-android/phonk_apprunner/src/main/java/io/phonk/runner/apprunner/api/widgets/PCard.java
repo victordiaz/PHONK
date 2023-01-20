@@ -38,9 +38,9 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 @PhonkClass
 public class PCard extends LinearLayout {
 
-    private final Context c;
     final LinearLayout cardLl;
     final TextView title;
+    private final Context c;
 
     public PCard(Context context) {
         super(context);

@@ -22,6 +22,10 @@
 
 package io.phonk.runner.apprunner.api.network;
 
+import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
+import static android.bluetooth.BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+import static com.welie.blessed.BluetoothPeripheral.GATT_SUCCESS;
+
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
@@ -45,110 +49,24 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
 import io.phonk.runner.base.utils.MLog;
 
-import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
-import static android.bluetooth.BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
-import static com.welie.blessed.BluetoothPeripheral.GATT_SUCCESS;
-
 @SuppressLint("NewApi")
 @PhonkClass
 public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterface {
-    private final Context mContext;
-    private final AppRunner mAppRunner;
-
     private final static String DISCONNECTED = "disconnected";
     private final static String CONNECTING = "connecting";
     private final static String CONNECTED = "connected";
     private final static String DISCONNECTING = "disconnecting";
-
+    private final Context mContext;
+    private final AppRunner mAppRunner;
     private final BluetoothAdapter mBleAdapter;
-    private BluetoothGatt mGatt;
-
-    // private Boolean connected = false;
-    public boolean autoConnect = false;
-    private ReturnInterface mCallbackDevice;
-    private ReturnInterface mCallbackCharacteristic;
-
     private final String mConnectionStatus;
-
     private final BluetoothCentral central;
     private final Handler handler = new Handler();
-
-    public PBluetoothLEClient(AppRunner appRunner, BluetoothAdapter bleAdapter) {
-        super(appRunner);
-        mAppRunner = appRunner;
-        mContext = appRunner.getAppContext();
-        mBleAdapter = bleAdapter;
-        mConnectionStatus = DISCONNECTED;
-
-        central = new BluetoothCentral(appRunner.getAppContext(), bluetoothCentralCallback, new Handler());
-        mAppRunner.whatIsRunning.add(this);
-    }
-
-    public PBluetoothLEClient connectDevice(String macAddress) {
-        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
-        peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
-        central.connectPeripheral(peripheral, peripheralCallback);
-        return this;
-    }
-
-    public PBluetoothLEClient connectDevice(String macAddress, int mtuSize) {
-        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
-        peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
-        peripheral.requestMtu(mtuSize);
-        central.connectPeripheral(peripheral, peripheralCallback);
-
-        return this;
-    }
-
-    public PBluetoothLEClient autoConnect(boolean autoConnect) {
-        this.autoConnect = autoConnect;
-
-        return this;
-    }
-
-    public PBluetoothLEClient disconnectDevice(String macAddress) {
-        central.getPeripheral(macAddress).cancelConnection();
-        return this;
-    }
-
-    public PBluetoothLEClient disconnectAllDevices() {
-        central.getConnectedPeripherals().forEach(bluetoothPeripheral -> {
-            bluetoothPeripheral.cancelConnection();
-        });
-        return this;
-    }
-
-    public PBluetoothLEClient onNewDeviceStatus(ReturnInterface callback) {
-        mCallbackDevice = callback;
-        return this;
-    }
-
-    public PBluetoothLEClient readFromCharacteristic(String macAddress, String serviceUUID, String charUUID) {
-        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
-        BluetoothGattCharacteristic btChar = peripheral.getCharacteristic(UUID.fromString(serviceUUID), UUID.fromString(charUUID));
-        peripheral.readCharacteristic(btChar);
-        peripheral.setNotify(btChar, true);
-        return this;
-    }
-
-    public PBluetoothLEClient onNewData(ReturnInterface callback) {
-        mCallbackCharacteristic = callback;
-        return this;
-    }
-
-    public PBluetoothLEClient write(String value, String macAddress, String serviceUUID, String charUUID) {
-        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
-
-        UUID sUUID = UUID.fromString(serviceUUID);
-        UUID cUUID = UUID.fromString(charUUID);
-        BluetoothGattCharacteristic btChar = peripheral.getCharacteristic(sUUID, cUUID);
-
-        // peripheral.writeCharacteristic(btChar, value, type);
-        peripheral.writeCharacteristic(btChar, value.getBytes(), WRITE_TYPE_DEFAULT);
-
-        return this;
-    }
-
+    // private Boolean connected = false;
+    public boolean autoConnect = false;
+    private BluetoothGatt mGatt;
+    private ReturnInterface mCallbackDevice;
+    private ReturnInterface mCallbackCharacteristic;
     // Callback for peripherals
     private final BluetoothPeripheralCallback peripheralCallback = new BluetoothPeripheralCallback() {
         @Override
@@ -158,7 +76,11 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         }
 
         @Override
-        public void onNotificationStateUpdate(BluetoothPeripheral peripheral, BluetoothGattCharacteristic characteristic, int status) {
+        public void onNotificationStateUpdate(
+                BluetoothPeripheral peripheral,
+                BluetoothGattCharacteristic characteristic,
+                int status
+        ) {
             if (status == GATT_SUCCESS) {
                 if (peripheral.isNotifying(characteristic)) {
                     MLog.d(TAG, "SUCCESS: Notify set to 'on' for %s " + characteristic.getUuid());
@@ -171,12 +93,12 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         }
 
         @Override
-        public void onCharacteristicWrite(BluetoothPeripheral peripheral, byte[] value, BluetoothGattCharacteristic characteristic, int status) {
-            MLog.d(TAG, "onCharWrite");
-        }
-
-        @Override
-        public void onCharacteristicUpdate(BluetoothPeripheral peripheral, byte[] value, BluetoothGattCharacteristic characteristic, int status) {
+        public void onCharacteristicUpdate(
+                BluetoothPeripheral peripheral,
+                byte[] value,
+                BluetoothGattCharacteristic characteristic,
+                int status
+        ) {
             // MLog.d(TAG, "onCharacteristicUpdate");
 
             if (status != GATT_SUCCESS) return;
@@ -219,10 +141,12 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
 
                 // Deal with Omron devices where we can only write currentTime under specific conditions
                 if(peripheral.getName().contains("BLEsmart_")) {
-                    boolean isNotifying = peripheral.isNotifying(peripheral.getCharacteristic(BLP_SERVICE_UUID, BLOOD_PRESSURE_MEASUREMENT_CHARACTERISTIC_UUID));
+                    boolean isNotifying = peripheral.isNotifying(peripheral.getCharacteristic(BLP_SERVICE_UUID,
+                    BLOOD_PRESSURE_MEASUREMENT_CHARACTERISTIC_UUID));
                     if(isNotifying) currentTimeCounter++;
 
-                    // We can set device time for Omron devices only if it is the first notification and currentTime is more than 10 min from now
+                    // We can set device time for Omron devices only if it is the first notification and currentTime
+                    is more than 10 min from now
                     long interval = abs(Calendar.getInstance().getTimeInMillis() - currentTime.getTime());
                     if (currentTimeCounter == 1 && interval > 10*60*1000) {
                         parser.setCurrentTime(Calendar.getInstance());6E400001-B5A3-F393-E0A9-E50E24DCCA9E
@@ -244,8 +168,17 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
             }
              */
         }
-    };
 
+        @Override
+        public void onCharacteristicWrite(
+                BluetoothPeripheral peripheral,
+                byte[] value,
+                BluetoothGattCharacteristic characteristic,
+                int status
+        ) {
+            MLog.d(TAG, "onCharWrite");
+        }
+    };
     // Callback for central
     private final BluetoothCentralCallback bluetoothCentralCallback = new BluetoothCentralCallback() {
 
@@ -296,9 +229,88 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         }
     };
 
+    public PBluetoothLEClient(AppRunner appRunner, BluetoothAdapter bleAdapter) {
+        super(appRunner);
+        mAppRunner = appRunner;
+        mContext = appRunner.getAppContext();
+        mBleAdapter = bleAdapter;
+        mConnectionStatus = DISCONNECTED;
+
+        central = new BluetoothCentral(appRunner.getAppContext(), bluetoothCentralCallback, new Handler());
+        mAppRunner.whatIsRunning.add(this);
+    }
+
+    public PBluetoothLEClient connectDevice(String macAddress) {
+        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
+        peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
+        central.connectPeripheral(peripheral, peripheralCallback);
+        return this;
+    }
+
+    public PBluetoothLEClient connectDevice(String macAddress, int mtuSize) {
+        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
+        peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
+        peripheral.requestMtu(mtuSize);
+        central.connectPeripheral(peripheral, peripheralCallback);
+
+        return this;
+    }
+
+    public PBluetoothLEClient autoConnect(boolean autoConnect) {
+        this.autoConnect = autoConnect;
+
+        return this;
+    }
+
+    public PBluetoothLEClient disconnectDevice(String macAddress) {
+        central.getPeripheral(macAddress).cancelConnection();
+        return this;
+    }
+
+    public PBluetoothLEClient onNewDeviceStatus(ReturnInterface callback) {
+        mCallbackDevice = callback;
+        return this;
+    }
+
+    public PBluetoothLEClient readFromCharacteristic(String macAddress, String serviceUUID, String charUUID) {
+        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
+        BluetoothGattCharacteristic btChar = peripheral.getCharacteristic(
+                UUID.fromString(serviceUUID),
+                UUID.fromString(charUUID)
+        );
+        peripheral.readCharacteristic(btChar);
+        peripheral.setNotify(btChar, true);
+        return this;
+    }
+
+    public PBluetoothLEClient onNewData(ReturnInterface callback) {
+        mCallbackCharacteristic = callback;
+        return this;
+    }
+
+    public PBluetoothLEClient write(String value, String macAddress, String serviceUUID, String charUUID) {
+        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
+
+        UUID sUUID = UUID.fromString(serviceUUID);
+        UUID cUUID = UUID.fromString(charUUID);
+        BluetoothGattCharacteristic btChar = peripheral.getCharacteristic(sUUID, cUUID);
+
+        // peripheral.writeCharacteristic(btChar, value, type);
+        peripheral.writeCharacteristic(btChar, value.getBytes(), WRITE_TYPE_DEFAULT);
+
+        return this;
+    }
+
     @Override
     public void __stop() {
         disconnectAllDevices();
         central.close();
+    }
+
+    public PBluetoothLEClient disconnectAllDevices() {
+        central.getConnectedPeripherals().forEach(bluetoothPeripheral -> {
+            bluetoothPeripheral.cancelConnection();
+        });
+        return this;
     }
 }

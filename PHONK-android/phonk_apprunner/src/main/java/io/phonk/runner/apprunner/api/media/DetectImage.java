@@ -35,13 +35,13 @@ import io.phonk.runner.base.utils.MLog;
 
 public class DetectImage {
 
-    private final AppRunner mAppRunner;
-
-    private Classifier detector;
     private static final int TF_OD_API_INPUT_SIZE = 300;
     private static final boolean TF_OD_API_IS_QUANTIZED = true;
     private static final String TF_OD_API_MODEL_FILE = "detect.tflite";
     private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/labelmap.txt";
+    private final AppRunner mAppRunner;
+    LearnImages.Callback mCallback = null;
+    private Classifier detector;
 
     DetectImage(AppRunner appRunner) {
         mAppRunner = appRunner;
@@ -51,13 +51,13 @@ public class DetectImage {
         int cropSize = TF_OD_API_INPUT_SIZE;
 
         try {
-            detector =
-                    TFLiteObjectDetectionAPIModel.create(
-                            mAppRunner.getAppContext().getAssets(),
-                            TF_OD_API_MODEL_FILE,
-                            TF_OD_API_LABELS_FILE,
-                            TF_OD_API_INPUT_SIZE,
-                            TF_OD_API_IS_QUANTIZED);
+            detector = TFLiteObjectDetectionAPIModel.create(
+                    mAppRunner.getAppContext().getAssets(),
+                    TF_OD_API_MODEL_FILE,
+                    TF_OD_API_LABELS_FILE,
+                    TF_OD_API_INPUT_SIZE,
+                    TF_OD_API_IS_QUANTIZED
+            );
         } catch (final IOException e) {
             e.printStackTrace();
             MLog.e(e.toString(), "Exception initializing classifier!");
@@ -75,14 +75,12 @@ public class DetectImage {
         }
     }
 
-    LearnImages.Callback mCallback = null;
+    public void addCallback(LearnImages.Callback callback) {
+        this.mCallback = callback;
+    }
 
     public interface Callback {
         void event(String p);
-    }
-
-    public void addCallback(LearnImages.Callback callback) {
-        this.mCallback = callback;
     }
 
 }

@@ -41,7 +41,12 @@ public class PVerticalSeekbar extends androidx.appcompat.widget.AppCompatSeekBar
         super(context, attrs);
     }
 
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onDraw(Canvas c) {
+        c.rotate(-90);
+        c.translate(-getHeight(), 0);
+
+        super.onDraw(c);
+    }    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(h, w, oldh, oldw);
     }
 
@@ -51,12 +56,7 @@ public class PVerticalSeekbar extends androidx.appcompat.widget.AppCompatSeekBar
         setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
     }
 
-    protected void onDraw(Canvas c) {
-        c.rotate(-90);
-        c.translate(-getHeight(), 0);
 
-        super.onDraw(c);
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

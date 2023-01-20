@@ -49,18 +49,21 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterface {
-    private final PBluetooth mPBluetooth;
-    private ReturnInterface mCallbackConnected;
-    private ReturnInterface mCallbackData;
-
     private final static int DISCONNECTED = 0;
     private final static int CONNECTING = 1;
     private final static int CONNECTED = 2;
-
-    private BluetoothDevice mDevice;
-
+    private final PBluetooth mPBluetooth;
     private final int status;
+    private ReturnInterface mCallbackConnected;
+    private ReturnInterface mCallbackData;
+    private BluetoothDevice mDevice;
+    /***********************************************************************************
+     * IMPL
+     */
 
+
+    private ConnectingThread mConnectingThread;
+    private ConnectedThread mConnectedThread;
 
     public PBluetoothClient(PBluetooth pBluetooth, AppRunner appRunner) {
         super(appRunner);
@@ -98,77 +101,12 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         }).show();
     }
 
-
     @PhonkMethod(description = "Connect to mContext bluetooth device using the mac address", example = "")
     @PhonkMethodParam(params = {"mac", "function(data)"})
     public void connectSerial(String mac) {
         BluetoothDevice device = mPBluetooth.getAdapter().getRemoteDevice(mac);
         tryToConnect(device);
     }
-
-    @PhonkMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
-    @PhonkMethodParam(params = {"name, function(data)"})
-    public PBluetoothClient connectSerialByName(String name) {
-        Set<BluetoothDevice> pairedDevices = mPBluetooth.getAdapter().getBondedDevices();
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
-                if (device.getName().equals(name)) {
-                    tryToConnect(device);
-
-                    break;
-                }
-            }
-        }
-        return this;
-    }
-
-    @PhonkMethod(description = "Send bluetooth serial message", example = "")
-    @PhonkMethodParam(params = {"string"})
-    public void send(String string) {
-        mConnectedThread.write(string.getBytes());
-    }
-
-    @PhonkMethod(description = "Send bluetooth serial message", example = "")
-    @PhonkMethodParam(params = {"int"})
-    public void sendBytes(byte[] bytes) {
-        mConnectedThread.write(bytes);
-    }
-
-    @PhonkMethod(description = "Disconnect the bluetooth", example = "")
-    @PhonkMethodParam(params = {""})
-    public void disconnect() {
-        if (mConnectingThread != null) {
-            mConnectingThread.cancel();
-            mConnectingThread = null;
-        }
-        if (mConnectedThread != null) {
-            mConnectedThread.shutdown();
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-        changeStatus(DISCONNECTED, mDevice);
-    }
-
-    @PhonkMethod(description = "Enable/Disable the bluetooth adapter", example = "")
-    @PhonkMethodParam(params = {"boolean"})
-    public boolean isConnected() {
-        return status == CONNECTED;
-    }
-
-    @Override
-    public void __stop() {
-        disconnect();
-    }
-
-
-    /***********************************************************************************
-     * IMPL
-     */
-
-
-    private ConnectingThread mConnectingThread;
-    private ConnectedThread mConnectedThread;
-
 
     // connection thread
     public synchronized void tryToConnect(BluetoothDevice device) {
@@ -206,6 +144,114 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         }
     }
 
+    private void changeStatus(int status, BluetoothDevice device) {
+        if (mCallbackConnected != null) {
+
+            String returnString = "";
+
+            switch (status) {
+                case DISCONNECTED:
+                    returnString = "disconnected";
+                    break;
+
+                case CONNECTING:
+                    returnString = "connecting";
+                    break;
+
+                case CONNECTED:
+                    returnString = "connected";
+                    break;
+            }
+
+            final ReturnObject o = new ReturnObject();
+            o.put("status", returnString);
+
+            if (device != null) {
+                o.put("mac", device.getAddress());
+                o.put("name", device.getName());
+            }
+
+            mHandler.post(() -> mCallbackConnected.event(o));
+        }
+    }
+
+    @PhonkMethod(description = "Connect to mContext bluetooth device using mContext name", example = "")
+    @PhonkMethodParam(params = {"name, function(data)"})
+    public PBluetoothClient connectSerialByName(String name) {
+        Set<BluetoothDevice> pairedDevices = mPBluetooth.getAdapter().getBondedDevices();
+        if (pairedDevices.size() > 0) {
+            for (BluetoothDevice device : pairedDevices) {
+                if (device.getName().equals(name)) {
+                    tryToConnect(device);
+
+                    break;
+                }
+            }
+        }
+        return this;
+    }
+
+    @PhonkMethod(description = "Send bluetooth serial message", example = "")
+    @PhonkMethodParam(params = {"string"})
+    public void send(String string) {
+        mConnectedThread.write(string.getBytes());
+    }
+
+    @PhonkMethod(description = "Send bluetooth serial message", example = "")
+    @PhonkMethodParam(params = {"int"})
+    public void sendBytes(byte[] bytes) {
+        mConnectedThread.write(bytes);
+    }
+
+    @PhonkMethod(description = "Enable/Disable the bluetooth adapter", example = "")
+    @PhonkMethodParam(params = {"boolean"})
+    public boolean isConnected() {
+        return status == CONNECTED;
+    }
+
+    @Override
+    public void __stop() {
+        disconnect();
+    }
+
+    @PhonkMethod(description = "Disconnect the bluetooth", example = "")
+    @PhonkMethodParam(params = {""})
+    public void disconnect() {
+        if (mConnectingThread != null) {
+            mConnectingThread.cancel();
+            mConnectingThread = null;
+        }
+        if (mConnectedThread != null) {
+            mConnectedThread.shutdown();
+            mConnectedThread.cancel();
+            mConnectedThread = null;
+        }
+        changeStatus(DISCONNECTED, mDevice);
+    }
+
+    // start connection thread
+    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+        MLog.d(TAG, "connected");
+
+        changeStatus(CONNECTED, device);
+        mDevice = device;
+
+        // Cancel the thread that completed the connection
+        if (mConnectingThread != null) {
+            mConnectingThread.cancel();
+            mConnectingThread = null;
+        }
+
+        // Cancel any thread currently running mContext connection
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
+        }
+
+        // Start the thread to manage the connection and perform transmissions
+        mConnectedThread = new ConnectedThread(socket, device);
+        mConnectedThread.start();
+    }
 
     /**
      * This thread runs while attempting to make an outgoing connection with a
@@ -281,31 +327,6 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         }
     }
 
-    // start connection thread
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
-        MLog.d(TAG, "connected");
-
-        changeStatus(CONNECTED, device);
-        mDevice = device;
-
-        // Cancel the thread that completed the connection
-        if (mConnectingThread != null) {
-            mConnectingThread.cancel();
-            mConnectingThread = null;
-        }
-
-        // Cancel any thread currently running mContext connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket, device);
-        mConnectedThread.start();
-    }
-
-
     /**
      * This thread runs during a connection with a remote device. It handles all
      * incoming and outgoing transmissions.
@@ -315,7 +336,8 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
         private final BluetoothDevice mmDevice;
-
+        private final boolean hasReadAnything = false;
+        private boolean stop = false;
         public ConnectedThread(BluetoothSocket socket, BluetoothDevice device) {
             MLog.d(TAG, "create ConnectedThread");
             mmSocket = socket;
@@ -334,9 +356,6 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
-
-        private boolean stop = false;
-        private final boolean hasReadAnything = false;
 
         public void shutdown() {
             stop = true;
@@ -400,37 +419,6 @@ public class PBluetoothClient extends ProtoBase implements WhatIsRunningInterfac
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);
             }
-        }
-    }
-
-    private void changeStatus(int status, BluetoothDevice device) {
-        if (mCallbackConnected != null) {
-
-            String returnString = "";
-
-            switch (status) {
-                case DISCONNECTED:
-                    returnString = "disconnected";
-                    break;
-
-                case CONNECTING:
-                    returnString = "connecting";
-                    break;
-
-                case CONNECTED:
-                    returnString = "connected";
-                    break;
-            }
-
-            final ReturnObject o = new ReturnObject();
-            o.put("status", returnString);
-
-            if (device != null) {
-                o.put("mac", device.getAddress());
-                o.put("name", device.getName());
-            }
-
-            mHandler.post(() -> mCallbackConnected.event(o));
         }
     }
 

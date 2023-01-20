@@ -76,7 +76,22 @@ public class PPopupDialogFragment extends DialogFragment {
         return new PPopupDialogFragment();
     }
 
+    @Nullable
     @Override
+    public View onCreateView(
+            LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+
+        if (mView != null) {
+            MLog.d("lalalalalalla", "llalalalalal");
+            LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            getDialog().addContentView(mView, lp);
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(mTitle);
@@ -111,7 +126,10 @@ public class PPopupDialogFragment extends DialogFragment {
         if (mMultichoice != null) {
             MLog.d(TAG, "multichoice");
 
-            builder.setMultiChoiceItems(mMultichoice, mMultichoiceState, (dialog, which, isChecked) -> mMultichoiceState[which] = isChecked
+            builder.setMultiChoiceItems(
+                    mMultichoice,
+                    mMultichoiceState,
+                    (dialog, which, isChecked) -> mMultichoiceState[which] = isChecked
             );
         }
 
@@ -135,30 +153,6 @@ public class PPopupDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        if (mView != null) {
-            MLog.d("lalalalalalla", "llalalalalal");
-            LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            getDialog().addContentView(mView, lp);
-        }
-
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // if width and height is unset then we show the default size
-        if (mW == -2 && mH == -2) return;
-
-        calculateSize();
-        getDialog().getWindow().setLayout(mWidth, mHeight);
-    }
-
     public PPopupDialogFragment onAction(ReturnInterface callback) {
         mCallback = callback;
 
@@ -169,6 +163,15 @@ public class PPopupDialogFragment extends DialogFragment {
         mTitle = title;
 
         return this;
+    }    @Override
+    public void onStart() {
+        super.onStart();
+
+        // if width and height is unset then we show the default size
+        if (mW == -2 && mH == -2) return;
+
+        calculateSize();
+        getDialog().getWindow().setLayout(mWidth, mHeight);
     }
 
     public PPopupDialogFragment description(String description) {
@@ -230,6 +233,10 @@ public class PPopupDialogFragment extends DialogFragment {
         mView = v;
         // mContainer.addView(v);
     }
+
+
+
+
 
     public void dismiss() {
         super.dismiss();

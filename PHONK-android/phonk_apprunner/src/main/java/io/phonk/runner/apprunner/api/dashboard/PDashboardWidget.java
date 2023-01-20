@@ -40,15 +40,11 @@ public abstract class PDashboardWidget extends ProtoBase {
 
     private static final String TAG = PDashboardWidget.class.getSimpleName();
     protected final PDashboard.DashboardServer mDashboardServer;
-
-    private final Context mContext;
-
-    protected ReturnInterface mCallback;
-
+    protected final String mId;
     final String D_MODULE = "dashboard";
     final String mType;
-
-    protected final String mId;
+    private final Context mContext;
+    protected ReturnInterface mCallback;
     protected String name;
 
     public PDashboardWidget(AppRunner appRunner, PDashboard.DashboardServer dashboardServer, String type) {
@@ -63,24 +59,17 @@ public abstract class PDashboardWidget extends ProtoBase {
     public void add(String name, int x, int y, int w, int h) throws JSONException, UnknownHostException {
         this.name = name;
 
-        JSONObject values = new JSONObject()
-                .put("name", name)
-                .put("x", x)
-                .put("y", y)
-                .put("w", w)
-                .put("h", h);
+        JSONObject values = new JSONObject().put("name", name).put("x", x).put("y", y).put("w", w).put("h", h);
 
         sendToDashboard("add", values);
     }
 
     protected void sendToDashboard(String action, JSONObject values) throws JSONException {
         // wrap the values
-        JSONObject msg = new JSONObject()
-                .put("module", D_MODULE)
-                .put("type", mType)
-                .put("id", mId)
-                .put("action", action)
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("module", D_MODULE).put("type", mType).put("id", mId).put(
+                "action",
+                action
+        ).put("values", values);
 
         // send to app that manages the websocket
         Intent i = new Intent("io.phonk.intent.WEBEDITOR_SEND");

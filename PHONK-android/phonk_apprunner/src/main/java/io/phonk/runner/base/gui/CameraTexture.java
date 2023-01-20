@@ -69,33 +69,34 @@ import io.phonk.runner.base.utils.TimeUtils;
 public class CameraTexture extends AutoFitTextureView implements TextureView.SurfaceTextureListener {
 
     public static final int MODE_COLOR_COLOR = 3;
+    private static final double MAX_ASPECT_DISTORTION = 0.15;
+    private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
     private static int mCameraRotation = 0;
-
+    protected final String TAG = CameraTexture.class.getSimpleName();
     final String modeColor;
     final String modeCamera;
-    private int cameraId;
-
-    protected final String TAG = CameraTexture.class.getSimpleName();
-
     final AppRunner mAppRunner;
-
     // camera
     protected Camera mCamera;
-
+    protected Parameters mParameters;
+    File dir = null;
+    File file = null;
+    String fileName;
+    private int cameraId;
     // saving info
     private String _rootPath;
     private String _fileName;
     private String _path;
     private View v;
-
     private CallbackData callbackData;
     private CallbackBmp callbackBmp;
     private CallbackStream callbackStream;
     private boolean frameProcessing = false;
-    protected Parameters mParameters;
     private OnReadyCallback mOnReadyCallback;
     private ReturnInterface mPictureTakenCallback;
     private ReturnInterface mVideoTakenCallback;
+    private MediaRecorder recorder;
+    private boolean recording = false;
 
     public CameraTexture(AppRunner appRunner, String camera, String colorMode) {
         super(appRunner.getAppContext());
@@ -106,28 +107,58 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         this.setSurfaceTextureListener(this);
     }
 
+    //desiredWidth and desiredHeight can be the screen size of mobile device
+    private static SizePair generateValidPreviewSize(
+            Camera camera, int desiredWidth, int desiredHeight
+    ) {
+        Camera.Parameters parameters = camera.getParameters();
+        double screenAspectRatio = desiredWidth / (double) desiredHeight;
+        List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
+        List<Camera.Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
+        SizePair bestPair = null;
+        double currentMinDistortion = MAX_ASPECT_DISTORTION;
+        for (Camera.Size previewSize : supportedPreviewSizes) {
+            float previewAspectRatio = (float) previewSize.width / (float) previewSize.height;
+            for (Camera.Size pictureSize : supportedPictureSizes) {
+                float pictureAspectRatio = (float) pictureSize.width / (float) pictureSize.height;
+                if (Math.abs(previewAspectRatio - pictureAspectRatio) < ASPECT_RATIO_TOLERANCE) {
+                    SizePair sizePair = new SizePair(previewSize, pictureSize);
+
+                    boolean isCandidatePortrait = previewSize.width < previewSize.height;
+                    int maybeFlippedWidth = isCandidatePortrait ? previewSize.width : previewSize.height;
+                    int maybeFlippedHeight = isCandidatePortrait ? previewSize.height : previewSize.width;
+                    double aspectRatio = maybeFlippedWidth / (double) maybeFlippedHeight;
+                    double distortion = Math.abs(aspectRatio - screenAspectRatio);
+                    if (distortion < currentMinDistortion) {
+                        currentMinDistortion = distortion;
+                        bestPair = sizePair;
+                    }
+                    break;
+                }
+            }
+        }
+
+        return bestPair;
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         stopCamera();
     }
 
+    protected void stopCamera() {
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        return true;
     }
 
     @Override
@@ -157,58 +188,78 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         mOnReadyCallback.event();
     }
 
-    public interface CallbackData {
-        void event(byte[] data, Camera camera);
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
     }
 
-    public void addCallbackData(CallbackData callbackData) {
-        this.callbackData = callbackData;
-        startOnFrameProcessing();
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        return true;
     }
 
-    public interface CallbackBmp {
-        void event(Bitmap bmp);
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
     }
 
-    public void addCallbackBmp(CallbackBmp callbackBmp) {
-        this.callbackBmp = callbackBmp;
-        startOnFrameProcessing();
-    }
-
-    public interface CallbackStream {
-        void event(String out);
-    }
-
-    public void addCallbackStream(CallbackStream callbackStream) {
-        this.callbackStream = callbackStream;
-        startOnFrameProcessing();
+    @SuppressLint("NewApi")
+    private int getCameraId(int cameraId) {
+        CameraInfo ci = new CameraInfo();
+        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
+            Camera.getCameraInfo(i, ci);
+            if (ci.facing == cameraId) { //CameraInfo.CAMERA_FACING_FRONT) {
+                MLog.d(TAG, "returning " + i);
+                return i;
+                //} else (ci.facing == CameraInfo.CAMERA_FACING_BACK) {
+                //    return i;
+            }
+        }
+        return -1; // No front-facing camera found
     }
 
     public void applyParameters() {
         mCamera.setParameters(mParameters);
     }
 
-    public void setPreviewSize(int w, int h) {
-        mParameters.setPreviewSize(w, h);
-        applyParameters();
+    public void setCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+
+        WindowManager windowManager = (WindowManager) mAppRunner.getAppContext()
+                .getSystemService(Context.WINDOW_SERVICE);
+        int rotation = windowManager.getDefaultDisplay().getRotation();
+
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+
+        mCameraRotation = result;
+        MLog.d("wewe", "" + mCameraRotation);
+        camera.setDisplayOrientation(mCameraRotation);
     }
 
-    public void setPictureSize(int w, int h) {
-        mParameters.setPictureSize(w, h);
-        applyParameters();
-    }
-
-    public void setColorEffect(String mode) {
-        mParameters.setColorEffect(mode);
-        applyParameters();
-    }
-
-    public void getProperties() {
-        Log.i(TAG, "Supported Exposure Modes:" + mParameters.get("exposure-mode-values"));
-        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
-        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
-        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance"));
-        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("exposure"));
+    public void addCallbackData(CallbackData callbackData) {
+        this.callbackData = callbackData;
+        startOnFrameProcessing();
     }
 
     public void startOnFrameProcessing() {
@@ -278,18 +329,38 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         }
     }
 
-    protected void stopCamera() {
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.setPreviewCallback(null);
-            mCamera.release();
-            mCamera = null;
-        }
+    public void addCallbackBmp(CallbackBmp callbackBmp) {
+        this.callbackBmp = callbackBmp;
+        startOnFrameProcessing();
     }
 
-    File dir = null;
-    File file = null;
-    String fileName;
+    public void addCallbackStream(CallbackStream callbackStream) {
+        this.callbackStream = callbackStream;
+        startOnFrameProcessing();
+    }
+
+    public void setPreviewSize(int w, int h) {
+        mParameters.setPreviewSize(w, h);
+        applyParameters();
+    }
+
+    public void setPictureSize(int w, int h) {
+        mParameters.setPictureSize(w, h);
+        applyParameters();
+    }
+
+    public void setColorEffect(String mode) {
+        mParameters.setColorEffect(mode);
+        applyParameters();
+    }
+
+    public void getProperties() {
+        Log.i(TAG, "Supported Exposure Modes:" + mParameters.get("exposure-mode-values"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance-values"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("whitebalance"));
+        Log.i(TAG, "Supported White Balance Modes:" + mParameters.get("exposure"));
+    }
 
     public String takePic() {
         // final CountDownLatch latch = new CountDownLatch(1);
@@ -310,17 +381,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         });
 
         return fileName;
-    }
-
-    private MediaRecorder recorder;
-    private boolean recording = false;
-
-    public void stopRecordingVideo() {
-        recorder.stop();
-        recorder.release();
-        mCamera.lock();
-        recording = false;
-        MLog.d(TAG, "Recording Stopped");
     }
 
     public void recordVideo(String file) {
@@ -377,6 +437,14 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     }
 
+    public void stopRecordingVideo() {
+        recorder.stop();
+        recorder.release();
+        mCamera.lock();
+        recording = false;
+        MLog.d(TAG, "Recording Stopped");
+    }
+
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void onPictureTaken(byte[] data, Camera camera) {
         Log.i(TAG, "photo taken");
@@ -414,26 +482,6 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
 
     }
 
-    @SuppressLint("NewApi")
-    private int getCameraId(int cameraId) {
-        CameraInfo ci = new CameraInfo();
-        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
-            Camera.getCameraInfo(i, ci);
-            if (ci.facing == cameraId) { //CameraInfo.CAMERA_FACING_FRONT) {
-                MLog.d(TAG, "returning " + i);
-                return i;
-                //} else (ci.facing == CameraInfo.CAMERA_FACING_BACK) {
-                //    return i;
-            }
-        }
-        return -1; // No front-facing camera found
-    }
-
-    public boolean isFlashAvailable() {
-
-        return mAppRunner.getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-    }
-
     public void flash(boolean b) {
         if (isFlashAvailable()) {
             if (b) mParameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
@@ -443,10 +491,10 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         }
     }
 
-    public boolean hasAutofocus() {
-        return mAppRunner.getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
-    }
+    public boolean isFlashAvailable() {
 
+        return mAppRunner.getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
 
     public void focus(final ReturnInterface callbackfn) {
         if (hasAutofocus()) {
@@ -457,6 +505,10 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         }
     }
 
+    public boolean hasAutofocus() {
+        return mAppRunner.getAppContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    }
+
     public void addPictureTakenCallback(ReturnInterface callback) {
         mPictureTakenCallback = callback;
     }
@@ -465,88 +517,25 @@ public class CameraTexture extends AutoFitTextureView implements TextureView.Sur
         mVideoTakenCallback = callback;
     }
 
-    public void setCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
+    public void addOnReadyCallback(OnReadyCallback callback) {
+        mOnReadyCallback = callback;
+    }
 
-        WindowManager windowManager = (WindowManager) mAppRunner.getAppContext().getSystemService(Context.WINDOW_SERVICE);
-        int rotation = windowManager.getDefaultDisplay().getRotation();
-
-        int degrees = 0;
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                degrees = 0;
-                break;
-            case Surface.ROTATION_90:
-                degrees = 90;
-                break;
-            case Surface.ROTATION_180:
-                degrees = 180;
-                break;
-            case Surface.ROTATION_270:
-                degrees = 270;
-                break;
-        }
-
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
-        } else {  // back-facing
-            result = (info.orientation - degrees + 360) % 360;
-        }
-
-        mCameraRotation = result;
-        MLog.d("wewe", "" + mCameraRotation);
-        camera.setDisplayOrientation(mCameraRotation);
+    public interface CallbackData {
+        void event(byte[] data, Camera camera);
     }
 
 
-    public void addOnReadyCallback(OnReadyCallback callback) {
-        mOnReadyCallback = callback;
+    public interface CallbackBmp {
+        void event(Bitmap bmp);
+    }
+    public interface CallbackStream {
+        void event(String out);
     }
 
     public interface OnReadyCallback {
         void event();
     }
-
-
-    private static final double MAX_ASPECT_DISTORTION = 0.15;
-    private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
-
-    //desiredWidth and desiredHeight can be the screen size of mobile device
-    private static SizePair generateValidPreviewSize(Camera camera, int desiredWidth,
-                                                     int desiredHeight) {
-        Camera.Parameters parameters = camera.getParameters();
-        double screenAspectRatio = desiredWidth / (double) desiredHeight;
-        List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
-        List<Camera.Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
-        SizePair bestPair = null;
-        double currentMinDistortion = MAX_ASPECT_DISTORTION;
-        for (Camera.Size previewSize : supportedPreviewSizes) {
-            float previewAspectRatio = (float) previewSize.width / (float) previewSize.height;
-            for (Camera.Size pictureSize : supportedPictureSizes) {
-                float pictureAspectRatio = (float) pictureSize.width / (float) pictureSize.height;
-                if (Math.abs(previewAspectRatio - pictureAspectRatio) < ASPECT_RATIO_TOLERANCE) {
-                    SizePair sizePair = new SizePair(previewSize, pictureSize);
-
-                    boolean isCandidatePortrait = previewSize.width < previewSize.height;
-                    int maybeFlippedWidth = isCandidatePortrait ? previewSize.width : previewSize.height;
-                    int maybeFlippedHeight = isCandidatePortrait ? previewSize.height : previewSize.width;
-                    double aspectRatio = maybeFlippedWidth / (double) maybeFlippedHeight;
-                    double distortion = Math.abs(aspectRatio - screenAspectRatio);
-                    if (distortion < currentMinDistortion) {
-                        currentMinDistortion = distortion;
-                        bestPair = sizePair;
-                    }
-                    break;
-                }
-            }
-        }
-
-        return bestPair;
-    }
-
 
     private static class SizePair {
         private final Size mPreview;

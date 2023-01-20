@@ -43,7 +43,8 @@ public class WidgetHelper {
 
                     case MotionEvent.ACTION_DOWN:
                         x_init = (int) e.getRawX() - (int) viewContainer.getX();
-                        //MLog.network(getContext(), TAG, "" + x_init + " " + (int) e.getRawX() + " " + (int) mWindow.getX() + " " + (int) mWindow.getLeft());
+                        //MLog.network(getContext(), TAG, "" + x_init + " " + (int) e.getRawX() + " " + (int) mWindow
+                        // .getX() + " " + (int) mWindow.getLeft());
                         y_init = (int) e.getRawY() - (int) viewContainer.getY();
 
                         break;

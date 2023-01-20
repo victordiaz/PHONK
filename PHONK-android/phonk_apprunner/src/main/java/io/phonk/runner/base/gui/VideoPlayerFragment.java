@@ -39,22 +39,13 @@ import io.phonk.runner.base.utils.MLog;
 @SuppressLint("NewApi")
 public class VideoPlayerFragment extends VideoView {
 
+    protected final Handler handler;
+    final Vector<VideoListener> listeners = new Vector<>();
+    private final Context c;
+    protected MediaPlayer mp_;
+    Runnable r;
     private View v;
     private VideoView mVideoView;
-    final Vector<VideoListener> listeners = new Vector<>();
-    Runnable r;
-    protected final Handler handler;
-    protected MediaPlayer mp_;
-    private final Context c;
-
-    public interface VideoListener {
-
-        void onReady(boolean ready);
-
-        void onFinish(boolean finished);
-
-        void onTimeUpdate(int ms, int totalDuration);
-    }
 
     /**
      * Called when the activity is first created.
@@ -75,31 +66,7 @@ public class VideoPlayerFragment extends VideoView {
 
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        for (VideoListener l : listeners) {
-            l.onReady(true);
-        }
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        for (VideoListener l : listeners) {
-            l = null;
-        }
-        handler.removeCallbacks(r);
-    }
-
     public void loadExternalVideo(String path) {
-        loadVideo(path);
-    }
-
-    public void loadResourceVideo(String videoFile) {
-        String path = "android.resource://" + c.getPackageName() + videoFile;
         loadVideo(path);
     }
 
@@ -160,6 +127,17 @@ public class VideoPlayerFragment extends VideoView {
 
     }
 
+    public void close() {
+        handler.removeCallbacks(r);
+        // mVideoView.stopPlayback();
+
+    }
+
+    public void loadResourceVideo(String videoFile) {
+        String path = "android.resource://" + c.getPackageName() + videoFile;
+        loadVideo(path);
+    }
+
     public void setVolume(float volume) {
         if (mp_ != null) {
             mp_.setVolume(volume, volume);
@@ -171,12 +149,6 @@ public class VideoPlayerFragment extends VideoView {
         mp_.setLooping(b);
     }
 
-    public void close() {
-        handler.removeCallbacks(r);
-        // mVideoView.stopPlayback();
-
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -185,17 +157,9 @@ public class VideoPlayerFragment extends VideoView {
         return true;
     }
 
-    public void addListener(VideoListener videoListener) {
-        listeners.add(videoListener);
-    }
-
-    public void removeListener(VideoListener videoListener) {
-        listeners.remove(videoListener);
-    }
-
     @Override
-    public void seekTo(int ms) {
-        mp_.seekTo(ms);
+    public void pause() {
+        mp_.pause();
     }
 
     @Override
@@ -206,6 +170,38 @@ public class VideoPlayerFragment extends VideoView {
     @Override
     public int getCurrentPosition() {
         return mp_.getCurrentPosition();
+    }
+
+    @Override
+    public void seekTo(int ms) {
+        mp_.seekTo(ms);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        for (VideoListener l : listeners) {
+            l.onReady(true);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        for (VideoListener l : listeners) {
+            l = null;
+        }
+        handler.removeCallbacks(r);
+    }
+
+    public void addListener(VideoListener videoListener) {
+        listeners.add(videoListener);
+    }
+
+    public void removeListener(VideoListener videoListener) {
+        listeners.remove(videoListener);
     }
 
     public void getVideoWidth() {
@@ -220,13 +216,17 @@ public class VideoPlayerFragment extends VideoView {
         mp_.start();
     }
 
-    @Override
-    public void pause() {
-        mp_.pause();
-    }
-
     public void stop() {
         mp_.stop();
+    }
+
+    public interface VideoListener {
+
+        void onReady(boolean ready);
+
+        void onFinish(boolean finished);
+
+        void onTimeUpdate(int ms, int totalDuration);
     }
 
 }

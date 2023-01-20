@@ -44,7 +44,10 @@ public class AbsolutePositionFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         v = new RelativeLayout(getActivity());
-        v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        v.setLayoutParams(new LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT
+        ));
         // ac.setContentView(mainLayout);
 
     }
@@ -67,7 +70,7 @@ public class AbsolutePositionFragment extends BaseFragment {
         sb.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
             }
 
@@ -77,7 +80,7 @@ public class AbsolutePositionFragment extends BaseFragment {
             }
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });

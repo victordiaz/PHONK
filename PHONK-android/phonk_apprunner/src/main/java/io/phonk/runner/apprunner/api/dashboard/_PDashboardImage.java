@@ -47,8 +47,7 @@ public class _PDashboardImage extends ProtoBase {
     public void add(String url, int x, int y, int w, int h) throws UnknownHostException, JSONException {
         this.id = StrUtils.generateUUID();
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
+        JSONObject values = new JSONObject().put("id", id)
                 .put("url", url)
                 .put("type", "image")
                 .put("x", x)
@@ -56,10 +55,7 @@ public class _PDashboardImage extends ProtoBase {
                 .put("w", w)
                 .put("h", h);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
@@ -70,15 +66,9 @@ public class _PDashboardImage extends ProtoBase {
     @PhonkMethodParam(params = {"url"})
     public void changeImage(String url) throws JSONException, UnknownHostException {
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("type", "label")
-                .put("url", url);
+        JSONObject values = new JSONObject().put("id", id).put("type", "label").put("url", url);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "changeImage")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "changeImage").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);

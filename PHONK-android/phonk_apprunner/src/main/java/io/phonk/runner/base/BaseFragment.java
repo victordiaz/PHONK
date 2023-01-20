@@ -31,13 +31,6 @@ import androidx.fragment.app.Fragment;
 public abstract class BaseFragment extends Fragment {
 
     private static final String TAG = BaseFragment.class.getSimpleName();
-
-    public interface FragmentListener {
-        void onReady();
-
-        void onFinish(boolean finished);
-    }
-
     FragmentListener fragmentListener;
 
     @Override
@@ -52,6 +45,12 @@ public abstract class BaseFragment extends Fragment {
         if (fragmentListener != null) {
             fragmentListener.onReady();
         }
+    }
+
+    public interface FragmentListener {
+        void onReady();
+
+        void onFinish(boolean finished);
     }
 
 }

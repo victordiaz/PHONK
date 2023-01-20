@@ -85,6 +85,24 @@ public class ServiceDiscovery {
 
             mRegistrationListener = new NsdManager.RegistrationListener() {
                 @Override
+                public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                    // Registration failed!  Put debugging code here to determine why.
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceInfo.getServiceName());
+                    ret.put("status", "registration_failed");
+                    if (mCallback != null) mCallback.event(ret);
+                }
+
+                @Override
+                public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                    // Unregistration failed.  Put debugging code here to determine why.
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceInfo.getServiceName());
+                    ret.put("status", "unregistration_failed");
+                    if (mCallback != null) mCallback.event(ret);
+                }
+
+                @Override
                 public void onServiceRegistered(NsdServiceInfo serviceInfo) {
                     // Save the service name.  Android may have changed it in order to
                     // resolve mContext conflict, so update the name you initially requested
@@ -100,30 +118,12 @@ public class ServiceDiscovery {
                 }
 
                 @Override
-                public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                    // Registration failed!  Put debugging code here to determine why.
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("name", serviceInfo.getServiceName());
-                    ret.put("status", "registration_failed");
-                    if (mCallback != null) mCallback.event(ret);
-                }
-
-                @Override
                 public void onServiceUnregistered(NsdServiceInfo arg0) {
                     // Service has been unregistered.  This only happens when you call
                     // NsdManager.unregisterService() and pass in this listener.
                     ReturnObject ret = new ReturnObject();
                     ret.put("name", serviceInfo.getServiceName());
                     ret.put("status", "unregistered");
-                    if (mCallback != null) mCallback.event(ret);
-                }
-
-                @Override
-                public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                    // Unregistration failed.  Put debugging code here to determine why.
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("name", serviceInfo.getServiceName());
-                    ret.put("status", "unregistration_failed");
                     if (mCallback != null) mCallback.event(ret);
                 }
             };
@@ -151,8 +151,8 @@ public class ServiceDiscovery {
 
     public class Discover {
         final NsdManager mNsdManager;
-        private final String mServiceType;
         final NsdManager.DiscoveryListener mDiscoveryListener;
+        private final String mServiceType;
         ReturnInterface mCallback;
 
         Discover(Context a, final String serviceType) {
@@ -162,6 +162,27 @@ public class ServiceDiscovery {
             // Instantiate mContext new DiscoveryListener
             mDiscoveryListener = new NsdManager.DiscoveryListener() {
 
+                @Override
+                public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+                    Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+                    //mNsdManager.stopServiceDiscovery(this);
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("type", serviceType);
+                    ret.put("error", errorCode);
+                    ret.put("status", "discovery_failed");
+                    if (mCallback != null) mCallback.event(ret);
+                }
+
+                @Override
+                public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+                    Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("name", serviceType);
+                    ret.put("error", errorCode);
+                    ret.put("status", "stop_discovering_failed");
+                    if (mCallback != null) mCallback.event(ret);
+                }
+
                 //  Called as soon as service discovery begins.
                 @Override
                 public void onDiscoveryStarted(String regType) {
@@ -169,6 +190,15 @@ public class ServiceDiscovery {
                     ReturnObject ret = new ReturnObject();
                     ret.put("name", regType);
                     ret.put("status", "started");
+                    if (mCallback != null) mCallback.event(ret);
+                }
+
+                @Override
+                public void onDiscoveryStopped(String serviceType) {
+                    Log.i(TAG, "Discovery stopped: " + serviceType);
+                    ReturnObject ret = new ReturnObject();
+                    ret.put("type", serviceType);
+                    ret.put("status", "discovery_stopped");
                     if (mCallback != null) mCallback.event(ret);
                 }
 
@@ -199,7 +229,6 @@ public class ServiceDiscovery {
 
                 }
 
-
                 @Override
                 public void onServiceLost(NsdServiceInfo serviceInfo) {
                     // When the network service is no longer available.
@@ -211,36 +240,6 @@ public class ServiceDiscovery {
                     ret.put("serviceName", serviceInfo.getServiceName());
                     ret.put("host", serviceInfo.getHost());
                     ret.put("type", serviceInfo.getServiceType());
-                    if (mCallback != null) mCallback.event(ret);
-                }
-
-                @Override
-                public void onDiscoveryStopped(String serviceType) {
-                    Log.i(TAG, "Discovery stopped: " + serviceType);
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("type", serviceType);
-                    ret.put("status", "discovery_stopped");
-                    if (mCallback != null) mCallback.event(ret);
-                }
-
-                @Override
-                public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-                    Log.e(TAG, "Discovery failed: Error code:" + errorCode);
-                    //mNsdManager.stopServiceDiscovery(this);
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("type", serviceType);
-                    ret.put("error", errorCode);
-                    ret.put("status", "discovery_failed");
-                    if (mCallback != null) mCallback.event(ret);
-                }
-
-                @Override
-                public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-                    Log.e(TAG, "Discovery failed: Error code:" + errorCode);
-                    ReturnObject ret = new ReturnObject();
-                    ret.put("name", serviceType);
-                    ret.put("error", errorCode);
-                    ret.put("status", "stop_discovering_failed");
                     if (mCallback != null) mCallback.event(ret);
                 }
             };

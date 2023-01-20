@@ -57,6 +57,18 @@ public class PWebSocketServer extends ProtoBase {
         websocketServer = new WebSocketServer(inetSocket) {
 
             @Override
+            public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "connect");
+                    o.put("socket", arg0);
+                    if (mCallbackConnect != null) mCallbackConnect.event(o);
+                    if (mCallbackStatus != null) mCallbackStatus.event(o);
+                });
+                //MLog.d(TAG, "onOpen");
+            }
+
+            @Override
             public void onClose(final WebSocket arg0, int arg1, String arg2, boolean arg3) {
                 mHandler.post(() -> {
                     ReturnObject o = new ReturnObject();
@@ -66,6 +78,19 @@ public class PWebSocketServer extends ProtoBase {
                     if (mCallbackStatus != null) mCallbackStatus.event(o);
                 });
                 // MLog.d(TAG, "onClose");
+            }
+
+            @Override
+            public void onMessage(final WebSocket arg0, final String arg1) {
+                mHandler.post(() -> {
+                    ReturnObject o = new ReturnObject();
+                    o.put("status", "message");
+                    o.put("socket", arg0);
+                    o.put("data", arg1);
+                    if (mCallbackNewData != null) mCallbackNewData.event(o);
+                });
+                //MLog.d(TAG, "onMessage server");
+
             }
 
             @Override
@@ -88,31 +113,6 @@ public class PWebSocketServer extends ProtoBase {
                     if (mCallbackStart != null) mCallbackStart.event(o);
                     if (mCallbackStatus != null) mCallbackStatus.event(o);
                 });
-            }
-
-            @Override
-            public void onMessage(final WebSocket arg0, final String arg1) {
-                mHandler.post(() -> {
-                    ReturnObject o = new ReturnObject();
-                    o.put("status", "message");
-                    o.put("socket", arg0);
-                    o.put("data", arg1);
-                    if (mCallbackNewData != null) mCallbackNewData.event(o);
-                });
-                //MLog.d(TAG, "onMessage server");
-
-            }
-
-            @Override
-            public void onOpen(final WebSocket arg0, ClientHandshake arg1) {
-                mHandler.post(() -> {
-                    ReturnObject o = new ReturnObject();
-                    o.put("status", "connect");
-                    o.put("socket", arg0);
-                    if (mCallbackConnect != null) mCallbackConnect.event(o);
-                    if (mCallbackStatus != null) mCallbackStatus.event(o);
-                });
-                //MLog.d(TAG, "onOpen");
             }
 
         };

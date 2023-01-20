@@ -38,9 +38,9 @@ import io.phonk.runner.base.utils.AndroidUtils;
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
     final int numCol = 1;
-    private boolean mIsAutoScroll = false;
-    PList list;
     final NativeArray data = new NativeArray(0);
+    PList list;
+    private boolean mIsAutoScroll = false;
     private ReturnInterfaceWithReturn mCreateCallback;
     private ReturnInterfaceWithReturn mUpdateCallback;
 
@@ -62,10 +62,8 @@ public class PTextList extends PList implements PTextInterface {
             t.setTextSize(AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6));
             t.setTextColor(Color.argb(255, 255, 255, 255));
 
-            if (mTextColor != -1)
-                t.textColor(mTextColor);
-            if (mTextSize != -1)
-                t.textSize(mTextSize);
+            if (mTextColor != -1) t.textColor(mTextColor);
+            if (mTextSize != -1) t.textSize(mTextSize);
 
             styler.apply();
             return t;

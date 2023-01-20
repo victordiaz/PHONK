@@ -52,11 +52,11 @@ import io.phonk.runner.apprunner.api.widgets.PInput;
 import io.phonk.runner.apprunner.api.widgets.PKnob;
 import io.phonk.runner.apprunner.api.widgets.PLinearLayout;
 import io.phonk.runner.apprunner.api.widgets.PList;
+import io.phonk.runner.apprunner.api.widgets.PLoader;
 import io.phonk.runner.apprunner.api.widgets.PMap;
 import io.phonk.runner.apprunner.api.widgets.PMatrix;
 import io.phonk.runner.apprunner.api.widgets.PNumberPicker;
 import io.phonk.runner.apprunner.api.widgets.PPlot;
-import io.phonk.runner.apprunner.api.widgets.PLoader;
 import io.phonk.runner.apprunner.api.widgets.PRadioButtonGroup;
 import io.phonk.runner.apprunner.api.widgets.PScrollView;
 import io.phonk.runner.apprunner.api.widgets.PSlider;
@@ -78,11 +78,17 @@ public class PViewsArea extends ProtoBase {
 
     // contains a reference of all views added to the absolute layout
     protected final ArrayList<View> viewArray = new ArrayList<>();
-
+    /**
+     * blablba
+     *
+     * @status TODO
+     */
+    @PhonkField
+    public PToolbar toolbar;
+    protected PAbsoluteLayout uiAbsoluteLayout;
     // UI
     private StylePropertiesProxy mTheme;
     private boolean isScrollEnabled = false;
-    protected PAbsoluteLayout uiAbsoluteLayout;
     private RelativeLayout uiHolderLayout;
     private PScrollView uiScrollView;
 
@@ -92,14 +98,11 @@ public class PViewsArea extends ProtoBase {
         mContext = appRunner.getAppContext();
     }
 
-    private int getLayoutType(String type) {
-        if (type.equals("wrap")) return ViewGroup.LayoutParams.WRAP_CONTENT;
-        else if (type.equals("match")) return ViewGroup.LayoutParams.MATCH_PARENT;
-        return -1;
-    }
-
     public View initMainLayout(String widthType, String heightType) {
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(getLayoutType(widthType), getLayoutType(heightType));
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                getLayoutType(widthType),
+                getLayoutType(heightType)
+        );
 
         // this is the structure of the layout
         // uiHolderLayout (background color)
@@ -128,12 +131,48 @@ public class PViewsArea extends ProtoBase {
         return uiHolderLayout;
     }
 
+    private int getLayoutType(String type) {
+        if (type.equals("wrap")) return ViewGroup.LayoutParams.WRAP_CONTENT;
+        else if (type.equals("match")) return ViewGroup.LayoutParams.MATCH_PARENT;
+        return -1;
+    }
+
+    /**
+     * Allows the main interface to scroll up and down.
+     * It's quite handy to lay out many widgets that cannot fit in a screen.
+     *
+     * @param scroll
+     * @staus TODO_EXAMPLE
+     */
+    @PhonkMethod
+    public void allowScroll(boolean scroll) {
+        uiScrollView.setScrollingEnabled(scroll);
+        isScrollEnabled = scroll;
+    }
+
     public PAbsoluteLayout newAbsoluteLayout() {
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
         PAbsoluteLayout pAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
         pAbsoluteLayout.setLayoutParams(layoutParams);
 
         return pAbsoluteLayout;
+    }
+
+    public View addView(PViewMethodsInterface v) {
+        Map props = v.getProps();
+        // String type = props.get("type").toString();
+        Object x = props.get("x");
+        Object y = props.get("y");
+        Object w = props.get("w");
+        Object h = props.get("h");
+
+        // PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
+        this.addView((View) v, x, y, w, h);
+
+        return (View) v;
     }
 
     /**
@@ -162,20 +201,6 @@ public class PViewsArea extends ProtoBase {
         return v;
     }
 
-    public View addView(PViewMethodsInterface v) {
-        Map props = v.getProps();
-        // String type = props.get("type").toString();
-        Object x = props.get("x");
-        Object y = props.get("y");
-        Object w = props.get("w");
-        Object h = props.get("h");
-
-        // PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
-        this.addView((View) v, x, y, w, h);
-
-        return (View) v;
-    }
-
     /**
      * Remove all views in the layout
      *
@@ -194,27 +219,16 @@ public class PViewsArea extends ProtoBase {
     }
 
     /**
-     * Allows the main interface to scroll up and down.
-     * It's quite handy to lay out many widgets that cannot fit in a screen.
+     * Changes the background color using RGB
      *
-     * @param scroll
-     * @staus TODO_EXAMPLE
+     * @param red
+     * @param green
+     * @param blue
+     * @status TODO_EXAMPLE
      */
     @PhonkMethod
-    public void allowScroll(boolean scroll) {
-        uiScrollView.setScrollingEnabled(scroll);
-        isScrollEnabled = scroll;
-    }
-
-    /**
-     * blablba
-     *
-     * @status TODO
-     */
-    @PhonkField
-    public PToolbar toolbar;
-
-    public void statusBarColor(int color) {
+    public void background(int red, int green, int blue) {
+        background(Color.rgb(red, green, blue));
     }
 
     /**
@@ -229,17 +243,7 @@ public class PViewsArea extends ProtoBase {
         this.statusBarColor(color);
     }
 
-    /**
-     * Changes the background color using RGB
-     *
-     * @param red
-     * @param green
-     * @param blue
-     * @status TODO_EXAMPLE
-     */
-    @PhonkMethod
-    public void background(int red, int green, int blue) {
-        background(Color.rgb(red, green, blue));
+    public void statusBarColor(int color) {
     }
 
     /**
@@ -290,16 +294,70 @@ public class PViewsArea extends ProtoBase {
         return b;
     }
 
+    public View newView(String viewName, Map props) {
+        switch (viewName) {
+            case "linearLayout":
+                return new PLinearLayout(mAppRunner, props);
+            case "list":
+                return new PList(mAppRunner, props);
+            case "map":
+                return new PMap(mAppRunner, props);
+            case "canvas":
+                return new PCustomView(mAppRunner, props);
+            case "touchPad":
+                return new PTouchPad(mAppRunner, props);
+            case "plot":
+                return new PPlot(mAppRunner, props);
+            case "webView":
+                return new PWebView(mAppRunner);
+            case "numberPicker":
+                return new PNumberPicker(mAppRunner);
+            case "choiceBox":
+                return new PSpinner(mAppRunner);
+            case "image":
+                return new PImage(mAppRunner, props);
+            case "radioButtonGroup":
+                return new PRadioButtonGroup(mAppRunner);
+            case "loader":
+                return new PLoader(mAppRunner);
+            case "matrix":
+                return new PMatrix(mAppRunner, props);
+            case "knob":
+                return new PKnob(mAppRunner, props);
+            case "slider":
+                return new PSlider(mAppRunner, props);
+            case "pager":
+                return new PViewPager(mAppRunner, props);
+            case "toggle":
+                return new PToggle(mAppRunner, props);
+            case "input":
+                PInput input = new PInput(mAppRunner, props);
+                input.setMaxLines(1);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                return input;
+            case "textArea":
+                PInput textArea = new PInput(mAppRunner, props);
+                textArea.setGravity(Gravity.TOP | Gravity.LEFT);
+                return textArea;
+            case "text":
+                return new PText(mAppRunner, props);
+            case "textList":
+                return new PTextList(mAppRunner, props);
+            case "button":
+                return new PButton(mAppRunner, props);
+            case "imageButton":
+                return new PImageButton(mAppRunner, props);
+            default:
+                return null;
+        }
+    }
+
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y) {
         PButton b = (PButton) newView("button");
         b.text(label);
         addView(b, x, y, -1, -1);
         return b;
-    }
-
-    private float toFloat(Object o) {
-        return ((Number) o).floatValue();
     }
 
     /**
@@ -311,12 +369,20 @@ public class PViewsArea extends ProtoBase {
     public PButton addButtonWithProperties(Map style) {
     PButton b = newButton("hi");
     b.setStyle(style);
-    addViewAbsolute(b, toFloat(style.get("x")), toFloat(style.get("y")), toFloat(style.get("width")), toFloat(style.get("height")));
+    addViewAbsolute(b, toFloat(style.get("x")), toFloat(style.get("y")), toFloat(style.get("width")), toFloat(style
+    .get("height")));
 
     return b;
     }
      */
 
+    public View newView(String viewName) {
+        return newView(viewName, null);
+    }
+
+    private float toFloat(Object o) {
+        return ((Number) o).floatValue();
+    }
 
     /**
      * Adds an imageButton
@@ -424,6 +490,11 @@ public class PViewsArea extends ProtoBase {
         return et;
     }
 
+    @PhonkMethod
+    public PToggle addToggle(Object x, Object y, Object w, Object h) {
+        return addToggle(new String[]{}, x, y, w, h);
+    }
+
     /**
      * Adds a toggle
      *
@@ -458,11 +529,6 @@ public class PViewsArea extends ProtoBase {
         addView(t, x, y, w, h);
 
         return t;
-    }
-
-    @PhonkMethod
-    public PToggle addToggle(Object x, Object y, Object w, Object h) {
-        return addToggle(new String[]{}, x, y, w, h);
     }
 
     @PhonkMethod
@@ -619,6 +685,32 @@ public class PViewsArea extends ProtoBase {
         return iv;
     }
 
+    /*
+    public Object addCam(Object x, Object y, Object w, Object h) {
+        PCameraXOne cameraX = new PCameraXOne(getAppRunner());
+        // cameraX.start();
+        // addViewAbsolute((View) cameraX, x, y, w, h);
+        // return cameraX;
+
+        FrameLayout fl = new FrameLayout(getContext());
+        fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout
+        .LayoutParams.MATCH_PARENT));
+        fl.setId(200 + (int) (200 * Math.random()));
+
+        // Add the view
+        addViewAbsolute(fl, x, y, w, h);
+
+        // PCameraX p = new PCameraX();
+
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.add(fl.getId(), cameraX, String.valueOf(fl.getId()));
+        ft.commit();
+
+        // return p;
+        return null;
+    }
+     */
+
     /**
      * Add a choice box
      *
@@ -657,31 +749,6 @@ public class PViewsArea extends ProtoBase {
 
         return pNumberPicker;
     }
-
-    /*
-    public Object addCam(Object x, Object y, Object w, Object h) {
-        PCameraXOne cameraX = new PCameraXOne(getAppRunner());
-        // cameraX.start();
-        // addViewAbsolute((View) cameraX, x, y, w, h);
-        // return cameraX;
-
-        FrameLayout fl = new FrameLayout(getContext());
-        fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        fl.setId(200 + (int) (200 * Math.random()));
-
-        // Add the view
-        addViewAbsolute(fl, x, y, w, h);
-
-        // PCameraX p = new PCameraX();
-
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.add(fl.getId(), cameraX, String.valueOf(fl.getId()));
-        ft.commit();
-
-        // return p;
-        return null;
-    }
-     */
 
     /**
      * Adds a webview
@@ -812,7 +879,6 @@ public class PViewsArea extends ProtoBase {
         return pTextList;
     }
 
-
     /**
      * Adds a processing view.
      * This Processing view acts quite similar to Processing.org for Android.
@@ -833,7 +899,10 @@ public class PViewsArea extends ProtoBase {
     public PProcessing addProcessingCanvas(Object x, Object y, Object w, Object h) {
         // Create the main layout. This is where all the items actually go
         FrameLayout fl = new FrameLayout(getContext());
-        fl.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        fl.setLayoutParams(new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        ));
         fl.setId(200 + (int) (200 * Math.random()));
 
         // Add the view
@@ -890,68 +959,6 @@ public class PViewsArea extends ProtoBase {
     public View add(View v, Object x, Object y, Object w, Object h) {
         addView(v, x, y, w, h);
         return v;
-    }
-
-    public View newView(String viewName) {
-        return newView(viewName, null);
-    }
-
-    public View newView(String viewName, Map props) {
-        switch (viewName) {
-            case "linearLayout":
-                return new PLinearLayout(mAppRunner, props);
-            case "list":
-                return new PList(mAppRunner, props);
-            case "map":
-                return new PMap(mAppRunner, props);
-            case "canvas":
-                return new PCustomView(mAppRunner, props);
-            case "touchPad":
-                return new PTouchPad(mAppRunner, props);
-            case "plot":
-                return new PPlot(mAppRunner, props);
-            case "webView":
-                return new PWebView(mAppRunner);
-            case "numberPicker":
-                return new PNumberPicker(mAppRunner);
-            case "choiceBox":
-                return new PSpinner(mAppRunner);
-            case "image":
-                return new PImage(mAppRunner, props);
-            case "radioButtonGroup":
-                return new PRadioButtonGroup(mAppRunner);
-            case "loader":
-                return new PLoader(mAppRunner);
-            case "matrix":
-                return new PMatrix(mAppRunner, props);
-            case "knob":
-                return new PKnob(mAppRunner, props);
-            case "slider":
-                return new PSlider(mAppRunner, props);
-            case "pager":
-                return new PViewPager(mAppRunner, props);
-            case "toggle":
-                return new PToggle(mAppRunner, props);
-            case "input":
-                PInput input = new PInput(mAppRunner, props);
-                input.setMaxLines(1);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                return input;
-            case "textArea":
-                PInput textArea = new PInput(mAppRunner, props);
-                textArea.setGravity(Gravity.TOP | Gravity.LEFT);
-                return textArea;
-            case "text":
-                return new PText(mAppRunner, props);
-            case "textList":
-                return new PTextList(mAppRunner, props);
-            case "button":
-                return new PButton(mAppRunner, props);
-            case "imageButton":
-                return new PImageButton(mAppRunner, props);
-            default:
-                return null;
-        }
     }
 
     @Override

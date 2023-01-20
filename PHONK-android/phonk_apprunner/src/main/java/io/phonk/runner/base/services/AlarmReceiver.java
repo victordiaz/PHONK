@@ -34,14 +34,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String TAG = AlarmReceiver.class.getSimpleName();
 
-    private void startComponent(Context c, Intent intent) {
-        Intent newIntent = new Intent(c, AppRunnerActivity.class);
-        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        newIntent.putExtras(intent);
-        c.startActivity(newIntent);
-        MLog.d(TAG, "ww starting activity");
-    }
-
     @Override
     public void onReceive(Context c, Intent intent) {
         MLog.d(TAG, "ww alarm started");
@@ -55,5 +47,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             e.printStackTrace();
 
         }
+    }
+
+    private void startComponent(Context c, Intent intent) {
+        Intent newIntent = new Intent(c, AppRunnerActivity.class);
+        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        newIntent.putExtras(intent);
+        c.startActivity(newIntent);
+        MLog.d(TAG, "ww starting activity");
     }
 }

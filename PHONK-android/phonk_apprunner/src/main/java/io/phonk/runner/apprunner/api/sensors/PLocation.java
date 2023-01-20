@@ -61,16 +61,13 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PLocation extends ProtoBase {
     protected static final String TAG = PLocation.class.getSimpleName();
-
+    public boolean running;
     LocationManager locationManager;
     String provider;
-
     private boolean isGPSFix;
     private Location mLastLocation;
     private long mLastLocationMillis;
     private LocationListener locationListener;
-    public boolean running;
-
     private ReturnInterface mLocationCallback;
     private ReturnInterface mSatellitesCallback;
 
@@ -139,6 +136,30 @@ public class PLocation extends ProtoBase {
         locationListener = new LocationListener() {
 
             @Override
+            public void onLocationChanged(Location location) {
+                MLog.d(TAG, "updated ");
+
+                ReturnObject r = new ReturnObject();
+                r.put("latitude", location.getLatitude());
+                r.put("longitude", location.getLongitude());
+                r.put("altitude", location.getAltitude());
+                r.put("speed", location.getSpeed());
+                r.put("speedUnit", "m/s");
+                r.put("accuracy", location.getAccuracy());
+                r.put("bearing", location.getBearing());
+                r.put("provider", location.getProvider());
+                r.put("time", location.getTime());
+                mLocationCallback.event(r);
+
+                if (location == null) {
+                    return;
+                }
+
+                mLastLocationMillis = SystemClock.elapsedRealtime();
+                mLastLocation = location;
+            }
+
+            @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
                 MLog.d(TAG, "the location status is: " + status);
 
@@ -174,30 +195,6 @@ public class PLocation extends ProtoBase {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 getContext().startActivity(intent);
             }
-
-            @Override
-            public void onLocationChanged(Location location) {
-                MLog.d(TAG, "updated ");
-
-                ReturnObject r = new ReturnObject();
-                r.put("latitude", location.getLatitude());
-                r.put("longitude", location.getLongitude());
-                r.put("altitude", location.getAltitude());
-                r.put("speed", location.getSpeed());
-                r.put("speedUnit", "m/s");
-                r.put("accuracy", location.getAccuracy());
-                r.put("bearing", location.getBearing());
-                r.put("provider", location.getProvider());
-                r.put("time", location.getTime());
-                mLocationCallback.event(r);
-
-                if (location == null) {
-                    return;
-                }
-
-                mLastLocationMillis = SystemClock.elapsedRealtime();
-                mLastLocation = location;
-            }
         };
 
         locationManager.requestLocationUpdates(provider, 100, 0.1f, locationListener);
@@ -230,6 +227,37 @@ public class PLocation extends ProtoBase {
             }
             // MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
         });
+    }
+
+    public boolean isAvailable() {
+        PackageManager packageManager = getContext().getPackageManager();
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    }
+
+    /**
+     * Function to show settings alert dialog On pressing Settings button will
+     * lauch Settings Options
+     */
+    private void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+
+        // Setting Dialog Title
+        alertDialog.setTitle("GPS settings");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to the settings menu?");
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", (dialog, which) -> {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            getContext().startActivity(intent);
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        // Showing Alert Message
+        alertDialog.show();
     }
 
     @PhonkMethod(description = "Start the GPS. Returns x, y, z", example = "")
@@ -269,32 +297,6 @@ public class PLocation extends ProtoBase {
         return gpsLocation;
     }
 
-    /**
-     * Function to show settings alert dialog On pressing Settings button will
-     * lauch Settings Options
-     */
-    private void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-
-        // Setting Dialog Title
-        alertDialog.setTitle("GPS settings");
-
-        // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to the settings menu?");
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", (dialog, which) -> {
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            getContext().startActivity(intent);
-        });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        // Showing Alert Message
-        alertDialog.show();
-    }
-
     @PhonkMethod(description = "Get the distance from two points", example = "")
     @PhonkMethodParam(params = {"startLatitude", "starLongitude", "endLatitude", "endLongitude"})
     public double distance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
@@ -313,18 +315,13 @@ public class PLocation extends ProtoBase {
         return locationA.distanceTo(locationB);
     }
 
-    public boolean isAvailable() {
-        PackageManager packageManager = getContext().getPackageManager();
-        return packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    @Override
+    public void __stop() {
+        stop();
     }
 
     public void stop() {
         running = false;
         if (locationManager != null) locationManager.removeUpdates(locationListener);
-    }
-
-    @Override
-    public void __stop() {
-        stop();
     }
 }

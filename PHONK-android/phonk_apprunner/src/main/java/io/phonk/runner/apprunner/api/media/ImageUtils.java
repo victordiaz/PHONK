@@ -36,11 +36,10 @@ import io.phonk.runner.base.utils.MLog;
  * Copy-pasted from TFLite object detection example.
  */
 public class ImageUtils {
-    private static final String TAG = ImageUtils.class.getSimpleName();
-
     // This value is 2 ^ 18 - 1, and is used to clamp the RGB values before their ranges
     // are normalized to eight bits.
     static final int MAX_CHANNEL_VALUE = 262143;
+    private static final String TAG = ImageUtils.class.getSimpleName();
 
     public static void convertYUV420SPToARGB8888(byte[] input, int width, int height, int[] output) {
         final int frameSize = width * height;
@@ -94,7 +93,8 @@ public class ImageUtils {
             int yRowStride,
             int uvRowStride,
             int uvPixelStride,
-            int[] out) {
+            int[] out
+    ) {
         int yp = 0;
         for (int j = 0; j < height; j++) {
             int pY = yRowStride * j;
@@ -109,8 +109,7 @@ public class ImageUtils {
     }
 
     public static void saveBitmap(final Bitmap bitmap, final String filename) {
-        final String root =
-                Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tensorflow";
+        final String root = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "tensorflow";
         MLog.d(TAG, "Saving " + bitmap.getWidth() + " " + bitmap.getHeight() + " in " + root);
         final File myDir = new File(root);
 

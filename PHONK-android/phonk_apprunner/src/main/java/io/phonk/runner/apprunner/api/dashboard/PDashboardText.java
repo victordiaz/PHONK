@@ -42,8 +42,7 @@ public class PDashboardText extends PDashboardWidget {
     @PhonkMethodParam(params = {"text"})
     public void setText(String text) throws UnknownHostException, JSONException {
 
-        JSONObject values = new JSONObject()
-                .put("val", text);
+        JSONObject values = new JSONObject().put("val", text);
 
         sendToDashboard("setText", values);
     }

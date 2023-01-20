@@ -86,6 +86,17 @@ public class PImageButton extends PImage {
         return true;
     }
 
+    private void on() {
+        // if (hideBackground) PImageButton.this.getDrawable().setColorFilter(styler.srcTintPressed, PorterDuff.Mode
+        // .MULTIPLY);
+        if (mBitmapPressed != null) setImageBitmap(mBitmapPressed);
+    }
+
+    private void off() {
+        // if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
+        if (mBitmap != null) setImageBitmap(mBitmap);
+    }
+
     /**
      * Adds an image with the option to hide the default background
      */
@@ -93,15 +104,5 @@ public class PImageButton extends PImage {
         this.callbackfn = callbackfn;
 
         return this;
-    }
-
-    private void on() {
-        // if (hideBackground) PImageButton.this.getDrawable().setColorFilter(styler.srcTintPressed, PorterDuff.Mode.MULTIPLY);
-        if (mBitmapPressed != null) setImageBitmap(mBitmapPressed);
-    }
-
-    private void off() {
-        // if (hideBackground) PImageButton.this.getDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.MULTIPLY);
-        if (mBitmap != null) setImageBitmap(mBitmap);
     }
 }

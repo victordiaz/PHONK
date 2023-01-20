@@ -82,8 +82,7 @@ public class MyCustomControlService extends ControlsProviderService {
                     // MLog.d(TAG, "nop: " + p.getFullPath() + " " + isDeviceControl + " : " + p.getFullPath());
                 }
 
-                Control control = new Control.StatelessBuilder(p.getSandboxPath(), pi)
-                        .setTitle(p.getName())
+                Control control = new Control.StatelessBuilder(p.getSandboxPath(), pi).setTitle(p.getName())
                         // .setSubtitle("Subtitle")
                         // .setStructure(getBaseContext().getString(R.string.app_name))
                         .setDeviceType(DeviceTypes.TYPE_UNKNOWN) // For example, DeviceTypes.TYPE_THERMOSTAT
@@ -112,8 +111,7 @@ public class MyCustomControlService extends ControlsProviderService {
 
             Project p = new Project(controlId);
 
-            Control control = new Control.StatefulBuilder(controlId, pi)
-                    .setTitle(p.getName())
+            Control control = new Control.StatefulBuilder(controlId, pi).setTitle(p.getName())
                     // .setSubtitle(MY-CONTROL-SUBTITLE)
                     // .setStructure(getBaseContext().getString(R.string.app_name))
                     .setDeviceType(DeviceTypes.TYPE_UNKNOWN) // For example, DeviceTypes.TYPE_THERMOSTAT
@@ -134,7 +132,11 @@ public class MyCustomControlService extends ControlsProviderService {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void performControlAction(@NonNull String controlId, @NonNull ControlAction controlAction, @NonNull Consumer<Integer> consumer) {
+    public void performControlAction(
+            @NonNull String controlId,
+            @NonNull ControlAction controlAction,
+            @NonNull Consumer<Integer> consumer
+    ) {
         Intent i = new Intent();
         PendingIntent pi = PendingIntent.getActivity(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -185,8 +187,7 @@ public class MyCustomControlService extends ControlsProviderService {
              * After updating, the application should use the publisher to update SystemUI with the new
              * state.
              */
-            Control control = new Control.StatefulBuilder(controlId, pi)
-                    .setTitle(p.getName())
+            Control control = new Control.StatefulBuilder(controlId, pi).setTitle(p.getName())
                     // .setSubtitle(MY-CONTROL-SUBTITLE)
                     // .setStructure(MY-CONTROL-STRUCTURE)
                     // Required: Type of device, i.e., thermostat, light, switch

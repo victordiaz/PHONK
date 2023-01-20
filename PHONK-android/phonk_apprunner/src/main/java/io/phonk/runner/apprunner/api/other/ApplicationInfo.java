@@ -29,18 +29,27 @@ import android.graphics.drawable.Drawable;
 
 public class ApplicationInfo {
     public CharSequence title;
-    Intent intent;
     public Drawable iconDrawable;
     public Bitmap iconBitmap;
     public String iconURL;
     public String packageName;
     public String permission;
+    Intent intent;
 
     public final void setActivity(ComponentName className, int launchFlags) {
         intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.setComponent(className);
         intent.setFlags(launchFlags);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        result = (title != null ? title.hashCode() : 0);
+        final String name = intent.getComponent().getClassName();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -53,16 +62,7 @@ public class ApplicationInfo {
         }
 
         ApplicationInfo that = (ApplicationInfo) o;
-        return title.equals(that.title)
-                && intent.getComponent().getClassName().equals(that.intent.getComponent().getClassName());
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        result = (title != null ? title.hashCode() : 0);
-        final String name = intent.getComponent().getClassName();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return title.equals(that.title) && intent.getComponent().getClassName().equals(that.intent.getComponent()
+                .getClassName());
     }
 }

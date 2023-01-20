@@ -89,12 +89,10 @@ public class LoggingBenchmark {
 
         StringBuilder msg = new StringBuilder();
         for (Map.Entry<String, Long> entry : stageTime.get(imageId).entrySet()) {
-            msg.append(String.format(Locale.getDefault(),
-                    "%s: %.2fms | ", entry.getKey(), entry.getValue() / 1.0e6));
+            msg.append(String.format(Locale.getDefault(), "%s: %.2fms | ", entry.getKey(), entry.getValue() / 1.0e6));
         }
 
-        msg.append(String.format(Locale.getDefault(),
-                "TOTAL: %.2fms", totalImageTime.get(imageId) / 1.0e6));
+        msg.append(String.format(Locale.getDefault(), "TOTAL: %.2fms", totalImageTime.get(imageId) / 1.0e6));
         Log.d(tag, msg.toString());
     }
 }

@@ -44,11 +44,10 @@ public class ProjectBrowserFragment extends Fragment {
     public static int MODE_NORMAL = 0;
     public static int MODE_SINGLE_PICK = 1;
     public static int MODE_MULTIPLE_PICK = 2;
-
+    public ViewPager mViewPager;
     private FolderListFragment mFolderListFragment;
     private ProjectListFragment mProjectListFragment;
     private ProjectBrowserPagerAdapter mProjectBrowserPagerAdapter;
-    public ViewPager mViewPager;
     private ProjectListFragment.ProjectSelectedListener mListener;
     private int mMode;
 
@@ -76,7 +75,11 @@ public class ProjectBrowserFragment extends Fragment {
 
         mFolderListFragment = FolderListFragment.newInstance(PhonkSettings.EXAMPLES_FOLDER, true);
         mProjectListFragment = ProjectListFragment.newInstance("", mMode, true);
-        mProjectBrowserPagerAdapter = new ProjectBrowserPagerAdapter(getChildFragmentManager(), mFolderListFragment, mProjectListFragment);
+        mProjectBrowserPagerAdapter = new ProjectBrowserPagerAdapter(
+                getChildFragmentManager(),
+                mFolderListFragment,
+                mProjectListFragment
+        );
 
         mFolderListFragment.setListener((folder, name) -> {
             mProjectListFragment.loadFolder(folder, name);
@@ -97,14 +100,14 @@ public class ProjectBrowserFragment extends Fragment {
         return rootView;
     }
 
-    public void setProjectClickListener(ProjectListFragment.ProjectSelectedListener listener) {
-        mListener = listener;
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+    }
+
+    public void setProjectClickListener(ProjectListFragment.ProjectSelectedListener listener) {
+        mListener = listener;
     }
 
 }

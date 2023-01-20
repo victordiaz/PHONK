@@ -42,8 +42,8 @@ public class PermissionsActivity extends BaseActivity {
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 11;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -52,8 +52,13 @@ public class PermissionsActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -62,13 +67,8 @@ public class PermissionsActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    protected void onResume() {
+        super.onResume();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -88,7 +88,10 @@ public class PermissionsActivity extends BaseActivity {
 
         // request the permissions
         if (request && !requiredPermissions.isEmpty()) {
-            requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+            requestPermissions(
+                    requiredPermissions.toArray(new String[requiredPermissions.size()]),
+                    REQUEST_CODE_SOME_FEATURES_PERMISSIONS
+            );
         }
     }
 
@@ -132,7 +135,10 @@ public class PermissionsActivity extends BaseActivity {
 
         // request the permissions
         if (!requiredPermissions.isEmpty()) {
-            requestPermissions(requiredPermissions.toArray(new String[requiredPermissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+            requestPermissions(
+                    requiredPermissions.toArray(new String[requiredPermissions.size()]),
+                    REQUEST_CODE_SOME_FEATURES_PERMISSIONS
+            );
         }
     }
 

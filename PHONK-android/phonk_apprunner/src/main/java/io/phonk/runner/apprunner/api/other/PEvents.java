@@ -33,11 +33,6 @@ import io.phonk.runner.base.utils.StrUtils;
 public class PEvents extends ProtoBase {
     final ArrayList<EventItem> eventsList;
 
-    public interface EventCB {
-        void event(NativeObject obj);
-
-    }
-
     public PEvents(AppRunner appRunner) {
         super(appRunner);
         eventsList = new ArrayList<>();
@@ -69,6 +64,18 @@ public class PEvents extends ProtoBase {
         }
     }
 
+    @Override
+    public void __stop() {
+        for (int i = 0; i < eventsList.size(); i++) {
+            eventsList.remove(i);
+        }
+    }
+
+    public interface EventCB {
+        void event(NativeObject obj);
+
+    }
+
     static class EventItem {
         public final String id;
         public final String name;
@@ -78,13 +85,6 @@ public class PEvents extends ProtoBase {
             this.id = id;
             this.name = name;
             this.cb = cb;
-        }
-    }
-
-    @Override
-    public void __stop() {
-        for (int i = 0; i < eventsList.size(); i++) {
-            eventsList.remove(i);
         }
     }
 

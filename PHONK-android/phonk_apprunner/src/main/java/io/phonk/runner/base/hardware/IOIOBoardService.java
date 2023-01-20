@@ -33,17 +33,15 @@ import ioio.lib.util.android.IOIOService;
 
 public class IOIOBoardService extends IOIOService {
     protected static final String TAG = IOIOBoardService.class.getSimpleName();
-
-    private IOIOBoard.HardwareCallback mCallback;
     protected final Boolean mAbort = false;
-
     // Binder given to clients
     private final IBinder mBinder = new IOIOServiceBinder();
+    private IOIOBoard.HardwareCallback mCallback;
 
-    public class IOIOServiceBinder extends Binder {
-        IOIOBoardService getService() {
-            return IOIOBoardService.this;
-        }
+    @Override
+    public void onStart(Intent intent, int startId) {
+        MLog.d(TAG, "onStart");
+        super.onStart(intent, startId);
     }
 
     @Override
@@ -82,12 +80,6 @@ public class IOIOBoardService extends IOIOService {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        MLog.d(TAG, "onStart");
-        super.onStart(intent, startId);
-    }
-
-    @Override
     public IBinder onBind(Intent arg0) {
         return mBinder;
     }
@@ -100,5 +92,11 @@ public class IOIOBoardService extends IOIOService {
     public void start(Intent in) {
         MLog.d(TAG, "start");
         startService(in);
+    }
+
+    public class IOIOServiceBinder extends Binder {
+        IOIOBoardService getService() {
+            return IOIOBoardService.this;
+        }
     }
 }

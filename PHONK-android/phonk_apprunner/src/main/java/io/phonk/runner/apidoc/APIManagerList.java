@@ -32,23 +32,9 @@ import io.phonk.runner.base.utils.MLog;
 
 public class APIManagerList {
 
-    class API {
-
-        public final Class cls;
-        protected final Method methods;
-
-        public API(Class cls, Object obj, String name, Method method) {
-            this.cls = cls;
-            this.methods = method;
-        }
-
-    }
-
     private static final String TAG = "MethodsExtract";
-
-    String methodAnnotationName = "JavaScriptInterface";
     private final Vector<API> apis;
-
+    String methodAnnotationName = "JavaScriptInterface";
     APIManagerList() {
         methodAnnotationName = "JavaScriptInterface";
         apis = new Vector<>();
@@ -142,6 +128,18 @@ public class APIManagerList {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    class API {
+
+        public final Class cls;
+        protected final Method methods;
+
+        public API(Class cls, Object obj, String name, Method method) {
+            this.cls = cls;
+            this.methods = method;
         }
 
     }

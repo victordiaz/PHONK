@@ -31,8 +31,6 @@ import io.phonk.runner.apprunner.AppRunnerSettings;
 import io.phonk.runner.base.utils.MLog;
 
 public class Project {
-    private final String TAG = Project.class.getSimpleName();
-
     // we need this to serialize the data using intent bundles
     public static final String FOLDER = "projectFolder";
     public static final String NAME = "projectName";
@@ -41,14 +39,13 @@ public class Project {
     public static final String INTENTCODE = "code";
     public static final String POSTFIX = "postfix";
     public static final String LAUNCH_DATA = "launchData";
-
     public static final String SETTINGS_SCREEN_ALWAYS_ON = "settings_screenOn";
     public static final String SETTINGS_SCREEN_WAKEUP = "settings_wakeUpScreen";
     public static final String SETTINGS_SCREEN_ORIENTATION = "settings_screenOrientation";
     public static final String SERVER_PORT = "settings_phonk_port";
     public static final String SETTINGS = "project_settings";
     public static final String DEVICE_ID = "device_id";
-
+    private final String TAG = Project.class.getSimpleName();
     /*
      * this will get serialized
      */
@@ -87,16 +84,16 @@ public class Project {
         return AppRunnerSettings.getBaseDir() + this.folder + File.separator;
     }
 
-    public String getSandboxPath() {
-        return this.folder + File.separator + this.name + File.separator;
-    }
-
     public String getSandboxPathParent() {
         return this.folder + File.separator;
     }
 
     public String getSandboxPathForFile(String filename) {
         return getSandboxPath() + filename;
+    }
+
+    public String getSandboxPath() {
+        return this.folder + File.separator + this.name + File.separator;
     }
 
     public String getParentPath() {
@@ -107,23 +104,13 @@ public class Project {
         return AppRunnerSettings.getBaseDir() + this.parentFolder;
     }
 
-    public String getFullPath() {
-        return AppRunnerSettings.getBaseDir() + getSandboxPath();
-    }
-
-    public String getFullPathForFile(String fileName) {
-        return getFullPath() + fileName;
-    }
-
     public boolean exists() {
         File f = new File(getFullPath());
         return f.exists();
     }
 
-    public String getIconUrl() {
-        File f = new File(this.getFullPathForFile("icon.png"));
-        if (f.exists()) return f.toString();
-        else return null;
+    public String getFullPath() {
+        return AppRunnerSettings.getBaseDir() + getSandboxPath();
     }
 
     public Bitmap getIcon() {
@@ -138,5 +125,15 @@ public class Project {
             return null;
         }
 
+    }
+
+    public String getIconUrl() {
+        File f = new File(this.getFullPathForFile("icon.png"));
+        if (f.exists()) return f.toString();
+        else return null;
+    }
+
+    public String getFullPathForFile(String fileName) {
+        return getFullPath() + fileName;
     }
 }

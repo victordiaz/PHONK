@@ -35,7 +35,8 @@ public class Network {
 
     public void checkVersion() {
         //check if new version is available
-        if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) UserPreferences.getInstance().get("notify_new_version")) {
+        if (mAppRunner.pNetwork.isNetworkAvailable() && (boolean) UserPreferences.getInstance()
+                .get("notify_new_version")) {
             /*
             mAppRunner.pNetwork.httpGet("http://www.phonk.app/downloads/list_latest.php", data -> {
                 //console.log(event + " " + data);
@@ -46,7 +47,8 @@ public class Network {
 
                 if (versionCode > mAppRunner.pPhonk.versionCode()) {
                     // TODO enable this
-                    mAppRunner.pUi.popupInfo("New version available", "The new version " + versionName + " is available in the phonk.app website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
+                    mAppRunner.pUi.popupInfo("New version available", "The new version " + versionName + " is
+                    available in the phonk.app website. Do you want to get it?", "Yes!", "Later", new PUI.popupCB() {
                         @Override
                         public void event(boolean b) {
                             if (b) {

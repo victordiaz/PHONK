@@ -44,9 +44,19 @@ public class WelcomeFragment extends BaseFragment {
     public WelcomeFragment() {
     }
 
+    public static WelcomeFragment newInstance() {
+
+        return new WelcomeFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -62,18 +72,8 @@ public class WelcomeFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-    }
-
-    public static WelcomeFragment newInstance() {
-
-        return new WelcomeFragment();
     }
 
     private class IntroductionPagerAdapter extends PagerAdapter {
@@ -82,8 +82,13 @@ public class WelcomeFragment extends BaseFragment {
         }
 
         @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
         public Object instantiateItem(ViewGroup collection, int position) {
-//            View v = getActivity().getLayoutInflater().inflate(...);
+            //            View v = getActivity().getLayoutInflater().inflate(...);
 
             int resId = 0;
             switch (position) {
@@ -105,11 +110,6 @@ public class WelcomeFragment extends BaseFragment {
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
         }
     }
 

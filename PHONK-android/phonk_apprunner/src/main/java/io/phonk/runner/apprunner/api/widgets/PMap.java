@@ -61,23 +61,19 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PMap extends MapView implements PViewMethodsInterface {
+    // this is a props proxy for the user
+    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    // the props are transformed / accessed using the styler object
+    public final Styler styler;
     final String TAG = PMap.class.getSimpleName();
-
-    private IMapController mapController = null;
-    private MapView mapView = null;
     // MyLocationNewOverlay myLocationOverlay;
     final ItemizedOverlayWithFocus<OverlayItem> iconOverlay;
     private final boolean firstMarker = false;
-    private ArrayList<OverlayItem> markerList = null;
-
     private final AppRunner mAppRunner;
     private final Context mContext;
-
-    // this is a props proxy for the user
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
-
-    // the props are transformed / accessed using the styler object
-    public final Styler styler;
+    private IMapController mapController = null;
+    private MapView mapView = null;
+    private ArrayList<OverlayItem> markerList = null;
 
     public PMap(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -113,12 +109,6 @@ public class PMap extends MapView implements PViewMethodsInterface {
         iconOverlay = new ItemizedOverlayWithFocus<>(markerList,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
-                    public boolean onItemLongPress(int arg0, OverlayItem arg1) {
-                        MLog.d(TAG, "long press");
-                        return false;
-                    }
-
-                    @Override
                     public boolean onItemSingleTapUp(int arg0, OverlayItem arg1) {
                         MLog.d(TAG, "single press");
 
@@ -126,7 +116,15 @@ public class PMap extends MapView implements PViewMethodsInterface {
 
                         return true;
                     }
-                }, getContext());
+
+                    @Override
+                    public boolean onItemLongPress(int arg0, OverlayItem arg1) {
+                        MLog.d(TAG, "long press");
+                        return false;
+                    }
+                },
+                getContext()
+        );
 
 
         iconOverlay.setFocusItemsOnTap(true);
@@ -428,6 +426,11 @@ public class PMap extends MapView implements PViewMethodsInterface {
      * OSMbonus methods
      */
 
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
     public class PMapMarker extends Marker {
 
         public PMapMarker(MapView mapView) {
@@ -503,11 +506,6 @@ public class PMap extends MapView implements PViewMethodsInterface {
             return this;
         }
 
-    }
-
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
     }
 
     @Override

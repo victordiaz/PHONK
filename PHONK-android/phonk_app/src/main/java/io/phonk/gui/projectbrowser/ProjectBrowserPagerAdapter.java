@@ -39,15 +39,20 @@ public class ProjectBrowserPagerAdapter extends PagerAdapter {
     private final SparseArray mFragments;
     private FragmentTransaction mCurrentTransaction;
 
-    public ProjectBrowserPagerAdapter(FragmentManager fm, FolderListFragment mFolderListFragment, ProjectListFragment mProjectListFragment) {
+    public ProjectBrowserPagerAdapter(
+            FragmentManager fm,
+            FolderListFragment mFolderListFragment,
+            ProjectListFragment mProjectListFragment
+    ) {
         mFragmentManager = fm;
         mFragments = new SparseArray<>();
         mFragments.put(0, mFolderListFragment);
         mFragments.put(1, mProjectListFragment);
     }
 
-    public Fragment getItem(int position) {
-        return (Fragment) mFragments.get(position);
+    @Override
+    public int getCount() {
+        return mFragments.size();
     }
 
     @Override
@@ -61,17 +66,16 @@ public class ProjectBrowserPagerAdapter extends PagerAdapter {
         return mFragments.get(position);
     }
 
+    public Fragment getItem(int position) {
+        return (Fragment) mFragments.get(position);
+    }
+
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         if (mCurrentTransaction == null) {
             mCurrentTransaction = mFragmentManager.beginTransaction();
         }
         mCurrentTransaction.detach((Fragment) mFragments.get(position));
-    }
-
-    @Override
-    public boolean isViewFromObject(View view, Object fragment) {
-        return ((Fragment) fragment).getView() == view;
     }
 
     @Override
@@ -84,7 +88,7 @@ public class ProjectBrowserPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public int getCount() {
-        return mFragments.size();
+    public boolean isViewFromObject(View view, Object fragment) {
+        return ((Fragment) fragment).getView() == view;
     }
 }

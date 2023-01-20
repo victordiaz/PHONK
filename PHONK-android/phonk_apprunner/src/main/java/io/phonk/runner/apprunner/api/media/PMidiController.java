@@ -58,12 +58,11 @@ public class PMidiController extends ProtoBase {
     private static final byte STATUS_NOTE_ON = (byte) 0x90;
     private static final byte STATUS_PITCH_BEND = (byte) 0xE0;
     private static final int DISABLE_PITCH_BEND_VALUE = 8191;  // max pitch bend (=16383) / 2
-
+    private final Map<String, MidiInput> midiInputByIds = new TreeMap<>();
+    private final Map<Integer, MidiDeviceInfo> midiDeviceInfoByIds = new HashMap<>();
     private MidiManager midiManager;
     private MidiInputPort midiInputPort;
     private MidiDevice midiDevice;
-    private final Map<String, MidiInput> midiInputByIds = new TreeMap<>();
-    private final Map<Integer, MidiDeviceInfo> midiDeviceInfoByIds = new HashMap<>();
 
     public PMidiController(final AppRunner appRunner) {
         super(appRunner);
@@ -73,8 +72,7 @@ public class PMidiController extends ProtoBase {
                 return;
             }
         }
-        Toast.makeText(getContext(), "MIDI not supported!", Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(getContext(), "MIDI not supported!", Toast.LENGTH_LONG).show();
     }
 
     @PhonkMethod(description = "Find available midi inputs to send midi command to", example = "")
@@ -108,8 +106,7 @@ public class PMidiController extends ProtoBase {
                 }
             }, new Handler(Looper.getMainLooper()));
         } else {
-            Toast.makeText(getContext(), "Unknown MIDI input id: " + midiInputId, Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(getContext(), "Unknown MIDI input id: " + midiInputId, Toast.LENGTH_LONG).show();
         }
         return this;
     }
@@ -118,28 +115,6 @@ public class PMidiController extends ProtoBase {
     @PhonkMethodParam(params = "channel [0-15], pitch[0-127], velocity[0-127]")
     public void noteOff(final int channel, final int pitch, final int velocity) {
         midiCommand(STATUS_NOTE_OFF + channel, pitch, velocity);
-    }
-
-    @PhonkMethod(description = "Plays a note", example = "")
-    @PhonkMethodParam(params = "channel [0-15], pitch[0-127], velocity[0-127]")
-    public void noteOn(final int channel, final int pitch, final int velocity) {
-        midiCommand(STATUS_NOTE_ON + channel, pitch, velocity);
-    }
-
-    @PhonkMethod(description = "Pitch bend notes", example = "")
-    @PhonkMethodParam(params = "channel [0-15], pitchBendValue[0-16383] with 8192 being no pitch bend")
-    public void pitchBend(final int channel, final int pitchBendValue) {
-        // need to convert pitchBendValue in lsb 7 bytes and msb 7 bytes
-        int pitchBendValueMsbOn7Bytes = pitchBendValue >> 7;
-        int pitchBendValueLsbOn7Bytes = pitchBendValue & 0x7F;
-        // careful, lsb is first!
-        midiCommand(STATUS_PITCH_BEND + channel, pitchBendValueLsbOn7Bytes, pitchBendValueMsbOn7Bytes);
-    }
-
-    @PhonkMethod(description = "Disable pitch bend", example = "")
-    @PhonkMethodParam(params = "channel [0-15]")
-    public void stopPitchBend(final int channel) {
-        this.pitchBend(channel, DISABLE_PITCH_BEND_VALUE);
     }
 
     @PhonkMethod(description = "Sends a midi message you build yourself. Quite low level!", example = "")
@@ -161,6 +136,28 @@ public class PMidiController extends ProtoBase {
         } catch (IOException e) {
             Log.e(TAG, "midiSend failed " + e);
         }
+    }
+
+    @PhonkMethod(description = "Plays a note", example = "")
+    @PhonkMethodParam(params = "channel [0-15], pitch[0-127], velocity[0-127]")
+    public void noteOn(final int channel, final int pitch, final int velocity) {
+        midiCommand(STATUS_NOTE_ON + channel, pitch, velocity);
+    }
+
+    @PhonkMethod(description = "Disable pitch bend", example = "")
+    @PhonkMethodParam(params = "channel [0-15]")
+    public void stopPitchBend(final int channel) {
+        this.pitchBend(channel, DISABLE_PITCH_BEND_VALUE);
+    }
+
+    @PhonkMethod(description = "Pitch bend notes", example = "")
+    @PhonkMethodParam(params = "channel [0-15], pitchBendValue[0-16383] with 8192 being no pitch bend")
+    public void pitchBend(final int channel, final int pitchBendValue) {
+        // need to convert pitchBendValue in lsb 7 bytes and msb 7 bytes
+        int pitchBendValueMsbOn7Bytes = pitchBendValue >> 7;
+        int pitchBendValueLsbOn7Bytes = pitchBendValue & 0x7F;
+        // careful, lsb is first!
+        midiCommand(STATUS_PITCH_BEND + channel, pitchBendValueLsbOn7Bytes, pitchBendValueMsbOn7Bytes);
     }
 
     @Override

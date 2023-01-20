@@ -48,18 +48,14 @@ public class _PDashboardVideoCamera extends ProtoBase {
     public void add(int x, int y, int w, int h) throws UnknownHostException, JSONException {
         this.id = StrUtils.generateUUID();
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
+        JSONObject values = new JSONObject().put("id", id)
                 .put("type", "camera")
                 .put("x", x)
                 .put("y", y)
                 .put("w", w)
                 .put("h", h);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
@@ -69,15 +65,9 @@ public class _PDashboardVideoCamera extends ProtoBase {
 
     @PhonkMethod(description = "", example = "")
     public void update(String encodedImage) throws JSONException, UnknownHostException {
-        JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("type", "widget")
-                .put("src", encodedImage);
+        JSONObject values = new JSONObject().put("id", id).put("type", "widget").put("src", encodedImage);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "updateCamera")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "updateCamera").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);

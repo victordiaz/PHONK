@@ -42,12 +42,18 @@ public class _PDashboardPlot extends ProtoBase {
         super(appRunner);
     }
 
-    public void add(String name, int x, int y, int w, int h, float minLimit, float maxLimit)
-            throws UnknownHostException, JSONException {
+    public void add(
+            String name,
+            int x,
+            int y,
+            int w,
+            int h,
+            float minLimit,
+            float maxLimit
+    ) throws UnknownHostException, JSONException {
         this.id = StrUtils.generateUUID();
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
+        JSONObject values = new JSONObject().put("id", id)
                 .put("name", name)
                 .put("type", "plot")
                 .put("x", x)
@@ -57,10 +63,7 @@ public class _PDashboardPlot extends ProtoBase {
                 .put("minLimit", minLimit)
                 .put("maxLimit", maxLimit);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "add")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "add").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);
@@ -71,15 +74,9 @@ public class _PDashboardPlot extends ProtoBase {
     @PhonkMethodParam(params = {"value"})
     public void update(float val) throws UnknownHostException, JSONException {
 
-        JSONObject values = new JSONObject()
-                .put("id", id)
-                .put("type", "plot")
-                .put("val", val);
+        JSONObject values = new JSONObject().put("id", id).put("type", "plot").put("val", val);
 
-        JSONObject msg = new JSONObject()
-                .put("type", "widget")
-                .put("action", "update")
-                .put("values", values);
+        JSONObject msg = new JSONObject().put("type", "widget").put("action", "update").put("values", values);
 
         //TODO change to events
         //CustomWebsocketServer.getInstance(getContext()).send(msg);

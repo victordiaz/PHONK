@@ -26,7 +26,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
-import android.widget.Switch;
 
 import androidx.appcompat.widget.SwitchCompat;
 

@@ -42,25 +42,24 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PFtpClient extends ProtoBase {
-    final String TAG = PFtpClient.class.getSimpleName();
-
     public static String workDir;
-
-    private FTPClient mFTPClient;
+    final String TAG = PFtpClient.class.getSimpleName();
     Boolean isConnected = false;
+    private FTPClient mFTPClient;
 
     public PFtpClient(AppRunner appRunner) {
         super(appRunner);
     }
 
-    public interface FtpConnectedCb {
-        void event(boolean connected);
-    }
-
-
     @PhonkMethod(description = "Connect to a ftp server", example = "")
     @PhonkMethodParam(params = {"host", "port", "username", "password", "function(connected)"})
-    public void connect(final String host, final int port, final String username, final String password, final FtpConnectedCb callback) {
+    public void connect(
+            final String host,
+            final int port,
+            final String username,
+            final String password,
+            final FtpConnectedCb callback
+    ) {
         mFTPClient = new FTPClient();
 
         Thread t = new Thread(() -> {
@@ -86,11 +85,6 @@ public class PFtpClient extends ProtoBase {
         t.start();
     }
 
-    public interface GetCurrentDirCb {
-        void event(String msg);
-    }
-
-
     @PhonkMethod(description = "Get the current directory", example = "")
     @PhonkMethodParam(params = {""})
     public void getCurrentDir(final GetCurrentDirCb callback) {
@@ -109,11 +103,6 @@ public class PFtpClient extends ProtoBase {
 
     }
 
-    public interface ChangeDirectoryCb {
-        void event(boolean msg);
-    }
-
-
     @PhonkMethod(description = "Change the directory", example = "")
     @PhonkMethodParam(params = {"dirname"})
     public void changeDir(final String directory_path, final ChangeDirectoryCb callback) {
@@ -126,17 +115,6 @@ public class PFtpClient extends ProtoBase {
         });
         t.start();
     }
-
-
-    public interface GetFileListCb {
-        void event(ArrayList<ListDir> msg);
-    }
-
-    static class ListDir {
-        public String type;
-        public String name;
-    }
-
 
     @PhonkMethod(description = "Get list of files in the given dir", example = "")
     @PhonkMethodParam(params = {"dirname"})
@@ -169,18 +147,14 @@ public class PFtpClient extends ProtoBase {
         t.start();
     }
 
-    public interface DownloadFiletCb {
-        void event(boolean msg);
-    }
-
-
     @PhonkMethod(description = "Download the file", example = "")
     @PhonkMethodParam(params = {"sourceFilePath", "destinyFilePath"})
     public void download(final String srcFilePath, final String destiny, final DownloadFiletCb callback) {
         Thread t = new Thread(() -> {
             boolean status = false;
             //TODO reenable this
-            String desFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + destiny;
+            String desFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" +
+            // destiny;
 
             try {
                 FileOutputStream desFileStream = new FileOutputStream(desFilePath);
@@ -196,18 +170,14 @@ public class PFtpClient extends ProtoBase {
         t.start();
     }
 
-    public interface UploadCb {
-        void event(boolean msg);
-    }
-
-
     @PhonkMethod(description = "Upload a file", example = "")
     @PhonkMethodParam(params = {"sourceFilePath", "fileName", "destinyPath"})
     public void upload(final String source, final String desFileName, String desDirectory, final UploadCb callback) {
         boolean status = false;
 
         //TODO reenable this
-        final String srcFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" + source;
+        final String srcFilePath = null; //ProjectManager.getInstance().getCurrentProject().getStoragePath() + "/" +
+        // source;
 
         Thread t = new Thread(() -> {
             while (!isConnected) {
@@ -232,11 +202,6 @@ public class PFtpClient extends ProtoBase {
 
     }
 
-    public interface DeleteFileCb {
-        void event(boolean msg);
-    }
-
-
     @PhonkMethod(description = "Delete a file", example = "")
     @PhonkMethodParam(params = {"filename", "function(boolean)"})
     public void deleteFile(final String filename, final DeleteFileCb callback) {
@@ -254,10 +219,10 @@ public class PFtpClient extends ProtoBase {
         t.start();
     }
 
-    public interface DisconnectCb {
-        void event(Boolean msg);
+    @Override
+    public void __stop() {
+        disconnect(null);
     }
-
 
     @PhonkMethod(description = "Disconnect from server", example = "")
     @PhonkMethodParam(params = {""})
@@ -273,15 +238,50 @@ public class PFtpClient extends ProtoBase {
                 }
                 isConnected = false;
 
-                if (callback != null)
-                    callback.event(isConnected);
+                if (callback != null) callback.event(isConnected);
             }
         });
         t.start();
     }
 
-    @Override
-    public void __stop() {
-        disconnect(null);
+    public interface FtpConnectedCb {
+        void event(boolean connected);
+    }
+
+
+    public interface GetCurrentDirCb {
+        void event(String msg);
+    }
+
+    public interface ChangeDirectoryCb {
+        void event(boolean msg);
+    }
+
+
+    public interface GetFileListCb {
+        void event(ArrayList<ListDir> msg);
+    }
+
+    public interface DownloadFiletCb {
+        void event(boolean msg);
+    }
+
+
+    public interface UploadCb {
+        void event(boolean msg);
+    }
+
+    public interface DeleteFileCb {
+        void event(boolean msg);
+    }
+
+
+    public interface DisconnectCb {
+        void event(Boolean msg);
+    }
+
+    static class ListDir {
+        public String type;
+        public String name;
     }
 }

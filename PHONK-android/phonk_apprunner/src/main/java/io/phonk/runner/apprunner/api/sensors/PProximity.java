@@ -46,7 +46,8 @@ public class PProximity extends PCustomSensorManager implements WhatIsRunningInt
     }
 
 
-    @PhonkMethod(description = "Start the proximity sensor. Returns a proximity value. It might differ per device", example = "")
+    @PhonkMethod(description = "Start the proximity sensor. Returns a proximity value. It might differ per device",
+            example = "")
     @PhonkMethodParam(params = {"function(proximity)"})
     public void start() {
         super.start();

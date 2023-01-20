@@ -72,7 +72,8 @@ public class PhonkExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     private void writeToFile(String stacktrace, String filename) {
         try {
-            BufferedWriter bos = new BufferedWriter(new FileWriter(localPath.getAbsoluteFile() + File.separator + filename));
+            BufferedWriter bos =
+                    new BufferedWriter(new FileWriter(localPath.getAbsoluteFile() + File.separator + filename));
             bos.write(stacktrace);
             bos.flush();
             bos.close();

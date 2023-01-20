@@ -52,12 +52,11 @@ import io.phonk.runner.base.views.FitRecyclerView;
 public class ConnectionInfoFragment extends Fragment {
 
     private final String TAG = ConnectionInfoFragment.class.getSimpleName();
-
+    private final String mMaskedIp = "XXX.XXX.XXX.XXX";
     private Switch mToggleServers;
     private TextView mTxtConnectionMessage;
     private TextView mTxtConnectionIp;
     private String mRealIp = "";
-    private final String mMaskedIp = "XXX.XXX.XXX.XXX";
     private String mLastConnectionMessage;
     private String mLastIp;
 
@@ -117,8 +116,7 @@ public class ConnectionInfoFragment extends Fragment {
         recyclerViewEvents.setAdapter(mEventsAdapter);
 
         ConstraintLayout ul = rootView.findViewById(R.id.update_layout);
-        ul.getLayoutTransition()
-                .enableTransitionType(LayoutTransition.CHANGING);
+        ul.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
 
         btnExpand.setOnClickListener(view -> {
             mCardExpanded = !mCardExpanded;
@@ -149,7 +147,8 @@ public class ConnectionInfoFragment extends Fragment {
         setConnectionMessage(mLastConnectionMessage, mLastIp);
         EventBus.getDefault().register(this);
 
-        ArrayList<EventManager.EventLogItem> mEventsList = ((App) getActivity().getApplication()).eventManager.getEventsList();
+        ArrayList<EventManager.EventLogItem> mEventsList =
+                ((App) getActivity().getApplication()).eventManager.getEventsList();
         mEventsAdapter.setEventList(mEventsList);
     }
 
