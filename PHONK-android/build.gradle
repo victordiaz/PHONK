@@ -16,6 +16,7 @@ project.ext {
     targetSdkVersion = 29
     minSdkVersion = 16
     webIDEDir = '../../PHONK-editor'
+    examplesDir = '../../PHONK-examples'
 }
 
 allprojects {

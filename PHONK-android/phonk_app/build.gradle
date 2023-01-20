@@ -3,7 +3,7 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath "com.github.node-gradle:gradle-node-plugin:3.4.0"
+        classpath "com.github.node-gradle:gradle-node-plugin:3.5.1"
     }
 }
 apply plugin: 'com.github.node-gradle.node'
@@ -99,9 +99,13 @@ task buildWebIDE(type: NpmTask) {
     // script = file('script.js')
 }
 
-task copyExamples(type: NpmTask) {
-    dependsOn npmInstall
-    args = ['run', '']
+task deleteExamples(type: Delete) {
+    delete "./src/main/assets/examples"
+}
+
+task copyExamples(type: Copy, dependsOn: 'deleteExamples') {
+    from project.examplesDir
+    into "./src/main/assets/examples"
 }
 
 repositories {
@@ -118,10 +122,11 @@ dependencies {
     // implementation 'androidx.emoji:emoji-bundled:1.0.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     implementation 'org.reactivestreams:reactive-streams:1.0.3'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
 }
 
 preBuild.dependsOn buildWebIDE
+preBuild.dependsOn copyExamples
