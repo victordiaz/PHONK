@@ -2,6 +2,8 @@
   - Upgraded WebEditor to a more recent Vue.js version
   - Some refactor and clean-up of the App and WebEditor. Hopefully there aren't too many new bugs :D
   - Emulate Midi device support and Vertical Slides thanks to @polhomarkho
+  - Use Gradle tasks to compile the webIDE and copy the examples
+  -
 
 1.4.2
   - Small WebEditor color tweaks
