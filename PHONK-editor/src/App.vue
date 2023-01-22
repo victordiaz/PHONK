@@ -447,6 +447,11 @@ button {
     &:hover {
       background: transparent;
       color: var(--color-accent);
+      opacity: 0.8;
+    }
+
+    &:active {
+      opacity: 1;
     }
   }
 
@@ -565,7 +570,7 @@ button {
           text-align: left;
           flex: 1;
           cursor: pointer;
-          font-size: 0.8em;
+          font-size: 12px;
           color: var(--color-accent);
 
           &:hover {

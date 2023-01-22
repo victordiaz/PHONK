@@ -80,7 +80,7 @@ export default {
     }
 
     .value {
-      color: var(--color-text-dark-lighten);
+      color: var(--color-text-light-faded);
     }
   }
 

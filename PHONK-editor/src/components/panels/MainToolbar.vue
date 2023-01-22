@@ -372,6 +372,14 @@ export default {
       overflow: hidden;
       white-space: nowrap;
       display: inline-flex;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:active {
+        opacity: 1;
+      }
     }
 
     .closer {
