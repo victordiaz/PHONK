@@ -19,6 +19,10 @@ phonk_app/src/main/assets/examples
 # Signing Properties
 signing.properties
 
+# ignore release folders
+extended
+normal
+
 ## ANDROID THINGS
 # built application files
 *.apk
@@ -61,4 +65,7 @@ Thumbs.db
 
 # JS stuff
 node_modules
+
+# Other
+hs_err*.log
 manifest-merger*
