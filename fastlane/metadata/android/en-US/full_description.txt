@@ -1,0 +1,24 @@
+<p>
+  <i>PHONK</i> is a coding playground with a very accesible API. You can create scripts rapidly from your phone or using the <i>remote Web Editor</i> on your computer or directly from the phone using Javascript.
+  The API is simple and extensive. GUI, audio, graphics, Bluetooth BLE, OSC, MIDI, Arduino, PdLib (PureData) and much more.
+
+  Official website of PHONK http://phonk.app
+</p>
+  
+<p>
+  <b>Features</b>
+</p>
+
+<ul>
+  <li>Takes 1 min to set up on your phone</li>
+  <li>No need to install anything on your computer</li>
+  <li>PHONK uses JavaScript but it calls native Java functions, getting close to native speed</li>
+  <li>Simplified API. Create custom interfaces and access on-device sensors in a couple of lines of code</li>
+  <li>Pseudo Live Coding (select your code and Control (or Cmd) + Enter to live execute)</li>
+  <li>Bluetooth and Arduino in a few lines of code</li>
+  <li>MQTT, HTTP requests, WebSockets, OSC, MIDI</li>
+  <li>Access to Processing graphic API</li>
+  <li>Use your PureData skills thanks to the embedded LibPd</li>
+  <li>OpenStreetMaps</li>
+  <li>and muuuch more!</li>
+</ul>
