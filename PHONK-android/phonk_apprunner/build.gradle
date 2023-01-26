@@ -44,8 +44,7 @@ android {
 
 
 repositories {
-    maven { url 'https://github.com/kshoji/USB-MIDI-Driver/raw/master/MIDIDriver/snapshots' }
-
+    maven { url 'https://jitpack.io' }
     google()
     mavenCentral()
 }
@@ -96,7 +95,7 @@ dependencies {
     api group: 'com.github.ytai.ioio', name: 'IOIOLibAndroidAccessory', version: '5.07'
     api group: 'com.github.ytai.ioio', name: 'IOIOLibAndroidDevice', version: '5.07'
     implementation 'com.github.felHR85:UsbSerial:6.1.0'
-    api 'jp.kshoji:midi-driver:0.1.4:@aar'
+    api 'com.github.kshoji:USB-MIDI-Driver:v0.1.7@aar'
 
     // other libs
     api 'net.lingala.zip4j:zip4j:1.3.2'
