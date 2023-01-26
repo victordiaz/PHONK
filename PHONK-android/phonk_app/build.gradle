@@ -24,8 +24,8 @@ android {
         minSdkVersion project.minSdkVersion
         targetSdkVersion project.targetSdkVersion
 
-        versionCode project.versionCode
-        versionName project.versionName
+        versionCode 150
+        versionName "1.5.0"
         multiDexEnabled true
         setProperty("archivesBaseName", "phonk-$versionName")
 
