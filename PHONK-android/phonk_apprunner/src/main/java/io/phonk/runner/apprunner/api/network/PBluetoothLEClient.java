@@ -67,6 +67,8 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
     private BluetoothGatt mGatt;
     private ReturnInterface mCallbackDevice;
     private ReturnInterface mCallbackCharacteristic;
+    private int mtuSize = 500;
+    private ReturnInterface mCallbackMtu;
     // Callback for peripherals
     private final BluetoothPeripheralCallback peripheralCallback = new BluetoothPeripheralCallback() {
         @Override
@@ -178,13 +180,26 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         ) {
             MLog.d(TAG, "onCharWrite");
         }
+
+        @Override
+        public void onMtuChanged(BluetoothPeripheral peripheral, int mtu, int status) {
+            ReturnObject ret = new ReturnObject();
+            ret.put("deviceMac", peripheral.getAddress());
+            ret.put("deviceName", peripheral.getName());
+            ret.put("mtu", mtu);
+            ret.put("success", status == GATT_SUCCESS);
+
+            mHandler.post(() -> {
+                if (mCallbackMtu != null) mCallbackMtu.event(ret);
+            });
+        }
     };
     // Callback for central
     private final BluetoothCentralCallback bluetoothCentralCallback = new BluetoothCentralCallback() {
 
         @Override
         public void onConnectedPeripheral(BluetoothPeripheral peripheral) {
-            peripheral.requestMtu(500);
+            peripheral.requestMtu(mtuSize);
 
             MLog.d(TAG, "connected to '%s' " + peripheral.getName());
             ReturnObject ret = new ReturnObject();
@@ -204,6 +219,13 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         @Override
         public void onDisconnectedPeripheral(final BluetoothPeripheral peripheral, final int status) {
             MLog.d(TAG, "disconnected '%s' with status %d" + " " + peripheral.getName() + " " + status);
+            ReturnObject ret = new ReturnObject();
+            ret.put("deviceMac", peripheral.getAddress());
+            ret.put("deviceName", peripheral.getAddress());
+            ret.put("status", "disconnected");
+            mHandler.post(() -> {
+                if (mCallbackDevice != null) mCallbackDevice.event(ret);
+            });
 
             // Reconnect to this device when it becomes available again if autoConnect is true
             if (!autoConnect) return;
@@ -248,12 +270,8 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
     }
 
     public PBluetoothLEClient connectDevice(String macAddress, int mtuSize) {
-        BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
-        peripheral.requestConnectionPriority(CONNECTION_PRIORITY_HIGH);
-        peripheral.requestMtu(mtuSize);
-        central.connectPeripheral(peripheral, peripheralCallback);
-
-        return this;
+        this.mtuSize = mtuSize;
+        return this.connectDevice(macAddress);
     }
 
     public PBluetoothLEClient autoConnect(boolean autoConnect) {
@@ -285,6 +303,11 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
 
     public PBluetoothLEClient onNewData(ReturnInterface callback) {
         mCallbackCharacteristic = callback;
+        return this;
+    }
+
+    public PBluetoothLEClient onMtuChanged(ReturnInterface callback) {
+        this.mCallbackMtu = callback;
         return this;
     }
 
