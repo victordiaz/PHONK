@@ -312,6 +312,10 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
     }
 
     public PBluetoothLEClient write(String value, String macAddress, String serviceUUID, String charUUID) {
+      return this._write(value.getBytes(), macAddress, serviceUUID, charUUID);
+    }
+
+    public PBluetoothLEClient _write(byte[] bytes, String macAddress, String serviceUUID, String charUUID) {
         BluetoothPeripheral peripheral = central.getPeripheral(macAddress);
 
         UUID sUUID = UUID.fromString(serviceUUID);
@@ -319,7 +323,7 @@ public class PBluetoothLEClient extends ProtoBase implements WhatIsRunningInterf
         BluetoothGattCharacteristic btChar = peripheral.getCharacteristic(sUUID, cUUID);
 
         // peripheral.writeCharacteristic(btChar, value, type);
-        peripheral.writeCharacteristic(btChar, value.getBytes(), WRITE_TYPE_DEFAULT);
+        peripheral.writeCharacteristic(btChar, bytes, WRITE_TYPE_DEFAULT);
 
         return this;
     }
