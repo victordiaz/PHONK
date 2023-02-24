@@ -217,15 +217,15 @@ public class PLocation extends ProtoBase {
                 satItem.put("prn", sat.getPrn());
                 satItem.put("snr", sat.getSnr());
                 sats.add(satItem);
-
-                ReturnObject ret = new ReturnObject();
-                ret.put("satellites", sats);
-                ret.put("satellitesInView", satellitesCount);
-                ret.put("satellitesInFix", satellitesInFix);
-
-                if (mSatellitesCallback != null) mSatellitesCallback.event(ret);
             }
             // MLog.d(TAG, satellitesCount + " Used In Last Fix ("+satellitesInFix+")");
+
+            ReturnObject ret = new ReturnObject();
+            ret.put("satellites", sats);
+            ret.put("satellitesInView", satellitesCount);
+            ret.put("satellitesInFix", satellitesInFix);
+
+            if (mSatellitesCallback != null) mSatellitesCallback.event(ret);
         });
     }
 
