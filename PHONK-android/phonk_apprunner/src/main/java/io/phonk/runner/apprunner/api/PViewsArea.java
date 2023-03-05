@@ -285,11 +285,8 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y, Object w, Object h) {
-        Map<String, String> map = new HashMap<>();
-        map.put("text", label);
-
-        PButton b = (PButton) newView("button", map);
-        // b.text(label);
+        PButton b = (PButton) newView("button");
+        b.setText(label);
         addView(b, x, y, w, h);
         return b;
     }
@@ -355,7 +352,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y) {
         PButton b = (PButton) newView("button");
-        b.text(label);
+        b.setText(label);
         addView(b, x, y, -1, -1);
         return b;
     }
@@ -509,25 +506,23 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PToggle addToggle(final String[] text, Object x, Object y, Object w, Object h) {
-        HashMap<String, String> map = new HashMap();
+        PToggle t = (PToggle) newView("toggle");
 
         if (text.length == 1) {
-            map.put("text", text[0]);
-            map.put("textOn", text[0]);
-            map.put("textOff", text[0]);
+            t.setText(text[0]);
+            t.setTextOn(text[0]);
+            t.setTextOff(text[0]);
         } else if (text.length == 2) {
-            map.put("text", text[0]);
-            map.put("textOn", text[1]);
-            map.put("textOff", text[0]);
+            t.setText(text[0]);
+            t.setTextOn(text[1]);
+            t.setTextOff(text[0]);
         } else if (text.length == 3) {
-            map.put("text", text[0]);
-            map.put("textOn", text[1]);
-            map.put("textOff", text[2]);
+            t.setText(text[0]);
+            t.setTextOn(text[1]);
+            t.setTextOff(text[2]);
         }
 
-        PToggle t = (PToggle) newView("toggle", map);
         addView(t, x, y, w, h);
-
         return t;
     }
 

@@ -38,7 +38,6 @@ import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -51,6 +50,7 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     private final AppRunner mAppRunner;
     private final EditText mInput;
     private Typeface mFont;
+    private int mStyle;
 
     public PInput(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -71,20 +71,19 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         props.put("paddingRight", props, appRunner.pUtil.dpToPixels(10));
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("hintColor", props, appRunner.pUi.theme.get("secondaryShade"));
-        props.put("hint", props, "");
         Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
 
         mInput = this;
-        textFont(mFont);
+
+        hint("");
     }
 
     @Override
     public View textFont(Typeface font) {
         mFont = font;
-
-        this.setTypeface(font);
+        this.setTypeface(font, mStyle);
         return this;
     }
 
@@ -101,8 +100,6 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     }
 
     @Override
-    @PhonkMethod(description = "Changes the font text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
         return this;
@@ -116,7 +113,8 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
 
     @Override
     public View textStyle(int style) {
-        this.setTypeface(null, style);
+        mStyle = style;
+        this.setTypeface(mFont, style);
         return this;
     }
 
@@ -193,7 +191,9 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         hideKeyboard(this);
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -202,7 +202,9 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         InputMethodManager inputMethodManager = (InputMethodManager) mAppRunner.getAppContext().getSystemService(
                 Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }    @Override
+    }
+
+    @Override
     public Map getProps() {
         return props;
     }
@@ -219,12 +221,8 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
             super.apply();
 
             hintColor = Color.parseColor(mProps.get("hintColor").toString());
-            setHint(mProps.get("hint").toString());
-            setHintTextColor(styler.hintColor);
+
+            setHintTextColor(hintColor);
         }
     }
-
-
-
-
 }

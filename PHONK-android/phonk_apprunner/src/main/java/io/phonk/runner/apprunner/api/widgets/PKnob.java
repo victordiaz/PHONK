@@ -223,7 +223,9 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         this.textFont = font;
 
         return this;
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -231,7 +233,9 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     @Override
     public View textSize(int size) {
         return null;
-    }    @Override
+    }
+
+    @Override
     public Map getProps() {
         return props;
     }
@@ -283,8 +287,4 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             knobProgressColor = Color.parseColor(mProps.get("knobProgressColor").toString());
         }
     }
-
-
-
-
 }

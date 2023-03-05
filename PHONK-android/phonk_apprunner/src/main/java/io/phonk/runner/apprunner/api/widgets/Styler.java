@@ -75,7 +75,7 @@ public class Styler {
     double borderRadius;
     float padding;
     int textColor;
-    double textSize;
+    float textSize;
     String textFont;
     String textStyle;
     String textTransform;
@@ -245,10 +245,8 @@ public class Styler {
 
         if (mView instanceof PTextInterface) {
             PTextInterface v = (PTextInterface) mView;
-            // btn.setTextAlignment();
             v.textColor(textColor);
-            v.textSize((float) textSize);
-            // btn.setFont();
+            v.textSize(textSize);
 
             switch (textFont) {
                 case "serif":

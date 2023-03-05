@@ -26,8 +26,6 @@ import android.graphics.Typeface;
 import android.view.View;
 
 public interface PTextInterface {
-
-
     View textFont(Typeface font);
 
     View textSize(int size);

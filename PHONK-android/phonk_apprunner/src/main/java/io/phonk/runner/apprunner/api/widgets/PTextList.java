@@ -28,6 +28,7 @@ import android.view.View;
 
 import org.mozilla.javascript.NativeArray;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -58,15 +59,10 @@ public class PTextList extends PList implements PTextInterface {
 
     private void init() {
         mCreateCallback = r -> {
-            PText t = new PText(mAppRunner, null);
-            t.setTextSize(AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6));
-            t.setTextColor(Color.argb(255, 255, 255, 255));
-
-            if (mTextColor != -1) t.textColor(mTextColor);
-            if (mTextSize != -1) t.textSize(mTextSize);
-
-            styler.apply();
-            return t;
+            Map p = new HashMap<String, Object>();
+            p.put("textColor", mTextColor == -1 ? Color.argb(255, 255, 255, 255) : mTextColor);
+            p.put("textSize", mTextSize == -1 ? AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6) : mTextSize);
+            return new PText(mAppRunner, p);
         };
 
         mUpdateCallback = r -> {
@@ -105,28 +101,24 @@ public class PTextList extends PList implements PTextInterface {
     @Override
     public View textSize(int size) {
         mTextSize = size;
-
         return this;
     }
 
     @Override
     public View textColor(String textColor) {
         mTextColor = Color.parseColor(textColor);
-
         return this;
     }
 
     @Override
     public View textColor(int textColor) {
         mTextColor = textColor;
-
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
         mTextSize = textSize;
-
         return this;
     }
 

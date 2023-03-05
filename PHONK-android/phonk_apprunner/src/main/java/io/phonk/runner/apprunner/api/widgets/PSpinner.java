@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -109,8 +107,6 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
     }
 
     @Override
-    @PhonkMethod(description = "Changes the font text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         // this.setTextColor(c);
         return this;
@@ -148,6 +144,4 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
     public Map getProps() {
         return props;
     }
-
-
 }
