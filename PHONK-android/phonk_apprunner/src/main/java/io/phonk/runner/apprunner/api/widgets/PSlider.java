@@ -296,7 +296,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     static class SliderStyler extends Styler {
         int slider;
-        float sliderHeight;
 
         SliderStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
@@ -307,11 +306,6 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             super.apply();
 
             slider = Color.parseColor((String) mProps.get("slider"));
-            sliderHeight = toFloat(mProps.get("sliderHeight"));
         }
     }
-
-
-
-
 }

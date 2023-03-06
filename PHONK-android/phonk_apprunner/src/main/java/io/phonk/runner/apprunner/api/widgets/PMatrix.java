@@ -284,7 +284,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         int matrixCellSelectedColor;
         float matrixCellBorderSize;
         int matrixCellBorderColor;
-        float matrixCellBorderRadius;
 
         MatrixStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
@@ -298,9 +297,10 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
             matrixCellSelectedColor = Color.parseColor(mProps.get("matrixCellSelectedColor").toString());
             matrixCellBorderSize = toFloat(mProps.get("matrixCellBorderSize"));
             matrixCellBorderColor = Color.parseColor(mProps.get("matrixCellBorderColor").toString());
-            matrixCellBorderRadius = toFloat(mProps.get("matrixCellBorderRadius"));
         }
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -309,7 +309,4 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     public Map getProps() {
         return props;
     }
-
-
-
 }

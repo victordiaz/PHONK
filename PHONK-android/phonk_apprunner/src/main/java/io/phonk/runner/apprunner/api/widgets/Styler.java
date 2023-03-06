@@ -58,27 +58,20 @@ public class Styler {
     // common properties
     final String id;
     final String mViewName;
-    boolean enabled;
-    String visibility;
     float opacity;
-    float x;
-    float y;
-    float width;
-    float height;
     int background;
     int backgroundHover;
     int backgroundPressed;
     int backgroundSelected;
     int backgroundChecked;
-    double borderWidth;
+    float borderWidth;
     int borderColor;
-    double borderRadius;
+    float borderRadius;
     float padding;
     int textColor;
     float textSize;
     String textFont;
     String textStyle;
-    String textTransform;
     String textAlign;
 
     private Typeface font;
@@ -155,8 +148,6 @@ public class Styler {
         }
         mViewIsSet = true;
 
-        enabled = (boolean) mProps.get("enabled");
-        visibility = mProps.get("visibility").toString();
         opacity = toFloat(mProps.get("opacity"));
         background = Color.parseColor(mProps.get("background").toString());
 
@@ -172,7 +163,6 @@ public class Styler {
         textSize = toFloat(mProps.get("textSize"));
         textFont = mProps.get("textFont").toString();
         textStyle = mProps.get("textStyle").toString();
-        textTransform = mProps.get("textTransform").toString();
         textAlign = mProps.get("textAlign").toString();
         padding = toFloat(mProps.get("padding"));
 
@@ -209,9 +199,7 @@ public class Styler {
         // animOut = props.get("animOut").toString();
         */
 
-        // mView.setVisibility(visibility);
         mView.setAlpha(opacity);
-        mView.setEnabled(enabled);
 
         mView.setPadding((int) paddingLeft, (int) paddingTop, (int) paddingRight, (int) paddingBottom);
 

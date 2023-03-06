@@ -45,13 +45,10 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final KnobStyler styler;
-    private final Typeface textStyle = Typeface.DEFAULT;
     private final boolean autoTextSize = false;
     private final DecimalFormat df;
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
-    private Typeface textFont;
-    private ArrayList touches;
     private float firstY;
     private float prevVal = 0;
     private float val = 0;
@@ -220,8 +217,6 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     @Override
     public View textFont(Typeface font) {
-        this.textFont = font;
-
         return this;
     }
 
@@ -232,7 +227,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     @Override
     public View textSize(int size) {
-        return null;
+        return this;
     }
 
     @Override
@@ -252,7 +247,7 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
     @Override
     public View textSize(float textSize) {
-        return null;
+        return this;
     }
 
     @Override
@@ -266,11 +261,11 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     }
 
     static class KnobStyler extends Styler {
-        public float knobProgressSeparation;
-        public float knobBorderWidth;
-        public float knobProgressWidth;
-        public int knobBorderColor;
-        public int knobProgressColor;
+        float knobProgressSeparation;
+        float knobBorderWidth;
+        float knobProgressWidth;
+        int knobBorderColor;
+        int knobProgressColor;
 
         KnobStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);

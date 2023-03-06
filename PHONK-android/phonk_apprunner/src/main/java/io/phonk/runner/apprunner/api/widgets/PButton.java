@@ -150,6 +150,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
+    @Override
     public PButton textFont(Typeface font) {
         mFont = font;
         this.setTypeface(font, mStyle);

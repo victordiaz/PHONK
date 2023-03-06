@@ -130,8 +130,9 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         return this;
     }
 
-    public void text(String txt) {
+    public View text(String txt) {
         this.setText(txt);
+        return this;
     }
 
     public String text() {
@@ -210,8 +211,6 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     }
 
     class InputStyler extends Styler {
-        int hintColor;
-
         InputStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
         }
@@ -220,9 +219,7 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         public void apply() {
             super.apply();
 
-            hintColor = Color.parseColor(mProps.get("hintColor").toString());
-
-            setHintTextColor(hintColor);
+            setHintTextColor(Color.parseColor(mProps.get("hintColor").toString()));
         }
     }
 }

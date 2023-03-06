@@ -131,14 +131,16 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return this;
     }
 
-    public void text(String label) {
+    public View text(String label) {
         setText(label);
         setTextOn(label);
         setTextOff(label);
+        return this;
     }
 
-    public void checked(boolean b) {
+    public View checked(boolean b) {
         setChecked(b);
+        return this;
     }
 
     @Override
@@ -147,10 +149,10 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     }
 
     class ToggleStyler extends Styler {
-        private int textOnColor;
-        private int textOffColor;
-        private int backgroundColor;
-        private int backgroundCheckedColor;
+        int textOnColor;
+        int textOffColor;
+        int backgroundColor;
+        int backgroundCheckedColor;
 
         ToggleStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);

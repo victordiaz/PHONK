@@ -202,7 +202,9 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
             padBorderColor = Color.parseColor(mProps.get("padBorderColor").toString());
             padBorderSize = toFloat(mProps.get("padBorderSize"));
         }
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -211,8 +213,4 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     public Map getProps() {
         return props;
     }
-
-
-
-
 }

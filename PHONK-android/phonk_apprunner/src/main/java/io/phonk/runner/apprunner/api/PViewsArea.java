@@ -155,10 +155,10 @@ public class PViewsArea extends ProtoBase {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        PAbsoluteLayout pAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
-        pAbsoluteLayout.setLayoutParams(layoutParams);
+        PAbsoluteLayout absoluteLayout = new PAbsoluteLayout(getAppRunner());
+        absoluteLayout.setLayoutParams(layoutParams);
 
-        return pAbsoluteLayout;
+        return absoluteLayout;
     }
 
     public View addView(PViewMethodsInterface v) {
@@ -395,10 +395,10 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y, Object w, Object h) {
-        PImageButton pImageButton = (PImageButton) newView("imageButton");
-        pImageButton.load(imagePath);
-        addView(pImageButton, x, y, w, h);
-        return pImageButton;
+        PImageButton imageButton = (PImageButton) newView("imageButton");
+        imageButton.load(imagePath);
+        addView(imageButton, x, y, w, h);
+        return imageButton;
     }
 
     /**
@@ -411,10 +411,10 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y) {
-        PImageButton pImageButton = (PImageButton) newView("imageButton");
-        pImageButton.load(imagePath);
-        addView(pImageButton, x, y, -1, -1);
-        return pImageButton;
+        PImageButton imageButton = (PImageButton) newView("imageButton");
+        imageButton.load(imagePath);
+        addView(imageButton, x, y, -1, -1);
+        return imageButton;
     }
 
     /**
@@ -540,9 +540,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod(description = "Creates a new pager", example = "")
     public PViewPager addPager(Object x, Object y, Object w, Object h) {
-        PViewPager pViewPager = (PViewPager) newView("pager");
-        addView(pViewPager, x, y, w, h);
-        return pViewPager;
+        PViewPager viewPager = (PViewPager) newView("pager");
+        addView(viewPager, x, y, w, h);
+        return viewPager;
     }
 
     public View getView() {
@@ -578,9 +578,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PKnob addKnob(Object x, Object y, Object w, Object h) {
-        PKnob slider = (PKnob) newView("knob");
-        addView(slider, x, y, w, h);
-        return slider;
+        PKnob knob = (PKnob) newView("knob");
+        addView(knob, x, y, w, h);
+        return knob;
     }
 
     /**
@@ -652,7 +652,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImage addImage(Object x, Object y) {
-        final PImage iv = (PImage) newView("image");
+        PImage iv = (PImage) newView("image");
         addView(iv, x, y, -1, -1);
         return iv;
     }
@@ -719,12 +719,11 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PSpinner addChoiceBox(final String[] array, Object x, Object y, Object w, Object h) {
-        PSpinner pSpinner = (PSpinner) newView("choiceBox");
-        pSpinner.setData(array);
-        // pSpinner.setPrompt("qq");
-
-        addView(pSpinner, x, y, w, h);
-        return pSpinner;
+        PSpinner spinner = (PSpinner) newView("choiceBox");
+        spinner.setData(array);
+        // spinner.setPrompt("qq");
+        addView(spinner, x, y, w, h);
+        return spinner;
     }
 
     /**
@@ -739,10 +738,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PNumberPicker addNumberPicker(Object x, Object y, Object w, Object h) {
-        PNumberPicker pNumberPicker = (PNumberPicker) newView("numberPicker");
-        addView(pNumberPicker, x, y, w, h);
-
-        return pNumberPicker;
+        PNumberPicker numberPicker = (PNumberPicker) newView("numberPicker");
+        addView(numberPicker, x, y, w, h);
+        return numberPicker;
     }
 
     /**
@@ -774,9 +772,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PPlot addPlot(Object x, Object y, Object w, Object h) {
-        PPlot pPlot = (PPlot) newView("plot");
-        addView(pPlot, x, y, w, h);
-        return pPlot;
+        PPlot plot = (PPlot) newView("plot");
+        addView(plot, x, y, w, h);
+        return plot;
     }
 
     /**
@@ -808,7 +806,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PCustomView addCanvas(Object x, Object y, Object w, Object h) {
-        final PCustomView canvasView = (PCustomView) newView("canvas"); // (int) w, (int) h);
+        PCustomView canvasView = (PCustomView) newView("canvas"); // (int) w, (int) h);
         addView(canvasView, x, y, w, h);
         return canvasView;
     }
@@ -844,7 +842,6 @@ public class PViewsArea extends ProtoBase {
         PList list = (PList) newView("list");
         list.numColumns(numCols);
         addView(list, x, y, w, h);
-
         return list;
     }
 
@@ -863,15 +860,13 @@ public class PViewsArea extends ProtoBase {
         PList list = (PList) newView("list");
         list.numColumns(1);
         addView(list, x, y, w, h);
-
         return list;
     }
 
     public PTextList addTextList(Object x, Object y, Object w, Object h) {
-        PTextList pTextList = (PTextList) newView("textList");
-        addView(pTextList, x, y, w, h);
-
-        return pTextList;
+        PTextList textList = (PTextList) newView("textList");
+        addView(textList, x, y, w, h);
+        return textList;
     }
 
     /**
@@ -925,18 +920,16 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y) {
-        PLinearLayout pLinearLayout = (PLinearLayout) newView("linearLayout");
-        addView(pLinearLayout, x, y, -1, -1);
-
-        return pLinearLayout;
+        PLinearLayout linearLayout = (PLinearLayout) newView("linearLayout");
+        addView(linearLayout, x, y, -1, -1);
+        return linearLayout;
     }
 
     @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y, Object w, Object h) {
-        PLinearLayout pLinearLayout = (PLinearLayout) newView("linearLayout");
-        addView(pLinearLayout, x, y, w, h);
-
-        return pLinearLayout;
+        PLinearLayout linearLayout = (PLinearLayout) newView("linearLayout");
+        addView(linearLayout, x, y, w, h);
+        return linearLayout;
     }
 
     /**
