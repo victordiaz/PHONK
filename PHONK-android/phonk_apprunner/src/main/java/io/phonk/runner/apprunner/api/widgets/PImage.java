@@ -42,23 +42,22 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     private static final String TAG = PImage.class.getSimpleName();
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     protected final AppRunner mAppRunner;
-    protected final Styler styler;
+    protected final ImageStyler styler;
 
     public PImage(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
 
-        styler = new Styler(appRunner, this, props);
+        styler = new ImageStyler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("background", props, "#00FFFFFF");
+        props.put("srcMode", props, "fit");
 
         addFromChild(props);
 
         Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
-
-        mode("fit");
     }
 
     protected void addFromChild(StylePropertiesProxy props) {
@@ -128,6 +127,19 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         styler.setLayoutProps(x, y, w, h);
     }
 
+    class ImageStyler extends Styler {
+        ImageStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+            super(appRunner, view, props);
+        }
+
+        @Override
+        public void apply() {
+            super.apply();
+
+            mode(mProps.get("srcMode").toString());
+        }
+    }
+
     @Override
     public void setProps(Map style) {
         styler.setProps(style);
@@ -137,4 +149,11 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
 }

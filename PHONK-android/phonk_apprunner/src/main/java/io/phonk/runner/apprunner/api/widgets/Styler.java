@@ -31,8 +31,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.util.Map;
 
 import io.phonk.runner.apprunner.AppRunner;
@@ -56,7 +54,6 @@ public class Styler {
     // String animOut;
 
     // common properties
-    final String id;
     final String mViewName;
     float opacity;
     int background;
@@ -74,9 +71,6 @@ public class Styler {
     String textStyle;
     String textAlign;
 
-    private Typeface font;
-    private int typeFaceStyle;
-
     /*
     String src;
     String srcPressed;
@@ -84,12 +78,10 @@ public class Styler {
 
     private int mWidth;
     private int mHeight;
-    private boolean mViewIsSet = false;
 
     Styler(AppRunner appRunner, View view, StylePropertiesProxy props) {
         mAppRunner = appRunner;
 
-        id = RandomStringUtils.randomAlphanumeric(8);
         mView = view;
         mViewName = mView.getClass().getSimpleName().substring(1).toLowerCase();
         mProps = props;
@@ -134,19 +126,10 @@ public class Styler {
     public void resetStyle() {
         StylePropertiesProxy style = mAppRunner.pUi.getStyle();
         fromTo(style, mProps);
-        mProps.put("id", id);
     }
 
     public void apply() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-
-        if (mViewIsSet) {
-            setX(mProps.get("x"));
-            setY(mProps.get("y"));
-            setWidth(mProps.get("w"));
-            setHeight(mProps.get("h"));
-        }
-        mViewIsSet = true;
 
         opacity = toFloat(mProps.get("opacity"));
         background = Color.parseColor(mProps.get("background").toString());
@@ -236,6 +219,7 @@ public class Styler {
             v.textColor(textColor);
             v.textSize(textSize);
 
+            Typeface font = Typeface.DEFAULT;
             switch (textFont) {
                 case "serif":
                     font = Typeface.SERIF;
@@ -250,10 +234,8 @@ public class Styler {
             }
             v.textFont(font);
 
+            int typeFaceStyle = Typeface.NORMAL;
             switch (textStyle) {
-                case "normal":
-                    typeFaceStyle = Typeface.NORMAL;
-                    break;
                 case "bold":
                     typeFaceStyle = Typeface.BOLD;
                     break;
@@ -350,12 +332,10 @@ public class Styler {
     }
 
     public void setLayoutProps(float x, float y, float width, float height) {
-        mProps.eventOnChange = false;
-        mProps.put("x", mProps, x);
-        mProps.put("y", mProps, y);
-        mProps.put("w", mProps, width);
-        mProps.put("h", mProps, height);
-        mProps.eventOnChange = true;
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
     }
 
 }

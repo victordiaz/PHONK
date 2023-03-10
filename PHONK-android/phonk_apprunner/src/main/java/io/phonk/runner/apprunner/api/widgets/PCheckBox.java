@@ -117,4 +117,10 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
 }

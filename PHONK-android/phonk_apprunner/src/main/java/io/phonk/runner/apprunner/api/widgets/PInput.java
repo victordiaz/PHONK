@@ -76,13 +76,12 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         styler.apply();
 
         mInput = this;
-
-        hint("");
     }
 
     @Override
     public View textFont(Typeface font) {
         mFont = font;
+
         this.setTypeface(font, mStyle);
         return this;
     }
@@ -222,4 +221,13 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
             setHintTextColor(Color.parseColor(mProps.get("hintColor").toString()));
         }
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
+
 }

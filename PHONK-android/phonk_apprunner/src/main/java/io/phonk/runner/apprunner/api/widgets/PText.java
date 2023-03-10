@@ -64,6 +64,7 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
 
     public PText color(String c) {
         this.setTextColor(Color.parseColor(c));
+
         return this;
     }
 
@@ -102,6 +103,10 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         this.setText(joinedText.toString());
 
         return this;
+    }
+
+    public String text() {
+        return getText().toString();
     }
 
 
@@ -230,4 +235,12 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
 }

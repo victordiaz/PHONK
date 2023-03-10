@@ -29,7 +29,6 @@ import android.view.View;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -282,4 +281,13 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             knobProgressColor = Color.parseColor(mProps.get("knobProgressColor").toString());
         }
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
+
 }

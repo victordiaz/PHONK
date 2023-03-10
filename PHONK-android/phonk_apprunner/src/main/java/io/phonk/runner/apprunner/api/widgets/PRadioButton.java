@@ -42,4 +42,8 @@ public class PRadioButton extends androidx.appcompat.widget.AppCompatRadioButton
         return this;
     }
 
+    public String text() {
+        return getText().toString();
+    }
+
 }

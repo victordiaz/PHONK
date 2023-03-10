@@ -144,4 +144,11 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
 }

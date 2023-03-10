@@ -71,6 +71,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         mFont = font;
         this.setTypeface(font, mStyle);
         MLog.d(TAG, "--> " + "font");
+
         return this;
     }
 
@@ -101,7 +102,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     @Override
     public View textStyle(int style) {
         this.mStyle = style;
-        this.setTypeface(this.mFont, style);
+        this.setTypeface(mFont, style);
         return this;
     }
 
@@ -138,9 +139,35 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return this;
     }
 
+    public String text() {
+        return getText().toString();
+    }
+
+    public View textOn(String label) {
+        setTextOn(label);
+        return this;
+    }
+
+    public String textOn() {
+        return getTextOn().toString();
+    }
+
+    public View textOff(String label) {
+        setTextOff(label);
+        return this;
+    }
+
+    public String textOff() {
+        return getTextOff().toString();
+    }
+
     public View checked(boolean b) {
         setChecked(b);
         return this;
+    }
+
+    public boolean checked() {
+        return isChecked();
     }
 
     @Override
@@ -186,4 +213,11 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
 }

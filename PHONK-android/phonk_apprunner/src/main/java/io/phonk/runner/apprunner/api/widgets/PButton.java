@@ -67,8 +67,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
-
-        setText("");
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -101,6 +99,10 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public PButton text(String label) {
         setText(label);
         return this;
+    }
+
+    public String text() {
+        return getText().toString();
     }
 
     @PhonkMethod(description = "Triggers the function when the button is clicked", example = "")
@@ -180,6 +182,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     @Override
     public View textSize(float size) {
         this.setTextSize(size);
+
         return this;
     }
 
@@ -245,4 +248,13 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
+
 }

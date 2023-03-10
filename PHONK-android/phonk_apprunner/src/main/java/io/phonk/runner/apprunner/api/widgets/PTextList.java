@@ -101,24 +101,28 @@ public class PTextList extends PList implements PTextInterface {
     @Override
     public View textSize(int size) {
         mTextSize = size;
+
         return this;
     }
 
     @Override
     public View textColor(String textColor) {
         mTextColor = Color.parseColor(textColor);
+
         return this;
     }
 
     @Override
     public View textColor(int textColor) {
         mTextColor = textColor;
+
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
         mTextSize = textSize;
+
         return this;
     }
 

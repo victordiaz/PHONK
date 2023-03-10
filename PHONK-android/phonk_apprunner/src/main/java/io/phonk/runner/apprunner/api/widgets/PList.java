@@ -129,4 +129,9 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
 }

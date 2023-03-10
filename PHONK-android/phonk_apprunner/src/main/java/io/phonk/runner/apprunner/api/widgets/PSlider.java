@@ -236,7 +236,9 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         ReturnObject ret = new ReturnObject();
         ret.put("value", computeCurrentValueForTheUser());
         if (callbackDrag != null) callbackDrag.event(ret);
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -246,7 +248,9 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     public PSlider mode(String mode) {
         this.mode = mode;
         return this;
-    }    @Override
+    }
+
+    @Override
     public Map<String, Object> getProps() {
         return props;
     }
@@ -308,4 +312,13 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             slider = Color.parseColor((String) mProps.get("slider"));
         }
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
+
 }

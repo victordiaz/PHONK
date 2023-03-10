@@ -34,7 +34,6 @@ import android.widget.RelativeLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -155,24 +154,10 @@ public class PViewsArea extends ProtoBase {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
-        PAbsoluteLayout absoluteLayout = new PAbsoluteLayout(getAppRunner());
-        absoluteLayout.setLayoutParams(layoutParams);
+        PAbsoluteLayout pAbsoluteLayout = new PAbsoluteLayout(getAppRunner());
+        pAbsoluteLayout.setLayoutParams(layoutParams);
 
-        return absoluteLayout;
-    }
-
-    public View addView(PViewMethodsInterface v) {
-        Map props = v.getProps();
-        // String type = props.get("type").toString();
-        Object x = props.get("x");
-        Object y = props.get("y");
-        Object w = props.get("w");
-        Object h = props.get("h");
-
-        // PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
-        this.addView((View) v, x, y, w, h);
-
-        return (View) v;
+        return pAbsoluteLayout;
     }
 
     /**
@@ -286,7 +271,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y, Object w, Object h) {
         PButton b = (PButton) newView("button");
-        b.setText(label);
+        b.text(label);
         addView(b, x, y, w, h);
         return b;
     }
@@ -352,7 +337,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y) {
         PButton b = (PButton) newView("button");
-        b.setText(label);
+        b.text(label);
         addView(b, x, y, -1, -1);
         return b;
     }
@@ -395,10 +380,10 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y, Object w, Object h) {
-        PImageButton imageButton = (PImageButton) newView("imageButton");
-        imageButton.load(imagePath);
-        addView(imageButton, x, y, w, h);
-        return imageButton;
+        PImageButton pImageButton = (PImageButton) newView("imageButton");
+        pImageButton.load(imagePath);
+        addView(pImageButton, x, y, w, h);
+        return pImageButton;
     }
 
     /**
@@ -411,10 +396,10 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y) {
-        PImageButton imageButton = (PImageButton) newView("imageButton");
-        imageButton.load(imagePath);
-        addView(imageButton, x, y, -1, -1);
-        return imageButton;
+        PImageButton pImageButton = (PImageButton) newView("imageButton");
+        pImageButton.load(imagePath);
+        addView(pImageButton, x, y, -1, -1);
+        return pImageButton;
     }
 
     /**
@@ -446,7 +431,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PText addText(String text, Object x, Object y) {
         PText tv = (PText) newView("text");
-        tv.setText(text);
+        tv.text(text);
         addView(tv, x, y, -1, -1);
         return tv;
     }
@@ -454,7 +439,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PText addText(String label, Object x, Object y, Object w, Object h) {
         PText tv = (PText) newView("text");
-        tv.setText(label);
+        tv.text(label);
         addView(tv, x, y, w, h);
         return tv;
     }
@@ -509,20 +494,21 @@ public class PViewsArea extends ProtoBase {
         PToggle t = (PToggle) newView("toggle");
 
         if (text.length == 1) {
-            t.setText(text[0]);
-            t.setTextOn(text[0]);
-            t.setTextOff(text[0]);
+            t.text(text[0]);
+            t.textOn(text[0]);
+            t.textOff(text[0]);
         } else if (text.length == 2) {
-            t.setText(text[0]);
-            t.setTextOn(text[1]);
-            t.setTextOff(text[0]);
+            t.text(text[0]);
+            t.textOn(text[1]);
+            t.textOff(text[0]);
         } else if (text.length == 3) {
-            t.setText(text[0]);
-            t.setTextOn(text[1]);
-            t.setTextOff(text[2]);
+            t.text(text[0]);
+            t.textOn(text[1]);
+            t.textOff(text[2]);
         }
 
         addView(t, x, y, w, h);
+
         return t;
     }
 
@@ -540,9 +526,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod(description = "Creates a new pager", example = "")
     public PViewPager addPager(Object x, Object y, Object w, Object h) {
-        PViewPager viewPager = (PViewPager) newView("pager");
-        addView(viewPager, x, y, w, h);
-        return viewPager;
+        PViewPager pViewPager = (PViewPager) newView("pager");
+        addView(pViewPager, x, y, w, h);
+        return pViewPager;
     }
 
     public View getView() {
@@ -652,7 +638,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImage addImage(Object x, Object y) {
-        PImage iv = (PImage) newView("image");
+        final PImage iv = (PImage) newView("image");
         addView(iv, x, y, -1, -1);
         return iv;
     }
@@ -719,11 +705,12 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PSpinner addChoiceBox(final String[] array, Object x, Object y, Object w, Object h) {
-        PSpinner spinner = (PSpinner) newView("choiceBox");
-        spinner.setData(array);
-        // spinner.setPrompt("qq");
-        addView(spinner, x, y, w, h);
-        return spinner;
+        PSpinner pSpinner = (PSpinner) newView("choiceBox");
+        pSpinner.setData(array);
+        // pSpinner.setPrompt("qq");
+
+        addView(pSpinner, x, y, w, h);
+        return pSpinner;
     }
 
     /**
@@ -738,9 +725,10 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PNumberPicker addNumberPicker(Object x, Object y, Object w, Object h) {
-        PNumberPicker numberPicker = (PNumberPicker) newView("numberPicker");
-        addView(numberPicker, x, y, w, h);
-        return numberPicker;
+        PNumberPicker pNumberPicker = (PNumberPicker) newView("numberPicker");
+        addView(pNumberPicker, x, y, w, h);
+
+        return pNumberPicker;
     }
 
     /**
@@ -772,9 +760,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PPlot addPlot(Object x, Object y, Object w, Object h) {
-        PPlot plot = (PPlot) newView("plot");
-        addView(plot, x, y, w, h);
-        return plot;
+        PPlot pPlot = (PPlot) newView("plot");
+        addView(pPlot, x, y, w, h);
+        return pPlot;
     }
 
     /**
@@ -806,7 +794,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PCustomView addCanvas(Object x, Object y, Object w, Object h) {
-        PCustomView canvasView = (PCustomView) newView("canvas"); // (int) w, (int) h);
+        final PCustomView canvasView = (PCustomView) newView("canvas"); // (int) w, (int) h);
         addView(canvasView, x, y, w, h);
         return canvasView;
     }
@@ -842,6 +830,7 @@ public class PViewsArea extends ProtoBase {
         PList list = (PList) newView("list");
         list.numColumns(numCols);
         addView(list, x, y, w, h);
+
         return list;
     }
 
@@ -860,13 +849,15 @@ public class PViewsArea extends ProtoBase {
         PList list = (PList) newView("list");
         list.numColumns(1);
         addView(list, x, y, w, h);
+
         return list;
     }
 
     public PTextList addTextList(Object x, Object y, Object w, Object h) {
-        PTextList textList = (PTextList) newView("textList");
-        addView(textList, x, y, w, h);
-        return textList;
+        PTextList pTextList = (PTextList) newView("textList");
+        addView(pTextList, x, y, w, h);
+
+        return pTextList;
     }
 
     /**
@@ -920,16 +911,18 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y) {
-        PLinearLayout linearLayout = (PLinearLayout) newView("linearLayout");
-        addView(linearLayout, x, y, -1, -1);
-        return linearLayout;
+        PLinearLayout pLinearLayout = (PLinearLayout) newView("linearLayout");
+        addView(pLinearLayout, x, y, -1, -1);
+
+        return pLinearLayout;
     }
 
     @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y, Object w, Object h) {
-        PLinearLayout linearLayout = (PLinearLayout) newView("linearLayout");
-        addView(linearLayout, x, y, w, h);
-        return linearLayout;
+        PLinearLayout pLinearLayout = (PLinearLayout) newView("linearLayout");
+        addView(pLinearLayout, x, y, w, h);
+
+        return pLinearLayout;
     }
 
     /**

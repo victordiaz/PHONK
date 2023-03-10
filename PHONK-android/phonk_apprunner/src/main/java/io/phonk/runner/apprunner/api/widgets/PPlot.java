@@ -232,14 +232,18 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
 
     public void __stop() {
         handler.removeCallbacks(r);
-    }    @Override
+    }
+
+    @Override
     public Map getProps() {
         return props;
     }
@@ -270,4 +274,14 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
             plotWidth = toFloat(mProps.get("plotWidth"));
         }
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
+
+
 }

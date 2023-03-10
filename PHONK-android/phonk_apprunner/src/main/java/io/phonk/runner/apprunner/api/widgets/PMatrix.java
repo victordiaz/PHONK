@@ -309,4 +309,12 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
+
+
+
 }
