@@ -144,4 +144,9 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         return props;
     }
 
+    @Override
+    public int id() {
+        return getId();
+    }
+
 }

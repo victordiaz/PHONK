@@ -29,8 +29,6 @@ import android.view.View;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -40,6 +38,9 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
         PTextInterface {
     public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final Styler styler;
+
+    private Typeface mFont;
+    private int mStyle;
 
     public PCheckBox(AppRunner appRunner) {
         super(appRunner.getAppContext());
@@ -60,7 +61,8 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
 
     @Override
     public View textFont(Typeface font) {
-        this.setTypeface(font);
+        mFont = font;
+        this.setTypeface(font, mStyle);
         return this;
     }
 
@@ -77,8 +79,6 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     }
 
     @Override
-    @PhonkMethod(description = "Changes the font text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
         return this;
@@ -92,7 +92,8 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
 
     @Override
     public View textStyle(int style) {
-        this.setTypeface(null, style);
+        mStyle = style;
+        this.setTypeface(mFont, style);
         return this;
     }
 
@@ -115,6 +116,11 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     @Override
     public Map getProps() {
         return props;
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 
 }

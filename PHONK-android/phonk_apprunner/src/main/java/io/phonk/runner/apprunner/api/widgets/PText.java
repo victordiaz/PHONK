@@ -44,13 +44,14 @@ import io.phonk.runner.apprunner.AppRunner;
 public class PText extends androidx.appcompat.widget.AppCompatTextView implements PViewMethodsInterface,
         PTextInterface {
     public final StylePropertiesProxy props = new StylePropertiesProxy();
-    public final TextStyler styler;
-    private Typeface currentFont;
+    public final Styler styler;
+    private Typeface mFont;
+    private int mStyle;
 
     public PText(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
-        styler = new TextStyler(appRunner, this, props);
+        styler = new Styler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("background", props, "#00FFFFFF");
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
@@ -61,16 +62,12 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         styler.apply();
     }
 
-    @PhonkMethod(description = "Sets the text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PText color(String c) {
         this.setTextColor(Color.parseColor(c));
 
         return this;
     }
 
-    @PhonkMethod(description = "Sets the background color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PText background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
@@ -106,6 +103,10 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         this.setText(joinedText.toString());
 
         return this;
+    }
+
+    public String text() {
+        return getText().toString();
     }
 
 
@@ -178,16 +179,12 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         return this;
     }
 
-    @PhonkMethod(description = "Changes the font", example = "")
-    @PhonkMethodParam(params = {"Typeface"})
-    public PText textFont(Typeface f) {
-        this.currentFont = f;
-        this.setTypeface(f);
+    public PText textFont(Typeface font) {
+        this.mFont = font;
+        this.setTypeface(font, mStyle);
         return this;
     }
 
-    @PhonkMethod(description = "Sets the text size", example = "")
-    @PhonkMethodParam(params = {"size"})
     public PText textSize(int size) {
         this.setTextSize(size);
         return this;
@@ -200,8 +197,6 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     }
 
     @Override
-    @PhonkMethod(description = "Changes the font text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public View textColor(int c) {
         this.setTextColor(c);
         return this;
@@ -215,7 +210,8 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
 
     @Override
     public View textStyle(int style) {
-        this.setTypeface(currentFont, style);
+        mStyle = style;
+        this.setTypeface(mFont, style);
         return this;
     }
 
@@ -230,16 +226,7 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         styler.setLayoutProps(x, y, w, h);
     }
 
-    static class TextStyler extends Styler {
-        TextStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
-        }
-
-        @Override
-        public void apply() {
-            super.apply();
-        }
-    }    @Override
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -247,6 +234,11 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     @Override
     public Map getProps() {
         return props;
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 
 

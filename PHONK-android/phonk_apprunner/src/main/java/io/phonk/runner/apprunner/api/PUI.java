@@ -139,14 +139,7 @@ public class PUI extends PViewsArea {
         String colorBackground = (String) theme.get("background");
         String colorTransparent = "#00FFFFFF";
 
-        rootStyle.put("x", rootStyle, 0f);
-        rootStyle.put("y", rootStyle, 0f);
-        rootStyle.put("w", rootStyle, 0.2f);
-        rootStyle.put("h", rootStyle, 0.2f);
-
-        rootStyle.put("enabled", rootStyle, true);
         rootStyle.put("opacity", rootStyle, 1.0f);
-        rootStyle.put("visibility", rootStyle, "visible");
 
         rootStyle.put("background", rootStyle, colorPrimaryShade);
         rootStyle.put("backgroundHover", rootStyle, "#88000000");
@@ -554,15 +547,13 @@ public class PUI extends PViewsArea {
         return AndroidUtils.takeScreenshotView(v);
     }
 
-    public View getViewById(String id) {
+    public View getViewById(int id) {
         ArrayList<View> views = ((PViewsArea) (viewTree.get(0))).viewArray;
 
         for (View v : views) {
             PViewMethodsInterface vmi = (PViewMethodsInterface) v;
-            String viewId = (String) vmi.getProps().get("id");
-            if (id.equals(viewId)) {
+            if (vmi.id() == id) {
                 return v;
-            } else {
             }
         }
 

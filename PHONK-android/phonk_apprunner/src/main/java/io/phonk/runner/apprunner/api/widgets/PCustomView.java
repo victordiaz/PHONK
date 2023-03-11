@@ -123,4 +123,9 @@ public class PCustomView extends View implements PViewMethodsInterface {
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
 }

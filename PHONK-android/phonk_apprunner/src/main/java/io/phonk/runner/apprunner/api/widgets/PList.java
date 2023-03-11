@@ -40,7 +40,7 @@ import io.phonk.runner.base.views.FitRecyclerView;
 public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
     public final StylePropertiesProxy props = new StylePropertiesProxy();
-    public final ListStyler styler;
+    public final Styler styler;
     protected final AppRunner mAppRunner;
     private final Context mContext;
     private GridLayoutManager mGridLayoutManager;
@@ -52,7 +52,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         mAppRunner = appRunner;
         mContext = appRunner.getAppContext();
 
-        styler = new ListStyler(appRunner, this, props);
+        styler = new Styler(appRunner, this, props);
         props.eventOnChange = false;
 
         addFromChild(props);
@@ -120,17 +120,6 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         styler.setLayoutProps(x, y, w, h);
     }
 
-    static class ListStyler extends Styler {
-        ListStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
-        }
-
-        @Override
-        public void apply() {
-            super.apply();
-        }
-    }
-
     @Override
     public void setProps(Map style) {
         styler.setProps(style);
@@ -139,5 +128,10 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 }

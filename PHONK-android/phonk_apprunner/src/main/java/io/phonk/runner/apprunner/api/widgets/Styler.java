@@ -31,8 +31,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.util.Map;
 
 import io.phonk.runner.apprunner.AppRunner;
@@ -56,33 +54,22 @@ public class Styler {
     // String animOut;
 
     // common properties
-    final String id;
     final String mViewName;
-    boolean enabled;
-    String visibility;
     float opacity;
-    float x;
-    float y;
-    float width;
-    float height;
     int background;
     int backgroundHover;
     int backgroundPressed;
     int backgroundSelected;
     int backgroundChecked;
-    double borderWidth;
+    float borderWidth;
     int borderColor;
-    double borderRadius;
+    float borderRadius;
     float padding;
     int textColor;
-    double textSize;
+    float textSize;
     String textFont;
     String textStyle;
-    String textTransform;
     String textAlign;
-
-    private Typeface font;
-    private int typeFaceStyle;
 
     /*
     String src;
@@ -91,12 +78,10 @@ public class Styler {
 
     private int mWidth;
     private int mHeight;
-    private boolean mViewIsSet = false;
 
     Styler(AppRunner appRunner, View view, StylePropertiesProxy props) {
         mAppRunner = appRunner;
 
-        id = RandomStringUtils.randomAlphanumeric(8);
         mView = view;
         mViewName = mView.getClass().getSimpleName().substring(1).toLowerCase();
         mProps = props;
@@ -141,22 +126,11 @@ public class Styler {
     public void resetStyle() {
         StylePropertiesProxy style = mAppRunner.pUi.getStyle();
         fromTo(style, mProps);
-        mProps.put("id", id);
     }
 
     public void apply() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 
-        if (mViewIsSet) {
-            setX(mProps.get("x"));
-            setY(mProps.get("y"));
-            setWidth(mProps.get("w"));
-            setHeight(mProps.get("h"));
-        }
-        mViewIsSet = true;
-
-        enabled = (boolean) mProps.get("enabled");
-        visibility = mProps.get("visibility").toString();
         opacity = toFloat(mProps.get("opacity"));
         background = Color.parseColor(mProps.get("background").toString());
 
@@ -172,7 +146,6 @@ public class Styler {
         textSize = toFloat(mProps.get("textSize"));
         textFont = mProps.get("textFont").toString();
         textStyle = mProps.get("textStyle").toString();
-        textTransform = mProps.get("textTransform").toString();
         textAlign = mProps.get("textAlign").toString();
         padding = toFloat(mProps.get("padding"));
 
@@ -209,9 +182,7 @@ public class Styler {
         // animOut = props.get("animOut").toString();
         */
 
-        // mView.setVisibility(visibility);
         mView.setAlpha(opacity);
-        mView.setEnabled(enabled);
 
         mView.setPadding((int) paddingLeft, (int) paddingTop, (int) paddingRight, (int) paddingBottom);
 
@@ -245,11 +216,10 @@ public class Styler {
 
         if (mView instanceof PTextInterface) {
             PTextInterface v = (PTextInterface) mView;
-            // btn.setTextAlignment();
             v.textColor(textColor);
-            v.textSize((float) textSize);
-            // btn.setFont();
+            v.textSize(textSize);
 
+            Typeface font = Typeface.DEFAULT;
             switch (textFont) {
                 case "serif":
                     font = Typeface.SERIF;
@@ -264,10 +234,8 @@ public class Styler {
             }
             v.textFont(font);
 
+            int typeFaceStyle = Typeface.NORMAL;
             switch (textStyle) {
-                case "normal":
-                    typeFaceStyle = Typeface.NORMAL;
-                    break;
                 case "bold":
                     typeFaceStyle = Typeface.BOLD;
                     break;
@@ -364,12 +332,10 @@ public class Styler {
     }
 
     public void setLayoutProps(float x, float y, float width, float height) {
-        mProps.eventOnChange = false;
-        mProps.put("x", mProps, x);
-        mProps.put("y", mProps, y);
-        mProps.put("w", mProps, width);
-        mProps.put("h", mProps, height);
-        mProps.eventOnChange = true;
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
     }
 
 }

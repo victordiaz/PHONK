@@ -128,8 +128,6 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     }
 
     class ImageStyler extends Styler {
-        private String srcMode;
-
         ImageStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
             super(appRunner, view, props);
         }
@@ -138,10 +136,11 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         public void apply() {
             super.apply();
 
-            srcMode = mProps.get("srcMode").toString();
-            mode(srcMode);
+            mode(mProps.get("srcMode").toString());
         }
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
@@ -149,6 +148,11 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     @Override
     public Map getProps() {
         return props;
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 
 

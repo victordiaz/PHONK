@@ -31,4 +31,6 @@ public interface PViewMethodsInterface {
     Map getProps();
 
     void setProps(Map style);
+
+    int id();
 }

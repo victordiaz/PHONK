@@ -232,14 +232,18 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
 
     public void __stop() {
         handler.removeCallbacks(r);
-    }    @Override
+    }
+
+    @Override
     public Map getProps() {
         return props;
     }
@@ -255,9 +259,7 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     }
 
     static class PlotStyler extends Styler {
-        int plotBackground = Color.parseColor("#22000000");
         int plotColor = Color.parseColor("#222222");
-        int plotBorderColor = Color.parseColor("#222222");
         float plotWidth = 2;
 
         PlotStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
@@ -271,6 +273,11 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
             plotColor = Color.parseColor(mProps.get("plotColor").toString());
             plotWidth = toFloat(mProps.get("plotWidth"));
         }
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 
 

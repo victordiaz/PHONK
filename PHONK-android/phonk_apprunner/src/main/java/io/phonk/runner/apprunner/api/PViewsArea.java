@@ -34,7 +34,6 @@ import android.widget.RelativeLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -161,20 +160,6 @@ public class PViewsArea extends ProtoBase {
         return pAbsoluteLayout;
     }
 
-    public View addView(PViewMethodsInterface v) {
-        Map props = v.getProps();
-        // String type = props.get("type").toString();
-        Object x = props.get("x");
-        Object y = props.get("y");
-        Object w = props.get("w");
-        Object h = props.get("h");
-
-        // PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
-        this.addView((View) v, x, y, w, h);
-
-        return (View) v;
-    }
-
     /**
      * Adds a view created with new (newButton, newSlider, newText, etc) to the layout
      *
@@ -285,11 +270,8 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y, Object w, Object h) {
-        Map<String, String> map = new HashMap<>();
-        map.put("text", label);
-
-        PButton b = (PButton) newView("button", map);
-        // b.text(label);
+        PButton b = (PButton) newView("button");
+        b.text(label);
         addView(b, x, y, w, h);
         return b;
     }
@@ -449,7 +431,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PText addText(String text, Object x, Object y) {
         PText tv = (PText) newView("text");
-        tv.setText(text);
+        tv.text(text);
         addView(tv, x, y, -1, -1);
         return tv;
     }
@@ -457,7 +439,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PText addText(String label, Object x, Object y, Object w, Object h) {
         PText tv = (PText) newView("text");
-        tv.setText(label);
+        tv.text(label);
         addView(tv, x, y, w, h);
         return tv;
     }
@@ -509,23 +491,22 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PToggle addToggle(final String[] text, Object x, Object y, Object w, Object h) {
-        HashMap<String, String> map = new HashMap();
+        PToggle t = (PToggle) newView("toggle");
 
         if (text.length == 1) {
-            map.put("text", text[0]);
-            map.put("textOn", text[0]);
-            map.put("textOff", text[0]);
+            t.text(text[0]);
+            t.textOn(text[0]);
+            t.textOff(text[0]);
         } else if (text.length == 2) {
-            map.put("text", text[0]);
-            map.put("textOn", text[1]);
-            map.put("textOff", text[0]);
+            t.text(text[0]);
+            t.textOn(text[1]);
+            t.textOff(text[0]);
         } else if (text.length == 3) {
-            map.put("text", text[0]);
-            map.put("textOn", text[1]);
-            map.put("textOff", text[2]);
+            t.text(text[0]);
+            t.textOn(text[1]);
+            t.textOff(text[2]);
         }
 
-        PToggle t = (PToggle) newView("toggle", map);
         addView(t, x, y, w, h);
 
         return t;
@@ -583,9 +564,9 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PKnob addKnob(Object x, Object y, Object w, Object h) {
-        PKnob slider = (PKnob) newView("knob");
-        addView(slider, x, y, w, h);
-        return slider;
+        PKnob knob = (PKnob) newView("knob");
+        addView(knob, x, y, w, h);
+        return knob;
     }
 
     /**

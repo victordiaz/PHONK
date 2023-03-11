@@ -86,6 +86,10 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
         return this;
     }
 
+    public String text() {
+        return getText().toString();
+    }
+
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
@@ -99,6 +103,11 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 
 }

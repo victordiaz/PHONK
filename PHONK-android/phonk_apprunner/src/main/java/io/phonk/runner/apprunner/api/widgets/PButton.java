@@ -48,9 +48,10 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public final StylePropertiesProxy props = new StylePropertiesProxy();
 
     // the props are transformed / accessed using the styler object
-    public final ButtonStyler styler;
+    public final Styler styler;
 
     private Typeface mFont;
+    private int mStyle;
 
     private ReturnInterface onPressCallback;
     private ReturnInterface onReleaseCallback;
@@ -58,17 +59,14 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public PButton(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
 
-        styler = new ButtonStyler(appRunner, this, props);
+        styler = new Styler(appRunner, this, props);
         props.eventOnChange = false;
         props.put("textStyle", props, "bold");
         props.put("textAlign", props, "center");
         // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
-        props.put("text", props, "");
         Styler.fromTo(initProps, props);
         props.eventOnChange = true;
         styler.apply();
-
-        setTypeface(mFont);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -101,6 +99,10 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     public PButton text(String label) {
         setText(label);
         return this;
+    }
+
+    public String text() {
+        return getText().toString();
     }
 
     @PhonkMethod(description = "Triggers the function when the button is clicked", example = "")
@@ -150,11 +152,10 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
-    @PhonkMethod(description = "Changes the font type to the button", example = "")
-    @PhonkMethodParam(params = {"Typeface"})
-    public PButton textFont(Typeface f) {
-        mFont = f;
-        this.setTypeface(f);
+    @Override
+    public PButton textFont(Typeface font) {
+        mFont = font;
+        this.setTypeface(font, mStyle);
         MLog.d(TAG, "--> " + "font");
 
         return this;
@@ -162,29 +163,23 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     @Override
     public View textSize(int size) {
-        this.textSize(size);
+        setTextSize(size);
         return this;
     }
 
     @Override
-    @PhonkMethod(description = "Changes the font text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PButton textColor(String c) {
         this.setTextColor(Color.parseColor(c));
         return this;
     }
 
     @Override
-    @PhonkMethod(description = "Changes the font text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PButton textColor(int c) {
         this.setTextColor(c);
         return this;
     }
 
     @Override
-    @PhonkMethod(description = "Changes the text size", example = "")
-    @PhonkMethodParam(params = {"size"})
     public View textSize(float size) {
         this.setTextSize(size);
 
@@ -193,6 +188,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     @Override
     public View textStyle(int style) {
+        mStyle = style;
         this.setTypeface(mFont, style);
         return this;
     }
@@ -203,8 +199,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         return this;
     }
 
-    @PhonkMethod(description = "Changes the background color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PButton background(String c) {
         this.setBackgroundColor(Color.parseColor(c));
         return this;
@@ -243,25 +237,21 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     public PAnimation anim() {
         return new PAnimation(this);
-    }    @Override
+    }
+
+    @Override
     public void setProps(Map style) {
         styler.setProps(style);
     }
 
-    class ButtonStyler extends Styler {
-        ButtonStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
-        }
-
-        @Override
-        public void apply() {
-            super.apply();
-
-            text(mProps.get("text").toString());
-        }
-    }    @Override
+    @Override
     public Map getProps() {
         return props;
+    }
+
+    @Override
+    public int id() {
+        return getId();
     }
 
 

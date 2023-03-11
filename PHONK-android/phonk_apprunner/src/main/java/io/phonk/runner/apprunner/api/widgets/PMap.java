@@ -517,5 +517,10 @@ public class PMap extends MapView implements PViewMethodsInterface {
     public Map getProps() {
         return props;
     }
+
+    @Override
+    public int id() {
+        return getId();
+    }
 }
 
