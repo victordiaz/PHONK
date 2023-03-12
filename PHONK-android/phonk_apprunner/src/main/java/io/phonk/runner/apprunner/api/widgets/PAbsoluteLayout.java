@@ -45,8 +45,8 @@ public class PAbsoluteLayout extends FixedLayout {
     private static final int DP = 1;
     private static final int NORMALIZED = 2;
     private final AppRunner mAppRunner;
-    public int mWidth = -1;
-    public int mHeight = -1;
+    private int mWidth = -1;
+    private int mHeight = -1;
 
     public PAbsoluteLayout(AppRunner appRunner) {
         super(appRunner.getAppContext());

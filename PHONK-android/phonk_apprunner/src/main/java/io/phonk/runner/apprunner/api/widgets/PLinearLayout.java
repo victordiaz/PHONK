@@ -63,34 +63,50 @@ public class PLinearLayout extends LinearLayout {
         setLayoutParams(mLp);
     }
 
-    public void orientation(String orientation) {
-        int mode = VERTICAL;
-        if ("horizontal".equals(orientation)) {
-            mode = HORIZONTAL;
-        }
-        setOrientation(mode);
-
+    public PLinearLayout orientation(String orientation) {
+        setOrientation("horizontal".equals(orientation) ? HORIZONTAL : VERTICAL);
+        return this;
     }
 
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
-    public void add(View v, String name) {
+    public PLinearLayout add(View v, String name) {
         addView(v);
         mViews.put(name, v);
+        return this;
     }
 
-    public void add(View v, String name, float weight) {
-        add(v, name, LayoutParams.WRAP_CONTENT, weight);
+    public PLinearLayout add(View v, String name, float weight) {
+        return add(v, name, LayoutParams.WRAP_CONTENT, weight);
     }
 
-    public void add(View v, String name, float height, float weight) {
+    public PLinearLayout add(View v, String name, Object height, float weight) {
+        return add(v, name, LayoutParams.WRAP_CONTENT, height, weight);
+    }
+
+    public PLinearLayout add(View v, String name, Object width, Object height, float weight) {
+        if (v instanceof PViewMethodsInterface) {
+            PropertiesProxy props = (PropertiesProxy) ((PViewMethodsInterface) v).getProps();
+            props.eventOnChange = false;
+            props.put("w", width);
+            props.put("h", height);
+            props.eventOnChange = true;
+        }
+
+        int w = mAppRunner.pUtil.sizeToPixels(width, mAppRunner.pUi.screenWidth);
+        int h = mAppRunner.pUtil.sizeToPixels(height, mAppRunner.pUi.screenHeight);
+
+        if (w < 0) w = LayoutParams.WRAP_CONTENT;
+        if (h < 0) h = LayoutParams.WRAP_CONTENT;
+
         // lp.gravity = Gravity.CENTER;
-        LinearLayout.LayoutParams lp = new LayoutParams(0, (int) height, weight);
+        LinearLayout.LayoutParams lp = new LayoutParams(w, h, weight);
 
         mViews.put(name, v);
 
         // setWeightSum(1.0f);
         addView(v, lp);
+        return this;
     }
 
     public View get(String name) {
