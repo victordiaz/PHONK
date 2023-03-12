@@ -38,30 +38,27 @@ import io.phonk.runner.base.utils.AndroidUtils;
 
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
-    final int numCol = 1;
     final NativeArray data = new NativeArray(0);
-    PList list;
     private boolean mIsAutoScroll = false;
     private ReturnInterfaceWithReturn mCreateCallback;
     private ReturnInterfaceWithReturn mUpdateCallback;
 
-    private float mTextSize = -1;
-    private int mTextColor = -1;
-    private Typeface mTextfont;
-
     public PTextList(AppRunner appRunner, Map initProps) {
-        super(appRunner, null);
+        super(appRunner, initProps);
+
+        if (initProps != null && !initProps.containsKey("textSize")) {
+            props.put("textSize", AndroidUtils.spToPixels(appRunner.getAppContext(), 6));
+        }
 
         init();
-        super.numColumns(numCol);
         super.init(data, mCreateCallback, mUpdateCallback);
     }
 
     private void init() {
         mCreateCallback = r -> {
             Map p = new HashMap<String, Object>();
-            p.put("textColor", mTextColor == -1 ? Color.argb(255, 255, 255, 255) : mTextColor);
-            p.put("textSize", mTextSize == -1 ? AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6) : mTextSize);
+            p.put("textColor", props.get("textColor"));
+            p.put("textSize", props.get("textSize"));
             return new PText(mAppRunner, p);
         };
 
@@ -87,42 +84,28 @@ public class PTextList extends PList implements PTextInterface {
         return this;
     }
 
-    public PTextList numColumns(int num) {
-        list.numColumns(num);
-        return this;
-    }
-
     @Override
     public View textFont(Typeface font) {
-        mTextfont = font;
         return this;
     }
 
     @Override
     public View textSize(int size) {
-        mTextSize = size;
-
         return this;
     }
 
     @Override
     public View textColor(String textColor) {
-        mTextColor = Color.parseColor(textColor);
-
         return this;
     }
 
     @Override
     public View textColor(int textColor) {
-        mTextColor = textColor;
-
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
-        mTextSize = textSize;
-
         return this;
     }
 
