@@ -39,7 +39,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         PTextInterface {
     private static final String TAG = PToggle.class.getSimpleName();
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     private final ToggleStyler styler;
     private Typeface mFont;
     private int mStyle;
@@ -48,6 +48,11 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         super(appRunner.getAppContext());
 
         styler = new ToggleStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("textColor", props, appRunner.pUi.theme.get("primary"));
         props.put("background", props, "#00FFFFFF");
@@ -57,9 +62,9 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
         props.put("textOnColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("textOffColor", props, appRunner.pUi.theme.get("textPrimary"));
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         setText("Toggle");
         setTextOn("ON");
@@ -132,7 +137,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return this;
     }
 
-    public View text(String label) {
+    public PToggle text(String label) {
         setText(label);
         setTextOn(label);
         setTextOff(label);
@@ -143,7 +148,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return getText().toString();
     }
 
-    public View textOn(String label) {
+    public PToggle textOn(String label) {
         setTextOn(label);
         return this;
     }
@@ -152,7 +157,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return getTextOn().toString();
     }
 
-    public View textOff(String label) {
+    public PToggle textOff(String label) {
         setTextOff(label);
         return this;
     }
@@ -161,7 +166,7 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         return getTextOff().toString();
     }
 
-    public View checked(boolean b) {
+    public PToggle checked(boolean b) {
         setChecked(b);
         return this;
     }
@@ -181,42 +186,55 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         int backgroundColor;
         int backgroundCheckedColor;
 
-        ToggleStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        ToggleStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            textOnColor = Color.parseColor(mProps.get("textOnColor").toString());
-            textOffColor = Color.parseColor(mProps.get("textOffColor").toString());
-            backgroundColor = Color.parseColor(mProps.get("background").toString());
-            backgroundCheckedColor = Color.parseColor(mProps.get("backgroundChecked").toString());
+            if (name == null) {
+                apply("textOnColor");
+                apply("textOffColor");
+                apply("background");
+                apply("backgroundChecked");
 
-            if (isChecked()) {
-                setTextColor(textOnColor);
-                styler.mBackgroundDrawable.setBackground(backgroundCheckedColor);
             } else {
-                setTextColor(textOffColor);
-                styler.mBackgroundDrawable.setBackground(backgroundColor);
+                if (value == null) return;
+                switch (name) {
+                    case "textOnColor":
+                        textOnColor = Color.parseColor(value.toString());
+                        if (isChecked()) setTextColor(textOnColor);
+                        break;
+
+                    case "textOffColor":
+                        textOffColor = Color.parseColor(value.toString());
+                        if (!isChecked()) setTextColor(textOffColor);
+                        break;
+
+                    case "background":
+                        backgroundColor = Color.parseColor(value.toString());
+                        if (!isChecked()) styler.mBackgroundDrawable.setBackground(backgroundColor);
+                        break;
+
+                    case "backgroundChecked":
+                        backgroundCheckedColor = Color.parseColor(value.toString());
+                        if (isChecked()) styler.mBackgroundDrawable.setBackground(backgroundCheckedColor);
+                        break;
+                }
             }
         }
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

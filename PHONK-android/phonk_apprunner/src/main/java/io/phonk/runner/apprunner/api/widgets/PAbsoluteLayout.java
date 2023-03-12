@@ -169,6 +169,16 @@ public class PAbsoluteLayout extends FixedLayout {
     @PhonkMethod(description = "Adds a view", example = "")
     @PhonkMethodParam(params = {"view", "x", "y", "w", "h"})
     public void addView(View v, Object x, Object y, Object w, Object h) {
+        if (v instanceof PViewMethodsInterface) {
+            PropertiesProxy map = (PropertiesProxy) ((PViewMethodsInterface) v).getProps();
+            map.eventOnChange = false;
+            map.put("x", x);
+            map.put("y", y);
+            map.put("w", w);
+            map.put("h", h);
+            map.eventOnChange = true;
+        }
+
         int mx = mAppRunner.pUtil.sizeToPixels(x, mWidth);
         int my = mAppRunner.pUtil.sizeToPixels(y, mHeight);
         int mw = mAppRunner.pUtil.sizeToPixels(w, mWidth);

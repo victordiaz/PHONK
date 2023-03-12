@@ -42,7 +42,7 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PKnob extends PCustomView implements PViewMethodsInterface, PTextInterface {
     private static final String TAG = PKnob.class.getSimpleName();
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final KnobStyler styler;
     private final boolean autoTextSize = false;
     private final DecimalFormat df;
@@ -104,6 +104,11 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         draw = mydraw;
 
         styler = new KnobStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
         props.put("knobProgressWidth", props, appRunner.pUtil.dpToPixels(2));
@@ -115,9 +120,9 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
         props.put("textFont", props, "monospace");
         props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         df = new DecimalFormat("#.##");
         decimals(2);
@@ -220,8 +225,8 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
@@ -266,25 +271,46 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
         int knobBorderColor;
         int knobProgressColor;
 
-        KnobStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        KnobStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            knobProgressSeparation = toFloat(mProps.get("knobProgressSeparation"));
-            knobBorderWidth = toFloat(mProps.get("knobBorderWidth"));
-            knobProgressWidth = toFloat(mProps.get("knobProgressWidth"));
-            knobBorderColor = Color.parseColor(mProps.get("knobBorderColor").toString());
-            knobProgressColor = Color.parseColor(mProps.get("knobProgressColor").toString());
+            if (name == null) {
+                apply("knobProgressSeparation");
+                apply("knobBorderWidth");
+                apply("knobProgressWidth");
+                apply("knobBorderColor");
+                apply("knobProgressColor");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "knobProgressSeparation":
+                        knobProgressSeparation = toFloat(value);
+                        break;
+
+                    case "knobBorderWidth":
+                        knobBorderWidth = toFloat(value);
+                        break;
+
+                    case "knobProgressWidth":
+                        knobProgressWidth = toFloat(value);
+                        break;
+
+                    case "knobBorderColor":
+                        knobBorderColor = Color.parseColor(value.toString());
+                        break;
+
+                    case "knobProgressColor":
+                        knobProgressColor = Color.parseColor(value.toString());
+                        break;
+                }
+            }
         }
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

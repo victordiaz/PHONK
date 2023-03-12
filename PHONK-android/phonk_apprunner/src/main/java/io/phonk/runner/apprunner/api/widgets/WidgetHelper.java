@@ -24,6 +24,9 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.Map;
+
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
@@ -79,5 +82,61 @@ public class WidgetHelper {
 
     public static void removeMovable(View viewHandler) {
         viewHandler.setOnTouchListener(null);
+    }
+
+    private static void applyLayoutParams(String name, PropertiesProxy props, View view, AppRunner appRunner) {
+        applyLayoutParams(name, props.get(name), props, view, appRunner);
+    }
+
+    public static void applyLayoutParams(String name, Object value, PropertiesProxy props, View view, AppRunner appRunner) {
+        if (name == null) {
+            applyLayoutParams("x", props, view, appRunner);
+            applyLayoutParams("y", props, view, appRunner);
+            applyLayoutParams("w", props, view, appRunner);
+            applyLayoutParams("h", props, view, appRunner);
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "x":
+                    if (view.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+                        ((FixedLayout.LayoutParams) view.getLayoutParams()).x = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenWidth);
+                    }
+                    break;
+
+                case "y":
+                    if (view.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+                        ((FixedLayout.LayoutParams) view.getLayoutParams()).y = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenHeight);
+                    }
+                    break;
+
+                case "w":
+                    if (view.getLayoutParams() != null) {
+                        view.getLayoutParams().width = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenWidth);
+                    }
+                    break;
+
+                case "h":
+                    if (view.getLayoutParams() != null) {
+                        view.getLayoutParams().height = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenHeight);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public static void setProps(PropertiesProxy props, Map o) {
+        props.eventOnChange = false;
+        fromTo(o, props);
+        props.eventOnChange = true;
+        props.change();
+    }
+
+    public static void fromTo(Map<String, Object> styleFrom, PropertiesProxy styleTo) {
+        if (styleFrom == null) return;
+
+        for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
+            styleTo.put(entry.getKey(), styleTo, entry.getValue());
+        }
     }
 }

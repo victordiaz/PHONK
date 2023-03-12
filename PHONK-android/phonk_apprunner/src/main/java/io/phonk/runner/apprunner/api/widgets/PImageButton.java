@@ -47,7 +47,7 @@ public class PImageButton extends PImage {
     }
 
     @Override
-    protected void addFromChild(StylePropertiesProxy props) {
+    protected void addFromChild(PropertiesProxy props) {
         super.addFromChild(props);
         props.put("background", props, mAppRunner.pUi.theme.get("primaryShade"));
         // props.put("srcTintPressed", props, mAppRunner.pUi.theme.get("secondary"));

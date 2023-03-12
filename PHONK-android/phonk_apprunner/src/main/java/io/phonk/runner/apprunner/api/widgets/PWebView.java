@@ -38,7 +38,7 @@ import io.phonk.runner.apprunner.AppRunner;
 @SuppressLint("JavascriptInterface")
 @PhonkClass
 public class PWebView extends WebView implements PViewMethodsInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     private final AppRunner mAppRunner;
     private final Styler styler;
 
@@ -46,7 +46,11 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
         styler = new Styler(appRunner, this, props);
-        styler.apply();
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+        props.change();
 
         // this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         WebSettings webSettings = this.getSettings();
@@ -135,18 +139,13 @@ public class PWebView extends WebView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 }

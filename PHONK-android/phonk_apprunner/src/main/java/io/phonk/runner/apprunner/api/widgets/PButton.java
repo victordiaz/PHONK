@@ -45,7 +45,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     private static final String TAG = PButton.class.getSimpleName();
 
     // this is a props proxy for the user
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
 
     // the props are transformed / accessed using the styler object
     public final Styler styler;
@@ -60,13 +60,18 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         super(appRunner.getAppContext());
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("textStyle", props, "bold");
         props.put("textAlign", props, "center");
         // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -240,18 +245,13 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

@@ -40,7 +40,7 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PMatrix.class.getSimpleName();
     private static final int STATUS_DISABLED = 0;
     private static final int STATUS_ENABLED = 1;
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final MatrixStyler styler;
     private final int colorUnselected;
     int COLS = 20;
@@ -107,6 +107,11 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         draw = mydraw;
 
         styler = new MatrixStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("matrixCellColor", props, "#00FFFFFF");
         props.put("matrixCellSelectedColor", props, appRunner.pUi.theme.get("primary"));
@@ -119,9 +124,9 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         props.put("matrixCellBorderRadius", props, 0);
         props.put("background", props, "#00FFFFFF");
         props.put("backgroundPressed", props, "#00FFFFFF");
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         colorUnselected = styler.matrixCellColor;
         colorSelected = styler.matrixCellSelectedColor;
@@ -285,34 +290,51 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         float matrixCellBorderSize;
         int matrixCellBorderColor;
 
-        MatrixStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        MatrixStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            matrixCellColor = Color.parseColor(mProps.get("matrixCellColor").toString());
-            matrixCellSelectedColor = Color.parseColor(mProps.get("matrixCellSelectedColor").toString());
-            matrixCellBorderSize = toFloat(mProps.get("matrixCellBorderSize"));
-            matrixCellBorderColor = Color.parseColor(mProps.get("matrixCellBorderColor").toString());
+            if (name == null) {
+                apply("matrixCellColor");
+                apply("matrixCellSelectedColor");
+                apply("matrixCellBorderSize");
+                apply("matrixCellBorderColor");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "matrixCellColor":
+                        matrixCellColor = Color.parseColor(value.toString());
+                        break;
+
+                    case "matrixCellSelectedColor":
+                        matrixCellSelectedColor = Color.parseColor(value.toString());
+                        break;
+
+                    case "matrixCellBorderSize":
+                        matrixCellBorderSize = toFloat(value);
+                        break;
+
+                    case "matrixCellBorderColor":
+                        matrixCellBorderColor = Color.parseColor(value.toString());
+                        break;
+                }
+            }
         }
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

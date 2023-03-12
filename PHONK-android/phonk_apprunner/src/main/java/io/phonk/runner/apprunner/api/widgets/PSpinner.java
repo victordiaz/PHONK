@@ -38,7 +38,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 @PhonkClass
 public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner implements PViewMethodsInterface,
         PTextInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     private String[] mData;
     // public Styler styler;
     private Typeface mFont;
@@ -136,18 +136,13 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
     }
 
     @Override
-    public void setProps(Map style) {
+    public void setProps(Map props) {
         // styler.setStyle(style);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

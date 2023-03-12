@@ -39,7 +39,7 @@ import io.phonk.runner.base.utils.MLog;
 public class PPlot extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PPlot.class.getSimpleName();
     public final ArrayList<PlotPoint> arrayViz = new ArrayList<>();
-    final StylePropertiesProxy props = new StylePropertiesProxy();
+    final PropertiesProxy props = new PropertiesProxy();
     private final Handler handler;
     private final Runnable r;
     private final int mStrokeWeight;
@@ -127,15 +127,20 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         draw = mydraw;
 
         styler = new PlotStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("plotColor", props, appRunner.pUi.theme.get("primary"));
         props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
         props.put("textColor", props, "#ffffff");
         // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
         props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         mAppRunner.whatIsRunning.add(this);
 
@@ -235,8 +240,8 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     public void __stop() {
@@ -262,22 +267,31 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         int plotColor = Color.parseColor("#222222");
         float plotWidth = 2;
 
-        PlotStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        PlotStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            plotColor = Color.parseColor(mProps.get("plotColor").toString());
-            plotWidth = toFloat(mProps.get("plotWidth"));
+            if (name == null) {
+                apply("plotColor");
+                apply("plotWidth");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "plotColor":
+                        plotColor = Color.parseColor(value.toString());
+                        break;
+
+                    case "plotWidth":
+                        plotWidth = toFloat(value);
+                        break;
+                }
+            }
         }
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

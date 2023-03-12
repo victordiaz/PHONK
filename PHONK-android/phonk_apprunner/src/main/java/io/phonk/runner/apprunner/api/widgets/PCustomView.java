@@ -38,7 +38,7 @@ import io.phonk.runner.base.utils.MLog;
 public class PCustomView extends View implements PViewMethodsInterface {
     private static final String TAG = PCustomView.class.getSimpleName();
     // this is a props proxy for the user
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     // the props are transformed / accessed using the styler object
     public final Styler styler;
     protected final AppRunner mAppRunner;
@@ -58,11 +58,16 @@ public class PCustomView extends View implements PViewMethodsInterface {
         this.setBackgroundColor(Color.TRANSPARENT);
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("background", "#00FFFFFF");
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         init();
     }
@@ -115,17 +120,12 @@ public class PCustomView extends View implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 }

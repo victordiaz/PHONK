@@ -40,7 +40,7 @@ import io.phonk.runner.apprunner.AppRunner;
 @PhonkClass
 public class PImage extends androidx.appcompat.widget.AppCompatImageView implements PViewMethodsInterface {
     private static final String TAG = PImage.class.getSimpleName();
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     protected final AppRunner mAppRunner;
     protected final ImageStyler styler;
 
@@ -49,18 +49,23 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         this.mAppRunner = appRunner;
 
         styler = new ImageStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("background", props, "#00FFFFFF");
         props.put("srcMode", props, "fit");
 
         addFromChild(props);
 
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
-    protected void addFromChild(StylePropertiesProxy props) {
+    protected void addFromChild(PropertiesProxy props) {
     }
 
     @PhonkMethod(description = "Sets an image", example = "")
@@ -128,31 +133,36 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     }
 
     class ImageStyler extends Styler {
-        ImageStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        ImageStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            mode(mProps.get("srcMode").toString());
+            if (name == null) {
+                apply("srcMode");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "srcMode":
+                        mode(value.toString());
+                        break;
+                }
+            }
         }
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

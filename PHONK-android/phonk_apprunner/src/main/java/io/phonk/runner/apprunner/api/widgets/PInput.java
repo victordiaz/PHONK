@@ -45,7 +45,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 @PhonkClass
 public class PInput extends androidx.appcompat.widget.AppCompatEditText implements PViewMethodsInterface,
         PTextInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final InputStyler styler;
     private final AppRunner mAppRunner;
     private final EditText mInput;
@@ -60,6 +60,11 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         setFocusableInTouchMode(true);
 
         styler = new InputStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("textAlign", props, "left");
         props.put("background", props, "#00FFFFFF"); // appRunner.pUi.theme.get("secondaryShade"));
@@ -71,9 +76,9 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         props.put("paddingRight", props, appRunner.pUtil.dpToPixels(10));
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         props.put("hintColor", props, appRunner.pUi.theme.get("secondaryShade"));
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         mInput = this;
     }
@@ -129,7 +134,7 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         return this;
     }
 
-    public View text(String txt) {
+    public PInput text(String txt) {
         this.setText(txt);
         return this;
     }
@@ -194,8 +199,8 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     private void hideKeyboard(View view) {
@@ -210,21 +215,26 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     }
 
     class InputStyler extends Styler {
-        InputStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        InputStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            setHintTextColor(Color.parseColor(mProps.get("hintColor").toString()));
+            if (name == null) {
+                apply("hintColor");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "hintColor":
+                        setHintTextColor(Color.parseColor(value.toString()));
+                        break;
+                }
+            }
         }
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

@@ -36,7 +36,7 @@ import io.phonk.runner.apprunner.AppRunner;
 
 public class PLinearLayout extends LinearLayout {
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
     private final AppRunner mAppRunner;
     private final LayoutParams mLp;
@@ -47,8 +47,15 @@ public class PLinearLayout extends LinearLayout {
         mAppRunner = appRunner;
 
         styler = new Styler(appRunner, this, props);
-        Styler.fromTo(initProps, props);
-        styler.apply();
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
+        props.eventOnChange = false;
+        WidgetHelper.fromTo(initProps, props);
+        props.eventOnChange = true;
+        props.change();
 
         mLp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
         orientation("vertical");

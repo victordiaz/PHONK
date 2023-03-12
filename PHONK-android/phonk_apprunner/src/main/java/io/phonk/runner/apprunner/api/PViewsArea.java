@@ -68,7 +68,7 @@ import io.phonk.runner.apprunner.api.widgets.PTouchPad;
 import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
 import io.phonk.runner.apprunner.api.widgets.PViewPager;
 import io.phonk.runner.apprunner.api.widgets.PWebView;
-import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.apprunner.api.widgets.PropertiesProxy;
 
 @PhonkClass
 public class PViewsArea extends ProtoBase {
@@ -86,7 +86,6 @@ public class PViewsArea extends ProtoBase {
     public PToolbar toolbar;
     protected PAbsoluteLayout uiAbsoluteLayout;
     // UI
-    private StylePropertiesProxy mTheme;
     private boolean isScrollEnabled = false;
     private RelativeLayout uiHolderLayout;
     private PScrollView uiScrollView;
@@ -158,6 +157,20 @@ public class PViewsArea extends ProtoBase {
         pAbsoluteLayout.setLayoutParams(layoutParams);
 
         return pAbsoluteLayout;
+    }
+
+    public View addView(PViewMethodsInterface v) {
+        Map props = v.getProps();
+        // String type = props.get("type").toString();
+        Object x = props.get("x");
+        Object y = props.get("y");
+        Object w = props.get("w");
+        Object h = props.get("h");
+
+        // PViewMethodsInterface btn = (PViewMethodsInterface) newView(type, props);
+        this.addView((View) v, x, y, w, h);
+
+        return (View) v;
     }
 
     /**

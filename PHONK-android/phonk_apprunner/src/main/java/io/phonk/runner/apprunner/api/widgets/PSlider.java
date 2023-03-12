@@ -47,7 +47,7 @@ import io.phonk.runner.base.views.CanvasUtils;
 public class PSlider extends PCustomView implements PViewMethodsInterface {
     private static final String TAG = PSlider.class.getSimpleName();
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     private final DecimalFormat df = new DecimalFormat("#.##");
     public SliderStyler styler;
     private ReturnInterface callbackDrag;
@@ -125,15 +125,16 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
 
     private void setupStyle(final AppRunner appRunner, final Map<String, Object> initProps) {
         styler = new SliderStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("slider", null, appRunner.pUi.theme.get("primary"));
-        props.put("sliderPressed", null, appRunner.pUi.theme.get("primary"));
-        props.put("sliderHeight", null, 20);
-        props.put("sliderBorderSize", null, 0);
-        props.put("sliderBorderColor", null, "#00FFFFFF");
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
     @PhonkMethod(description = "Sets the decimal count", example = "")
@@ -239,8 +240,8 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @PhonkMethod(description = "Sets the slider mode", example = "")
@@ -301,21 +302,26 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     static class SliderStyler extends Styler {
         int slider;
 
-        SliderStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        SliderStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            slider = Color.parseColor((String) mProps.get("slider"));
+            if (name == null) {
+                apply("slider");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "slider":
+                        slider = Color.parseColor((String) value);
+                        break;
+                }
+            }
         }
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

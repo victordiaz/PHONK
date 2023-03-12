@@ -38,7 +38,7 @@ import io.phonk.runner.apprunner.AppRunner;
 @PhonkClass
 public class PViewPager extends ViewPager implements PViewMethodsInterface {
     // this is a props proxy for the user
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     // the props are transformed / accessed using the styler object
     public final Styler styler;
     final MyAdapter mAdapter;
@@ -47,10 +47,15 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
         super(appRunner.getAppContext());
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
         setPageMargin(0);
         setPadding(0, 0, 0, 0);
 
@@ -109,17 +114,12 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 }

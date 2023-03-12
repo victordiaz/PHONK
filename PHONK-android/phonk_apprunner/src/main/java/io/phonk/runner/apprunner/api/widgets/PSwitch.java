@@ -41,14 +41,18 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 @SuppressLint("NewApi")
 @PhonkClass
 public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
     private Typeface currentFont;
 
     public PSwitch(AppRunner appRunner) {
         super(appRunner.getAppContext());
         styler = new Styler(appRunner, this, props);
-        styler.apply();
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+        props.change();
         setGravity(Gravity.CENTER);
     }
 
@@ -96,18 +100,13 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 }

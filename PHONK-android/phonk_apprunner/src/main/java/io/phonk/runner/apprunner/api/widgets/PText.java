@@ -43,7 +43,7 @@ import io.phonk.runner.apprunner.AppRunner;
 @PhonkClass
 public class PText extends androidx.appcompat.widget.AppCompatTextView implements PViewMethodsInterface,
         PTextInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
     private Typeface mFont;
     private int mStyle;
@@ -52,14 +52,19 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         super(appRunner.getAppContext());
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("background", props, "#00FFFFFF");
         props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
         // textStyle.put("textSize", textStyle, 12);
         props.put("textAlign", props, "left");
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
     public PText color(String c) {
@@ -227,18 +232,13 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

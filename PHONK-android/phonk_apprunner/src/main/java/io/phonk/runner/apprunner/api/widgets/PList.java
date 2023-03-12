@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -39,7 +38,7 @@ import io.phonk.runner.base.views.FitRecyclerView;
 
 public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
     protected final AppRunner mAppRunner;
     private final Context mContext;
@@ -53,16 +52,21 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         mContext = appRunner.getAppContext();
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
 
         addFromChild(props);
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
 
-    protected void addFromChild(StylePropertiesProxy props) {
+    protected void addFromChild(PropertiesProxy props) {
     }
 
     public void init(
@@ -121,17 +125,12 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 }

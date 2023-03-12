@@ -53,7 +53,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.widgets.PPopupDialogFragment;
 import io.phonk.runner.apprunner.api.widgets.PToolbar;
 import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
-import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.apprunner.api.widgets.PropertiesProxy;
 import io.phonk.runner.apprunner.api.widgets.WidgetHelper;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.AndroidUtils;
@@ -61,9 +61,9 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject(mergeFrom = "ViewsArea")
 public class PUI extends PViewsArea {
-    public final StylePropertiesProxy rootStyle = new StylePropertiesProxy();
+    public final PropertiesProxy rootProps = new PropertiesProxy();
     public final ArrayList viewTree = new ArrayList<ViewElement>();
-    public StylePropertiesProxy theme;
+    public PropertiesProxy theme;
     public View mainLayout;
     public int screenWidth;
     public int screenHeight;
@@ -114,7 +114,7 @@ public class PUI extends PViewsArea {
 
     @SuppressLint("ResourceType")
     private void setTheme() {
-        theme = new StylePropertiesProxy();
+        theme = new PropertiesProxy();
 
         theme.put("background", getContext().getResources().getString(R.color.phonk_backgroundColor));
         theme.put("primary", getContext().getResources().getString(R.color.phonk_colorPrimary));
@@ -139,28 +139,29 @@ public class PUI extends PViewsArea {
         String colorBackground = (String) theme.get("background");
         String colorTransparent = "#00FFFFFF";
 
-        rootStyle.put("opacity", rootStyle, 1.0f);
+        rootProps.put("x", rootProps, 0f);
+        rootProps.put("y", rootProps, 0f);
+        rootProps.put("w", rootProps, 0.2f);
+        rootProps.put("h", rootProps, 0.2f);
 
-        rootStyle.put("background", rootStyle, colorPrimaryShade);
-        rootStyle.put("backgroundHover", rootStyle, "#88000000");
-        rootStyle.put("backgroundPressed", rootStyle, "#33FFFFFF");
-        rootStyle.put("backgroundSelected", rootStyle, "#88000000");
-        rootStyle.put("backgroundChecked", rootStyle, "#88000000");
+        rootProps.put("opacity", rootProps, 1.0f);
 
-        rootStyle.put("borderColor", rootStyle, colorTransparent);
-        rootStyle.put("borderWidth", rootStyle, 0);
-        rootStyle.put("borderRadius", rootStyle, 20); // set to 20
+        rootProps.put("background", rootProps, colorPrimaryShade);
+        rootProps.put("backgroundHover", rootProps, "#88000000");
+        rootProps.put("backgroundPressed", rootProps, "#33FFFFFF");
+        rootProps.put("backgroundSelected", rootProps, "#88000000");
+        rootProps.put("backgroundChecked", rootProps, "#88000000");
 
-        rootStyle.put("src", rootStyle, "");
-        rootStyle.put("srcPressed", rootStyle, "");
+        rootProps.put("borderColor", rootProps, colorTransparent);
+        rootProps.put("borderWidth", rootProps, 0);
+        rootProps.put("borderRadius", rootProps, 20); // set to 20
 
-        rootStyle.put("textColor", rootStyle, colorTextPrimary);
-        rootStyle.put("textSize", rootStyle, 16);
-        rootStyle.put("textFont", rootStyle, "monospace");
-        rootStyle.put("textStyle", rootStyle, "normal");
-        rootStyle.put("textAlign", rootStyle, "center");
-        rootStyle.put("textTransform", rootStyle, "none");
-        rootStyle.put("padding", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
+        rootProps.put("textColor", rootProps, colorTextPrimary);
+        rootProps.put("textSize", rootProps, 16);
+        rootProps.put("textFont", rootProps, "monospace");
+        rootProps.put("textStyle", rootProps, "normal");
+        rootProps.put("textAlign", rootProps, "center");
+        rootProps.put("padding", rootProps, AndroidUtils.dpToPixels(getContext(), 2));
         /*
         rootStyle.put("paddingLeft", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
         rootStyle.put("paddingTop", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
@@ -206,8 +207,8 @@ public class PUI extends PViewsArea {
         return pViewsArea;
     }
 
-    public StylePropertiesProxy getStyle() {
-        return rootStyle;
+    public PropertiesProxy getProps() {
+        return rootProps;
     }
 
     public void screenMode(String mode) {
@@ -547,12 +548,13 @@ public class PUI extends PViewsArea {
         return AndroidUtils.takeScreenshotView(v);
     }
 
-    public View getViewById(int id) {
+    public View getViewById(String id) {
         ArrayList<View> views = ((PViewsArea) (viewTree.get(0))).viewArray;
 
         for (View v : views) {
             PViewMethodsInterface vmi = (PViewMethodsInterface) v;
-            if (vmi.id() == id) {
+            String viewId = (String) vmi.getProps().get("id");
+            if (id.equals(viewId)) {
                 return v;
             }
         }
@@ -574,7 +576,7 @@ public class PUI extends PViewsArea {
 
             if (o instanceof PViewMethodsInterface) {
                 Map props = ((PViewMethodsInterface) o).getProps();
-                ReturnObject returnObject = ((StylePropertiesProxy) props).values;
+                ReturnObject returnObject = ((PropertiesProxy) props).values;
                 ob.put("props", returnObject);
             } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass()
                     .getSimpleName()
