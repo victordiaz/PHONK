@@ -34,7 +34,7 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 
-public class PLinearLayout extends LinearLayout {
+public class PLinearLayout extends LinearLayout implements PViewMethodsInterface {
 
     public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
@@ -75,9 +75,7 @@ public class PLinearLayout extends LinearLayout {
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {""})
     public PLinearLayout add(View v, String name) {
-        addView(v);
-        mViews.put(name, v);
-        return this;
+        return add(v, name, 0);
     }
 
     public PLinearLayout add(View v, String name, float weight) {
@@ -186,6 +184,21 @@ public class PLinearLayout extends LinearLayout {
 
     private void apply(String name) {
         apply(name, props.get(name));
+    }
+
+    @Override
+    public void set(float x, float y, float w, float h) {
+        styler.setLayoutProps(x, y, w, h);
+    }
+
+    @Override
+    public Map getProps() {
+        return props;
+    }
+
+    @Override
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
 }

@@ -636,9 +636,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImage addImage(Object x, Object y) {
-        final PImage iv = (PImage) newView("image");
-        addView(iv, x, y, -1, -1);
-        return iv;
+        return addImage(x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @PhonkMethod
@@ -650,10 +648,7 @@ public class PViewsArea extends ProtoBase {
 
     @PhonkMethod
     public PImage addImage(String imagePath, Object x, Object y) {
-        PImage iv = (PImage) newView("image");
-        iv.load(imagePath);
-        addView(iv, x, y, -1, -1);
-        return iv;
+        return addImage(imagePath, x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @PhonkMethod
@@ -909,10 +904,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PLinearLayout addLinearLayout(Object x, Object y) {
-        PLinearLayout pLinearLayout = (PLinearLayout) newView("linearLayout");
-        addView(pLinearLayout, x, y, -1, -1);
-
-        return pLinearLayout;
+        return addLinearLayout(x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @PhonkMethod
