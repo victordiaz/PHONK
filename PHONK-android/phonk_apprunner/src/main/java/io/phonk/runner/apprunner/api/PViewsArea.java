@@ -284,7 +284,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y, Object w, Object h) {
         PButton b = (PButton) newView("button");
-        b.text(label);
+        b.props.put("text", label);
         addView(b, x, y, w, h);
         return b;
     }
@@ -349,10 +349,7 @@ public class PViewsArea extends ProtoBase {
 
     @PhonkMethod
     public PButton addButton(String label, Object x, Object y) {
-        PButton b = (PButton) newView("button");
-        b.text(label);
-        addView(b, x, y, -1, -1);
-        return b;
+        return addButton(label, x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     /**
@@ -409,10 +406,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PImageButton addImageButton(String imagePath, Object x, Object y) {
-        PImageButton pImageButton = (PImageButton) newView("imageButton");
-        pImageButton.load(imagePath);
-        addView(pImageButton, x, y, -1, -1);
-        return pImageButton;
+        return addImageButton(imagePath, x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     /**
@@ -429,30 +423,23 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod(description = "", example = "")
     @PhonkMethodParam(params = {"label", "x", "y"})
     public PText addText(Object x, Object y) {
-        PText tv = (PText) newView("text");
-        addView(tv, x, y, -1, -1);
-        return tv;
+        return addText("", x, y);
     }
 
     @PhonkMethod
     public PText addText(Object x, Object y, Object w, Object h) {
-        PText tv = (PText) newView("text");
-        addView(tv, x, y, w, h);
-        return tv;
+        return addText("", x, y, w, h);
     }
 
     @PhonkMethod
     public PText addText(String text, Object x, Object y) {
-        PText tv = (PText) newView("text");
-        tv.text(text);
-        addView(tv, x, y, -1, -1);
-        return tv;
+        return addText(text, x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @PhonkMethod
     public PText addText(String label, Object x, Object y, Object w, Object h) {
         PText tv = (PText) newView("text");
-        tv.text(label);
+        tv.props.put("text", label);
         addView(tv, x, y, w, h);
         return tv;
     }
@@ -507,17 +494,17 @@ public class PViewsArea extends ProtoBase {
         PToggle t = (PToggle) newView("toggle");
 
         if (text.length == 1) {
-            t.text(text[0]);
-            t.textOn(text[0]);
-            t.textOff(text[0]);
+            t.props.put("text", text[0]);
+            t.props.put("textOn", text[0]);
+            t.props.put("textOff", text[0]);
         } else if (text.length == 2) {
-            t.text(text[0]);
-            t.textOn(text[1]);
-            t.textOff(text[0]);
+            t.props.put("text", text[0]);
+            t.props.put("textOn", text[1]);
+            t.props.put("textOff", text[0]);
         } else if (text.length == 3) {
-            t.text(text[0]);
-            t.textOn(text[1]);
-            t.textOff(text[2]);
+            t.props.put("text", text[0]);
+            t.props.put("textOn", text[1]);
+            t.props.put("textOff", text[2]);
         }
 
         addView(t, x, y, w, h);
@@ -615,7 +602,7 @@ public class PViewsArea extends ProtoBase {
     @PhonkMethod
     public PLoader addLoader(Object x, Object y, Object w, Object h) {
         PLoader pb = (PLoader) newView("loader");
-        addView(pb, x, y, w, -1);
+        addView(pb, x, y, w, ViewGroup.LayoutParams.WRAP_CONTENT);
         return pb;
     }
 
@@ -629,9 +616,7 @@ public class PViewsArea extends ProtoBase {
      */
     @PhonkMethod
     public PRadioButtonGroup addRadioButtonGroup(Object x, Object y) {
-        PRadioButtonGroup rbg = (PRadioButtonGroup) newView("radioButtonGroup");
-        addView(rbg, x, y, -1, -1);
-        return rbg;
+        return addRadioButtonGroup(x, y, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @PhonkMethod

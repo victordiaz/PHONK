@@ -36,19 +36,13 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PMatrix extends PCustomView implements PViewMethodsInterface {
+public class PMatrix extends PCustomView {
     private static final String TAG = PMatrix.class.getSimpleName();
-    private static final int STATUS_DISABLED = 0;
-    private static final int STATUS_ENABLED = 1;
-    public final PropertiesProxy props = new PropertiesProxy();
     public final MatrixStyler styler;
     private final int colorUnselected;
     int COLS = 20;
     int ROWS = 20;
     boolean wasSelected = false;
-    private ArrayList touches;
-    private float x;
-    private float y;
     private int[][] matrix;
     private int colorSelected;
     private float W;
@@ -108,22 +102,22 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
 
         styler = new MatrixStyler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("matrixCellColor", props, "#00FFFFFF");
-        props.put("matrixCellSelectedColor", props, appRunner.pUi.theme.get("primary"));
+        props.put("matrixCellColor", "#00FFFFFF");
+        props.put("matrixCellSelectedColor", appRunner.pUi.theme.get("primary"));
 
-        props.put("borderColor", props, appRunner.pUi.theme.get("secondaryShade"));
-        props.put("borderRadius", props, 0);
+        props.put("borderColor", appRunner.pUi.theme.get("secondaryShade"));
+        props.put("borderRadius", 0);
 
-        props.put("matrixCellBorderSize", props, appRunner.pUtil.dpToPixels(1));
-        props.put("matrixCellBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
-        props.put("matrixCellBorderRadius", props, 0);
-        props.put("background", props, "#00FFFFFF");
-        props.put("backgroundPressed", props, "#00FFFFFF");
+        props.put("matrixCellBorderSize", appRunner.pUtil.dpToPixels(1));
+        props.put("matrixCellBorderColor", appRunner.pUi.theme.get("secondaryShade"));
+        props.put("matrixCellBorderRadius", 0);
+        props.put("background", "#00FFFFFF");
+        props.put("backgroundPressed", "#00FFFFFF");
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
@@ -279,11 +273,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
-
     static class MatrixStyler extends Styler {
         int matrixCellColor;
         int matrixCellSelectedColor;
@@ -327,15 +316,6 @@ public class PMatrix extends PCustomView implements PViewMethodsInterface {
         }
     }
 
-    @Override
-    public void setProps(Map props) {
-        WidgetHelper.setProps(this.props, props);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
 
 
 

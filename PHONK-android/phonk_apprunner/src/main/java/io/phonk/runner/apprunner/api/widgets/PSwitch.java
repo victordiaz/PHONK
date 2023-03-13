@@ -43,17 +43,17 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
-    private Typeface currentFont;
 
     public PSwitch(AppRunner appRunner) {
         super(appRunner.getAppContext());
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
-        props.change();
-        setGravity(Gravity.CENTER);
+
+        props.put("textAlign", "center");
     }
 
     public PSwitch onChange(final ReturnInterface callbackfn) {
@@ -68,25 +68,18 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     }
 
 
-    @PhonkMethod(description = "Sets the text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PSwitch color(String c) {
-        this.setTextColor(Color.parseColor(c));
-
+        props.put("textColor", c);
         return this;
     }
 
-    @PhonkMethod(description = "Sets the background color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PSwitch background(String c) {
-        this.setBackgroundColor(Color.parseColor(c));
+        props.put("background", c);
         return this;
     }
 
-    @PhonkMethod(description = "Changes the text to the given text", example = "")
-    @PhonkMethodParam(params = {"text"})
     public PSwitch text(String text) {
-        this.setText(text);
+        props.put("text", text);
         return this;
     }
 
@@ -107,6 +100,24 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("text");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "text":
+                    setText(value.toString());
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 }

@@ -47,7 +47,7 @@ public class PWebView extends WebView implements PViewMethodsInterface {
         mAppRunner = appRunner;
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
         });
         props.change();

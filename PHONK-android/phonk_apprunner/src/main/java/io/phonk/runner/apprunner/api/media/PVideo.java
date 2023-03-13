@@ -38,15 +38,9 @@ import io.phonk.runner.base.gui.CustomVideoTextureView;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass(mergeFrom = "AudioPlayer")
-public class PVideo extends PAudioPlayer /* implements PViewMethodsInterface */ {
+public class PVideo extends PAudioPlayer {
     private static final java.lang.String TAG = PVideo.class.getSimpleName();
     private final CustomVideoTextureView mTextureView;
-
-    // this is a props proxy for the user
-    public PropertiesProxy props = new PropertiesProxy();
-
-    // the props are transformed / accessed using the styler object
-    public Styler styler;
 
     public PVideo(AppRunner appRunner) {
         super(appRunner);

@@ -260,8 +260,10 @@ public class PUtil extends ProtoBase {
             String type = splitted[1];
 
             returnVal = transform(type, value, toValue);
-        } else if (val instanceof Double) {
-            returnVal = transform("", (Double) val, toValue);
+        } else if (val instanceof Number) {
+            Double doubleVal = ((Number) val).doubleValue();
+            if (doubleVal < 0 && doubleVal.intValue() == doubleVal) return doubleVal.intValue();
+            returnVal = transform("", doubleVal, toValue);
         }
 
         return returnVal;

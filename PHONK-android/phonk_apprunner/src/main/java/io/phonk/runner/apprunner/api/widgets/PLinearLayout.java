@@ -42,29 +42,33 @@ public class PLinearLayout extends LinearLayout {
     private final LayoutParams mLp;
     private final HashMap<String, View> mViews = new HashMap<>();
 
+    private int horizontalAlign = Gravity.LEFT;
+    private int verticalAlign = Gravity.TOP;
+
     public PLinearLayout(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
 
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
+        props.put("orientation", "vertical");
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
 
         mLp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
-        orientation("vertical");
 
         setLayoutParams(mLp);
     }
 
     public PLinearLayout orientation(String orientation) {
-        setOrientation("horizontal".equals(orientation) ? HORIZONTAL : VERTICAL);
+        props.put("orientation", orientation);
         return this;
     }
 
@@ -96,9 +100,6 @@ public class PLinearLayout extends LinearLayout {
         int w = mAppRunner.pUtil.sizeToPixels(width, mAppRunner.pUi.screenWidth);
         int h = mAppRunner.pUtil.sizeToPixels(height, mAppRunner.pUi.screenHeight);
 
-        if (w < 0) w = LayoutParams.WRAP_CONTENT;
-        if (h < 0) h = LayoutParams.WRAP_CONTENT;
-
         // lp.gravity = Gravity.CENTER;
         LinearLayout.LayoutParams lp = new LayoutParams(w, h, weight);
 
@@ -114,37 +115,17 @@ public class PLinearLayout extends LinearLayout {
     }
 
     public void alignViews(String horizontal, String vertical) {
-        int h = Gravity.LEFT;
-        switch (horizontal) {
-            case "left":
-                h = Gravity.LEFT;
-                break;
-            case "center":
-                h = Gravity.CENTER_HORIZONTAL;
-                break;
-            case "right":
-                h = Gravity.RIGHT;
-                break;
-        }
-
-        int v = Gravity.TOP;
-        switch (vertical) {
-            case "top":
-                v = Gravity.TOP;
-                break;
-            case "center":
-                v = Gravity.CENTER_VERTICAL;
-                break;
-            case "bottom":
-                v = Gravity.BOTTOM;
-                break;
-        }
-
-        setGravity(h | v);
+        props.put("horizontalAlign", horizontal);
+        props.put("verticalAlign", vertical);
     }
 
     public void padding(float l, float t, float r, float b) {
-        setPadding((int) l, (int) t, (int) r, (int) b);
+        props.eventOnChange = false;
+        props.put("paddingLeft", l);
+        props.put("paddingTop", t);
+        props.put("paddingRight", r);
+        props.eventOnChange = true;
+        props.put("paddingBottom", b);
     }
 
     @PhonkMethod(description = "", example = "")
@@ -154,7 +135,57 @@ public class PLinearLayout extends LinearLayout {
     }
 
     public void background(int r, int g, int b) {
-        setBackgroundColor(Color.rgb(r, g, b));
+        props.put("background", String.format("#%02X%02X%02X", r, g, b));
+    }
+
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("orientation");
+            apply("horizontalAlign");
+            apply("verticalAlign");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "orientation":
+                    setOrientation("horizontal".equals(value.toString()) ? HORIZONTAL : VERTICAL);
+                    break;
+
+                case "horizontalAlign":
+                    switch (value.toString()) {
+                        case "left":
+                            horizontalAlign = Gravity.LEFT;
+                            break;
+                        case "center":
+                            horizontalAlign = Gravity.CENTER_HORIZONTAL;
+                            break;
+                        case "right":
+                            horizontalAlign = Gravity.RIGHT;
+                            break;
+                    }
+                    setGravity(horizontalAlign | verticalAlign);
+                    break;
+
+                case "verticalAlign":
+                    switch (value.toString()) {
+                        case "top":
+                            verticalAlign = Gravity.TOP;
+                            break;
+                        case "center":
+                            verticalAlign = Gravity.CENTER_VERTICAL;
+                            break;
+                        case "bottom":
+                            verticalAlign = Gravity.BOTTOM;
+                            break;
+                    }
+                    setGravity(horizontalAlign | verticalAlign);
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 }

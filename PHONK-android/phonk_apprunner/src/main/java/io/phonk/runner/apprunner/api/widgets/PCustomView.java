@@ -55,11 +55,10 @@ public class PCustomView extends View implements PViewMethodsInterface {
     public PCustomView(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
-        this.setBackgroundColor(Color.TRANSPARENT);
 
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, mAppRunner);
             styler.apply(name, value);
         });
 
@@ -69,11 +68,7 @@ public class PCustomView extends View implements PViewMethodsInterface {
         props.eventOnChange = true;
         props.change();
 
-        init();
-    }
-
-    private void init() {
-        mPCanvas = new PCanvas(mAppRunner);
+        mPCanvas = new PCanvas(appRunner);
     }
 
     @Override

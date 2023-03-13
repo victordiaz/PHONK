@@ -53,7 +53,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
         });
 
@@ -94,17 +94,11 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     }
 
     public void stackFromEnd(boolean b) {
-        mGridLayoutManager.setStackFromEnd(b);
-    }
-
-    public void scrollToPosition(int pos) {
-        super.scrollToPosition(pos);
+        props.put("stackFromEnd", b);
     }
 
     public PList numColumns(int num) {
-        nNumCols = num;
-        if (mGridLayoutManager != null) mGridLayoutManager.setSpanCount(num);
-
+        props.put("columns", num);
         return this;
     }
 
@@ -132,5 +126,33 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     @Override
     public Map getProps() {
         return props;
+    }
+
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("columns");
+            apply("stackFromEnd");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "columns":
+                    if (value instanceof Number) {
+                        nNumCols = ((Number) value).intValue();
+                        if (mGridLayoutManager != null) mGridLayoutManager.setSpanCount(nNumCols);
+                    }
+                    break;
+
+                case "stackFromEnd":
+                    if (value instanceof Boolean) {
+                        mGridLayoutManager.setStackFromEnd((Boolean) value);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 }

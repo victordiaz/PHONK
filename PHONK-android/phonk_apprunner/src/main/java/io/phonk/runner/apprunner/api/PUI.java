@@ -105,15 +105,15 @@ public class PUI extends PViewsArea {
 
         isMainLayoutSetup = true;
 
-        setTheme();
-        setStyle();
-        background((String) theme.get("background"));
+        initializeProps();
+        initializeTheme();
+        theme.change();
 
         viewTree.add(this);
     }
 
     @SuppressLint("ResourceType")
-    private void setTheme() {
+    private void initializeTheme() {
         theme = new PropertiesProxy();
 
         theme.put("background", getContext().getResources().getString(R.color.phonk_backgroundColor));
@@ -126,52 +126,64 @@ public class PUI extends PViewsArea {
 
         // if the theme is change then we reapply the styles
         theme.onChange((name, value) -> {
-            setStyle();
+            setStyle(name, value);
         });
     }
 
-    private void setStyle() {
-        String colorPrimary = (String) theme.get("primary");
-        String colorPrimaryShade = (String) theme.get("primaryShade");
-        String colorSecondary = (String) theme.get("secondary");
-        String colorSecondaryShade = (String) theme.get("secondaryShade");
-        String colorTextPrimary = (String) theme.get("textPrimary");
-        String colorBackground = (String) theme.get("background");
+    private void initializeProps() {
         String colorTransparent = "#00FFFFFF";
 
-        rootProps.put("x", rootProps, 0f);
-        rootProps.put("y", rootProps, 0f);
-        rootProps.put("w", rootProps, 0.2f);
-        rootProps.put("h", rootProps, 0.2f);
+        rootProps.put("x", 0f);
+        rootProps.put("y", 0f);
+        rootProps.put("w", 0.2f);
+        rootProps.put("h", 0.2f);
 
-        rootProps.put("opacity", rootProps, 1.0f);
+        rootProps.put("visibility", "visible");
+        rootProps.put("enabled", true);
+        rootProps.put("opacity", 1.0f);
 
-        rootProps.put("background", rootProps, colorPrimaryShade);
-        rootProps.put("backgroundHover", rootProps, "#88000000");
-        rootProps.put("backgroundPressed", rootProps, "#33FFFFFF");
-        rootProps.put("backgroundSelected", rootProps, "#88000000");
-        rootProps.put("backgroundChecked", rootProps, "#88000000");
+        rootProps.put("backgroundHover", "#88000000");
+        rootProps.put("backgroundPressed", "#33FFFFFF");
+        rootProps.put("backgroundSelected", "#88000000");
+        rootProps.put("backgroundChecked", "#88000000");
 
-        rootProps.put("borderColor", rootProps, colorTransparent);
-        rootProps.put("borderWidth", rootProps, 0);
-        rootProps.put("borderRadius", rootProps, 20); // set to 20
+        rootProps.put("borderColor", colorTransparent);
+        rootProps.put("borderWidth", 0);
+        rootProps.put("borderRadius", 20); // set to 20
 
-        rootProps.put("textColor", rootProps, colorTextPrimary);
-        rootProps.put("textSize", rootProps, 16);
-        rootProps.put("textFont", rootProps, "monospace");
-        rootProps.put("textStyle", rootProps, "normal");
-        rootProps.put("textAlign", rootProps, "center");
-        rootProps.put("padding", rootProps, AndroidUtils.dpToPixels(getContext(), 2));
-        /*
-        rootStyle.put("paddingLeft", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        rootStyle.put("paddingTop", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        rootStyle.put("paddingRight", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        rootStyle.put("paddingBottom", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-         */
+        rootProps.put("textSize", 16);
+        rootProps.put("textFont", "monospace");
+        rootProps.put("textStyle", "normal");
+        rootProps.put("textAlign", "center");
+        rootProps.put("padding", AndroidUtils.dpToPixels(getContext(), 2));
+    }
 
-        // style.put("animInBefore", style, "this.x(0).y(100)");
-        // style.put("animIn", style, "this.animate().x(100)");
-        // style.put("animOut", style, "this.animate().x(0)");
+    private void setStyle(String name, Object value) {
+        if (name == null) {
+            setStyle("background");
+            setStyle("primaryShade");
+            setStyle("textPrimary");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "background":
+                    background(value.toString());
+                    break;
+
+                case "primaryShade":
+                    rootProps.put("background", value);
+                    break;
+
+                case "textPrimary":
+                    rootProps.put("textColor", value);
+                    break;
+            }
+        }
+    }
+
+    private void setStyle(String name) {
+        setStyle(name, theme.get(name));
     }
 
     @Override
@@ -262,13 +274,7 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void setTheme(Map<String, Object> properties) {
-        theme.eventOnChange = false;
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            theme.put(entry.getKey(), theme, entry.getValue());
-        }
-        setStyle();
-        background((String) theme.get("background"));
-        theme.eventOnChange = true;
+        WidgetHelper.setProps(theme, properties);
     }
 
     /**
@@ -278,7 +284,7 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void addTitle(String title) {
-        getFragment().changeTitle(title, (String) theme.get("primary"));
+        getFragment().changeTitle(title, theme.get("primary").toString());
     }
 
     /**

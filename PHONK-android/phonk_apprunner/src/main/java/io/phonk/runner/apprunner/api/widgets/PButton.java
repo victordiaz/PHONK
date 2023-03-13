@@ -26,6 +26,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -61,13 +62,14 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("textStyle", props, "bold");
-        props.put("textAlign", props, "center");
+        props.put("textStyle", "bold");
+        props.put("textAlign", "center");
         // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
@@ -102,7 +104,7 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     }
 
     public PButton text(String label) {
-        setText(label);
+        props.put("text", label);
         return this;
     }
 
@@ -159,8 +161,8 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     @Override
     public PButton textFont(Typeface font) {
-        mFont = font;
-        this.setTypeface(font, mStyle);
+        styler.textFont = font;
+        props.put("textFont", "custom");
         MLog.d(TAG, "--> " + "font");
 
         return this;
@@ -168,52 +170,51 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
 
     @Override
     public View textSize(int size) {
-        setTextSize(size);
-        return this;
+        return textSize((float) size);
     }
 
     @Override
-    public PButton textColor(String c) {
-        this.setTextColor(Color.parseColor(c));
+    public PButton textColor(String textColor) {
+        props.put("textColor", textColor);
         return this;
     }
 
     @Override
     public PButton textColor(int c) {
-        this.setTextColor(c);
+        styler.textColor = c;
+        props.put("textColor", "custom");
         return this;
     }
 
     @Override
-    public View textSize(float size) {
-        this.setTextSize(size);
-
+    public View textSize(float textSize) {
+        props.put("textSize", textSize);
         return this;
     }
 
     @Override
     public View textStyle(int style) {
-        mStyle = style;
-        this.setTypeface(mFont, style);
+        styler.textStyle = style;
+        props.put("textStyle", "custom");
         return this;
     }
 
     @Override
     public View textAlign(int alignment) {
-        this.setGravity(alignment);
+        styler.textAlign = alignment;
+        props.put("textAlign", "custom");
         return this;
     }
 
     public PButton background(String c) {
-        this.setBackgroundColor(Color.parseColor(c));
+        props.put("background", c);
         return this;
     }
 
     @PhonkMethod(description = "Sets html text", example = "")
     @PhonkMethodParam(params = {"htmlText"})
     public PButton html(String htmlText) {
-        this.setText(Html.fromHtml(htmlText));
-
+        props.put("text", Html.fromHtml(htmlText));
         return this;
     }
 
@@ -252,6 +253,28 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     @Override
     public Map getProps() {
         return props;
+    }
+
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("text");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "text":
+                    if (value instanceof Spanned) {
+                        setText((Spanned) value);
+                    } else {
+                        setText(value.toString());
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

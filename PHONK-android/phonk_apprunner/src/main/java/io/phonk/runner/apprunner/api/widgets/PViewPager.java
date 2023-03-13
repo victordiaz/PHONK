@@ -48,7 +48,7 @@ public class PViewPager extends ViewPager implements PViewMethodsInterface {
 
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
         });
 

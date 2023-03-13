@@ -37,10 +37,9 @@ import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
 @PhonkClass
-public class PTouchPad extends PCustomView implements PViewMethodsInterface {
+public class PTouchPad extends PCustomView {
     private static final String TAG = PTouchPad.class.getSimpleName();
 
-    public final PropertiesProxy props = new PropertiesProxy();
     public final TouchPadStyler styler;
     final PLooper looper = new PLooper(mAppRunner, 5, () -> {
         invalidate();
@@ -90,16 +89,16 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
 
         styler = new TouchPadStyler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("padSize", props, appRunner.pUtil.dpToPixels(50));
-        props.put("background", props, appRunner.pUi.theme.get("primaryShade"));
-        props.put("padColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("padBorderColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("padBorderSize", props, appRunner.pUtil.dpToPixels(2));
+        props.put("padSize", appRunner.pUtil.dpToPixels(50));
+        props.put("background", appRunner.pUi.theme.get("primaryShade"));
+        props.put("padColor", appRunner.pUi.theme.get("primary"));
+        props.put("padBorderColor", appRunner.pUi.theme.get("primary"));
+        props.put("padBorderSize", appRunner.pUtil.dpToPixels(2));
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
@@ -183,11 +182,6 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         }
     }
 
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
-
     static class TouchPadStyler extends Styler {
         float padSize;
         int padColor;
@@ -229,16 +223,6 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
                 }
             }
         }
-    }
-
-    @Override
-    public void setProps(Map props) {
-        WidgetHelper.setProps(this.props, props);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
     }
 
 

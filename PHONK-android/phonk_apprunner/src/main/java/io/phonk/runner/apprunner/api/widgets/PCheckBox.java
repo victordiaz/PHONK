@@ -61,45 +61,46 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
 
     @Override
     public View textFont(Typeface font) {
-        mFont = font;
-        this.setTypeface(font, mStyle);
+        styler.textFont = font;
+        props.put("textFont", "custom");
         return this;
     }
 
     @Override
     public View textSize(int size) {
-        this.setTextSize(size);
-        return this;
+        return textSize((float) size);
     }
 
     @Override
     public View textColor(String textColor) {
-        this.setTextColor(Color.parseColor(textColor));
+        props.put("textColor", textColor);
         return this;
     }
 
     @Override
     public View textColor(int c) {
-        this.setTextColor(c);
+        styler.textColor = c;
+        props.put("textColor", "custom");
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
-        this.setTextSize(textSize);
+        props.put("textSize", textSize);
         return this;
     }
 
     @Override
     public View textStyle(int style) {
-        mStyle = style;
-        this.setTypeface(mFont, style);
+        styler.textStyle = style;
+        props.put("textStyle", "custom");
         return this;
     }
 
     @Override
     public View textAlign(int alignment) {
-        setGravity(alignment);
+        styler.textAlign = alignment;
+        props.put("textAlign", "custom");
         return this;
     }
 

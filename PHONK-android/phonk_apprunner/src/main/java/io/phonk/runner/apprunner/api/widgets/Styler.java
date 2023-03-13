@@ -29,6 +29,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
@@ -64,9 +65,9 @@ public class Styler {
     float padding;
     int textColor;
     float textSize;
-    String textFont;
-    String textStyle;
-    String textAlign;
+    Typeface textFont;
+    int textStyle;
+    int textAlign;
 
     Styler(AppRunner appRunner, View view, PropertiesProxy props) {
         mAppRunner = appRunner;
@@ -217,74 +218,78 @@ public class Styler {
                     break;
 
                 case "textAlign":
-                    textAlign = value.toString();
-                    if (mView instanceof PTextInterface) {
-                        int tAlignment = TEXT_ALIGNMENT_TEXT_START;
-                        switch (textAlign) {
-                            case "left":
-                                tAlignment = Gravity.CENTER_VERTICAL | Gravity.LEFT;
-                                break;
-                            case "center":
-                                tAlignment = Gravity.CENTER;
-                                break;
-
-                            case "right":
-                                tAlignment = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-                                break;
-                        }
-                        ((PTextInterface) mView).textAlign(tAlignment);
+                    switch (value.toString()) {
+                        case "left":
+                            textAlign = Gravity.CENTER_VERTICAL | Gravity.LEFT;
+                            break;
+                        case "center":
+                            textAlign = Gravity.CENTER;
+                            break;
+                        case "right":
+                            textAlign = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+                            break;
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setGravity(textAlign);
                     }
                     break;
 
                 case "textColor":
-                    textColor = Color.parseColor(value.toString());
-                    if (mView instanceof PTextInterface) {
-                        ((PTextInterface) mView).textColor(textColor);
+                    String colorString = value.toString();
+                    if (!colorString.equals("custom")) {
+                        textColor = Color.parseColor(colorString);
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setTextColor(textColor);
                     }
                     break;
 
                 case "textFont":
-                    textFont = value.toString();
-                    if (mView instanceof PTextInterface) {
-                        Typeface font = Typeface.DEFAULT;
-                        switch (textFont) {
-                            case "serif":
-                                font = Typeface.SERIF;
-                                break;
-                            case "sansSerif":
-                                font = Typeface.SANS_SERIF;
-                                break;
-                            case "monospace":
-                                font = Typeface.MONOSPACE;
-                                break;
-                        }
-                        ((PTextInterface) mView).textFont(font);
+                    switch (value.toString()) {
+                        case "default":
+                            textFont = Typeface.DEFAULT;
+                            break;
+                        case "serif":
+                            textFont = Typeface.SERIF;
+                            break;
+                        case "sansSerif":
+                            textFont = Typeface.SANS_SERIF;
+                            break;
+                        case "monospace":
+                            textFont = Typeface.MONOSPACE;
+                            break;
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setTypeface(textFont, textStyle);
                     }
                     break;
 
                 case "textSize":
-                    textSize = toFloat(value);
-                    if (mView instanceof PTextInterface) {
-                        ((PTextInterface) mView).textSize(textSize);;
+                    if (value instanceof Number) {
+                        textSize = toFloat(value);
+                        if (mView instanceof TextView) {
+                            ((TextView) mView).setTextSize(textSize);
+                        }
                     }
                     break;
 
                 case "textStyle":
-                    textStyle = value.toString();
-                    if (mView instanceof PTextInterface) {
-                        int typeFaceStyle = Typeface.NORMAL;
-                        switch (textStyle) {
-                            case "bold":
-                                typeFaceStyle = Typeface.BOLD;
-                                break;
-                            case "boldItalic":
-                                typeFaceStyle = Typeface.BOLD_ITALIC;
-                                break;
-                            case "italic":
-                                typeFaceStyle = Typeface.ITALIC;
-                                break;
-                        }
-                        ((PTextInterface) mView).textStyle(typeFaceStyle);
+                    switch (value.toString()) {
+                        case "normal":
+                            textStyle = Typeface.NORMAL;
+                            break;
+                        case "bold":
+                            textStyle = Typeface.BOLD;
+                            break;
+                        case "boldItalic":
+                            textStyle = Typeface.BOLD_ITALIC;
+                            break;
+                        case "italic":
+                            textStyle = Typeface.ITALIC;
+                            break;
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setTypeface(textFont, textStyle);
                     }
                     break;
             }

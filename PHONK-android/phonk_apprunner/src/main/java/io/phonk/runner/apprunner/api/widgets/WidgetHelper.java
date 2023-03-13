@@ -84,16 +84,18 @@ public class WidgetHelper {
         viewHandler.setOnTouchListener(null);
     }
 
-    private static void applyLayoutParams(String name, PropertiesProxy props, View view, AppRunner appRunner) {
-        applyLayoutParams(name, props.get(name), props, view, appRunner);
+    private static void applyViewParam(String name, PropertiesProxy props, View view, AppRunner appRunner) {
+        applyViewParam(name, props.get(name), props, view, appRunner);
     }
 
-    public static void applyLayoutParams(String name, Object value, PropertiesProxy props, View view, AppRunner appRunner) {
+    public static void applyViewParam(String name, Object value, PropertiesProxy props, View view, AppRunner appRunner) {
         if (name == null) {
-            applyLayoutParams("x", props, view, appRunner);
-            applyLayoutParams("y", props, view, appRunner);
-            applyLayoutParams("w", props, view, appRunner);
-            applyLayoutParams("h", props, view, appRunner);
+            applyViewParam("x", props, view, appRunner);
+            applyViewParam("y", props, view, appRunner);
+            applyViewParam("w", props, view, appRunner);
+            applyViewParam("h", props, view, appRunner);
+            applyViewParam("enabled", props, view, appRunner);
+            applyViewParam("visibility", props, view, appRunner);
 
         } else {
             if (value == null) return;
@@ -121,6 +123,14 @@ public class WidgetHelper {
                         view.getLayoutParams().height = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenHeight);
                     }
                     break;
+
+                case "enabled":
+                    view.setEnabled(value instanceof Boolean ? (Boolean) value : false);
+                    break;
+
+                case "visibility":
+                    view.setVisibility(view.toString() == "invisible" ? View.INVISIBLE : View.VISIBLE);
+                    break;
             }
         }
     }
@@ -132,11 +142,11 @@ public class WidgetHelper {
         props.change();
     }
 
-    public static void fromTo(Map<String, Object> styleFrom, PropertiesProxy styleTo) {
-        if (styleFrom == null) return;
+    public static void fromTo(Map<String, Object> propsFrom, PropertiesProxy propsTo) {
+        if (propsFrom == null) return;
 
-        for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
-            styleTo.put(entry.getKey(), styleTo, entry.getValue());
+        for (Map.Entry<String, Object> entry : propsFrom.entrySet()) {
+            propsTo.put(entry.getKey(), entry.getValue());
         }
     }
 }

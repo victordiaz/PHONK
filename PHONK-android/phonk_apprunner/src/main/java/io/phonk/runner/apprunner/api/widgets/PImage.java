@@ -42,21 +42,22 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     private static final String TAG = PImage.class.getSimpleName();
     public final PropertiesProxy props = new PropertiesProxy();
     protected final AppRunner mAppRunner;
-    protected final ImageStyler styler;
+    protected final Styler styler;
 
     public PImage(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
 
-        styler = new ImageStyler(appRunner, this, props);
+        styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("background", props, "#00FFFFFF");
-        props.put("srcMode", props, "fit");
+        props.put("background", "#00FFFFFF");
+        props.put("srcMode", "fit");
 
         addFromChild(props);
 
@@ -100,59 +101,13 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     }
 
     public PImage mode(String mode) {
-        switch (mode) {
-            case "tiled":
-                BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
-
-                Shader.TileMode tileMode = Shader.TileMode.REPEAT;
-                bitmapDrawable.setTileModeXY(tileMode, tileMode);
-
-                setBackground(bitmapDrawable);
-                setImageBitmap(null);
-                //setScaleX(2);
-                break;
-
-            case "fit":
-                this.setScaleType(ScaleType.FIT_CENTER);
-                break;
-
-            case "crop":
-                this.setScaleType(ScaleType.CENTER_CROP);
-                break;
-
-            case "resize":
-                this.setScaleType(ScaleType.FIT_XY);
-                break;
-        }
+        props.put("srcMode", mode);
         return this;
     }
 
     @Override
     public void set(float x, float y, float w, float h) {
         styler.setLayoutProps(x, y, w, h);
-    }
-
-    class ImageStyler extends Styler {
-        ImageStyler(AppRunner appRunner, View view, PropertiesProxy props) {
-            super(appRunner, view, props);
-        }
-
-        @Override
-        public void apply(String name, Object value) {
-            super.apply(name, value);
-
-            if (name == null) {
-                apply("srcMode");
-
-            } else {
-                if (value == null) return;
-                switch (name) {
-                    case "srcMode":
-                        mode(value.toString());
-                        break;
-                }
-            }
-        }
     }
 
     @Override
@@ -163,6 +118,46 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     @Override
     public Map getProps() {
         return props;
+    }
+
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("srcMode");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "srcMode":
+                    switch (value.toString()) {
+                        case "tiled":
+                            BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
+
+                            Shader.TileMode tileMode = Shader.TileMode.REPEAT;
+                            bitmapDrawable.setTileModeXY(tileMode, tileMode);
+
+                            setBackground(bitmapDrawable);
+                            setImageBitmap(null);
+                            break;
+
+                        case "fit":
+                            this.setScaleType(ScaleType.FIT_CENTER);
+                            break;
+
+                        case "crop":
+                            this.setScaleType(ScaleType.CENTER_CROP);
+                            break;
+
+                        case "resize":
+                            this.setScaleType(ScaleType.FIT_XY);
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

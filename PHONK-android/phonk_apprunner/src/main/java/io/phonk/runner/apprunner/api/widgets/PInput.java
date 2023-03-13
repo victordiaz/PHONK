@@ -46,7 +46,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 public class PInput extends androidx.appcompat.widget.AppCompatEditText implements PViewMethodsInterface,
         PTextInterface {
     public final PropertiesProxy props = new PropertiesProxy();
-    public final InputStyler styler;
+    public final Styler styler;
     private final AppRunner mAppRunner;
     private final EditText mInput;
     private Typeface mFont;
@@ -59,23 +59,24 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         setClickable(true);
         setFocusableInTouchMode(true);
 
-        styler = new InputStyler(appRunner, this, props);
+        styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("textAlign", props, "left");
-        props.put("background", props, "#00FFFFFF"); // appRunner.pUi.theme.get("secondaryShade"));
-        props.put("backgroundPressed", props, appRunner.pUi.theme.get("secondaryShade"));
-        props.put("borderColor", props, appRunner.pUi.theme.get("secondaryShade"));
-        props.put("borderWidth", props, appRunner.pUtil.dpToPixels(1));
-        props.put("padding", props, appRunner.pUtil.dpToPixels(0));
-        props.put("paddingLeft", props, appRunner.pUtil.dpToPixels(10));
-        props.put("paddingRight", props, appRunner.pUtil.dpToPixels(10));
-        props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
-        props.put("hintColor", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("textAlign", "left");
+        props.put("background", "#00FFFFFF"); // appRunner.pUi.theme.get("secondaryShade"));
+        props.put("backgroundPressed", appRunner.pUi.theme.get("secondaryShade"));
+        props.put("borderColor", appRunner.pUi.theme.get("secondaryShade"));
+        props.put("borderWidth", appRunner.pUtil.dpToPixels(1));
+        props.put("padding", appRunner.pUtil.dpToPixels(0));
+        props.put("paddingLeft", appRunner.pUtil.dpToPixels(10));
+        props.put("paddingRight", appRunner.pUtil.dpToPixels(10));
+        props.put("textColor", appRunner.pUi.theme.get("textPrimary"));
+        props.put("hintColor", appRunner.pUi.theme.get("secondaryShade"));
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
@@ -85,52 +86,52 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
 
     @Override
     public View textFont(Typeface font) {
-        mFont = font;
-
-        this.setTypeface(font, mStyle);
+        styler.textFont = font;
+        props.put("textFont", "custom");
         return this;
     }
 
     @Override
     public View textSize(int size) {
-        this.setTextSize(size);
-        return this;
+        return textSize((float) size);
     }
 
     @Override
     public View textColor(String textColor) {
-        this.setTextColor(Color.parseColor(textColor));
+        props.put("textColor", textColor);
         return this;
     }
 
     @Override
     public View textColor(int c) {
-        this.setTextColor(c);
+        styler.textColor = c;
+        props.put("textColor", "custom");
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
-        this.setTextSize(textSize);
+        props.put("textSize", textSize);
         return this;
     }
 
     @Override
     public View textStyle(int style) {
-        mStyle = style;
-        this.setTypeface(mFont, style);
+        styler.textStyle = style;
+        props.put("textStyle", "custom");
         return this;
     }
 
     @Override
     public View textAlign(int alignment) {
-        setGravity(alignment);
+        styler.textAlign = alignment;
+        props.put("textAlign", "custom");
         return this;
     }
 
     @PhonkMethod
     public PInput hint(String hint) {
-        this.setHint(hint);
+        props.put("hint", hint);
         return this;
     }
 
@@ -178,12 +179,7 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     }
 
     public View multiline(boolean isMultiline) {
-        if (isMultiline) {
-            this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-            this.setSingleLine(false);
-            this.setGravity(Gravity.TOP);
-        }
-        // this.setInputType(InputType.TYPE_CLASS_NUMBER);
+        props.put("multiline", isMultiline);
         return this;
     }
 
@@ -214,27 +210,36 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
         return props;
     }
 
-    class InputStyler extends Styler {
-        InputStyler(AppRunner appRunner, View view, PropertiesProxy props) {
-            super(appRunner, view, props);
-        }
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("hint");
+            apply("hintColor");
+            apply("multiline");
 
-        @Override
-        public void apply(String name, Object value) {
-            super.apply(name, value);
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "hint":
+                    setHint(value.toString());
+                    break;
 
-            if (name == null) {
-                apply("hintColor");
+                case "hintColor":
+                    setHintTextColor(Color.parseColor(value.toString()));
+                    break;
 
-            } else {
-                if (value == null) return;
-                switch (name) {
-                    case "hintColor":
-                        setHintTextColor(Color.parseColor(value.toString()));
-                        break;
-                }
+                case "multiline":
+                    if (value instanceof Boolean && (Boolean) value) {
+                        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        this.setSingleLine(false);
+                        this.setGravity(Gravity.TOP);
+                    }
+                    break;
             }
         }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

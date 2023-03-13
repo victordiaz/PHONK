@@ -53,61 +53,48 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
 
         styler = new Styler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("background", props, "#00FFFFFF");
-        props.put("textColor", props, appRunner.pUi.theme.get("textPrimary"));
-        // textStyle.put("textSize", textStyle, 12);
-        props.put("textAlign", props, "left");
+        props.put("background", "#00FFFFFF");
+        props.put("textColor", appRunner.pUi.theme.get("textPrimary"));
+        props.put("textAlign", "left");
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
     }
 
     public PText color(String c) {
-        this.setTextColor(Color.parseColor(c));
-
+        props.put("textColor", c);
         return this;
     }
 
     public PText background(String c) {
-        this.setBackgroundColor(Color.parseColor(c));
+        props.put("background", c);
         return this;
     }
 
     @PhonkMethod(description = "Enables/disables the scroll in the text view", example = "")
     @PhonkMethodParam(params = {"size"})
     public PText scrollable(boolean b) {
-        if (b) {
-            this.setMovementMethod(new ScrollingMovementMethod());
-            this.setVerticalScrollBarEnabled(true);
-            // this.setGravity(Gravity.BOTTOM);
-        } else {
-            this.setMovementMethod(null);
-        }
+        props.put("scrollable", b);
         return this;
     }
 
-    @PhonkMethod(description = "Changes the text to the given text", example = "")
-    @PhonkMethodParam(params = {"text"})
     public PText text(String text) {
-        this.setText(text);
+        props.put("text", text);
         return this;
     }
 
-    @PhonkMethod(description = "Changes the text to the given text", example = "")
-    @PhonkMethodParam(params = {"text, text, ..., text"})
     public PText text(String... txt) {
         StringBuilder joinedText = new StringBuilder();
         for (String s : txt) {
             joinedText.append(" ").append(s);
         }
-        this.setText(joinedText.toString());
-
-        return this;
+        return text(joinedText.toString());
     }
 
     public String text() {
@@ -118,55 +105,47 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     @PhonkMethod(description = "Changes the text to the given html text", example = "")
     @PhonkMethodParam(params = {"htmlText"})
     public PText html(String html) {
-
         Spanned text;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             text = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
         } else {
             text = Html.fromHtml(html);
         }
-        this.setText(text);
-
+        props.put("text", text);
         return this;
     }
 
     @PhonkMethod(description = "Appends text to the text view", example = "")
     @PhonkMethodParam(params = {"text"})
     public PText append(String text) {
-        this.setText(getText() + text);
-
-        return this;
+        return text(getText() + text);
     }
 
     @PhonkMethod(description = "Clears the text", example = "")
     public PText clear() {
-        this.setText("");
-        return this;
+        return text("");
     }
 
     @PhonkMethod(description = "Changes the box size of the text", example = "")
     @PhonkMethodParam(params = {"w", "h"})
     public PText boxsize(int w, int h) {
-        this.setWidth(w);
-        this.setHeight(h);
+        props.put("w", w);
+        props.put("h", h);
         return this;
     }
 
     @PhonkMethod(description = "Fits the text to the bounding box", example = "")
     @PhonkMethodParam(params = {"w", "h"})
     public PText autoFitText(boolean b) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return this;
-
-        if (b) TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_UNIFORM);
-        else TextViewCompat.setAutoSizeTextTypeWithDefaults(this, AUTO_SIZE_TEXT_TYPE_NONE);
+        props.put("autoFit", b);
         return this;
     }
 
     @PhonkMethod(description = "Sets a new position for the text", example = "")
     @PhonkMethodParam(params = {"x", "y"})
     public PText pos(int x, int y) {
-        this.setX(x);
-        this.setY(y);
+        props.put("x", x);
+        props.put("y", y);
         return this;
     }
 
@@ -180,49 +159,52 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
     @PhonkMethod(description = "Centers the text inside the textview", example = "")
     @PhonkMethodParam(params = {"Typeface"})
     public PText center(String centering) {
-        this.setGravity(Gravity.CENTER_VERTICAL);
+        styler.textAlign = Gravity.CENTER_VERTICAL;
+        props.put("textAlign", "custom");
         return this;
     }
 
     public PText textFont(Typeface font) {
-        this.mFont = font;
-        this.setTypeface(font, mStyle);
-        return this;
-    }
-
-    public PText textSize(int size) {
-        this.setTextSize(size);
+        styler.textFont = font;
+        props.put("textFont", "custom");
         return this;
     }
 
     @Override
+    public View textSize(int size) {
+        return textSize((float) size);
+    }
+
+    @Override
     public View textColor(String textColor) {
-        this.setTextColor(Color.parseColor(textColor));
+        props.put("textColor", textColor);
         return this;
     }
 
     @Override
     public View textColor(int c) {
-        this.setTextColor(c);
+        styler.textColor = c;
+        props.put("textColor", "custom");
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
-        this.setTextSize(textSize);
+        props.put("textSize", textSize);
         return this;
     }
 
     @Override
     public View textStyle(int style) {
-        mStyle = style;
-        this.setTypeface(mFont, style);
+        styler.textStyle = style;
+        props.put("textStyle", "custom");
         return this;
     }
 
     @Override
     public View textAlign(int alignment) {
-        this.setGravity(alignment);
+        styler.textAlign = alignment;
+        props.put("textAlign", "custom");
         return this;
     }
 
@@ -241,6 +223,47 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         return props;
     }
 
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("autoFit");
+            apply("scrollable");
+            apply("text");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "autoFit":
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+                    if (value instanceof Boolean) {
+                        TextViewCompat.setAutoSizeTextTypeWithDefaults(this, (Boolean) value ? AUTO_SIZE_TEXT_TYPE_UNIFORM : AUTO_SIZE_TEXT_TYPE_NONE);
+                    }
+                    break;
+
+                case "scrollable":
+                    if (value instanceof Boolean) {
+                        if ((Boolean) value) {
+                            setMovementMethod(new ScrollingMovementMethod());
+                            setVerticalScrollBarEnabled(true);
+                        } else {
+                            setMovementMethod(null);
+                        }
+                    }
+                    break;
+
+                case "text":
+                    if (value instanceof Spanned) {
+                        setText((Spanned) value);
+                    } else {
+                        setText(value.toString());
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
+    }
 
 
 }

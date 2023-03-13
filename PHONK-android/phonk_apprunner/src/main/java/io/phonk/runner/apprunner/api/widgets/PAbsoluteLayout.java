@@ -184,9 +184,6 @@ public class PAbsoluteLayout extends FixedLayout {
         int mw = mAppRunner.pUtil.sizeToPixels(w, mWidth);
         int mh = mAppRunner.pUtil.sizeToPixels(h, mHeight);
 
-        if (mw < 0) mw = LayoutParams.WRAP_CONTENT;
-        if (mh < 0) mh = LayoutParams.WRAP_CONTENT;
-
         addView(v, new LayoutParams(mw, mh, mx, my));
     }
 

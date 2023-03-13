@@ -36,10 +36,9 @@ import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PPlot extends PCustomView implements PViewMethodsInterface {
+public class PPlot extends PCustomView {
     private static final String TAG = PPlot.class.getSimpleName();
     public final ArrayList<PlotPoint> arrayViz = new ArrayList<>();
-    final PropertiesProxy props = new PropertiesProxy();
     private final Handler handler;
     private final Runnable r;
     private final int mStrokeWeight;
@@ -128,16 +127,15 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
 
         styler = new PlotStyler(appRunner, this, props);
         props.onChange((name, value) -> {
-            WidgetHelper.applyLayoutParams(name, value, props, this, appRunner);
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
         });
 
         props.eventOnChange = false;
-        props.put("plotColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
-        props.put("textColor", props, "#ffffff");
-        // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
-        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
+        props.put("plotColor", appRunner.pUi.theme.get("primary"));
+        props.put("plotWidth", AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
+        props.put("textColor", "#ffffff");
+        props.put("background", appRunner.pUi.theme.get("secondaryShade"));
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
@@ -234,23 +232,8 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         return this;
     }
 
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
-
-    @Override
-    public void setProps(Map props) {
-        WidgetHelper.setProps(this.props, props);
-    }
-
     public void __stop() {
         handler.removeCallbacks(r);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
     }
 
     static class PlotPoint {
