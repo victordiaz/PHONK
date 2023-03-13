@@ -42,9 +42,8 @@ public class PPlot extends PCustomView {
     private final Handler handler;
     private final Runnable r;
     private final int mStrokeWeight;
-    private final PlotStyler styler;
     private final ArrayList<PlotPoint> arrayData = new ArrayList<>();
-    String name = "";
+    String name;
     private float yMax = Float.MIN_VALUE;
     private float yMin = Float.MAX_VALUE;
     private float xMax = Float.MIN_VALUE;
@@ -52,6 +51,10 @@ public class PPlot extends PCustomView {
     private boolean isRange = false;
     private int mWidth;
     private int mHeight;
+
+    private int plotColor;
+    private float plotWidth;
+
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
@@ -71,8 +74,8 @@ public class PPlot extends PCustomView {
 
                 c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2)); // styler.plotWidth);
                 c.noFill();
-                c.strokeWidth(styler.plotWidth);
-                c.stroke(styler.plotColor);
+                c.strokeWidth(plotWidth);
+                c.stroke(plotColor);
 
                 c.beginPath();
                 p = arrayViz.get(0);
@@ -125,13 +128,14 @@ public class PPlot extends PCustomView {
 
         draw = mydraw;
 
-        styler = new PlotStyler(appRunner, this, props);
         props.onChange((name, value) -> {
             WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
+        props.put("name", "");
         props.put("plotColor", appRunner.pUi.theme.get("primary"));
         props.put("plotWidth", AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
         props.put("textColor", "#ffffff");
@@ -210,10 +214,8 @@ public class PPlot extends PCustomView {
     }
 
     public PPlot range(float min, float max) {
-        yMin = min;
-        yMax = max;
-        isRange = true;
-
+        props.put("min", min);
+        props.put("max", max);
         return this;
     }
 
@@ -228,7 +230,7 @@ public class PPlot extends PCustomView {
     }
 
     public PPlot name(String name) {
-        this.name = name;
+        props.put("name", name);
         return this;
     }
 
@@ -246,35 +248,48 @@ public class PPlot extends PCustomView {
         }
     }
 
-    static class PlotStyler extends Styler {
-        int plotColor = Color.parseColor("#222222");
-        float plotWidth = 2;
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("max");
+            apply("min");
+            apply("name");
+            apply("plotColor");
+            apply("plotWidth");
 
-        PlotStyler(AppRunner appRunner, View view, PropertiesProxy props) {
-            super(appRunner, view, props);
-        }
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "max":
+                    if (value instanceof Number) {
+                        yMax = ((Number) value).floatValue();
+                        isRange = true;
+                    }
+                    break;
 
-        @Override
-        public void apply(String name, Object value) {
-            super.apply(name, value);
+                case "min":
+                    if (value instanceof Number) {
+                        yMin = ((Number) value).floatValue();
+                        isRange = true;
+                    }
+                    break;
 
-            if (name == null) {
-                apply("plotColor");
-                apply("plotWidth");
+                case "name":
+                    this.name = value.toString();
+                    break;
 
-            } else {
-                if (value == null) return;
-                switch (name) {
-                    case "plotColor":
-                        plotColor = Color.parseColor(value.toString());
-                        break;
+                case "plotColor":
+                    plotColor = Color.parseColor(value.toString());
+                    break;
 
-                    case "plotWidth":
-                        plotWidth = toFloat(value);
-                        break;
-                }
+                case "plotWidth":
+                    plotWidth = styler.toFloat(value);
+                    break;
             }
         }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 
