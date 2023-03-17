@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -124,7 +123,7 @@ public class PPlot extends PCustomView {
     // rangeY [y1, y2]
 
     public PPlot(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         draw = mydraw;
 
@@ -274,7 +273,7 @@ public class PPlot extends PCustomView {
                     break;
 
                 case "name":
-                    this.name = value.toString();
+                    name = value.toString();
                     break;
 
                 case "plotColor":

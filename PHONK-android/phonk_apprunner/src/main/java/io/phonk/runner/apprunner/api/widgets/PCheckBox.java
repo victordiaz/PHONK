@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 
@@ -39,12 +38,14 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
 
-    private Typeface mFont;
-    private int mStyle;
-
     public PCheckBox(AppRunner appRunner) {
         super(appRunner.getAppContext());
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+        props.change();
     }
 
     public PCheckBox onChange(final ReturnInterface callbackfn) {

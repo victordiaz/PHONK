@@ -44,7 +44,6 @@ import io.phonk.runner.base.views.CanvasUtils;
 @SuppressLint("ViewConstructor")
 @PhonkClass
 public class PSlider extends PCustomView {
-    private static final String TAG = PSlider.class.getSimpleName();
     private final DecimalFormat df = new DecimalFormat("#.##");
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
@@ -63,7 +62,7 @@ public class PSlider extends PCustomView {
     private int sliderColor;
 
     public PSlider(final AppRunner appRunner, final Map<String, Object> initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         setupDrawCallback();
         setupProps(appRunner, initProps);
@@ -129,6 +128,7 @@ public class PSlider extends PCustomView {
         props.put("decimals", 2);
         props.put("from", 0);
         props.put("slider", appRunner.pUi.theme.get("primary"));
+        props.put("text", "");
         props.put("to", 1);
         props.put("value", 0);
         WidgetHelper.fromTo(initProps, props);
@@ -237,7 +237,6 @@ public class PSlider extends PCustomView {
         props.put("mode", mode);
         return this;
     }
-
 
     @PhonkMethod(description = "Sets the slider orientation", example = "")
     @PhonkMethodParam(params = "boolean")

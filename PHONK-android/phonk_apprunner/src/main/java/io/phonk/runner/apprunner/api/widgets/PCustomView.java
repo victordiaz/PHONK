@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.view.View;
 
 import java.util.Map;
@@ -31,7 +30,6 @@ import java.util.Map;
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
@@ -43,14 +41,11 @@ public class PCustomView extends View implements PViewMethodsInterface {
     public final Styler styler;
     protected final AppRunner mAppRunner;
     @PhonkField(description = "Time interval between draws", example = "")
-    private final int drawInterval = 35;
     public OnSetupCallback setup;
     public OnDrawCallback draw;
-    protected boolean mAutoDraw = false;
     protected int canvasWidth;
     protected int canvasHeight;
     private PCanvas mPCanvas;
-    private PLooper loop;
 
     public PCustomView(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());

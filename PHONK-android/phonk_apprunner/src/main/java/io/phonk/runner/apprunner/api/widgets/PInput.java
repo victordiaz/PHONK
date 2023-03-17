@@ -49,8 +49,6 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
     public final Styler styler;
     private final AppRunner mAppRunner;
     private final EditText mInput;
-    private Typeface mFont;
-    private int mStyle;
 
     public PInput(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -229,9 +227,9 @@ public class PInput extends androidx.appcompat.widget.AppCompatEditText implemen
 
                 case "multiline":
                     if (value instanceof Boolean && (Boolean) value) {
-                        this.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                        this.setSingleLine(false);
-                        this.setGravity(Gravity.TOP);
+                        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        setSingleLine(false);
+                        setGravity(Gravity.TOP);
                     }
                     break;
             }

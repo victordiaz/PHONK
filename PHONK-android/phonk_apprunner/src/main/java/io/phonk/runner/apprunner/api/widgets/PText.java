@@ -45,8 +45,6 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
         PTextInterface {
     public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
-    private Typeface mFont;
-    private int mStyle;
 
     public PText(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -60,8 +58,9 @@ public class PText extends androidx.appcompat.widget.AppCompatTextView implement
 
         props.eventOnChange = false;
         props.put("background", "#00FFFFFF");
-        props.put("textColor", appRunner.pUi.theme.get("textPrimary"));
+        props.put("text", "");
         props.put("textAlign", "left");
+        props.put("textColor", appRunner.pUi.theme.get("textPrimary"));
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();

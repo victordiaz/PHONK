@@ -44,7 +44,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     private final Context mContext;
     private GridLayoutManager mGridLayoutManager;
     private PViewItemAdapter mViewAdapter;
-    private int nNumCols = 1;
+    private int nNumCols;
 
     public PList(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -58,7 +58,8 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         });
 
         props.eventOnChange = false;
-
+        props.put("columns", 1);
+        props.put("stackFromEnd", false);
         addFromChild(props);
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
@@ -128,7 +129,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         return props;
     }
 
-    private void apply(String name, Object value) {
+    protected void apply(String name, Object value) {
         if (name == null) {
             apply("columns");
             apply("stackFromEnd");
@@ -152,7 +153,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         }
     }
 
-    private void apply(String name) {
+    protected void apply(String name) {
         apply(name, props.get(name));
     }
 }

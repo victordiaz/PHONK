@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -42,8 +41,6 @@ import io.phonk.runner.apprunner.api.ProtoBase;
 public class PToolbar extends ProtoBase {
     private final AppRunner mAppRunner;
     private final ActionBar mToolbar;
-    private int currentColor;
-    private Paint paint;
 
     public PToolbar(AppRunner appRunner, ActionBar toolbar) {
         super(appRunner);

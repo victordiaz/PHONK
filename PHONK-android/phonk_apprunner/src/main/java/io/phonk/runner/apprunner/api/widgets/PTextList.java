@@ -50,7 +50,7 @@ public class PTextList extends PList implements PTextInterface {
             apply(name, value);
         });
 
-        if (initProps != null && !initProps.containsKey("textSize")) {
+        if (!(initProps != null && initProps.containsKey("textSize"))) {
             props.put("textSize", AndroidUtils.spToPixels(appRunner.getAppContext(), 6));
         }
 
@@ -126,7 +126,9 @@ public class PTextList extends PList implements PTextInterface {
         return this;
     }
 
-    private void apply(String name, Object value) {
+    protected void apply(String name, Object value) {
+        super.apply(name, value);
+
         if (name == null) {
             apply("autoScroll");
 
@@ -140,9 +142,5 @@ public class PTextList extends PList implements PTextInterface {
                     break;
             }
         }
-    }
-
-    private void apply(String name) {
-        apply(name, props.get(name));
     }
 }

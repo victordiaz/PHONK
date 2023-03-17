@@ -22,8 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
-
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
@@ -40,16 +38,11 @@ public class Styler {
     final View mView;
     final AppRunner mAppRunner;
     final MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
-    // MyRoundCornerDrawable mActiveDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mPressedDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mSelectedDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mCheckedDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mHoveredDrawable = new MyRoundCornerDrawable();
     final StateListDrawable mStateListDrawable = new StateListDrawable();
-
-    // String animInBefore;
-    // String animIn;
-    // String animOut;
 
     // common properties
     final String mViewName;

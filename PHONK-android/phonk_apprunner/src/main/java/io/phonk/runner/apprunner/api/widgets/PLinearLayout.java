@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -42,8 +41,8 @@ public class PLinearLayout extends LinearLayout implements PViewMethodsInterface
     private final LayoutParams mLp;
     private final HashMap<String, View> mViews = new HashMap<>();
 
-    private int horizontalAlign = Gravity.LEFT;
-    private int verticalAlign = Gravity.TOP;
+    private int horizontalAlign;
+    private int verticalAlign;
 
     public PLinearLayout(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -58,6 +57,8 @@ public class PLinearLayout extends LinearLayout implements PViewMethodsInterface
 
         props.eventOnChange = false;
         props.put("orientation", "vertical");
+        props.put("horizontalAlign", "left");
+        props.put("verticalAlign", "top");
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
@@ -118,11 +119,9 @@ public class PLinearLayout extends LinearLayout implements PViewMethodsInterface
     }
 
     public void padding(float l, float t, float r, float b) {
-        props.eventOnChange = false;
         props.put("paddingLeft", l);
         props.put("paddingTop", t);
         props.put("paddingRight", r);
-        props.eventOnChange = true;
         props.put("paddingBottom", b);
     }
 

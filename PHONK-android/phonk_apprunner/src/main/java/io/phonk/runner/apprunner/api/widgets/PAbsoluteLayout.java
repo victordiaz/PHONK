@@ -41,9 +41,6 @@ import io.phonk.runner.base.utils.MLog;
 public class PAbsoluteLayout extends FixedLayout {
 
     private static final String TAG = PAbsoluteLayout.class.getSimpleName();
-    private static final int PIXELS = 0;
-    private static final int DP = 1;
-    private static final int NORMALIZED = 2;
     private final AppRunner mAppRunner;
     private int mWidth = -1;
     private int mHeight = -1;

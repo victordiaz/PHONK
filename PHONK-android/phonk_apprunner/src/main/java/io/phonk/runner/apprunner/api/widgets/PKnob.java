@@ -23,9 +23,7 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.MotionEvent;
-import android.view.View;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -40,16 +38,14 @@ import io.phonk.runner.base.views.CanvasUtils;
 
 @PhonkClass
 public class PKnob extends PCustomView {
-    private static final String TAG = PKnob.class.getSimpleName();
 
-    private final boolean autoTextSize = false;
+    private boolean autoTextSize;
     private final DecimalFormat df = new DecimalFormat("#.##");
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
     private float firstY;
     private float prevVal = 0;
     private float val = 0;
-    private int mWidth;
     private int mHeight;
     private float mappedVal;
     private float unmappedVal;
@@ -63,7 +59,6 @@ public class PKnob extends PCustomView {
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
-            mWidth = c.width;
             mHeight = c.height;
 
             c.clear();
@@ -104,7 +99,7 @@ public class PKnob extends PCustomView {
     private float rangeTo;
 
     public PKnob(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         draw = mydraw;
 
@@ -120,6 +115,7 @@ public class PKnob extends PCustomView {
         props.put("knobProgressSeparation", appRunner.pUtil.dpToPixels(15));
         props.put("knobBorderColor", appRunner.pUi.theme.get("secondaryShade"));
         props.put("knobProgressColor", appRunner.pUi.theme.get("primary"));
+        props.put("autoTextSize", false);
         props.put("decimals", 2);
         props.put("from", 0);
         props.put("to", 360);
@@ -216,6 +212,7 @@ public class PKnob extends PCustomView {
             apply("knobProgressWidth");
             apply("knobBorderColor");
             apply("knobProgressColor");
+            apply("autoTextSize");
             apply("decimals");
             apply("from");
             apply("to");
@@ -244,6 +241,12 @@ public class PKnob extends PCustomView {
                     progressColor = Color.parseColor(value.toString());
                     break;
 
+                case "autoTextSize":
+                    if (value instanceof Boolean) {
+                        autoTextSize = (Boolean) value;
+                    }
+                    break;
+
                 case "decimals":
                     if (value instanceof Number) {
                         int num = ((Number) value).intValue();
@@ -270,9 +273,8 @@ public class PKnob extends PCustomView {
 
                 case "value":
                     if (value instanceof Number) {
-                        float val = ((Number) value).floatValue();
-                        mappedVal = val;
-                        unmappedVal = CanvasUtils.map(val, rangeFrom, rangeTo, 0, 360);
+                        mappedVal = ((Number) value).floatValue();
+                        unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, 360);
                         invalidate();
                     }
                     break;

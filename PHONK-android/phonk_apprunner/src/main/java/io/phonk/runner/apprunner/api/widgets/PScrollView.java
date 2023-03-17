@@ -30,8 +30,7 @@ public class PScrollView extends ScrollView {
 
     // true if we can scroll (not locked)
     // false if we cannot scroll (locked)
-    private boolean mScrollable = true;
-
+    private boolean mScrollable;
 
     public PScrollView(Context context, boolean mScrollable) {
         super(context);

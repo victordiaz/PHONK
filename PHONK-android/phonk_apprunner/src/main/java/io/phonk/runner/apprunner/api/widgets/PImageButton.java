@@ -37,7 +37,6 @@ import io.phonk.runner.base.utils.MLog;
 public class PImageButton extends PImage {
     private final String TAG = PImageButton.class.getSimpleName();
 
-    private final boolean hideBackground = true;
     private Bitmap mBitmap;
     private Bitmap mBitmapPressed;
     private ReturnInterface callbackfn;

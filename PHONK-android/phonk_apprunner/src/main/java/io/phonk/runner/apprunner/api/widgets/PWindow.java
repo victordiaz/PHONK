@@ -35,7 +35,6 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 
 public class PWindow extends RelativeLayout {
-    private static final String TAG = PWindow.class.getSimpleName();
 
     private final RelativeLayout mBar;
     private final LinearLayout mMainContainer;
@@ -44,7 +43,6 @@ public class PWindow extends RelativeLayout {
 
     public PWindow(Context context) {
         super(context);
-        int currentColor = Color.argb(255, 255, 255, 255);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.pwidget_window, this, true);

@@ -35,7 +35,6 @@ import io.phonk.runner.base.utils.GSONUtil;
 
 public class PropertiesProxy implements Scriptable, Map<String, Object> {
 
-    private static final java.lang.String TAG = PropertiesProxy.class.getSimpleName();
     public final ReturnObject values = new ReturnObject();
     public boolean eventOnChange = true;
     private OnChangeListener changeListener;

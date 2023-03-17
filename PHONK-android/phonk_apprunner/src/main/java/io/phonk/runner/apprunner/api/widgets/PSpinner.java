@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;

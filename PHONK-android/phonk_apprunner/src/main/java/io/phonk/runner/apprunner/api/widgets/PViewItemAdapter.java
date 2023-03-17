@@ -35,7 +35,6 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 
 public class PViewItemAdapter extends RecyclerView.Adapter<PViewItemAdapter.ViewHolder> {
-    private static final String TAG = PViewItemAdapter.class.getSimpleName();
     private final ReturnInterfaceWithReturn mCreating;
     private final ReturnInterfaceWithReturn mBinding;
 

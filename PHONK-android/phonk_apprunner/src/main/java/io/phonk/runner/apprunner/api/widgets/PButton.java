@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.Spanned;
@@ -51,9 +50,6 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
     // the props are transformed / accessed using the styler object
     public final Styler styler;
 
-    private Typeface mFont;
-    private int mStyle;
-
     private ReturnInterface onPressCallback;
     private ReturnInterface onReleaseCallback;
 
@@ -68,9 +64,9 @@ public class PButton extends androidx.appcompat.widget.AppCompatButton implement
         });
 
         props.eventOnChange = false;
-        props.put("textStyle", "bold");
+        props.put("text", "");
         props.put("textAlign", "center");
-        // props.put("srcTintPressed", props, appRunner.pUi.theme.get("colorSecondary"));
+        props.put("textStyle", "bold");
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();

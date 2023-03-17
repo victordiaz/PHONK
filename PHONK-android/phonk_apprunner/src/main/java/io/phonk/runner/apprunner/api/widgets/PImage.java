@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Bitmap;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +38,6 @@ import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
 public class PImage extends androidx.appcompat.widget.AppCompatImageView implements PViewMethodsInterface {
-    private static final String TAG = PImage.class.getSimpleName();
     public final PropertiesProxy props = new PropertiesProxy();
     protected final AppRunner mAppRunner;
     protected final Styler styler;
@@ -131,24 +129,21 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
                     switch (value.toString()) {
                         case "tiled":
                             BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
-
-                            Shader.TileMode tileMode = Shader.TileMode.REPEAT;
-                            bitmapDrawable.setTileModeXY(tileMode, tileMode);
-
+                            bitmapDrawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
                             setBackground(bitmapDrawable);
                             setImageBitmap(null);
                             break;
 
                         case "fit":
-                            this.setScaleType(ScaleType.FIT_CENTER);
+                            setScaleType(ScaleType.FIT_CENTER);
                             break;
 
                         case "crop":
-                            this.setScaleType(ScaleType.CENTER_CROP);
+                            setScaleType(ScaleType.CENTER_CROP);
                             break;
 
                         case "resize":
-                            this.setScaleType(ScaleType.FIT_XY);
+                            setScaleType(ScaleType.FIT_XY);
                             break;
                     }
                     break;

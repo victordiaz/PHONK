@@ -68,12 +68,11 @@ public class PMap extends MapView implements PViewMethodsInterface {
     final String TAG = PMap.class.getSimpleName();
     // MyLocationNewOverlay myLocationOverlay;
     final ItemizedOverlayWithFocus<OverlayItem> iconOverlay;
-    private final boolean firstMarker = false;
     private final AppRunner mAppRunner;
     private final Context mContext;
-    private IMapController mapController = null;
-    private MapView mapView = null;
-    private ArrayList<OverlayItem> markerList = null;
+    private IMapController mapController;
+    private MapView mapView;
+    private ArrayList<OverlayItem> markerList;
 
     public PMap(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());

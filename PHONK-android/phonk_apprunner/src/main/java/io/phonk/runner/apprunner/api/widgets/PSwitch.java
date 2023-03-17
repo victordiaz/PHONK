@@ -23,17 +23,12 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.view.Gravity;
 
 import androidx.appcompat.widget.SwitchCompat;
 
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -53,7 +48,11 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
             apply(name, value);
         });
 
+        props.eventOnChange = false;
+        props.put("text", "");
         props.put("textAlign", "center");
+        props.eventOnChange = true;
+        props.change();
     }
 
     public PSwitch onChange(final ReturnInterface callbackfn) {

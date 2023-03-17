@@ -26,7 +26,6 @@ import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;

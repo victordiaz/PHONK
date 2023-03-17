@@ -32,17 +32,13 @@ import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
-import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton implements PViewMethodsInterface,
         PTextInterface {
-    private static final String TAG = PToggle.class.getSimpleName();
 
     public final PropertiesProxy props = new PropertiesProxy();
     private final Styler styler;
-    private Typeface mFont;
-    private int mStyle;
 
     private int textOnColor;
     private int textOffColor;
@@ -65,11 +61,12 @@ public class PToggle extends androidx.appcompat.widget.AppCompatToggleButton imp
         props.put("backgroundChecked", appRunner.pUi.theme.get("primaryShade"));
         props.put("borderColor", appRunner.pUi.theme.get("secondaryShade"));
         props.put("borderWidth", appRunner.pUtil.dpToPixels(1));
-        props.put("textOnColor", appRunner.pUi.theme.get("textPrimary"));
-        props.put("textOffColor", appRunner.pUi.theme.get("textPrimary"));
+        props.put("checked", false);
         props.put("text", "Toggle");
-        props.put("textOn", "ON");
         props.put("textOff", "OFF");
+        props.put("textOffColor", appRunner.pUi.theme.get("textPrimary"));
+        props.put("textOn", "ON");
+        props.put("textOnColor", appRunner.pUi.theme.get("textPrimary"));
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();

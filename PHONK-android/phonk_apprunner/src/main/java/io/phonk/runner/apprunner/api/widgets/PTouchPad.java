@@ -83,7 +83,7 @@ public class PTouchPad extends PCustomView {
     private float rangeYTo = 1.0f;
 
     public PTouchPad(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         draw = mydraw;
 
