@@ -37,12 +37,12 @@ import io.phonk.runner.base.utils.AndroidUtils;
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
     final NativeArray data = new NativeArray(0);
-    private boolean mIsAutoScroll = false;
+    private boolean mIsAutoScroll;
     private ReturnInterfaceWithReturn mCreateCallback;
     private ReturnInterfaceWithReturn mUpdateCallback;
 
     public PTextList(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         props.onChange((name, value) -> {
             WidgetHelper.applyViewParam(name, value, props, this, appRunner);
@@ -50,9 +50,12 @@ public class PTextList extends PList implements PTextInterface {
             apply(name, value);
         });
 
-        if (!(initProps != null && initProps.containsKey("textSize"))) {
-            props.put("textSize", AndroidUtils.spToPixels(appRunner.getAppContext(), 6));
-        }
+        props.eventOnChange = false;
+        props.put("autoScroll", false);
+        props.put("textSize", AndroidUtils.spToPixels(appRunner.getAppContext(), 6));
+        WidgetHelper.fromTo(initProps, props);
+        props.eventOnChange = true;
+        props.change();
 
         init();
         super.init(data, mCreateCallback, mUpdateCallback);
@@ -126,6 +129,7 @@ public class PTextList extends PList implements PTextInterface {
         return this;
     }
 
+    @Override
     protected void apply(String name, Object value) {
         super.apply(name, value);
 

@@ -128,7 +128,7 @@ public class PSlider extends PCustomView {
         props.put("decimals", 2);
         props.put("from", 0);
         props.put("slider", appRunner.pUi.theme.get("primary"));
-        props.put("text", "");
+        props.put("text", null);
         props.put("to", 1);
         props.put("value", 0);
         WidgetHelper.fromTo(initProps, props);

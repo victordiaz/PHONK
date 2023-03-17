@@ -45,6 +45,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     private GridLayoutManager mGridLayoutManager;
     private PViewItemAdapter mViewAdapter;
     private int nNumCols;
+    private boolean stackFromEnd;
 
     public PList(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -55,19 +56,15 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         props.onChange((name, value) -> {
             WidgetHelper.applyViewParam(name, value, props, this, appRunner);
             styler.apply(name, value);
+            apply(name, value);
         });
 
         props.eventOnChange = false;
         props.put("columns", 1);
         props.put("stackFromEnd", false);
-        addFromChild(props);
         WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
         props.change();
-    }
-
-
-    protected void addFromChild(PropertiesProxy props) {
     }
 
     public void init(
@@ -76,6 +73,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
             ReturnInterfaceWithReturn bindingCallback
     ) {
         mGridLayoutManager = new GridLayoutManager(mContext, nNumCols);
+        mGridLayoutManager.setStackFromEnd(stackFromEnd);
         setLayoutManager(mGridLayoutManager);
         mViewAdapter = new PViewItemAdapter(mContext, data, createCallback, bindingCallback);
 
@@ -146,7 +144,8 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
                 case "stackFromEnd":
                     if (value instanceof Boolean) {
-                        mGridLayoutManager.setStackFromEnd((Boolean) value);
+                        stackFromEnd = (Boolean) value;
+                        if (mGridLayoutManager != null) mGridLayoutManager.setStackFromEnd(stackFromEnd);
                     }
                     break;
             }
