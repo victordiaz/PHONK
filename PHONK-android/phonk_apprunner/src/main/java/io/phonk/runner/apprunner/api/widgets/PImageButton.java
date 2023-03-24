@@ -37,7 +37,6 @@ import io.phonk.runner.base.utils.MLog;
 public class PImageButton extends PImage {
     private final String TAG = PImageButton.class.getSimpleName();
 
-    private final boolean hideBackground = true;
     private Bitmap mBitmap;
     private Bitmap mBitmapPressed;
     private ReturnInterface callbackfn;
@@ -47,11 +46,10 @@ public class PImageButton extends PImage {
     }
 
     @Override
-    protected void addFromChild(StylePropertiesProxy props) {
+    protected void addFromChild(PropertiesProxy props) {
         super.addFromChild(props);
-        props.put("background", props, mAppRunner.pUi.theme.get("primaryShade"));
-        // props.put("srcTintPressed", props, mAppRunner.pUi.theme.get("secondary"));
-        props.put("padding", props, mAppRunner.pUtil.dpToPixels(10));
+        props.put("background", mAppRunner.pUi.theme.get("primaryShade"));
+        props.put("padding", mAppRunner.pUtil.dpToPixels(10));
     }
 
     // Set on click behavior

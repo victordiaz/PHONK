@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -36,16 +35,14 @@ import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
-public class PPlot extends PCustomView implements PViewMethodsInterface {
+public class PPlot extends PCustomView {
     private static final String TAG = PPlot.class.getSimpleName();
     public final ArrayList<PlotPoint> arrayViz = new ArrayList<>();
-    final StylePropertiesProxy props = new StylePropertiesProxy();
     private final Handler handler;
     private final Runnable r;
     private final int mStrokeWeight;
-    private final PlotStyler styler;
     private final ArrayList<PlotPoint> arrayData = new ArrayList<>();
-    String name = "";
+    String name;
     private float yMax = Float.MIN_VALUE;
     private float yMin = Float.MAX_VALUE;
     private float xMax = Float.MIN_VALUE;
@@ -53,6 +50,10 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     private boolean isRange = false;
     private int mWidth;
     private int mHeight;
+
+    private int plotColor;
+    private float plotWidth;
+
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
@@ -72,8 +73,8 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
 
                 c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2)); // styler.plotWidth);
                 c.noFill();
-                c.strokeWidth(styler.plotWidth);
-                c.stroke(styler.plotColor);
+                c.strokeWidth(plotWidth);
+                c.stroke(plotColor);
 
                 c.beginPath();
                 p = arrayViz.get(0);
@@ -122,20 +123,25 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     // rangeY [y1, y2]
 
     public PPlot(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         draw = mydraw;
 
-        styler = new PlotStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
         props.eventOnChange = false;
-        props.put("plotColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("plotWidth", props, AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
-        props.put("textColor", props, "#ffffff");
-        // props.put("borderColor", props, (String) appRunner.pUi.theme.get("secondaryShade"));
-        props.put("background", props, appRunner.pUi.theme.get("secondaryShade"));
-        Styler.fromTo(initProps, props);
+        props.put("name", "");
+        props.put("plotColor", appRunner.pUi.theme.get("primary"));
+        props.put("plotWidth", AndroidUtils.dpToPixels(mAppRunner.getAppContext(), 2));
+        props.put("textColor", "#ffffff");
+        props.put("background", appRunner.pUi.theme.get("secondaryShade"));
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         mAppRunner.whatIsRunning.add(this);
 
@@ -207,10 +213,8 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     }
 
     public PPlot range(float min, float max) {
-        yMin = min;
-        yMax = max;
-        isRange = true;
-
+        props.put("min", min);
+        props.put("max", max);
         return this;
     }
 
@@ -225,27 +229,12 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
     }
 
     public PPlot name(String name) {
-        this.name = name;
+        props.put("name", name);
         return this;
-    }
-
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
-
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
     }
 
     public void __stop() {
         handler.removeCallbacks(r);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
     }
 
     static class PlotPoint {
@@ -258,26 +247,48 @@ public class PPlot extends PCustomView implements PViewMethodsInterface {
         }
     }
 
-    static class PlotStyler extends Styler {
-        int plotColor = Color.parseColor("#222222");
-        float plotWidth = 2;
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("max");
+            apply("min");
+            apply("name");
+            apply("plotColor");
+            apply("plotWidth");
 
-        PlotStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
-        }
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "max":
+                    if (value instanceof Number) {
+                        yMax = ((Number) value).floatValue();
+                        isRange = true;
+                    }
+                    break;
 
-        @Override
-        public void apply() {
-            super.apply();
+                case "min":
+                    if (value instanceof Number) {
+                        yMin = ((Number) value).floatValue();
+                        isRange = true;
+                    }
+                    break;
 
-            plotColor = Color.parseColor(mProps.get("plotColor").toString());
-            plotWidth = toFloat(mProps.get("plotWidth"));
+                case "name":
+                    name = value.toString();
+                    break;
+
+                case "plotColor":
+                    plotColor = Color.parseColor(value.toString());
+                    break;
+
+                case "plotWidth":
+                    plotWidth = styler.toFloat(value);
+                    break;
+            }
         }
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

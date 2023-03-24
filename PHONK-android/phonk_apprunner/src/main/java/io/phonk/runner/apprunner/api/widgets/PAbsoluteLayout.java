@@ -41,12 +41,9 @@ import io.phonk.runner.base.utils.MLog;
 public class PAbsoluteLayout extends FixedLayout {
 
     private static final String TAG = PAbsoluteLayout.class.getSimpleName();
-    private static final int PIXELS = 0;
-    private static final int DP = 1;
-    private static final int NORMALIZED = 2;
     private final AppRunner mAppRunner;
-    public int mWidth = -1;
-    public int mHeight = -1;
+    private int mWidth = -1;
+    private int mHeight = -1;
 
     public PAbsoluteLayout(AppRunner appRunner) {
         super(appRunner.getAppContext());
@@ -169,13 +166,20 @@ public class PAbsoluteLayout extends FixedLayout {
     @PhonkMethod(description = "Adds a view", example = "")
     @PhonkMethodParam(params = {"view", "x", "y", "w", "h"})
     public void addView(View v, Object x, Object y, Object w, Object h) {
+        if (v instanceof PViewMethodsInterface) {
+            PropertiesProxy map = (PropertiesProxy) ((PViewMethodsInterface) v).getProps();
+            map.eventOnChange = false;
+            map.put("x", x);
+            map.put("y", y);
+            map.put("w", w);
+            map.put("h", h);
+            map.eventOnChange = true;
+        }
+
         int mx = mAppRunner.pUtil.sizeToPixels(x, mWidth);
         int my = mAppRunner.pUtil.sizeToPixels(y, mHeight);
         int mw = mAppRunner.pUtil.sizeToPixels(w, mWidth);
         int mh = mAppRunner.pUtil.sizeToPixels(h, mHeight);
-
-        if (mw < 0) mw = LayoutParams.WRAP_CONTENT;
-        if (mh < 0) mh = LayoutParams.WRAP_CONTENT;
 
         addView(v, new LayoutParams(mw, mh, mx, my));
     }

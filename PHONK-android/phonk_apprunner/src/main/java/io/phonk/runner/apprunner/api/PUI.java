@@ -53,7 +53,7 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.widgets.PPopupDialogFragment;
 import io.phonk.runner.apprunner.api.widgets.PToolbar;
 import io.phonk.runner.apprunner.api.widgets.PViewMethodsInterface;
-import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
+import io.phonk.runner.apprunner.api.widgets.PropertiesProxy;
 import io.phonk.runner.apprunner.api.widgets.WidgetHelper;
 import io.phonk.runner.apprunner.interpreter.PhonkNativeArray;
 import io.phonk.runner.base.utils.AndroidUtils;
@@ -61,9 +61,9 @@ import io.phonk.runner.base.utils.MLog;
 
 @PhonkObject(mergeFrom = "ViewsArea")
 public class PUI extends PViewsArea {
-    public final StylePropertiesProxy rootStyle = new StylePropertiesProxy();
+    public final PropertiesProxy rootProps = new PropertiesProxy();
     public final ArrayList viewTree = new ArrayList<ViewElement>();
-    public StylePropertiesProxy theme;
+    public PropertiesProxy theme;
     public View mainLayout;
     public int screenWidth;
     public int screenHeight;
@@ -105,16 +105,16 @@ public class PUI extends PViewsArea {
 
         isMainLayoutSetup = true;
 
-        setTheme();
-        setStyle();
-        background((String) theme.get("background"));
+        initializeProps();
+        initializeTheme();
+        theme.change();
 
         viewTree.add(this);
     }
 
     @SuppressLint("ResourceType")
-    private void setTheme() {
-        theme = new StylePropertiesProxy();
+    private void initializeTheme() {
+        theme = new PropertiesProxy();
 
         theme.put("background", getContext().getResources().getString(R.color.phonk_backgroundColor));
         theme.put("primary", getContext().getResources().getString(R.color.phonk_colorPrimary));
@@ -126,51 +126,64 @@ public class PUI extends PViewsArea {
 
         // if the theme is change then we reapply the styles
         theme.onChange((name, value) -> {
-            setStyle();
+            setStyle(name, value);
         });
     }
 
-    private void setStyle() {
-        String colorPrimary = (String) theme.get("primary");
-        String colorPrimaryShade = (String) theme.get("primaryShade");
-        String colorSecondary = (String) theme.get("secondary");
-        String colorSecondaryShade = (String) theme.get("secondaryShade");
-        String colorTextPrimary = (String) theme.get("textPrimary");
-        String colorBackground = (String) theme.get("background");
+    private void initializeProps() {
         String colorTransparent = "#00FFFFFF";
 
-        rootStyle.put("opacity", rootStyle, 1.0f);
+        rootProps.put("x", 0f);
+        rootProps.put("y", 0f);
+        rootProps.put("w", 0.2f);
+        rootProps.put("h", 0.2f);
 
-        rootStyle.put("background", rootStyle, colorPrimaryShade);
-        rootStyle.put("backgroundHover", rootStyle, "#88000000");
-        rootStyle.put("backgroundPressed", rootStyle, "#33FFFFFF");
-        rootStyle.put("backgroundSelected", rootStyle, "#88000000");
-        rootStyle.put("backgroundChecked", rootStyle, "#88000000");
+        rootProps.put("visibility", "visible");
+        rootProps.put("enabled", true);
+        rootProps.put("opacity", 1.0f);
 
-        rootStyle.put("borderColor", rootStyle, colorTransparent);
-        rootStyle.put("borderWidth", rootStyle, 0);
-        rootStyle.put("borderRadius", rootStyle, 20); // set to 20
+        rootProps.put("backgroundHover", "#88000000");
+        rootProps.put("backgroundPressed", "#33FFFFFF");
+        rootProps.put("backgroundSelected", "#88000000");
+        rootProps.put("backgroundChecked", "#88000000");
 
-        rootStyle.put("src", rootStyle, "");
-        rootStyle.put("srcPressed", rootStyle, "");
+        rootProps.put("borderColor", colorTransparent);
+        rootProps.put("borderWidth", 0);
+        rootProps.put("borderRadius", 20); // set to 20
 
-        rootStyle.put("textColor", rootStyle, colorTextPrimary);
-        rootStyle.put("textSize", rootStyle, 16);
-        rootStyle.put("textFont", rootStyle, "monospace");
-        rootStyle.put("textStyle", rootStyle, "normal");
-        rootStyle.put("textAlign", rootStyle, "center");
-        rootStyle.put("textTransform", rootStyle, "none");
-        rootStyle.put("padding", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        /*
-        rootStyle.put("paddingLeft", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        rootStyle.put("paddingTop", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        rootStyle.put("paddingRight", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-        rootStyle.put("paddingBottom", rootStyle, AndroidUtils.dpToPixels(getContext(), 2));
-         */
+        rootProps.put("textSize", 16);
+        rootProps.put("textFont", "monospace");
+        rootProps.put("textStyle", "normal");
+        rootProps.put("textAlign", "center");
+        rootProps.put("padding", AndroidUtils.dpToPixels(getContext(), 2));
+    }
 
-        // style.put("animInBefore", style, "this.x(0).y(100)");
-        // style.put("animIn", style, "this.animate().x(100)");
-        // style.put("animOut", style, "this.animate().x(0)");
+    private void setStyle(String name, Object value) {
+        if (name == null) {
+            setStyle("background");
+            setStyle("primaryShade");
+            setStyle("textPrimary");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "background":
+                    background(value.toString());
+                    break;
+
+                case "primaryShade":
+                    rootProps.put("background", value);
+                    break;
+
+                case "textPrimary":
+                    rootProps.put("textColor", value);
+                    break;
+            }
+        }
+    }
+
+    private void setStyle(String name) {
+        setStyle(name, theme.get(name));
     }
 
     @Override
@@ -206,8 +219,8 @@ public class PUI extends PViewsArea {
         return pViewsArea;
     }
 
-    public StylePropertiesProxy getStyle() {
-        return rootStyle;
+    public PropertiesProxy getProps() {
+        return rootProps;
     }
 
     public void screenMode(String mode) {
@@ -261,13 +274,7 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void setTheme(Map<String, Object> properties) {
-        theme.eventOnChange = false;
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            theme.put(entry.getKey(), theme, entry.getValue());
-        }
-        setStyle();
-        background((String) theme.get("background"));
-        theme.eventOnChange = true;
+        WidgetHelper.setProps(theme, properties);
     }
 
     /**
@@ -277,7 +284,7 @@ public class PUI extends PViewsArea {
      */
     @PhonkMethod
     public void addTitle(String title) {
-        getFragment().changeTitle(title, (String) theme.get("primary"));
+        getFragment().changeTitle(title, theme.get("primary").toString());
     }
 
     /**
@@ -547,12 +554,13 @@ public class PUI extends PViewsArea {
         return AndroidUtils.takeScreenshotView(v);
     }
 
-    public View getViewById(int id) {
+    public View getViewById(String id) {
         ArrayList<View> views = ((PViewsArea) (viewTree.get(0))).viewArray;
 
         for (View v : views) {
             PViewMethodsInterface vmi = (PViewMethodsInterface) v;
-            if (vmi.id() == id) {
+            String viewId = (String) vmi.getProps().get("id");
+            if (id.equals(viewId)) {
                 return v;
             }
         }
@@ -574,7 +582,7 @@ public class PUI extends PViewsArea {
 
             if (o instanceof PViewMethodsInterface) {
                 Map props = ((PViewMethodsInterface) o).getProps();
-                ReturnObject returnObject = ((StylePropertiesProxy) props).values;
+                ReturnObject returnObject = ((PropertiesProxy) props).values;
                 ob.put("props", returnObject);
             } else if (o.getClass().getSimpleName().equals("PViewsArea") || o.getClass()
                     .getSimpleName()

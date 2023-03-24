@@ -34,14 +34,11 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 @PhonkClass
 public class PGrid extends LinearLayout {
     private final Context context;
-    private int columns = 1;
 
     public PGrid(Context context) {
         super(context);
         this.context = context;
         setOrientation(LinearLayout.VERTICAL);
-
-
     }
 
 
@@ -58,7 +55,6 @@ public class PGrid extends LinearLayout {
     @PhonkMethod(description = "Specify the number of columns", example = "")
     @PhonkMethodParam(params = {"colums"})
     public PGrid columns(int cols) {
-        this.columns = cols;
 
         return this;
     }

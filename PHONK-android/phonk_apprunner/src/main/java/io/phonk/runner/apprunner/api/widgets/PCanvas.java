@@ -46,9 +46,7 @@ import io.phonk.runner.base.utils.Image;
 
 @PhonkClass(mergeFrom = "CustomView")
 public class PCanvas {
-    private static final String TAG = PCustomView.class.getSimpleName();
     private final AppRunner mAppRunner;
-    private final boolean absoluteMode = false;
     public Canvas mCanvas;
 
     @PhonkField(description = "Canvas width", example = "")

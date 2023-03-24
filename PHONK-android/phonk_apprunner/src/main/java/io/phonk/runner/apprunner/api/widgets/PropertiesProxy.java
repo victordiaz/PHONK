@@ -22,6 +22,7 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.mozilla.javascript.Scriptable;
 
 import java.util.Collection;
@@ -32,15 +33,14 @@ import java.util.Set;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.base.utils.GSONUtil;
 
-public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
+public class PropertiesProxy implements Scriptable, Map<String, Object> {
 
-    private static final java.lang.String TAG = StylePropertiesProxy.class.getSimpleName();
     public final ReturnObject values = new ReturnObject();
     public boolean eventOnChange = true;
     private OnChangeListener changeListener;
 
-    public StylePropertiesProxy() {
-
+    public PropertiesProxy() {
+        put("id", RandomStringUtils.randomAlphanumeric(8));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     public Object get(String name, Scriptable start) {
         // MLog.d(TAG, "get 1: " + name + " " + values.get(name));
 
-        return values.get(name);
+        return values.get(name, start);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     @Override
     public boolean has(String name, Scriptable start) {
         // TODO Auto-generated method stub
-        return false;
+        return values.has(name, start);
     }
 
     @Override
@@ -76,9 +76,9 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     @Override
     public void put(String name, Scriptable start, Object value) {
         // MLog.d(TAG, "put 1: " + name + " : " + value + " " + changeListener);
-        values.put(name, value);
+        values.put(name, start, value);
 
-        if (changeListener != null && eventOnChange) changeListener.event(name, value);
+        change(name, value);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     @Override
     public void delete(String name) {
-        // TODO Auto-generated method stub
-
+        values.delete(name);
+        change(name, null);
     }
 
     @Override
@@ -124,20 +124,17 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     @Override
     public Object[] getIds() {
-        // TODO Auto-generated method stub
-        return null;
+        return values.getIds();
     }
 
     @Override
     public Object getDefaultValue(Class<?> hint) {
-        // TODO Auto-generated method stub
-        return null;
+        return values.getDefaultValue(hint);
     }
 
     @Override
     public boolean hasInstance(Scriptable instance) {
-        // TODO Auto-generated method stub
-        return false;
+        return values.hasInstance(instance);
     }
 
     @Override
@@ -157,7 +154,7 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     @Override
     public boolean containsValue(Object value) {
-        return values.containsKey(value);
+        return values.containsValue(value);
     }
 
     @Override
@@ -169,14 +166,16 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
     @Override
     public Object put(String key, Object value) {
         // MLog.d(TAG, "put 3: " + key + " " + values.get(key));
-        values.put(key, value);
-
-        return value;
+        Object previousValue = values.put(key, value);
+        change(key, value);
+        return previousValue;
     }
 
     @Override
     public Object remove(Object key) {
-        return values.remove(key);
+        Object value = values.remove((String) key);
+        change((String) key, null);
+        return value;
     }
 
     @Override
@@ -184,11 +183,13 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
         // MLog.d(TAG, "putAll: ");
 
         values.putAll(m);
+        change(null, null);
     }
 
     @Override
     public void clear() {
         values.clear();
+        change(null, null);
     }
 
     @Override
@@ -210,8 +211,8 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
         changeListener = listener;
     }
 
-    public void apply(HashMap<String, Object> styleProps) {
-        this.putAll(styleProps);
+    public void apply(HashMap<String, Object> props) {
+        putAll(props);
     }
 
     public String toString() {
@@ -220,5 +221,13 @@ public class StylePropertiesProxy implements Scriptable, Map<String, Object> {
 
     public interface OnChangeListener {
         void event(String name, Object value);
+    }
+
+    public void change() {
+        change(null, null);
+    }
+
+    private void change(String name, Object value) {
+        if (changeListener != null && eventOnChange) changeListener.event(name, value);
     }
 }

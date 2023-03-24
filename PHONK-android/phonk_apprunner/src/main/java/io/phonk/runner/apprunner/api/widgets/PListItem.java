@@ -37,13 +37,10 @@ import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 public class PListItem extends LinearLayout {
 
     private final WeakReference<View> v;
-    // private Context c;
-    private final Context c;
     private String t;
 
     public PListItem(Context context) {
         super(context);
-        this.c = context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //TODO activate this
@@ -71,7 +68,7 @@ public class PListItem extends LinearLayout {
         //TODO activate this
         TextView textView = null; //(TextView) v.get().findViewById(R.id.customViewText);
         // TextUtils.changeFont(c.get(), textView, ProtocoderFonts.MENU_TITLE);
-        textView.setText(text);
+        // textView.setText(text);
     }
 
     //TODO place holder

@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -39,13 +38,14 @@ import io.phonk.runner.base.views.FitRecyclerView;
 
 public class PList extends FitRecyclerView implements PViewMethodsInterface {
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
     protected final AppRunner mAppRunner;
     private final Context mContext;
     private GridLayoutManager mGridLayoutManager;
     private PViewItemAdapter mViewAdapter;
-    private int nNumCols = 1;
+    private int nNumCols;
+    private boolean stackFromEnd;
 
     public PList(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -53,16 +53,18 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         mContext = appRunner.getAppContext();
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
         props.eventOnChange = false;
-
-        addFromChild(props);
-        Styler.fromTo(initProps, props);
+        props.put("columns", 1);
+        props.put("stackFromEnd", false);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
-    }
-
-
-    protected void addFromChild(StylePropertiesProxy props) {
+        props.change();
     }
 
     public void init(
@@ -71,6 +73,7 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
             ReturnInterfaceWithReturn bindingCallback
     ) {
         mGridLayoutManager = new GridLayoutManager(mContext, nNumCols);
+        mGridLayoutManager.setStackFromEnd(stackFromEnd);
         setLayoutManager(mGridLayoutManager);
         mViewAdapter = new PViewItemAdapter(mContext, data, createCallback, bindingCallback);
 
@@ -90,17 +93,11 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     }
 
     public void stackFromEnd(boolean b) {
-        mGridLayoutManager.setStackFromEnd(b);
-    }
-
-    public void scrollToPosition(int pos) {
-        super.scrollToPosition(pos);
+        props.put("stackFromEnd", b);
     }
 
     public PList numColumns(int num) {
-        nNumCols = num;
-        if (mGridLayoutManager != null) mGridLayoutManager.setSpanCount(num);
-
+        props.put("columns", num);
         return this;
     }
 
@@ -121,8 +118,8 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
@@ -130,8 +127,32 @@ public class PList extends FitRecyclerView implements PViewMethodsInterface {
         return props;
     }
 
-    @Override
-    public int id() {
-        return getId();
+    protected void apply(String name, Object value) {
+        if (name == null) {
+            apply("columns");
+            apply("stackFromEnd");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "columns":
+                    if (value instanceof Number) {
+                        nNumCols = ((Number) value).intValue();
+                        if (mGridLayoutManager != null) mGridLayoutManager.setSpanCount(nNumCols);
+                    }
+                    break;
+
+                case "stackFromEnd":
+                    if (value instanceof Boolean) {
+                        stackFromEnd = (Boolean) value;
+                        if (mGridLayoutManager != null) mGridLayoutManager.setStackFromEnd(stackFromEnd);
+                    }
+                    break;
+            }
+        }
+    }
+
+    protected void apply(String name) {
+        apply(name, props.get(name));
     }
 }

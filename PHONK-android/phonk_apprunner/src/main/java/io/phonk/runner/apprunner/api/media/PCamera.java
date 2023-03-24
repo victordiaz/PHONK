@@ -31,18 +31,12 @@ import io.phonk.runner.apidoc.annotation.PhonkMethod;
 import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
-import io.phonk.runner.apprunner.api.widgets.StylePropertiesProxy;
-import io.phonk.runner.apprunner.api.widgets.Styler;
 import io.phonk.runner.base.gui.CameraTexture;
 
 @PhonkClass
-public class PCamera extends CameraTexture implements /* PViewMethodsInterface,*/ PCameraInterface {
+public class PCamera extends CameraTexture implements PCameraInterface {
     protected final AppRunner mAppRunner;
     private final PCamera cam;
-    // this is a props proxy for the user
-    public StylePropertiesProxy props = new StylePropertiesProxy();
-    // the props are transformed / accessed using the styler object
-    public Styler styler;
     private LearnImages learnImages = null;
     private DetectImage detectImage = null;
 

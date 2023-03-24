@@ -22,7 +22,7 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -36,15 +36,21 @@ import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
 @PhonkClass
-public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner implements PViewMethodsInterface,
-        PTextInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner implements PViewMethodsInterface {
+    public final PropertiesProxy props = new PropertiesProxy();
     private String[] mData;
-    // public Styler styler;
-    private Typeface mFont;
+
+    private int align;
 
     public PSpinner(AppRunner appRunner) {
         super(appRunner.getAppContext());
+
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            apply(name, value);
+        });
+
+        props.put("align", "center");
     }
 
     public PSpinner onSelected(final ReturnInterface callback) {
@@ -85,59 +91,17 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
         return this;
     }
 
-
-    @Override
-    public View textFont(Typeface font) {
-        mFont = font;
-
-        // this.setTypeface(font);
-        return this;
-    }
-
-    @Override
-    public View textSize(int size) {
-        // this.setTextSize(size);
-        return this;
-    }
-
-    @Override
-    public View textColor(String textColor) {
-        // this.setTextColor(Color.parseColor(textColor));
-        return this;
-    }
-
-    @Override
-    public View textColor(int c) {
-        // this.setTextColor(c);
-        return this;
-    }
-
-    @Override
-    public View textSize(float textSize) {
-        // this.setTextSize(textSize);
-        return this;
-    }
-
-    @Override
-    public View textStyle(int style) {
-        // this.setTypeface(null, style);
-        return this;
-    }
-
-    @Override
-    public View textAlign(int alignment) {
-        setGravity(alignment);
-        return this;
-    }
-
     @Override
     public void set(float x, float y, float w, float h) {
-        // styler.setLayoutProps(x, y, w, h);
+        props.put("x", x);
+        props.put("y", y);
+        props.put("w", w);
+        props.put("h", h);
     }
 
     @Override
-    public void setProps(Map style) {
-        // styler.setStyle(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
@@ -145,9 +109,33 @@ public class PSpinner extends androidx.appcompat.widget.AppCompatSpinner impleme
         return props;
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("align");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "align":
+                    switch (value.toString()) {
+                        case "left":
+                            align = Gravity.LEFT;
+                            break;
+                        case "center":
+                            align = Gravity.CENTER;
+                            break;
+                        case "right":
+                            align = Gravity.RIGHT;
+                            break;
+                    }
+                    setGravity(align);
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

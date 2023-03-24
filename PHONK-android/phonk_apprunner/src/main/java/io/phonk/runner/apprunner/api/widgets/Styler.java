@@ -22,36 +22,27 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
-
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.StateListDrawable;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.Map;
+import android.widget.TextView;
 
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.base.utils.MLog;
 
 public class Styler {
     private static final java.lang.String TAG = Styler.class.getSimpleName();
-    public final StylePropertiesProxy mProps;
+    public final PropertiesProxy mProps;
     final View mView;
     final AppRunner mAppRunner;
     final MyRoundCornerDrawable mBackgroundDrawable = new MyRoundCornerDrawable();
-    // MyRoundCornerDrawable mActiveDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mPressedDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mSelectedDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mCheckedDrawable = new MyRoundCornerDrawable();
     final MyRoundCornerDrawable mHoveredDrawable = new MyRoundCornerDrawable();
     final StateListDrawable mStateListDrawable = new StateListDrawable();
-
-    // String animInBefore;
-    // String animIn;
-    // String animOut;
 
     // common properties
     final String mViewName;
@@ -67,19 +58,11 @@ public class Styler {
     float padding;
     int textColor;
     float textSize;
-    String textFont;
-    String textStyle;
-    String textAlign;
+    Typeface textFont;
+    int textStyle;
+    int textAlign;
 
-    /*
-    String src;
-    String srcPressed;
-    */
-
-    private int mWidth;
-    private int mHeight;
-
-    Styler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+    Styler(AppRunner appRunner, View view, PropertiesProxy props) {
         mAppRunner = appRunner;
 
         mView = view;
@@ -100,218 +83,209 @@ public class Styler {
 
         // get default styles
         resetStyle();
-
-        // when property changes then reapply them
-        props.onChange((name, value) -> {
-            /*
-            switch (name) {
-                case "x":
-                    setX(value);
-                    break;
-                case "y":
-                    setY(value);
-                    break;
-                case "w":
-                    setWidth(value);
-                    break;
-                case "h":
-                    setHeight(value);
-                    break;
-            }
-            */
-            apply();
-        });
     }
 
     public void resetStyle() {
-        StylePropertiesProxy style = mAppRunner.pUi.getStyle();
-        fromTo(style, mProps);
+        String id = (String) mProps.get("id");
+        WidgetHelper.fromTo(mAppRunner.pUi.getProps(), mProps);
+        mProps.put("id", id);
     }
 
     public void apply() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        apply(null, null);
+    }
 
-        opacity = toFloat(mProps.get("opacity"));
-        background = Color.parseColor(mProps.get("background").toString());
+    protected void apply(String name) {
+        apply(name, mProps.get(name));
+    }
 
-        backgroundHover = Color.parseColor(mProps.get("backgroundHover").toString());
-        backgroundPressed = Color.parseColor(mProps.get("backgroundPressed").toString());
-        backgroundSelected = Color.parseColor(mProps.get("backgroundSelected").toString());
-        backgroundChecked = Color.parseColor(mProps.get("backgroundChecked").toString());
-        borderWidth = toFloat(mProps.get("borderWidth"));
-        borderColor = Color.parseColor(mProps.get("borderColor").toString());
-        borderRadius = toFloat(mProps.get("borderRadius"));
+    public void apply(String name, Object value) {
+        if (name == null) {
+            apply("background");
+            apply("backgroundChecked");
+            apply("backgroundHover");
+            apply("backgroundPressed");
+            apply("backgroundSelected");
+            apply("borderColor");
+            apply("borderRadius");
+            apply("borderWidth");
+            apply("opacity");
+            apply("padding");
+            apply("textAlign");
+            apply("textColor");
+            apply("textFont");
+            apply("textSize");
+            apply("textStyle");
 
-        textColor = Color.parseColor(mProps.get("textColor").toString());
-        textSize = toFloat(mProps.get("textSize"));
-        textFont = mProps.get("textFont").toString();
-        textStyle = mProps.get("textStyle").toString();
-        textAlign = mProps.get("textAlign").toString();
-        padding = toFloat(mProps.get("padding"));
-
-        // individual paddings have preference over general
-        float paddingLeft = padding;
-        float paddingTop = padding;
-        float paddingRight = padding;
-        float paddingBottom = padding;
-
-        try {
-            paddingLeft = toFloat(mProps.get("paddingLeft"));
-        } catch (Exception ignored) {
-        }
-        try {
-            paddingTop = toFloat(mProps.get("paddingTop"));
-        } catch (Exception ignored) {
-        }
-        try {
-            paddingRight = toFloat(mProps.get("paddingRight"));
-        } catch (Exception ignored) {
-        }
-        try {
-            paddingBottom = toFloat(mProps.get("paddingBottom"));
-        } catch (Exception ignored) {
-        }
-
-        /*
-        src = props.get("src").toString();
-        srcPressed = props.get("srcPressed").toString();
-
-
-        // animInBefore = props.get("animInBefore").toString();
-        // animIn = props.get("animIn").toString();
-        // animOut = props.get("animOut").toString();
-        */
-
-        mView.setAlpha(opacity);
-
-        mView.setPadding((int) paddingLeft, (int) paddingTop, (int) paddingRight, (int) paddingBottom);
-
-        // set background
-        mBackgroundDrawable.setBackground(background);
-        // mActiveDrawable.setBackground(0x0000FF00);
-        mPressedDrawable.setBackground(backgroundPressed);
-        mSelectedDrawable.setBackground(backgroundSelected);
-        mCheckedDrawable.setBackground(backgroundChecked);
-        mHoveredDrawable.setBackground(backgroundHover);
-
-        mBackgroundDrawable.setBorderRadius((int) borderRadius);
-        // mActiveDrawable.setBorderRadius((int) borderRadius);
-
-        mPressedDrawable.setBorderRadius((int) borderRadius);
-        mSelectedDrawable.setBorderRadius((int) borderRadius);
-        mCheckedDrawable.setBorderRadius((int) borderRadius);
-        mHoveredDrawable.setBorderRadius((int) borderRadius);
-
-        mBackgroundDrawable.setBorderWidth((int) borderWidth);
-        mPressedDrawable.setBorderWidth((int) borderWidth);
-        mSelectedDrawable.setBorderWidth((int) borderWidth);
-        mCheckedDrawable.setBorderWidth((int) borderWidth);
-        mHoveredDrawable.setBorderWidth((int) borderWidth);
-
-        mBackgroundDrawable.setBorderColor(borderColor);
-        mPressedDrawable.setBorderColor(borderColor);
-        mSelectedDrawable.setBorderColor(borderColor);
-        mCheckedDrawable.setBorderColor(borderColor);
-        mHoveredDrawable.setBorderColor(borderColor);
-
-        if (mView instanceof PTextInterface) {
-            PTextInterface v = (PTextInterface) mView;
-            v.textColor(textColor);
-            v.textSize(textSize);
-
-            Typeface font = Typeface.DEFAULT;
-            switch (textFont) {
-                case "serif":
-                    font = Typeface.SERIF;
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "background":
+                    background = Color.parseColor(value.toString());
+                    mBackgroundDrawable.setBackground(background);
                     break;
-                case "sansSerif":
-                    font = Typeface.SANS_SERIF;
+
+                case "backgroundChecked":
+                    backgroundChecked = Color.parseColor(value.toString());
+                    mCheckedDrawable.setBackground(backgroundChecked);
                     break;
-                case "monospace":
-                    MLog.d(TAG, mViewName + " yep!");
-                    font = Typeface.MONOSPACE;
+
+                case "backgroundHover":
+                    backgroundHover = Color.parseColor(value.toString());
+                    mHoveredDrawable.setBackground(backgroundHover);
+                    break;
+
+                case "backgroundPressed":
+                    backgroundPressed = Color.parseColor(value.toString());
+                    mPressedDrawable.setBackground(backgroundPressed);
+                    break;
+
+                case "backgroundSelected":
+                    backgroundSelected = Color.parseColor(value.toString());
+                    mSelectedDrawable.setBackground(backgroundSelected);
+                    break;
+
+                case "borderColor":
+                    borderColor = Color.parseColor(value.toString());
+                    mBackgroundDrawable.setBorderColor(borderColor);
+                    mPressedDrawable.setBorderColor(borderColor);
+                    mSelectedDrawable.setBorderColor(borderColor);
+                    mCheckedDrawable.setBorderColor(borderColor);
+                    mHoveredDrawable.setBorderColor(borderColor);
+                    break;
+
+                case "borderRadius":
+                    borderRadius = toFloat(value);
+                    mBackgroundDrawable.setBorderRadius((int) borderRadius);
+                    mPressedDrawable.setBorderRadius((int) borderRadius);
+                    mSelectedDrawable.setBorderRadius((int) borderRadius);
+                    mCheckedDrawable.setBorderRadius((int) borderRadius);
+                    mHoveredDrawable.setBorderRadius((int) borderRadius);
+                    break;
+
+                case "borderWidth":
+                    borderWidth = toFloat(value);
+                    mBackgroundDrawable.setBorderWidth((int) borderWidth);
+                    mPressedDrawable.setBorderWidth((int) borderWidth);
+                    mSelectedDrawable.setBorderWidth((int) borderWidth);
+                    mCheckedDrawable.setBorderWidth((int) borderWidth);
+                    mHoveredDrawable.setBorderWidth((int) borderWidth);
+                    break;
+
+                case "opacity":
+                    opacity = toFloat(value);
+                    mView.setAlpha(opacity);
+                    break;
+
+                case "padding":
+                case "paddingLeft":
+                case "paddingTop":
+                case "paddingRight":
+                case "paddingBottom":
+                    padding = toFloat(mProps.get("padding"));
+
+                    float paddingLeft = padding;
+                    float paddingTop = padding;
+                    float paddingRight = padding;
+                    float paddingBottom = padding;
+
+                    // individual paddings have preference over general
+                    try {
+                        paddingLeft = toFloat(mProps.get("paddingLeft"));
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        paddingTop = toFloat(mProps.get("paddingTop"));
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        paddingRight = toFloat(mProps.get("paddingRight"));
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        paddingBottom = toFloat(mProps.get("paddingBottom"));
+                    } catch (Exception ignored) {
+                    }
+
+                    mView.setPadding((int) paddingLeft, (int) paddingTop, (int) paddingRight, (int) paddingBottom);
+                    break;
+
+                case "textAlign":
+                    switch (value.toString()) {
+                        case "left":
+                            textAlign = Gravity.CENTER_VERTICAL | Gravity.LEFT;
+                            break;
+                        case "center":
+                            textAlign = Gravity.CENTER;
+                            break;
+                        case "right":
+                            textAlign = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+                            break;
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setGravity(textAlign);
+                    }
+                    break;
+
+                case "textColor":
+                    String colorString = value.toString();
+                    if (!colorString.equals("custom")) {
+                        textColor = Color.parseColor(colorString);
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setTextColor(textColor);
+                    }
+                    break;
+
+                case "textFont":
+                    switch (value.toString()) {
+                        case "default":
+                            textFont = Typeface.DEFAULT;
+                            break;
+                        case "serif":
+                            textFont = Typeface.SERIF;
+                            break;
+                        case "sansSerif":
+                            textFont = Typeface.SANS_SERIF;
+                            break;
+                        case "monospace":
+                            textFont = Typeface.MONOSPACE;
+                            break;
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setTypeface(textFont, textStyle);
+                    }
+                    break;
+
+                case "textSize":
+                    if (value instanceof Number) {
+                        textSize = toFloat(value);
+                        if (mView instanceof TextView) {
+                            ((TextView) mView).setTextSize(textSize);
+                        }
+                    }
+                    break;
+
+                case "textStyle":
+                    switch (value.toString()) {
+                        case "normal":
+                            textStyle = Typeface.NORMAL;
+                            break;
+                        case "bold":
+                            textStyle = Typeface.BOLD;
+                            break;
+                        case "boldItalic":
+                            textStyle = Typeface.BOLD_ITALIC;
+                            break;
+                        case "italic":
+                            textStyle = Typeface.ITALIC;
+                            break;
+                    }
+                    if (mView instanceof TextView) {
+                        ((TextView) mView).setTypeface(textFont, textStyle);
+                    }
                     break;
             }
-            v.textFont(font);
-
-            int typeFaceStyle = Typeface.NORMAL;
-            switch (textStyle) {
-                case "bold":
-                    typeFaceStyle = Typeface.BOLD;
-                    break;
-                case "boldItalic":
-                    typeFaceStyle = Typeface.BOLD_ITALIC;
-                    break;
-                case "italic":
-                    typeFaceStyle = Typeface.ITALIC;
-                    break;
-            }
-            v.textStyle(typeFaceStyle);
-
-            int tAlignment = TEXT_ALIGNMENT_TEXT_START;
-            switch (textAlign) {
-                case "left":
-                    tAlignment = Gravity.CENTER_VERTICAL | Gravity.LEFT;
-                    break;
-                case "center":
-                    tAlignment = Gravity.CENTER;
-                    break;
-
-                case "right":
-                    tAlignment = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-                    break;
-            }
-            v.textAlign(tAlignment);
-        }
-    }
-
-    public static void fromTo(Map<String, Object> styleFrom, StylePropertiesProxy styleTo) {
-        if (styleFrom == null) return;
-
-        for (Map.Entry<String, Object> entry : styleFrom.entrySet()) {
-            styleTo.put(entry.getKey(), styleTo, entry.getValue());
-        }
-    }
-
-    public void setX(Object value) {
-        getScreenSize();
-        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
-
-        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
-            FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
-            lp.x = val;
-        }
-    }
-
-    public void setY(Object value) {
-        getScreenSize();
-        int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
-
-        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
-            FixedLayout.LayoutParams lp = (FixedLayout.LayoutParams) mView.getLayoutParams();
-            lp.y = val;
-        }
-    }
-
-    private void setWidth(Object value) {
-        getScreenSize();
-        int val = mAppRunner.pUtil.sizeToPixels(value, mWidth);
-
-        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
-            ViewGroup.LayoutParams lp = mView.getLayoutParams();
-            lp.width = val;
-            mView.setLayoutParams(lp);
-        }
-    }
-
-    private void setHeight(Object value) {
-        getScreenSize();
-        int val = mAppRunner.pUtil.sizeToPixels(value, mHeight);
-
-        if (mView.getLayoutParams() instanceof FixedLayout.LayoutParams) {
-            ViewGroup.LayoutParams lp = mView.getLayoutParams();
-            lp.height = val;
-            mView.setLayoutParams(lp);
         }
     }
 
@@ -319,23 +293,13 @@ public class Styler {
         return ((Number) o).floatValue();
     }
 
-    void getScreenSize() {
-        mWidth = mAppRunner.pUi.screenWidth;
-        mHeight = mAppRunner.pUi.screenHeight;
-    }
-
-    public void setProps(Map o) {
-        mProps.eventOnChange = false;
-        fromTo(o, mProps);
-        apply();
-        mProps.eventOnChange = true;
-    }
-
     public void setLayoutProps(float x, float y, float width, float height) {
-        setX(x);
-        setY(y);
-        setWidth(width);
-        setHeight(height);
+        mProps.eventOnChange = false;
+        mProps.put("x", x);
+        mProps.put("y", y);
+        mProps.put("w", width);
+        mProps.put("h", height);
+        mProps.eventOnChange = true;
     }
 
 }

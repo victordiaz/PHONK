@@ -23,7 +23,6 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.view.View;
 
 import java.util.Map;
@@ -31,44 +30,40 @@ import java.util.Map;
 import io.phonk.runner.apidoc.annotation.PhonkClass;
 import io.phonk.runner.apidoc.annotation.PhonkField;
 import io.phonk.runner.apprunner.AppRunner;
-import io.phonk.runner.apprunner.api.other.PLooper;
 import io.phonk.runner.base.utils.MLog;
 
 @PhonkClass
 public class PCustomView extends View implements PViewMethodsInterface {
     private static final String TAG = PCustomView.class.getSimpleName();
     // this is a props proxy for the user
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     // the props are transformed / accessed using the styler object
     public final Styler styler;
     protected final AppRunner mAppRunner;
     @PhonkField(description = "Time interval between draws", example = "")
-    private final int drawInterval = 35;
     public OnSetupCallback setup;
     public OnDrawCallback draw;
-    protected boolean mAutoDraw = false;
     protected int canvasWidth;
     protected int canvasHeight;
     private PCanvas mPCanvas;
-    private PLooper loop;
 
     public PCustomView(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         mAppRunner = appRunner;
-        this.setBackgroundColor(Color.TRANSPARENT);
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, mAppRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
         props.put("background", "#00FFFFFF");
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
-        init();
-    }
-
-    private void init() {
-        mPCanvas = new PCanvas(mAppRunner);
+        mPCanvas = new PCanvas(appRunner);
     }
 
     @Override
@@ -115,17 +110,12 @@ public class PCustomView extends View implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 }

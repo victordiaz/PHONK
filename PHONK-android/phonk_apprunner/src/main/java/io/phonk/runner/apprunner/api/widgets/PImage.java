@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.graphics.Bitmap;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
@@ -39,28 +38,33 @@ import io.phonk.runner.apprunner.AppRunner;
 
 @PhonkClass
 public class PImage extends androidx.appcompat.widget.AppCompatImageView implements PViewMethodsInterface {
-    private static final String TAG = PImage.class.getSimpleName();
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     protected final AppRunner mAppRunner;
-    protected final ImageStyler styler;
+    protected final Styler styler;
 
     public PImage(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
         this.mAppRunner = appRunner;
 
-        styler = new ImageStyler(appRunner, this, props);
+        styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
         props.eventOnChange = false;
-        props.put("background", props, "#00FFFFFF");
-        props.put("srcMode", props, "fit");
+        props.put("background", "#00FFFFFF");
+        props.put("srcMode", "fit");
 
         addFromChild(props);
 
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
-    protected void addFromChild(StylePropertiesProxy props) {
+    protected void addFromChild(PropertiesProxy props) {
     }
 
     @PhonkMethod(description = "Sets an image", example = "")
@@ -95,30 +99,7 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
     }
 
     public PImage mode(String mode) {
-        switch (mode) {
-            case "tiled":
-                BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
-
-                Shader.TileMode tileMode = Shader.TileMode.REPEAT;
-                bitmapDrawable.setTileModeXY(tileMode, tileMode);
-
-                setBackground(bitmapDrawable);
-                setImageBitmap(null);
-                //setScaleX(2);
-                break;
-
-            case "fit":
-                this.setScaleType(ScaleType.FIT_CENTER);
-                break;
-
-            case "crop":
-                this.setScaleType(ScaleType.CENTER_CROP);
-                break;
-
-            case "resize":
-                this.setScaleType(ScaleType.FIT_XY);
-                break;
-        }
+        props.put("srcMode", mode);
         return this;
     }
 
@@ -127,22 +108,9 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         styler.setLayoutProps(x, y, w, h);
     }
 
-    class ImageStyler extends Styler {
-        ImageStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
-        }
-
-        @Override
-        public void apply() {
-            super.apply();
-
-            mode(mProps.get("srcMode").toString());
-        }
-    }
-
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
@@ -150,9 +118,41 @@ public class PImage extends androidx.appcompat.widget.AppCompatImageView impleme
         return props;
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("srcMode");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "srcMode":
+                    switch (value.toString()) {
+                        case "tiled":
+                            BitmapDrawable bitmapDrawable = ((BitmapDrawable) this.getDrawable());
+                            bitmapDrawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+                            setBackground(bitmapDrawable);
+                            setImageBitmap(null);
+                            break;
+
+                        case "fit":
+                            setScaleType(ScaleType.FIT_CENTER);
+                            break;
+
+                        case "crop":
+                            setScaleType(ScaleType.CENTER_CROP);
+                            break;
+
+                        case "resize":
+                            setScaleType(ScaleType.FIT_XY);
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

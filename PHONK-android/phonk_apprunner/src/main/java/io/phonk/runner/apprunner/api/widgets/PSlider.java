@@ -25,7 +25,6 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.MotionEvent;
-import android.view.View;
 
 import androidx.core.math.MathUtils;
 
@@ -44,32 +43,29 @@ import io.phonk.runner.base.views.CanvasUtils;
 
 @SuppressLint("ViewConstructor")
 @PhonkClass
-public class PSlider extends PCustomView implements PViewMethodsInterface {
-    private static final String TAG = PSlider.class.getSimpleName();
-
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+public class PSlider extends PCustomView {
     private final DecimalFormat df = new DecimalFormat("#.##");
-    public SliderStyler styler;
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
     private float currentValue = 0;
-    private float rangeFrom = 0;
-    private float rangeTo = 1;
+    private float rangeFrom;
+    private float rangeTo;
     private String mode = "direct";
     private float initialXValue;
     private float initialYValue;
     private float initialValueWhenTouched = 0;
-    private float userValue = 0;
+    private float userValue;
     private boolean isVertical = false;
     private String text;
     private boolean firstDraw = true;
 
+    private int sliderColor;
+
     public PSlider(final AppRunner appRunner, final Map<String, Object> initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         setupDrawCallback();
-        setupStyle(appRunner, initProps);
-        decimals(2);
+        setupProps(appRunner, initProps);
     }
 
     private void setupDrawCallback() {
@@ -80,14 +76,14 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             canvas.clear();
             canvas.cornerMode(true);
 
-            canvas.fill(styler.slider);
+            canvas.fill(sliderColor);
 
             canvas.strokeWidth((float) styler.borderWidth);
             canvas.stroke(styler.borderColor);
 
             if (firstDraw) {
                 // the value is not correctly set the first time as the canvas is not created yet, so set it now
-                this.value(userValue);
+                value(userValue);
                 firstDraw = false;
             }
             if (isVertical) {
@@ -116,44 +112,41 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
             canvas.fill(styler.textColor);
             canvas.noStroke();
             canvas.typeface("monospace");
-
             canvas.textSize(AndroidUtils.spToPixels(getContext(), (int) styler.textSize));
-            final String textToDisplay = text != null ? text : df.format(computeCurrentValueForTheUser());
-            canvas.drawTextCentered("" + textToDisplay);
+            canvas.drawTextCentered(text != null ? text : df.format(computeCurrentValueForTheUser()));
         };
     }
 
-    private void setupStyle(final AppRunner appRunner, final Map<String, Object> initProps) {
-        styler = new SliderStyler(appRunner, this, props);
+    private void setupProps(final AppRunner appRunner, final Map<String, Object> initProps) {
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
         props.eventOnChange = false;
-        props.put("slider", null, appRunner.pUi.theme.get("primary"));
-        props.put("sliderPressed", null, appRunner.pUi.theme.get("primary"));
-        props.put("sliderHeight", null, 20);
-        props.put("sliderBorderSize", null, 0);
-        props.put("sliderBorderColor", null, "#00FFFFFF");
-        Styler.fromTo(initProps, props);
+        props.put("decimals", 2);
+        props.put("from", 0);
+        props.put("slider", appRunner.pUi.theme.get("primary"));
+        props.put("text", null);
+        props.put("to", 1);
+        props.put("value", 0);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
     }
 
     @PhonkMethod(description = "Sets the decimal count", example = "")
     @PhonkMethodParam(params = "decimal count")
     public PSlider decimals(int num) {
-        String formatString = "#";
-        if (num > 0) formatString = "#." + new String(new char[num]).replace("\0", "#");
-        df.applyPattern(formatString);
-        df.setMinimumFractionDigits(num);
-        df.setMaximumFractionDigits(num);
+        props.put("decimals", num);
         return this;
     }
 
     @PhonkMethod(description = "Sets the init value", example = "")
     @PhonkMethodParam(params = "float")
     public PSlider value(final float userValue) {
-        this.userValue = userValue;
-        final int maxCanvasValue = computeMaxCanvasValue();
-        this.currentValue = CanvasUtils.map(userValue, rangeFrom, rangeTo, 0, maxCanvasValue);
-        this.invalidate();
+        props.put("value", userValue);
         return this;
     }
 
@@ -219,15 +212,15 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
     @PhonkMethod(description = "Sets slider range", example = "")
     @PhonkMethodParam(params = "from and to are floats")
     public PSlider range(float from, float to) {
-        rangeFrom = from;
-        rangeTo = to;
+        props.put("from", from);
+        props.put("to", to);
         return this;
     }
 
     @PhonkMethod(description = "Sets the init value and fire onDrag()", example = "")
     @PhonkMethodParam(params = "float")
     public PSlider valueAndTriggerEvent(float val) {
-        this.value(val);
+        value(val);
         executeCallbackDrag();
         return this;
     }
@@ -238,40 +231,25 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         if (callbackDrag != null) callbackDrag.event(ret);
     }
 
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
     @PhonkMethod(description = "Sets the slider mode", example = "")
     @PhonkMethodParam(params = "direct or drag, try them both!")
     public PSlider mode(String mode) {
-        this.mode = mode;
+        props.put("mode", mode);
         return this;
-    }
-
-    @Override
-    public Map<String, Object> getProps() {
-        return props;
     }
 
     @PhonkMethod(description = "Sets the slider orientation", example = "")
     @PhonkMethodParam(params = "boolean")
     public PSlider verticalMode(final boolean isVertical) {
-        this.isVertical = isVertical;
+        props.put("vertical", isVertical);
         return this;
     }
 
     @PhonkMethod(description = "Sets a text inside the slider", example = "")
     @PhonkMethodParam(params = "string")
     public PSlider text(final String text) {
-        this.text = text;
+        props.put("text", text);
         return this;
-    }
-
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
     }
 
     private void handleHorizontalMovement(final MotionEvent event) {
@@ -298,24 +276,74 @@ public class PSlider extends PCustomView implements PViewMethodsInterface {
         if (callbackRelease != null) callbackRelease.event(ret);
     }
 
-    static class SliderStyler extends Styler {
-        int slider;
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("decimals");
+            apply("from");
+            apply("mode");
+            apply("slider");
+            apply("text");
+            apply("to");
+            apply("vertical");
+            apply("value");
 
-        SliderStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
-        }
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "decimals":
+                    if (value instanceof Number) {
+                        int num = ((Number) value).intValue();
+                        String formatString = "#";
+                        if (num > 0) formatString = "#." + new String(new char[num]).replace("\0", "#");
+                        df.applyPattern(formatString);
+                        df.setMinimumFractionDigits(num);
+                        df.setMaximumFractionDigits(num);
+                    }
+                    break;
 
-        @Override
-        public void apply() {
-            super.apply();
+                case "from":
+                    if (value instanceof Number) {
+                        rangeFrom = ((Number) value).floatValue();
+                    }
+                    break;
 
-            slider = Color.parseColor((String) mProps.get("slider"));
+                case "mode":
+                    mode = value.toString();
+                    break;
+
+                case "slider":
+                    sliderColor = Color.parseColor(value.toString());
+                    break;
+
+                case "text":
+                    text = value.toString();
+                    break;
+
+                case "to":
+                    if (value instanceof Number) {
+                        rangeTo = ((Number) value).floatValue();
+                    }
+                    break;
+
+                case "value":
+                    if (value instanceof Number) {
+                        userValue = ((Number) value).floatValue();
+                        currentValue = CanvasUtils.map(userValue, rangeFrom, rangeTo, 0, computeMaxCanvasValue());
+                        invalidate();
+                    }
+                    break;
+
+                case "vertical":
+                    if (value instanceof Boolean) {
+                        isVertical = (Boolean) value;
+                    }
+                    break;
+            }
         }
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

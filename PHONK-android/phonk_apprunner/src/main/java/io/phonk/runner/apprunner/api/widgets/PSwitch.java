@@ -23,17 +23,12 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.view.Gravity;
 
 import androidx.appcompat.widget.SwitchCompat;
 
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
-import io.phonk.runner.apidoc.annotation.PhonkMethod;
-import io.phonk.runner.apidoc.annotation.PhonkMethodParam;
 import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
@@ -41,15 +36,23 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 @SuppressLint("NewApi")
 @PhonkClass
 public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
-    private Typeface currentFont;
 
     public PSwitch(AppRunner appRunner) {
         super(appRunner.getAppContext());
         styler = new Styler(appRunner, this, props);
-        styler.apply();
-        setGravity(Gravity.CENTER);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
+        props.eventOnChange = false;
+        props.put("text", "");
+        props.put("textAlign", "center");
+        props.eventOnChange = true;
+        props.change();
     }
 
     public PSwitch onChange(final ReturnInterface callbackfn) {
@@ -64,25 +67,18 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     }
 
 
-    @PhonkMethod(description = "Sets the text color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PSwitch color(String c) {
-        this.setTextColor(Color.parseColor(c));
-
+        props.put("textColor", c);
         return this;
     }
 
-    @PhonkMethod(description = "Sets the background color", example = "")
-    @PhonkMethodParam(params = {"colorHex"})
     public PSwitch background(String c) {
-        this.setBackgroundColor(Color.parseColor(c));
+        props.put("background", c);
         return this;
     }
 
-    @PhonkMethod(description = "Changes the text to the given text", example = "")
-    @PhonkMethodParam(params = {"text"})
     public PSwitch text(String text) {
-        this.setText(text);
+        props.put("text", text);
         return this;
     }
 
@@ -96,8 +92,8 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
@@ -105,9 +101,22 @@ public class PSwitch extends SwitchCompat implements PViewMethodsInterface {
         return props;
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("text");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "text":
+                    setText(value.toString());
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 }

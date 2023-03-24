@@ -24,6 +24,9 @@ package io.phonk.runner.apprunner.api.widgets;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.Map;
+
+import io.phonk.runner.apprunner.AppRunner;
 import io.phonk.runner.apprunner.api.common.ReturnInterface;
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 
@@ -79,5 +82,71 @@ public class WidgetHelper {
 
     public static void removeMovable(View viewHandler) {
         viewHandler.setOnTouchListener(null);
+    }
+
+    private static void applyViewParam(String name, PropertiesProxy props, View view, AppRunner appRunner) {
+        applyViewParam(name, props.get(name), props, view, appRunner);
+    }
+
+    public static void applyViewParam(String name, Object value, PropertiesProxy props, View view, AppRunner appRunner) {
+        if (name == null) {
+            applyViewParam("x", props, view, appRunner);
+            applyViewParam("y", props, view, appRunner);
+            applyViewParam("w", props, view, appRunner);
+            applyViewParam("h", props, view, appRunner);
+            applyViewParam("enabled", props, view, appRunner);
+            applyViewParam("visibility", props, view, appRunner);
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "x":
+                    if (view.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+                        ((FixedLayout.LayoutParams) view.getLayoutParams()).x = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenWidth);
+                    }
+                    break;
+
+                case "y":
+                    if (view.getLayoutParams() instanceof FixedLayout.LayoutParams) {
+                        ((FixedLayout.LayoutParams) view.getLayoutParams()).y = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenHeight);
+                    }
+                    break;
+
+                case "w":
+                    if (view.getLayoutParams() != null) {
+                        view.getLayoutParams().width = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenWidth);
+                    }
+                    break;
+
+                case "h":
+                    if (view.getLayoutParams() != null) {
+                        view.getLayoutParams().height = appRunner.pUtil.sizeToPixels(value, appRunner.pUi.screenHeight);
+                    }
+                    break;
+
+                case "enabled":
+                    view.setEnabled(value instanceof Boolean ? (Boolean) value : false);
+                    break;
+
+                case "visibility":
+                    view.setVisibility(view.toString() == "invisible" ? View.INVISIBLE : View.VISIBLE);
+                    break;
+            }
+        }
+    }
+
+    public static void setProps(PropertiesProxy props, Map o) {
+        props.eventOnChange = false;
+        fromTo(o, props);
+        props.eventOnChange = true;
+        props.change();
+    }
+
+    public static void fromTo(Map<String, Object> propsFrom, PropertiesProxy propsTo) {
+        if (propsFrom == null) return;
+
+        for (Map.Entry<String, Object> entry : propsFrom.entrySet()) {
+            propsTo.put(entry.getKey(), entry.getValue());
+        }
     }
 }

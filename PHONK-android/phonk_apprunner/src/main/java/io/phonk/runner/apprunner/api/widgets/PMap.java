@@ -62,18 +62,17 @@ import io.phonk.runner.base.utils.MLog;
 @PhonkClass
 public class PMap extends MapView implements PViewMethodsInterface {
     // this is a props proxy for the user
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     // the props are transformed / accessed using the styler object
     public final Styler styler;
     final String TAG = PMap.class.getSimpleName();
     // MyLocationNewOverlay myLocationOverlay;
     final ItemizedOverlayWithFocus<OverlayItem> iconOverlay;
-    private final boolean firstMarker = false;
     private final AppRunner mAppRunner;
     private final Context mContext;
-    private IMapController mapController = null;
-    private MapView mapView = null;
-    private ArrayList<OverlayItem> markerList = null;
+    private IMapController mapController;
+    private MapView mapView;
+    private ArrayList<OverlayItem> markerList;
 
     public PMap(AppRunner appRunner, Map initProps) {
         super(appRunner.getAppContext());
@@ -82,10 +81,15 @@ public class PMap extends MapView implements PViewMethodsInterface {
         this.mContext = appRunner.getAppContext();
 
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
-        Styler.fromTo(initProps, props);
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         Configuration.getInstance().setUserAgentValue(this.mContext.getApplicationContext().getPackageName());
 
@@ -289,8 +293,7 @@ public class PMap extends MapView implements PViewMethodsInterface {
      */
     @PhonkMethod
     public MapView zoom(int zoom) {
-        mapController.setZoom(zoom);
-
+        props.put("zoom", zoom);
         return this;
     }
 
@@ -302,8 +305,7 @@ public class PMap extends MapView implements PViewMethodsInterface {
      */
     @PhonkMethod
     public MapView showControls(boolean b) {
-        mapView.setBuiltInZoomControls(b);
-
+        props.put("controls", b);
         return this;
     }
 
@@ -315,7 +317,7 @@ public class PMap extends MapView implements PViewMethodsInterface {
      */
     @PhonkMethod
     public MapView multitouch(boolean b) {
-        mapView.setMultiTouchControls(b);
+        props.put("multitouch", b);
         return this;
     }
 
@@ -381,9 +383,8 @@ public class PMap extends MapView implements PViewMethodsInterface {
      */
     @PhonkMethod
     public MapView zoomLimits(double min, double max) {
-        mapView.setMinZoomLevel(min);
-        mapView.setMaxZoomLevel(max);
-
+        props.put("minZoom", min);
+        props.put("maxZoom", max);
         return this;
     }
 
@@ -419,7 +420,7 @@ public class PMap extends MapView implements PViewMethodsInterface {
      * @param b
      */
     public void useOnlineData(boolean b) {
-        mapView.setUseDataConnection(b);
+        props.put("online", b);
     }
 
     /*
@@ -509,8 +510,8 @@ public class PMap extends MapView implements PViewMethodsInterface {
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
@@ -518,9 +519,59 @@ public class PMap extends MapView implements PViewMethodsInterface {
         return props;
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("controls");
+            apply("maxZoom");
+            apply("minZoom");
+            apply("multitouch");
+            apply("online");
+            apply("zoom");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "controls":
+                    if (value instanceof Boolean) {
+                        mapView.setBuiltInZoomControls((Boolean) value);
+                    }
+                    break;
+
+                case "maxZoom":
+                    if (value instanceof Number) {
+                        mapView.setMaxZoomLevel(((Number) value).doubleValue());
+                    }
+                    break;
+
+                case "minZoom":
+                    if (value instanceof Number) {
+                        mapView.setMinZoomLevel(((Number) value).doubleValue());
+                    }
+                    break;
+
+                case "multitouch":
+                    if (value instanceof Boolean) {
+                        mapView.setMultiTouchControls((Boolean) value);
+                    }
+                    break;
+
+                case "online":
+                    if (value instanceof Boolean) {
+                        mapView.setUseDataConnection((Boolean) value);
+                    }
+                    break;
+
+                case "zoom":
+                    if (value instanceof Number) {
+                        mapController.setZoom(((Number) value).intValue());
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 }
 

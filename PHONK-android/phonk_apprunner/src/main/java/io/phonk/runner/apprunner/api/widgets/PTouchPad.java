@@ -37,10 +37,9 @@ import io.phonk.runner.base.utils.MLog;
 import io.phonk.runner.base.views.CanvasUtils;
 
 @PhonkClass
-public class PTouchPad extends PCustomView implements PViewMethodsInterface {
+public class PTouchPad extends PCustomView {
     private static final String TAG = PTouchPad.class.getSimpleName();
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
     public final TouchPadStyler styler;
     final PLooper looper = new PLooper(mAppRunner, 5, () -> {
         invalidate();
@@ -84,20 +83,25 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
     private float rangeYTo = 1.0f;
 
     public PTouchPad(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         draw = mydraw;
 
         styler = new TouchPadStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+
         props.eventOnChange = false;
-        props.put("padSize", props, appRunner.pUtil.dpToPixels(50));
-        props.put("background", props, appRunner.pUi.theme.get("primaryShade"));
-        props.put("padColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("padBorderColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("padBorderSize", props, appRunner.pUtil.dpToPixels(2));
-        Styler.fromTo(initProps, props);
+        props.put("padSize", appRunner.pUtil.dpToPixels(50));
+        props.put("background", appRunner.pUi.theme.get("primaryShade"));
+        props.put("padColor", appRunner.pUi.theme.get("primary"));
+        props.put("padBorderColor", appRunner.pUi.theme.get("primary"));
+        props.put("padBorderSize", appRunner.pUtil.dpToPixels(2));
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
+        props.change();
 
         appRunner.pUi.onTouches(this, r -> {
             // remap values
@@ -178,45 +182,47 @@ public class PTouchPad extends PCustomView implements PViewMethodsInterface {
         }
     }
 
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
-
     static class TouchPadStyler extends Styler {
         float padSize;
         int padColor;
         int padBorderColor;
         float padBorderSize;
 
-        TouchPadStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
+        TouchPadStyler(AppRunner appRunner, View view, PropertiesProxy props) {
             super(appRunner, view, props);
         }
 
         @Override
-        public void apply() {
-            super.apply();
+        public void apply(String name, Object value) {
+            super.apply(name, value);
 
-            padSize = toFloat(mProps.get("padSize"));
-            padColor = Color.parseColor(mProps.get("padColor").toString());
-            padBorderColor = Color.parseColor(mProps.get("padBorderColor").toString());
-            padBorderSize = toFloat(mProps.get("padBorderSize"));
+            if (name == null) {
+                apply("padSize");
+                apply("padColor");
+                apply("padBorderColor");
+                apply("padBorderSize");
+
+            } else {
+                if (value == null) return;
+                switch (name) {
+                    case "padSize":
+                        padSize = toFloat(value);
+                        break;
+
+                    case "padColor":
+                        padColor = Color.parseColor(value.toString());
+                        break;
+
+                    case "padBorderColor":
+                        padBorderColor = Color.parseColor(value.toString());
+                        break;
+
+                    case "padBorderSize":
+                        padBorderSize = toFloat(value);
+                        break;
+                }
+            }
         }
-    }
-
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
-
-    @Override
-    public Map getProps() {
-        return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 

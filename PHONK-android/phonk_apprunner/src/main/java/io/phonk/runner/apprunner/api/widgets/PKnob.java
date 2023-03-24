@@ -23,9 +23,7 @@
 package io.phonk.runner.apprunner.api.widgets;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.MotionEvent;
-import android.view.View;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -39,26 +37,28 @@ import io.phonk.runner.base.utils.AndroidUtils;
 import io.phonk.runner.base.views.CanvasUtils;
 
 @PhonkClass
-public class PKnob extends PCustomView implements PViewMethodsInterface, PTextInterface {
-    private static final String TAG = PKnob.class.getSimpleName();
+public class PKnob extends PCustomView {
 
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
-    public final KnobStyler styler;
-    private final boolean autoTextSize = false;
-    private final DecimalFormat df;
+    private boolean autoTextSize;
+    private final DecimalFormat df = new DecimalFormat("#.##");
     private ReturnInterface callbackDrag;
     private ReturnInterface callbackRelease;
     private float firstY;
     private float prevVal = 0;
     private float val = 0;
-    private int mWidth;
     private int mHeight;
     private float mappedVal;
     private float unmappedVal;
+
+    private float progressSeparation;
+    private float borderWidth;
+    private float progressWidth;
+    private int borderColor;
+    private int progressColor;
+
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
-            mWidth = c.width;
             mHeight = c.height;
 
             c.clear();
@@ -74,14 +74,14 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
 
             c.noFill();
 
-            c.strokeWidth(styler.knobBorderWidth);
-            c.stroke(styler.knobBorderColor);
-            c.ellipse(posX, posY, diameter - styler.knobBorderWidth, diameter - styler.knobBorderWidth);
+            c.strokeWidth(borderWidth);
+            c.stroke(borderColor);
+            c.ellipse(posX, posY, diameter - borderWidth, diameter - borderWidth);
 
-            c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), (int) styler.knobProgressWidth));
-            c.stroke(styler.knobProgressColor); // styler.sliderBorderColor);
+            c.strokeWidth(AndroidUtils.dpToPixels(mAppRunner.getAppContext(), (int) progressWidth));
+            c.stroke(progressColor); // styler.sliderBorderColor);
 
-            float d = diameter - styler.knobBorderWidth - styler.knobProgressWidth - styler.knobProgressSeparation;
+            float d = diameter - borderWidth - progressWidth - progressSeparation;
             c.arc(posX, posY, d, d, 180, unmappedVal, false);
 
             c.fill(styler.textColor);
@@ -95,40 +95,41 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
             c.drawTextCentered("" + df.format(mappedVal));
         }
     };
-    private float rangeFrom = 0;
-    private float rangeTo = 360;
+    private float rangeFrom;
+    private float rangeTo;
 
     public PKnob(AppRunner appRunner, Map initProps) {
-        super(appRunner, initProps);
+        super(appRunner, null);
 
         draw = mydraw;
 
-        styler = new KnobStyler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
         props.eventOnChange = false;
-        props.put("knobBorderWidth", props, appRunner.pUtil.dpToPixels(1));
-        props.put("knobProgressWidth", props, appRunner.pUtil.dpToPixels(2));
-        props.put("knobProgressSeparation", props, appRunner.pUtil.dpToPixels(15));
-        props.put("knobBorderColor", props, appRunner.pUi.theme.get("secondaryShade"));
-
-        props.put("knobProgressColor", props, appRunner.pUi.theme.get("primary"));
-        props.put("background", props, "#00FFFFFF");
-        props.put("textColor", props, appRunner.pUi.theme.get("secondary"));
-        props.put("textFont", props, "monospace");
-        props.put("textSize", props, appRunner.pUtil.dpToPixels(4));
-        Styler.fromTo(initProps, props);
+        props.put("knobBorderWidth", appRunner.pUtil.dpToPixels(1));
+        props.put("knobProgressWidth", appRunner.pUtil.dpToPixels(2));
+        props.put("knobProgressSeparation", appRunner.pUtil.dpToPixels(15));
+        props.put("knobBorderColor", appRunner.pUi.theme.get("secondaryShade"));
+        props.put("knobProgressColor", appRunner.pUi.theme.get("primary"));
+        props.put("autoTextSize", false);
+        props.put("decimals", 2);
+        props.put("from", 0);
+        props.put("to", 360);
+        props.put("background", "#00FFFFFF");
+        props.put("textColor", appRunner.pUi.theme.get("secondary"));
+        props.put("textFont", "monospace");
+        props.put("textSize", appRunner.pUtil.dpToPixels(4));
+        WidgetHelper.fromTo(initProps, props);
         props.eventOnChange = true;
-        styler.apply();
-
-        df = new DecimalFormat("#.##");
-        decimals(2);
+        props.change();
     }
 
     public PKnob decimals(int num) {
-        String formatString = "#.##";
-        if (num > 0) formatString = "#." + new String(new char[num]).replace("\0", "#");
-        df.applyPattern(formatString);
-        df.setMinimumFractionDigits(num);
-        df.setMinimumFractionDigits(num);
+        props.put("decimals", num);
         return this;
     }
 
@@ -187,104 +188,102 @@ public class PKnob extends PCustomView implements PViewMethodsInterface, PTextIn
     }
 
     public PKnob range(float from, float to) {
-        rangeFrom = from;
-        rangeTo = to;
-
+        props.put("from", from);
+        props.put("to", to);
         return this;
     }
 
     public PKnob valueAndTriggerEvent(float val) {
-        this.value(val);
+        value(val);
         executeCallbackDrag();
 
         return this;
     }
 
     public PKnob value(float val) {
-        this.mappedVal = val;
-        this.unmappedVal = CanvasUtils.map(val, rangeFrom, rangeTo, 0, 360);
-
-        this.invalidate();
-
+        props.put("value", val);
         return this;
     }
 
-    @Override
-    public void set(float x, float y, float w, float h) {
-        styler.setLayoutProps(x, y, w, h);
-    }
+    private void apply(String name, Object value) {
+        if (name == null) {
+            apply("knobProgressSeparation");
+            apply("knobBorderWidth");
+            apply("knobProgressWidth");
+            apply("knobBorderColor");
+            apply("knobProgressColor");
+            apply("autoTextSize");
+            apply("decimals");
+            apply("from");
+            apply("to");
+            apply("value");
 
-    @Override
-    public View textFont(Typeface font) {
-        return this;
-    }
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "knobProgressSeparation":
+                    progressSeparation = styler.toFloat(value);
+                    break;
 
-    @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
-    }
+                case "knobBorderWidth":
+                    borderWidth = styler.toFloat(value);
+                    break;
 
-    @Override
-    public View textSize(int size) {
-        return this;
-    }
+                case "knobProgressWidth":
+                    progressWidth = styler.toFloat(value);
+                    break;
 
-    @Override
-    public Map getProps() {
-        return props;
-    }
+                case "knobBorderColor":
+                    borderColor = Color.parseColor(value.toString());
+                    break;
 
-    @Override
-    public View textColor(String textColor) {
-        return this;
-    }
+                case "knobProgressColor":
+                    progressColor = Color.parseColor(value.toString());
+                    break;
 
-    @Override
-    public View textColor(int textColor) {
-        return this;
-    }
+                case "autoTextSize":
+                    if (value instanceof Boolean) {
+                        autoTextSize = (Boolean) value;
+                    }
+                    break;
 
-    @Override
-    public View textSize(float textSize) {
-        return this;
-    }
+                case "decimals":
+                    if (value instanceof Number) {
+                        int num = ((Number) value).intValue();
+                        String formatString = "#.##";
+                        if (num > 0)
+                            formatString = "#." + new String(new char[num]).replace("\0", "#");
+                        df.applyPattern(formatString);
+                        df.setMinimumFractionDigits(num);
+                        df.setMinimumFractionDigits(num);
+                    }
+                    break;
 
-    @Override
-    public View textStyle(int textStyle) {
-        return this;
-    }
+                case "from":
+                    if (value instanceof Number) {
+                        rangeFrom = ((Number) value).floatValue();
+                    }
+                    break;
 
-    @Override
-    public View textAlign(int alignment) {
-        return this;
-    }
+                case "to":
+                    if (value instanceof Number) {
+                        rangeTo = ((Number) value).floatValue();
+                    }
+                    break;
 
-    static class KnobStyler extends Styler {
-        float knobProgressSeparation;
-        float knobBorderWidth;
-        float knobProgressWidth;
-        int knobBorderColor;
-        int knobProgressColor;
-
-        KnobStyler(AppRunner appRunner, View view, StylePropertiesProxy props) {
-            super(appRunner, view, props);
+                case "value":
+                    if (value instanceof Number) {
+                        mappedVal = ((Number) value).floatValue();
+                        unmappedVal = CanvasUtils.map(mappedVal, rangeFrom, rangeTo, 0, 360);
+                        invalidate();
+                    }
+                    break;
+            }
         }
-
-        @Override
-        public void apply() {
-            super.apply();
-
-            knobProgressSeparation = toFloat(mProps.get("knobProgressSeparation"));
-            knobBorderWidth = toFloat(mProps.get("knobBorderWidth"));
-            knobProgressWidth = toFloat(mProps.get("knobProgressWidth"));
-            knobBorderColor = Color.parseColor(mProps.get("knobBorderColor").toString());
-            knobProgressColor = Color.parseColor(mProps.get("knobProgressColor").toString());
-        }
     }
 
-    @Override
-    public int id() {
-        return getId();
+    private void apply(String name) {
+        apply(name, props.get(name));
     }
 
 

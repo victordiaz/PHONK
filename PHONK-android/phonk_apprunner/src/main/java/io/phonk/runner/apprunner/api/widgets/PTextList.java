@@ -22,13 +22,11 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 
 import org.mozilla.javascript.NativeArray;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.phonk.runner.apidoc.annotation.PhonkClass;
@@ -38,40 +36,39 @@ import io.phonk.runner.base.utils.AndroidUtils;
 
 @PhonkClass
 public class PTextList extends PList implements PTextInterface {
-    final int numCol = 1;
     final NativeArray data = new NativeArray(0);
-    PList list;
-    private boolean mIsAutoScroll = false;
+    private boolean mIsAutoScroll;
     private ReturnInterfaceWithReturn mCreateCallback;
     private ReturnInterfaceWithReturn mUpdateCallback;
-
-    private float mTextSize = -1;
-    private int mTextColor = -1;
-    private Typeface mTextfont;
 
     public PTextList(AppRunner appRunner, Map initProps) {
         super(appRunner, null);
 
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+            apply(name, value);
+        });
+
+        props.eventOnChange = false;
+        props.put("autoScroll", false);
+        props.put("textSize", AndroidUtils.spToPixels(appRunner.getAppContext(), 6));
+        WidgetHelper.fromTo(initProps, props);
+        props.eventOnChange = true;
+        props.change();
+
         init();
-        super.numColumns(numCol);
         super.init(data, mCreateCallback, mUpdateCallback);
     }
 
     private void init() {
         mCreateCallback = r -> {
-            Map p = new HashMap<String, Object>();
-            p.put("textColor", mTextColor == -1 ? Color.argb(255, 255, 255, 255) : mTextColor);
-            p.put("textSize", mTextSize == -1 ? AndroidUtils.spToPixels(mAppRunner.getAppContext(), 6) : mTextSize);
-            return new PText(mAppRunner, p);
+            PText t = new PText(mAppRunner, null);
+            t.props.put("textColor", props.get("textColor"));
+            t.props.put("textSize", props.get("textSize"));
+            return t;
         };
-
-        mUpdateCallback = r -> {
-            PText t = (PText) r.get("view");
-            int position = (int) r.get("position");
-
-            t.text((String) data.get(position));
-            return null;
-        };
+        mUpdateCallback = r -> ((PText) r.get("view")).props.put("text", data.get((int) r.get("position")));
     }
 
     public PTextList add(String text) {
@@ -83,56 +80,71 @@ public class PTextList extends PList implements PTextInterface {
     }
 
     public PTextList autoScroll(boolean b) {
-        mIsAutoScroll = b;
-        return this;
-    }
-
-    public PTextList numColumns(int num) {
-        list.numColumns(num);
+        props.put("autoScroll", b);
         return this;
     }
 
     @Override
     public View textFont(Typeface font) {
-        mTextfont = font;
+        styler.textFont = font;
+        props.put("textFont", "custom");
         return this;
     }
 
     @Override
     public View textSize(int size) {
-        mTextSize = size;
-
-        return this;
+        return textSize((float) size);
     }
 
     @Override
     public View textColor(String textColor) {
-        mTextColor = Color.parseColor(textColor);
-
+        props.put("textColor", textColor);
         return this;
     }
 
     @Override
     public View textColor(int textColor) {
-        mTextColor = textColor;
-
+        styler.textColor = textColor;
+        props.put("textColor", "custom");
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
-        mTextSize = textSize;
-
+        props.put("textSize", textSize);
         return this;
     }
 
     @Override
     public View textStyle(int textStyle) {
-        return null;
+        styler.textStyle = textStyle;
+        props.put("textStyle", "custom");
+        return this;
     }
 
     @Override
     public View textAlign(int alignment) {
-        return null;
+        styler.textAlign = alignment;
+        props.put("textAlign", "custom");
+        return this;
+    }
+
+    @Override
+    protected void apply(String name, Object value) {
+        super.apply(name, value);
+
+        if (name == null) {
+            apply("autoScroll");
+
+        } else {
+            if (value == null) return;
+            switch (name) {
+                case "autoScroll":
+                    if (value instanceof Boolean) {
+                        mIsAutoScroll = (Boolean) value;
+                    }
+                    break;
+            }
+        }
     }
 }

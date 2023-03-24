@@ -22,7 +22,6 @@
 
 package io.phonk.runner.apprunner.api.widgets;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 
@@ -36,15 +35,17 @@ import io.phonk.runner.apprunner.api.common.ReturnObject;
 @PhonkClass
 public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox implements PViewMethodsInterface,
         PTextInterface {
-    public final StylePropertiesProxy props = new StylePropertiesProxy();
+    public final PropertiesProxy props = new PropertiesProxy();
     public final Styler styler;
-
-    private Typeface mFont;
-    private int mStyle;
 
     public PCheckBox(AppRunner appRunner) {
         super(appRunner.getAppContext());
         styler = new Styler(appRunner, this, props);
+        props.onChange((name, value) -> {
+            WidgetHelper.applyViewParam(name, value, props, this, appRunner);
+            styler.apply(name, value);
+        });
+        props.change();
     }
 
     public PCheckBox onChange(final ReturnInterface callbackfn) {
@@ -61,45 +62,46 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
 
     @Override
     public View textFont(Typeface font) {
-        mFont = font;
-        this.setTypeface(font, mStyle);
+        styler.textFont = font;
+        props.put("textFont", "custom");
         return this;
     }
 
     @Override
     public View textSize(int size) {
-        this.setTextSize(size);
-        return this;
+        return textSize((float) size);
     }
 
     @Override
     public View textColor(String textColor) {
-        this.setTextColor(Color.parseColor(textColor));
+        props.put("textColor", textColor);
         return this;
     }
 
     @Override
     public View textColor(int c) {
-        this.setTextColor(c);
+        styler.textColor = c;
+        props.put("textColor", "custom");
         return this;
     }
 
     @Override
     public View textSize(float textSize) {
-        this.setTextSize(textSize);
+        props.put("textSize", textSize);
         return this;
     }
 
     @Override
     public View textStyle(int style) {
-        mStyle = style;
-        this.setTypeface(mFont, style);
+        styler.textStyle = style;
+        props.put("textStyle", "custom");
         return this;
     }
 
     @Override
     public View textAlign(int alignment) {
-        setGravity(alignment);
+        styler.textAlign = alignment;
+        props.put("textAlign", "custom");
         return this;
     }
 
@@ -109,18 +111,13 @@ public class PCheckBox extends androidx.appcompat.widget.AppCompatCheckBox imple
     }
 
     @Override
-    public void setProps(Map style) {
-        styler.setProps(style);
+    public void setProps(Map props) {
+        WidgetHelper.setProps(this.props, props);
     }
 
     @Override
     public Map getProps() {
         return props;
-    }
-
-    @Override
-    public int id() {
-        return getId();
     }
 
 }
