@@ -47,6 +47,7 @@ import java.nio.ByteOrder;
 
 import io.phonk.runner.apprunner.api.common.ReturnObject;
 import io.phonk.runner.apprunner.api.other.WhatIsRunningInterface;
+import io.phonk.runner.base.utils.MLog;
 
 public class NetworkUtils {
 
@@ -121,14 +122,12 @@ public class NetworkUtils {
         Method[] wmMethods = wifi.getClass().getDeclaredMethods();
         for (Method method : wmMethods) {
             if (method.getName().equals("isWifiApEnabled")) {
-
                 try {
-                    isWifiAPenabled = (boolean) method.invoke(wifi);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                    if (method.isAccessible()) {
+                        isWifiAPenabled = (boolean) method.invoke(wifi);
+                    }
+                } catch (Exception e) {
+                    MLog.d(TAG, "Cannot check if tethering is enabled");
                     e.printStackTrace();
                 }
             }
