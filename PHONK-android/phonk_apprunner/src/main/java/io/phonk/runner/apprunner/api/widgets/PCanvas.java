@@ -587,14 +587,9 @@ public class PCanvas {
         if (mTransparentBmp != null) {
             mTransparentBmp.recycle();
         }
-        // mCanvasBuffer = new Canvas();
-
         mCanvasBuffer = new Canvas();
         mTransparentBmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvasBuffer.setBitmap(mTransparentBmp);
-
-        // mPCanvas.setCanvas(canvas);
-
     }
 
     public void drawAll() {

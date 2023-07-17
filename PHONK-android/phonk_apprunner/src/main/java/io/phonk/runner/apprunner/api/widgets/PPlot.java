@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -54,12 +55,14 @@ public class PPlot extends PCustomView {
     private int plotColor;
     private float plotWidth;
 
+    int textHeight = AndroidUtils.spToPixels(mAppRunner.getAppContext(), 12);
+    DecimalFormat numberFormat = new DecimalFormat("#.000");
+
     final OnDrawCallback mydraw = new OnDrawCallback() {
         @Override
         public void event(PCanvas c) {
             mWidth = c.width;
             mHeight = c.height;
-            // MLog.d(TAG, "paint ");
 
             c.clear();
             c.cornerMode(false);
@@ -89,24 +92,23 @@ public class PPlot extends PCustomView {
                 c.pointPath(p.x, p.y);
                 c.closePath();
 
-                if (false) {
-                    c.fill(Color.BLUE);
-                    c.noStroke();
-                    for (int i = 0; i < arrayViz.size(); i++) {
-                        p = arrayViz.get(i);
-                        c.text("" + p.y, p.x, p.y);
-                    }
-                }
-
+                // display last updated value
+                PlotPoint lastValue = arrayData.get(arrayData.size() - 1);
+                c.fill("#88FFFFFF");
+                c.typeface("monospace");
+                c.noStroke();
+                c.textAlign("right");
+                c.text("" + numberFormat.format(lastValue.y), mWidth - 20, mHeight - textHeight);
             }
 
             // text
-            c.textSize(AndroidUtils.spToPixels(mAppRunner.getAppContext(), 12));
+            c.typeface("sans");
+            c.textSize(textHeight);
             c.fill(styler.textColor);
             c.noStroke();
-            c.textAlign("right");
+            c.textAlign("left");
 
-            c.text(name, mWidth - 20, 50);
+            c.text(name, 20, textHeight + 20);
 
             c.noFill();
             c.stroke(styler.borderColor);
@@ -125,6 +127,7 @@ public class PPlot extends PCustomView {
     public PPlot(AppRunner appRunner, Map initProps) {
         super(appRunner, null);
 
+        MLog.d(TAG, "PLOT");
         draw = mydraw;
 
         props.onChange((name, value) -> {
@@ -155,7 +158,7 @@ public class PPlot extends PCustomView {
             public void run() {
                 // exit if no data
                 if (arrayData.size() > 0) {
-                    MLog.d(TAG, "runnable " + arrayData.size());
+                    // MLog.d(TAG, "runnable " + arrayData.size());
                     arrayViz.clear();
 
                     // if auto scale
@@ -170,7 +173,6 @@ public class PPlot extends PCustomView {
                         float x = mAppRunner.pUtil.map(p.x, xfrom, xto, 10, mWidth - 10);
                         float y = mAppRunner.pUtil.map(p.y, yfrom, yto, 20, mHeight - 20);
                         arrayViz.add(new PlotPoint(x, y));
-
                     }
                 }
 
@@ -195,9 +197,6 @@ public class PPlot extends PCustomView {
         }
         if (x < xMin) xMin = x;
         else if (x > xMax) xMax = x;
-
-
-        // MLog.d(TAG, "adding " + x + " " + y);
 
         if (arrayData.size() > 100) {
             arrayData.remove(0);
@@ -273,7 +272,7 @@ public class PPlot extends PCustomView {
                     break;
 
                 case "name":
-                    name = value.toString();
+                    PPlot.this.name = value.toString();
                     break;
 
                 case "plotColor":
