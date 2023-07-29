@@ -119,20 +119,19 @@ public class NetworkUtils {
         boolean isWifiAPenabled = false;
 
         WifiManager wifi = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        Method[] wmMethods = wifi.getClass().getDeclaredMethods();
-        for (Method method : wmMethods) {
-            if (method.getName().equals("isWifiApEnabled")) {
-                try {
-                    if (method.isAccessible()) {
-                        isWifiAPenabled = (boolean) method.invoke(wifi);
-                    }
-                } catch (Exception e) {
-                    MLog.d(TAG, "Cannot check if tethering is enabled");
-                    e.printStackTrace();
-                }
-            }
-
+        Method method = null;
+        try {
+            method = wifi.getClass().getMethod("isWifiApEnabled");
+            isWifiAPenabled = (boolean) method.invoke(wifi);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
+
+        MLog.d(TAG, "Cannot check if tethering is enabled");
 
         return isWifiAPenabled;
     }
